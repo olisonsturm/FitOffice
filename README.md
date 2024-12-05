@@ -1,4 +1,4 @@
-# FitOffice
+# FitOffice@DHBW
 
 The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.
  
