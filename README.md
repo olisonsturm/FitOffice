@@ -3,8 +3,8 @@
 The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.
  
 ## ERROR
-  1. If you are facing [The current Flutter SDK version is 3.10.6. Because login_flutter_app depends on get >=4.6.6 <5.0.0-beta.1 which requires Flutter SDK version >=3.13.0, version solving failed.].
-     [Solution]: run flutter upgrade to upgrade your flutter sdk to the latest. Make sure to have an active internet connection.
+1. Wenn du auf den Fehler [The current Flutter SDK version is 3.10.6. Because login_flutter_app depends on get >=4.6.6 <5.0.0-beta.1 which requires Flutter SDK version >=3.13.0, version solving failed.] stößt:  
+   **[Lösung]:** Führe `flutter upgrade` aus, um dein Flutter SDK auf die neueste Version zu aktualisieren. Stelle sicher, dass eine aktive Internetverbindung besteht.
 
 ## Docs
      1. Show Splash Screen till data loads & when loaded call FlutterNativeSplash.remove(); 
