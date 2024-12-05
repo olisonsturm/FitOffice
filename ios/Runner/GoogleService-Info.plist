@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>271322425039-ndi620epvjg3qo331jo7b4eo0jvhmeue.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.271322425039-ndi620epvjg3qo331jo7b4eo0jvhmeue</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDwsrlvsfUnGN8wDCdGeKtLmyoczCG38JM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>271322425039</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>de.dhbw-ravensburg.FitOffice</string>
+	<key>PROJECT_ID</key>
+	<string>fitoffice-dhbw</string>
+	<key>STORAGE_BUCKET</key>
+	<string>fitoffice-dhbw.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:271322425039:ios:84ff4f16ab75fda2eaf9ba</string>
+	<key>DATABASE_URL</key>
+	<string>https://fitoffice-dhbw-default-rtdb.europe-west1.firebasedatabase.app</string>
+</dict>
+</plist>

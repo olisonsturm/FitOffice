@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "271322425039",
+    "firebase_url": "https://fitoffice-dhbw-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "fitoffice-dhbw",
+    "storage_bucket": "fitoffice-dhbw.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:271322425039:android:ae3152268dae7dd5eaf9ba",
+        "android_client_info": {
+          "package_name": "de.dhbwravensburg.fitoffice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "271322425039-sht3a8sgvh99ukochm51g9odcqvd5nad.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbQN6o0e-uBXpTdytOsvNyl6Pq960OhA8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "271322425039-sht3a8sgvh99ukochm51g9odcqvd5nad.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "271322425039-bljetnrtiiruadbmhu4t1qhaem22k2to.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.codingwitht.loginFlutterApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

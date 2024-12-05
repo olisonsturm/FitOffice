@@ -1,0 +1,56 @@
+name: fit_office
+description: A stay fit in the office app.
+publish_to: 'none'
+version: 1.0.0+1
+
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_lints: ^3.0.2
+  google_fonts: ^6.1.0
+
+  ## -- STATE MANAGEMENT
+  get: ^4.6.6
+  get_storage: ^2.1.1
+
+  ## -- OnBoarding PACKAGES
+  liquid_swipe: ^3.0.0
+  smooth_page_indicator: ^1.1.0
+
+  ## -- OTP TEXT FIELD PACKAGE
+  flutter_otp_text_field: ^1.1.1
+
+  ## -- FIREBASE PACKAGES
+  firebase_core: ^2.30.1
+  firebase_auth: ^4.19.4
+  cloud_firestore: ^4.17.5
+  flutter_facebook_auth: ^6.2.0
+  google_sign_in: ^6.2.1
+
+  ## -- ICON PACKAGES
+  cupertino_icons: ^1.0.6
+  line_awesome_flutter: ^2.0.0
+  flutter_native_splash: ^2.4.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/logo/
+    - assets/images/
+    - assets/images/profile/
+    - assets/images/dashboard/
+    - assets/images/splash_images/
+    - assets/images/welcome_images/
+    - assets/images/forget_password/
+    - assets/images/on_boarding_images/
+
+# Splash screen has been added in the 'splash.yaml' file in main project directory

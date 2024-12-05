@@ -1,0 +1,15 @@
+flutter_native_splash:
+  color: "#8A1218"
+  color_dark: "#79848B"
+  image: assets/logo/dhbw.png
+  image_dark: assets/logo/dhbw.png
+  android: true
+  ios: true
+  web: false
+
+  android_12:
+    image: assets/logo/dhbw.png
+    image_dark: assets/logo/dhbw.png
+
+# CREATE - flutter pub run flutter_native_splash:create --path=splash.yaml
+# REMOVE - flutter pub run flutter_native_splash:remove --path=splash.yaml
