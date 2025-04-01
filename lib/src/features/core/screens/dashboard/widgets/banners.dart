@@ -65,6 +65,37 @@ class DashboardBanners extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Flexible(child: Image(image: AssetImage(tBookmarkIcon))),
+                        Flexible(child: Text('🔥', style: TextStyle(fontSize: 50))),
+                      ],
+                    ),
+                    Text('Streak', style: txtTheme.headlineMedium, overflow: TextOverflow.ellipsis),
+                    Text(tDashboardBannerSubTitle, style: txtTheme.bodyMedium, overflow: TextOverflow.ellipsis),
+                  ],
+                ),
+              ),
+
+            ],
+          ),
+        ),
+        //3rd Banner
+        Expanded(
+          child: Column(
+            children: [
+              //Card
+              Container(
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
+                  //For Dark Color
+                  color: isDark ? tSecondaryColor : tCardBgColor,
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(child: Image(image: AssetImage(tBookmarkIcon))),
                         Flexible(child: Image(image: AssetImage(tBannerImage2))),
                       ],
                     ),
@@ -83,7 +114,7 @@ class DashboardBanners extends StatelessWidget {
               )
             ],
           ),
-        ),
+        )
       ],
     );
   }
