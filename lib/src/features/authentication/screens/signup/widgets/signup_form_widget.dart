@@ -16,7 +16,7 @@ class SignUpFormWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(SignUpController());
     return Container(
-      padding: const EdgeInsets.only(top: tFormHeight - 15, bottom: tFormHeight),
+      padding: const EdgeInsets.only(top: tFormHeight - 15, bottom: 10),
       child: Form(
         key: controller.signupFormKey,
         child: Column(

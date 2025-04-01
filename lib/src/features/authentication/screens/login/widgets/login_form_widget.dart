@@ -17,7 +17,7 @@ class LoginFormWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(LoginController());
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: tFormHeight),
+      padding: const EdgeInsets.only(top: tFormHeight - 15, bottom: 10),
       child: Form(
         key: controller.loginFormKey,
         child: Column(
