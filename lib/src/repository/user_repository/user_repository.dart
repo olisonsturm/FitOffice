@@ -14,8 +14,8 @@ class UserRepository extends GetxController {
     try {
       // It is recommended to use Authentication Id as DocumentId of the Users Collection.
       // To store a new user you first have to authenticate and get uID (e.g: Check Authentication Repository)
-      // Add user like this: await _db.collection("Users").doc(uID).set(user.toJson());
-      await recordExist(user.email) ? throw "Record Already Exists" : await _db.collection("Users").add(user.toJson());
+      // Add user like this: await _db.collection("users").doc(uID).set(user.toJson());
+      await recordExist(user.email) ? throw "Record Already Exists" : await _db.collection("users").add(user.toJson());
     } on FirebaseAuthException catch (e) {
       final result = TExceptions.fromCode(e.code);
       throw result.message;
@@ -31,9 +31,9 @@ class UserRepository extends GetxController {
     try {
       // It is recommended to use Authentication Id as DocumentId of the Users Collection.
       // Then when fetching the record you only have to get user authenticationID uID and query as follows.
-      // final snapshot = await _db.collection("Users").doc(uID).get();
+      // final snapshot = await _db.collection("users").doc(uID).get();
 
-      final snapshot = await _db.collection("Users").where("Email", isEqualTo: email).get();
+      final snapshot = await _db.collection("users").where("email", isEqualTo: email).get();
       if (snapshot.docs.isEmpty) throw 'No such user found';
 
       // Single will throw exception if there are two entries when result return.
@@ -53,7 +53,7 @@ class UserRepository extends GetxController {
   /// Fetch All Users
   Future<List<UserModel>> allUsers() async {
     try {
-      final snapshot = await _db.collection("Users").get();
+      final snapshot = await _db.collection("users").get();
       final users = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).toList();
       return users;
     } on FirebaseAuthException catch (e) {
@@ -69,7 +69,7 @@ class UserRepository extends GetxController {
   /// Update User details
   Future<void> updateUserRecord(UserModel user) async {
     try {
-      await _db.collection("Users").doc(user.id).update(user.toJson());
+      await _db.collection("users").doc(user.id).update(user.toJson());
     } on FirebaseAuthException catch (e) {
       final result = TExceptions.fromCode(e.code);
       throw result.message;
@@ -83,7 +83,7 @@ class UserRepository extends GetxController {
   /// Delete User Data
   Future<void> deleteUser(String id) async {
     try {
-      await _db.collection("Users").doc(id).delete();
+      await _db.collection("users").doc(id).delete();
     } on FirebaseAuthException catch (e) {
       final result = TExceptions.fromCode(e.code);
       throw result.message;
@@ -97,7 +97,7 @@ class UserRepository extends GetxController {
   /// Check if user exists with email or phoneNo
   Future<bool> recordExist(String email) async {
     try {
-      final snapshot = await _db.collection("Users").where("Email", isEqualTo: email).get();
+      final snapshot = await _db.collection("users").where("email", isEqualTo: email).get();
       return snapshot.docs.isEmpty ? false : true;
     } catch (e) {
       throw "Error fetching record.";

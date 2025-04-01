@@ -15,7 +15,7 @@ class SignUpController extends GetxController {
   // TextField Controllers to get data from TextFields
   final email = TextEditingController();
   final password = TextEditingController();
-  final fullName = TextEditingController();
+  final userName = TextEditingController();
   final phoneNo = TextEditingController();
 
   /// Loader
@@ -43,7 +43,7 @@ class SignUpController extends GetxController {
       final user = UserModel(
         email: email.text.trim(),
         password: password.text.trim(),
-        fullName: fullName.text.trim(),
+        userName: userName.text.trim(),
         phoneNo: phoneNo.text.trim(),
       );
 

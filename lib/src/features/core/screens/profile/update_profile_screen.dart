@@ -35,7 +35,7 @@ class UpdateProfileScreen extends StatelessWidget {
                   //Controllers
                   final email = TextEditingController(text: user.email);
                   final password = TextEditingController(text: user.password);
-                  final fullName = TextEditingController(text: user.fullName);
+                  final userName = TextEditingController(text: user.userName);
                   final phoneNo = TextEditingController(text: user.phoneNo);
 
                   //Image & Form
@@ -46,7 +46,7 @@ class UpdateProfileScreen extends StatelessWidget {
                       const SizedBox(height: 50),
 
                       /// -- Form (Get data and pass it to FormScreen)
-                      ProfileFormScreen(fullName: fullName, email: email, phoneNo: phoneNo, password: password, user: user),
+                      ProfileFormScreen(userName: userName, email: email, phoneNo: phoneNo, password: password, user: user),
                     ],
                   );
                 } else if (snapshot.hasError) {

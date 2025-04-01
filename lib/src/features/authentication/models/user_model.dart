@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
   final String? id;
-  final String fullName;
+  final String userName;
   final String email;
   final String phoneNo;
   /// Password should not be stored in the database.
@@ -12,19 +12,19 @@ class UserModel {
 
   /// Constructor
   const UserModel(
-      {this.id, required this.email, this.password, required this.fullName, required this.phoneNo});
+      {this.id, required this.email, this.password, required this.userName, required this.phoneNo});
 
   /// convert model to Json structure so that you can use it to store data in Firebase
   toJson() {
     return {
-      "FullName": fullName,
-      "Email": email,
-      "Phone": phoneNo,
+      "username": userName,
+      "email": email,
+      "phone": phoneNo,
     };
   }
 
   /// Empty Constructor for UserModel
-  static UserModel empty () => const UserModel(id: '', email: '', fullName: '', phoneNo: '');
+  static UserModel empty () => const UserModel(id: '', email: '', userName: '', phoneNo: '');
 
   /// Map Json oriented document snapshot from Firebase to UserModel
   factory UserModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
@@ -33,9 +33,9 @@ class UserModel {
     final data = document.data()!;
     return UserModel(
       id: document.id,
-      email: data["Email"] ?? '',
-      fullName: data["FullName"] ?? '',
-      phoneNo: data["Phone"] ?? ''
+      email: data["email"] ?? '',
+      userName: data["username"] ?? '',
+      phoneNo: data["phone"] ?? ''
     );
   }
 }

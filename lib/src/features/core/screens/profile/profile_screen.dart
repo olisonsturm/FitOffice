@@ -41,7 +41,7 @@ class ProfileScreen extends StatelessWidget {
 
                       //Controllers
                       final email = user.email;
-                      final fullName = user.fullName;
+                      final userName = user.userName;
 
                       return Column(
                         children: [
@@ -50,7 +50,7 @@ class ProfileScreen extends StatelessWidget {
                           const ImageWithIcon(),
                           const SizedBox(height: 10),
 
-                          Text(fullName, style: Theme
+                          Text(userName, style: Theme
                               .of(context)
                               .textTheme
                               .headlineMedium),

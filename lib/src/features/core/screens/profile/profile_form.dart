@@ -14,14 +14,14 @@ class ProfileFormScreen extends StatelessWidget {
     required this.user,
     required this.email,
     required this.phoneNo,
-    required this.fullName,
+    required this.userName,
     required this.password,
   });
 
   final UserModel user;
   final TextEditingController email;
   final TextEditingController phoneNo;
-  final TextEditingController fullName;
+  final TextEditingController userName;
   final TextEditingController password;
 
   @override
@@ -33,8 +33,8 @@ class ProfileFormScreen extends StatelessWidget {
       child: Column(
         children: [
           TextFormField(
-            controller: fullName,
-            decoration: const InputDecoration(label: Text(tFullName), prefixIcon: Icon(LineAwesomeIcons.user)),
+            controller: userName,
+            decoration: const InputDecoration(label: Text(tUserName), prefixIcon: Icon(LineAwesomeIcons.user)),
           ),
           const SizedBox(height: tFormHeight - 20),
           TextFormField(
@@ -56,7 +56,7 @@ class ProfileFormScreen extends StatelessWidget {
                 final userData = UserModel(
                   id: user.id,
                   email: email.text.trim(),
-                  fullName: fullName.text.trim(),
+                  userName: userName.text.trim(),
                   phoneNo: phoneNo.text.trim(),
                 );
 

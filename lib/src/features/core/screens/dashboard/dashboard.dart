@@ -43,12 +43,12 @@ class Dashboard extends StatelessWidget {
 
                       //Controllers
                       final email = user.email;
-                      final fullName = user.fullName;
+                      final userName = user.userName;
 
                       return UserAccountsDrawerHeader(
                         currentAccountPicture: const Image(image: AssetImage(tLogoImage)),
                         currentAccountPictureSize: const Size(100, 100),
-                        accountName: Text(fullName),
+                        accountName: Text(userName),
                         accountEmail: Text(email),
                         decoration: const BoxDecoration(color: tSecondaryColor),
                       );
@@ -90,7 +90,7 @@ class Dashboard extends StatelessWidget {
                       if (snapshot.connectionState == ConnectionState.done) {
                         if (snapshot.hasData) {
                           UserModel user = snapshot.data as UserModel;
-                          return Text('$tDashboardTitle ${user.fullName}', style: txtTheme.bodyMedium);
+                          return Text('$tDashboardTitle ${user.userName}', style: txtTheme.bodyMedium);
                         } else if (snapshot.hasError) {
                           return Center(child: Text(snapshot.error.toString()));
                         } else {
