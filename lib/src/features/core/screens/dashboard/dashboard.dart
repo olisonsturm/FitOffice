@@ -90,7 +90,7 @@ class Dashboard extends StatelessWidget {
                       if (snapshot.connectionState == ConnectionState.done) {
                         if (snapshot.hasData) {
                           UserModel user = snapshot.data as UserModel;
-                          return Text('$tDashboardTitle ${user.userName}', style: txtTheme.bodyMedium);
+                          return Text('$tDashboardTitle ${user.fullName}', style: txtTheme.bodyMedium);
                         } else if (snapshot.hasError) {
                           return Center(child: Text(snapshot.error.toString()));
                         } else {

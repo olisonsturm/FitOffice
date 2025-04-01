@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -7,9 +8,30 @@ import '../../constants/text_strings.dart';
 
 class Helper extends GetxController {
 
-  /* -- ============= VALIDATIONS ================ -- */
 
-  // TODO: Add validation to only allow stud.dhbw-ravensburg.de email addresses
+
+  /* -- ============= VALIDATIONS ================ -- */
+  static String? validateUsername(value) {
+    if (value!.isEmpty) return tUserNameCannotEmpty;
+    if (!RegExp(r'^[a-z0-9._]+$').hasMatch(value)) return tInvalidUserName;
+    if (value.length < 4) return tUserNameLength;
+    return null;
+  }
+
+  static Future<bool> isUsernameTaken(String username) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('username', isEqualTo: username)
+        .get();
+
+    return querySnapshot.docs.isNotEmpty;
+  }
+
+  static String? validateFullName(value) {
+    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) return tInvalidFullName;
+    return null;
+  }
+
   /**
       student@stud.dhbw-ravensburg.de
       john.doe@dhbw.de
@@ -25,9 +47,7 @@ class Helper extends GetxController {
   static String? validateEmail(value) {
     if (value == null || value.isEmpty) return tEmailCannotEmpty;
     if (!GetUtils.isEmail(value)) return tInvalidEmailFormat;
-    if (!RegExp(r'^[\w\.-]+@[\w\.-]*dhbw[\w\.-]*\.de$').hasMatch(value)) {
-      return tOnlyDHBWEmailAllowed;
-    }
+    if (!RegExp(r'^[\w\.-]+@[\w\.-]*dhbw[\w\.-]*\.de$').hasMatch(value)) return tOnlyDHBWEmailAllowed;
     return null;
   }
 

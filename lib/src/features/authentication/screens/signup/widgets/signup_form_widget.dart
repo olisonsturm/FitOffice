@@ -22,37 +22,77 @@ class SignUpFormWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Mandatory field with red asterisk
             TextFormField(
               controller: controller.userName,
-              validator: (value) {
-                if(value!.isEmpty) return 'Name cannot be empty';
-                return null;
-              },
-              decoration: const InputDecoration(label: Text(tUserName), prefixIcon: Icon(LineAwesomeIcons.user)),
+              validator: Helper.validateUsername,
+              decoration: InputDecoration(
+                label: RichText(
+                  text: const TextSpan(
+                    text: tUserName,
+                    style: TextStyle(color: Colors.black),
+                    children: [
+                      TextSpan(
+                        text: ' *',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ],
+                  ),
+                ),
+                prefixIcon: const Icon(LineAwesomeIcons.user),
+              ),
             ),
             const SizedBox(height: tFormHeight - 20),
+            // Optional field
+            TextFormField(
+              controller: controller.fullName,
+              validator: Helper.validateFullName,
+              decoration: const InputDecoration(
+                label: Text(tFullName),
+                prefixIcon: Icon(LineAwesomeIcons.user_tag),
+              ),
+            ),
+            const SizedBox(height: tFormHeight - 20),
+            // Mandatory field with red asterisk
             TextFormField(
               controller: controller.email,
               validator: Helper.validateEmail,
-              decoration: const InputDecoration(label: Text(tEmail), prefixIcon: Icon(LineAwesomeIcons.envelope)),
+              decoration: InputDecoration(
+                label: RichText(
+                  text: const TextSpan(
+                    text: tEmail,
+                    style: TextStyle(color: Colors.black),
+                    children: [
+                      TextSpan(
+                        text: ' *',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ],
+                  ),
+                ),
+                prefixIcon: Icon(LineAwesomeIcons.envelope),
+              ),
             ),
             const SizedBox(height: tFormHeight - 20),
-            TextFormField(
-              controller: controller.phoneNo,
-              validator: (value) {
-                if(value!.isEmpty) return 'Phone number cannot be empty';
-                return null;
-              },
-              decoration: const InputDecoration(label: Text(tPhoneNo), prefixIcon: Icon(LineAwesomeIcons.phone)),
-            ),
-            const SizedBox(height: tFormHeight - 20),
+            // Mandatory field with red asterisk
             Obx(
-              () => TextFormField(
+                  () => TextFormField(
                 controller: controller.password,
                 validator: Helper.validatePassword,
                 obscureText: controller.showPassword.value ? false : true,
                 decoration: InputDecoration(
-                  label: const Text(tPassword),
+                  label: RichText(
+                    text: const TextSpan(
+                      text: tPassword,
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(
+                          text: ' *',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ],
+                    ),
+                  ),
                   prefixIcon: const Icon(Icons.fingerprint),
                   suffixIcon: IconButton(
                     icon: controller.showPassword.value
@@ -65,14 +105,21 @@ class SignUpFormWidget extends StatelessWidget {
             ),
             const SizedBox(height: tFormHeight - 10),
             Obx(
-              () => TPrimaryButton(
+                  () => TPrimaryButton(
                 isLoading: controller.isLoading.value ? true : false,
                 text: tSignup.tr,
-                onPressed: controller.isFacebookLoading.value || controller.isGoogleLoading.value
-                    ? () {}
-                    : controller.isLoading.value
-                        ? () {}
-                        : () => controller.createUser(),
+                onPressed: () async {
+                  if (controller.signupFormKey.currentState!.validate()) {
+                    bool usernameExists = await Helper.isUsernameTaken(controller.userName.text);
+                    if (usernameExists) {
+                      // Show error message
+                      Helper.errorSnackBar(title: 'Error', message: tUserNameAlreadyExists);
+                    } else {
+                      // Proceed with form submission
+                      controller.createUser();
+                    }
+                  }
+                },
               ),
             ),
           ],

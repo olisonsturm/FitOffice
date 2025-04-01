@@ -32,7 +32,7 @@ class ForgetPasswordScreen {
             const SizedBox(height: 20.0),
             ForgetPasswordBtnWidget(
               onTap: () {},
-              title: tPhoneNo,
+              title: tFullName,
               subTitle: tResetViaPhone,
               btnIcon: Icons.mobile_friendly_rounded,
             ),

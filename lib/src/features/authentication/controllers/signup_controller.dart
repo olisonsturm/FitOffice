@@ -16,7 +16,7 @@ class SignUpController extends GetxController {
   final email = TextEditingController();
   final password = TextEditingController();
   final userName = TextEditingController();
-  final phoneNo = TextEditingController();
+  final fullName = TextEditingController();
 
   /// Loader
   final isLoading = false.obs;
@@ -44,7 +44,7 @@ class SignUpController extends GetxController {
         email: email.text.trim(),
         password: password.text.trim(),
         userName: userName.text.trim(),
-        phoneNo: phoneNo.text.trim(),
+        fullName: fullName.text.trim(),
       );
 
       // Authenticate User first

@@ -61,7 +61,7 @@ class AllUsers extends StatelessWidget {
                                     subtitle: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(snapshot.data![index].phoneNo),
+                                        Text(snapshot.data![index].fullName),
                                         Text(snapshot.data![index].email, overflow: TextOverflow.ellipsis),
                                       ],
                                     ),
