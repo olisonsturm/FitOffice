@@ -9,9 +9,25 @@ class Helper extends GetxController {
 
   /* -- ============= VALIDATIONS ================ -- */
 
+  // TODO: Add validation to only allow stud.dhbw-ravensburg.de email addresses
+  /**
+      student@stud.dhbw-ravensburg.de
+      john.doe@dhbw.de
+      jane_doe@stud.dhbw.de
+      user123@dhbw-karlsruhe.de
+      example.user@stud.dhbw-mannheim.de
+      firstname.lastname@dhbw-stuttgart.de
+      test.email@stud.dhbw-heilbronn.de
+      user.name@dhbw-loerrach.de
+      sample_user@stud.dhbw-villingen-schwenningen.de
+      another.example@dhbw-mosbach.de
+   */
   static String? validateEmail(value) {
     if (value == null || value.isEmpty) return tEmailCannotEmpty;
     if (!GetUtils.isEmail(value)) return tInvalidEmailFormat;
+    if (!RegExp(r'^[\w\.-]+@[\w\.-]*dhbw[\w\.-]*\.de$').hasMatch(value)) {
+      return tOnlyDHBWEmailAllowed;
+    }
     return null;
   }
 
@@ -21,7 +37,7 @@ class Helper extends GetxController {
     String pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
     RegExp regex = RegExp(pattern);
     if (!regex.hasMatch(value)) {
-      return 'Password must be 8 characters, with an uppercase letter, number and symbol';
+      return tPasswordRequirements;
     }
     return null;
   }

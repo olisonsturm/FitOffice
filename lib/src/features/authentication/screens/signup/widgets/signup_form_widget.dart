@@ -23,12 +23,12 @@ class SignUpFormWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
-              controller: controller.fullName,
+              controller: controller.userName,
               validator: (value) {
                 if(value!.isEmpty) return 'Name cannot be empty';
                 return null;
               },
-              decoration: const InputDecoration(label: Text(tFullName), prefixIcon: Icon(LineAwesomeIcons.user)),
+              decoration: const InputDecoration(label: Text(tUserName), prefixIcon: Icon(LineAwesomeIcons.user)),
             ),
             const SizedBox(height: tFormHeight - 20),
             TextFormField(

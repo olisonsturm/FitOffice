@@ -13,17 +13,18 @@ const String tSuccess = "Success";
 const String tPhoneNo = "Phone No";
 const String tContinue = "Continue";
 const String tPassword = "Password";
-const String tFullName = "Full Name";
+const String tUserName = "Username";
 const String tGetStarted = "Get Started";
 const String tForgetPassword = "Forget Password?";
 const String tSignInWithGoogle = "Sign-In with Google";
 
-
+// -- HELPER CONTROLLER --
 // -- Validation --
 const String tEmailCannotEmpty = "Email cannot be empty";
 const String tInvalidEmailFormat = "Invalid email format";
+const String tOnlyDHBWEmailAllowed = "Only DHBW students or employees are allowed to sign up";
 const String tNoRecordFound = "No record found";
-
+const String tPasswordRequirements = "Password must be 8 characters, with an uppercase letter, number and symbol";
 // -- SnackBar --
 const String tAlert = "Alert";
 const String tOhSnap = "Oh Snap";
