@@ -12,7 +12,7 @@ import '../../../../repository/user_repository/user_repository.dart';
 import '../../../authentication/models/user_model.dart';
 import '../../controllers/profile_controller.dart';
 
-
+// TODO: Add all the form fields, check if the username is already taken, and add a confirm popup before deleting the account.
 class ProfileFormScreen extends StatelessWidget {
   const ProfileFormScreen({
     super.key,
