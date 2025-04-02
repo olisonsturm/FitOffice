@@ -45,6 +45,7 @@ class Helper extends GetxController {
   static String? validateEmail(value) {
     if (value == null || value.isEmpty) return tEmailCannotEmpty;
     if (!GetUtils.isEmail(value)) return tInvalidEmailFormat;
+    // TODO: Uncomment this line to restrict email domains after development phase
     //if (!RegExp(r'^[\w\.-]+@[\w\.-]*dhbw[\w\.-]*\.de$').hasMatch(value)) return tOnlyDHBWEmailAllowed;
     return null;
   }
