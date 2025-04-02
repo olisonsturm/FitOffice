@@ -5,6 +5,11 @@ class UserModel {
   final String userName;
   final String email;
   final String fullName;
+  final Timestamp? createdAt;
+  final Timestamp? updatedAt;
+  final String? fitnessLevel;
+  final int? completedExercises;
+  final String? profilePicture;
   /// Password should not be stored in the database.
   /// Authentication will handle login logout for us.
   /// So just use this variable to get data from user and pass it to authentication.
@@ -12,7 +17,7 @@ class UserModel {
 
   /// Constructor
   const UserModel(
-      {this.id, required this.email, this.password, required this.userName, required this.fullName});
+      {this.id, required this.email, this.password, required this.userName, required this.fullName, this.createdAt, this.updatedAt, this.fitnessLevel, this.completedExercises, this.profilePicture});
 
   /// convert model to Json structure so that you can use it to store data in Firebase
   toJson() {
@@ -20,6 +25,11 @@ class UserModel {
       "username": userName,
       "email": email,
       "fullName": fullName,
+      "createdAt": createdAt,
+      "updatedAt": updatedAt,
+      "fitnessLevel": fitnessLevel,
+      "completedExercises": completedExercises,
+      "profilePicture": profilePicture,
     };
   }
 
@@ -35,7 +45,12 @@ class UserModel {
         id: document.id,
         email: data["email"] ?? '',
         userName: data["username"] ?? '',
-        fullName: data["fullName"] ?? ''
+        fullName: data["fullName"] ?? '',
+        createdAt: data["createdAt"] ?? Timestamp.now(),
+        updatedAt: data["updatedAt"] ?? Timestamp.now(),
+        fitnessLevel: data["fitnessLevel"] ?? 'Beginner',
+        completedExercises: data["completedExercises"] ?? 0,
+        profilePicture: data["profilePicture"] ?? '',
     );
   }
 }

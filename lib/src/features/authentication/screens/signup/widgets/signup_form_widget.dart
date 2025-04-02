@@ -7,6 +7,7 @@ import '../../../../../constants/sizes.dart';
 import '../../../../../constants/text_strings.dart';
 import '../../../controllers/signup_controller.dart';
 
+//TODO: If the document of the user already exists, the user account will be still created.
 class SignUpFormWidget extends StatelessWidget {
   const SignUpFormWidget({
     super.key,

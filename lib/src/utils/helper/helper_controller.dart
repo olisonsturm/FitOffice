@@ -8,8 +8,6 @@ import '../../constants/text_strings.dart';
 
 class Helper extends GetxController {
 
-
-
   /* -- ============= VALIDATIONS ================ -- */
   static String? validateUsername(value) {
     if (value!.isEmpty) return tUserNameCannotEmpty;
@@ -47,7 +45,7 @@ class Helper extends GetxController {
   static String? validateEmail(value) {
     if (value == null || value.isEmpty) return tEmailCannotEmpty;
     if (!GetUtils.isEmail(value)) return tInvalidEmailFormat;
-    if (!RegExp(r'^[\w\.-]+@[\w\.-]*dhbw[\w\.-]*\.de$').hasMatch(value)) return tOnlyDHBWEmailAllowed;
+    //if (!RegExp(r'^[\w\.-]+@[\w\.-]*dhbw[\w\.-]*\.de$').hasMatch(value)) return tOnlyDHBWEmailAllowed;
     return null;
   }
 

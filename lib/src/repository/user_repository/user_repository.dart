@@ -94,7 +94,7 @@ class UserRepository extends GetxController {
     }
   }
 
-  /// Check if user exists with email or phoneNo
+  /// Check if user exists with email
   Future<bool> recordExist(String email) async {
     try {
       final snapshot = await _db.collection("users").where("email", isEqualTo: email).get();
