@@ -71,7 +71,7 @@ class SignUpFormWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                prefixIcon: Icon(LineAwesomeIcons.envelope),
+                prefixIcon: const Icon(LineAwesomeIcons.envelope),
               ),
             ),
             const SizedBox(height: tFormHeight - 20),

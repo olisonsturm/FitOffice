@@ -20,18 +20,21 @@ class UserModel {
       {this.id, required this.email, this.password, required this.userName, required this.fullName, this.createdAt, this.updatedAt, this.fitnessLevel, this.completedExercises, this.profilePicture});
 
   /// convert model to Json structure so that you can use it to store data in Firebase
-  toJson() {
-    return {
-      "username": userName,
-      "email": email,
-      "fullName": fullName,
-      "createdAt": createdAt,
-      "updatedAt": updatedAt,
-      "fitnessLevel": fitnessLevel,
-      "completedExercises": completedExercises,
-      "profilePicture": profilePicture,
-    };
-  }
+toJson() {
+  final Map<String, dynamic> data = {
+    "username": userName,
+    "email": email,
+    "fullName": fullName,
+  };
+
+  if (createdAt != null) data["createdAt"] = createdAt;
+  if (updatedAt != null) data["updatedAt"] = updatedAt;
+  if (fitnessLevel != null) data["fitnessLevel"] = fitnessLevel;
+  if (completedExercises != null) data["completedExercises"] = completedExercises;
+  if (profilePicture != null) data["profilePicture"] = profilePicture;
+
+  return data;
+}
 
   /// Empty Constructor for UserModel
   static UserModel empty () => const UserModel(id: '', email: '', userName: '', fullName: '');
@@ -43,14 +46,14 @@ class UserModel {
     final data = document.data()!;
     return UserModel(
         id: document.id,
-        email: data["email"] ?? '',
-        userName: data["username"] ?? '',
-        fullName: data["fullName"] ?? '',
-        createdAt: data["createdAt"] ?? Timestamp.now(),
-        updatedAt: data["updatedAt"] ?? Timestamp.now(),
-        fitnessLevel: data["fitnessLevel"] ?? 'Beginner',
+        email: data["email"],
+        userName: data["username"],
+        fullName: data["fullName"],
+        createdAt: data["createdAt"],
+        updatedAt: data["updatedAt"],
+        fitnessLevel: data["fitnessLevel"] ?? "beginner",
         completedExercises: data["completedExercises"] ?? 0,
-        profilePicture: data["profilePicture"] ?? '',
+        profilePicture: data["profilePicture"] ?? "",
     );
   }
 }
