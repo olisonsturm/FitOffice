@@ -20,21 +20,21 @@ class UserModel {
       {this.id, required this.email, this.password, required this.userName, required this.fullName, this.createdAt, this.updatedAt, this.fitnessLevel, this.completedExercises, this.profilePicture});
 
   /// convert model to Json structure so that you can use it to store data in Firebase
-toJson() {
-  final Map<String, dynamic> data = {
-    "username": userName,
-    "email": email,
-    "fullName": fullName,
-  };
+  toJson() {
+    final Map<String, dynamic> data = {
+      "username": userName,
+      "email": email,
+      "fullName": fullName,
+    };
 
-  if (createdAt != null) data["createdAt"] = createdAt;
-  if (updatedAt != null) data["updatedAt"] = updatedAt;
-  if (fitnessLevel != null) data["fitnessLevel"] = fitnessLevel;
-  if (completedExercises != null) data["completedExercises"] = completedExercises;
-  if (profilePicture != null) data["profilePicture"] = profilePicture;
+    if (createdAt != null) data["createdAt"] = createdAt;
+    if (updatedAt != null) data["updatedAt"] = updatedAt;
+    if (fitnessLevel != null) data["fitnessLevel"] = fitnessLevel;
+    if (completedExercises != null) data["completedExercises"] = completedExercises;
+    if (profilePicture != null) data["profilePicture"] = profilePicture;
 
-  return data;
-}
+    return data;
+  }
 
   /// Empty Constructor for UserModel
   static UserModel empty () => const UserModel(id: '', email: '', userName: '', fullName: '');
