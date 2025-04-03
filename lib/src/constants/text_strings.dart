@@ -113,6 +113,7 @@ const String tDashboardBannerTitle1 = "Exercises for Beginners";
 const String tDashboardBannerSubTitle = "10 Lessons";
 const String tDashboardButton = "View All";
 const String tDashboardTopCourses = "Top Courses";
+const String tDashboardPhysicalExercisesTitle = "Übungen für deine körperliche Gesundheit";
 
 
 
