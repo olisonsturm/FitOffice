@@ -116,7 +116,7 @@ class _DashboardState extends State<Dashboard> {
                     const SizedBox(height: tDashboardPadding),
 
                     // Top Courses
-                    Text(tDashboardTopCourses, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
+                    Text(tDashboardStatistics, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
                     DashboardTopCourses(txtTheme: txtTheme, isDark: isDark),
                   ],
                 ),
@@ -141,8 +141,8 @@ class _DashboardState extends State<Dashboard> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: 'Search',
+              icon: Icon(Icons.route),
+              label: 'Progress',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),

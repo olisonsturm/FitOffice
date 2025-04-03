@@ -108,11 +108,11 @@ const String tBackToLogin = "Back to login";
 const String tDashboardTitle = "Hey,";
 const String tDashboardHeading = "Explore Exercises";
 const String tDashboardSearch = "Search...";
-const String tDashboardBannerTitle2 = "Oberkörper";
-const String tDashboardBannerTitle1 = "Exercises for Beginners";
+const String tDashboardBannerTitle2 = "Energieschub für Zwischendurch";
+const String tDashboardBannerTitle1 = "Unterstütze deine langfristige Gesundheit";
 const String tDashboardBannerSubTitle = "10 Lessons";
 const String tDashboardButton = "View All";
-const String tDashboardTopCourses = "Top Courses";
+const String tDashboardStatistics = "Statistiken";
 const String tDashboardPhysicalExercisesTitle = "Übungen für deine körperliche Gesundheit";
 const String tDashboardPsychologicalExercisesTitle = "Übungen für deine geistige Gesundheit";
 
