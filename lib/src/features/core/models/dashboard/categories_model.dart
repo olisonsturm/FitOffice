@@ -13,4 +13,8 @@ class DashboardCategoriesModel{
     DashboardCategoriesModel("UK", "Unterkörper", "11 Lessons", null),
     DashboardCategoriesModel("GK", "Ganzkörper", "8 Lessons", null),
   ];
+
+  static List<DashboardCategoriesModel> listPsychologicalExercises = [
+    DashboardCategoriesModel("GG", "Geist", "0 Lessons", null),
+  ];
 }
