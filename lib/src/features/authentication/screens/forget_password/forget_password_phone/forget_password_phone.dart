@@ -25,8 +25,8 @@ class ForgetPasswordPhoneScreen extends StatelessWidget {
                 FormHeaderWidget(
                   imageColor: isDark ? tPrimaryColor : tSecondaryColor,
                   image: tForgetPasswordImage,
-                  title: tForgetPassword,
-                  subTitle: tForgetPasswordSubTitle,
+                  title: tForgotPassword,
+                  subTitle: tForgotPasswordSubTitle,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   heightBetween: 30.0,
                   textAlign: TextAlign.center,

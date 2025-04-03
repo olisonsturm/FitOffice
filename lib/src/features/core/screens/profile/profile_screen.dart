@@ -83,7 +83,7 @@ class ProfileScreen extends StatelessWidget {
                   TPrimaryButton(
                       isFullWidth: false,
                       width: 200,
-                      text: tEditProfile,
+                      text: tSaveProfile,
                       onPressed: () => Get.to(() => UpdateProfileScreen())
                   ),
                   const SizedBox(height: 30),

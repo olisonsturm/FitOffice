@@ -3,13 +3,21 @@ import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/image_strings.dart';
 import 'package:fit_office/src/constants/sizes.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import '../../../../../common_widgets/form/form_header_widget.dart';
+import '../../../../core/controllers/profile_controller.dart';
 
 class ForgetPasswordMailScreen extends StatelessWidget {
-  const ForgetPasswordMailScreen({super.key});
+  const ForgetPasswordMailScreen({
+    super.key,
+    required this.email});
+
+  final String? email;
 
   @override
   Widget build(BuildContext context) {
+
     //Just In-case if you want to replace the Image Color for Dark Theme
     final brightness = MediaQuery.of(context).platformBrightness;
     final bool isDark = brightness == Brightness.dark;
@@ -25,8 +33,8 @@ class ForgetPasswordMailScreen extends StatelessWidget {
                 FormHeaderWidget(
                   imageColor: isDark ? tPrimaryColor : tSecondaryColor,
                   image: tForgetPasswordImage,
-                  title: tForgetPassword,
-                  subTitle: tForgetPasswordSubTitle,
+                  title: tForgotPassword,
+                  subTitle: tForgotPasswordSubTitle,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   heightBetween: 30.0,
                   textAlign: TextAlign.center,
@@ -36,10 +44,12 @@ class ForgetPasswordMailScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       TextFormField(
+                        initialValue: email,
                         decoration: const InputDecoration(
                           label: Text(tEmail),
                           hintText: tEmail,
                           prefixIcon: Icon(Icons.mail_outline_rounded),
+                          enabled: false,
                         ),
                       ),
                       const SizedBox(height: 20.0),
@@ -47,7 +57,7 @@ class ForgetPasswordMailScreen extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                               onPressed: () {},
-                              child: const Text(tNext))),
+                              child: const Text(tYes))),
                     ],
                   ),
                 ),

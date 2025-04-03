@@ -15,7 +15,7 @@ const String tContinue = "Continue";
 const String tPassword = "Password";
 const String tUserName = "Username";
 const String tGetStarted = "Get Started";
-const String tForgetPassword = "Forget Password?";
+const String tForgotPassword = "Forgot Password?";
 const String tSignInWithGoogle = "Sign-In with Google";
 
 // -- HELPER CONTROLLER --
@@ -81,8 +81,8 @@ const String tAlreadyHaveAnAccount = "Already have an Account";
 
 
 // -- Forget Password Text
-const String tForgetPasswordTitle = "Make Selection!";
-const String tForgetPasswordSubTitle = "Select one of the options given below to reset your password.";
+const String tForgotPasswordTitle = "Make Selection!";
+const String tForgotPasswordSubTitle = "Are you sure you want to reset your password?";
 const String tResetViaEMail = "Reset via Mail Verification";
 const String tResetViaPhone = "Reset via Phone Verification";
 
@@ -121,7 +121,7 @@ const String tDashboardTopCourses = "Top Courses";
 
 // -- Profile Screen - Text
 const String tProfile = "Profile";
-const String tEditProfile = "Edit Profile";
+const String tSaveProfile = "Save Profile";
 const String tLogoutDialogHeading = "Logout";
 // -- Menu
 const String tMenu5 = tLogout;

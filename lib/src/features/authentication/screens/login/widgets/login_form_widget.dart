@@ -61,7 +61,7 @@ class LoginFormWidget extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () => ForgetPasswordScreen.buildShowModalBottomSheet(context),
-                child: const Text(tForgetPassword),
+                child: const Text(tForgotPassword),
               ),
             ),
 

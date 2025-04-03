@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import '../../../../common_widgets/buttons/clickable_richtext_widget.dart';
 import '../../../../common_widgets/form/form_header_widget.dart';
+import '../../../../constants/colors.dart';
 import '../../../../constants/sizes.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -15,8 +16,16 @@ class SignupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    var mediaQuery = MediaQuery.of(context);
+    var width = mediaQuery.size.width;
+    var height = mediaQuery.size.height;
+    var brightness = mediaQuery.platformBrightness;
+    final isDarkMode = brightness == Brightness.dark;
+
     return SafeArea(
       child: Scaffold(
+        backgroundColor: isDarkMode ? tSecondaryColor : tWhiteColor,
         body: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.all(tDefaultSpace),

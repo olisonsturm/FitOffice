@@ -12,6 +12,7 @@ import '../../../../repository/authentication_repository/authentication_reposito
 import '../../../../repository/user_repository/user_repository.dart';
 import '../../../../utils/helper/helper_controller.dart';
 import '../../../authentication/models/user_model.dart';
+import '../../../authentication/screens/forget_password/forget_password_mail/forget_password_mail.dart';
 import '../../controllers/profile_controller.dart';
 
 // TODO: Add all the form fields, show the right timestamps not a hardcoded value, check if the username is already taken, and add a confirm popup before deleting the account.
@@ -59,7 +60,25 @@ class ProfileFormScreen extends StatelessWidget {
             decoration: const InputDecoration(label: Text(tEmail), prefixIcon: Icon(LineAwesomeIcons.envelope_1)),
             enabled: false,
           ),
-          const SizedBox(height: tFormHeight),
+          const SizedBox(height: tFormHeight - 20),
+
+          /// -- FORGET PASSWORD BTN
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                Get.to(() => ForgetPasswordMailScreen(email: email.text.trim(),));
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey.withOpacity(0.3),
+                elevation: 0,
+                foregroundColor: Colors.black,
+                side: BorderSide.none,
+              ),
+              child: const Text(tResetPassword),
+            ),
+          ),
+          const SizedBox(height: tFormHeight - 20),
 
           /// -- Form Submit Button
           SizedBox(
@@ -76,7 +95,7 @@ class ProfileFormScreen extends StatelessWidget {
 
                 await controller.updateRecord(userData);
               },
-              child: const Text(tEditProfile),
+              child: const Text(tSaveProfile),
             ),
           ),
           const SizedBox(height: tFormHeight),

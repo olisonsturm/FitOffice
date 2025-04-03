@@ -15,26 +15,18 @@ class ForgetPasswordScreen {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(tForgetPasswordTitle,
+            Text(tForgotPasswordTitle,
                 style: Theme.of(context).textTheme.displayMedium),
-            Text(tForgetPasswordSubTitle,
+            Text(tForgotPasswordSubTitle,
                 style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 30.0),
             ForgetPasswordBtnWidget(
               onTap: () {
                 Navigator.pop(context);
-                Get.to(() => const ForgetPasswordMailScreen());
               },
               title: tEmail,
               subTitle: tResetViaEMail,
               btnIcon: Icons.mail_outline_rounded,
-            ),
-            const SizedBox(height: 20.0),
-            ForgetPasswordBtnWidget(
-              onTap: () {},
-              title: tFullName,
-              subTitle: tResetViaPhone,
-              btnIcon: Icons.mobile_friendly_rounded,
             ),
           ],
         ),
