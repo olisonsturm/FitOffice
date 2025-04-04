@@ -12,7 +12,7 @@ import '../../../../repository/authentication_repository/authentication_reposito
 import '../../../../repository/user_repository/user_repository.dart';
 import '../../../../utils/helper/helper_controller.dart';
 import '../../../authentication/models/user_model.dart';
-import '../../../authentication/screens/forget_password/forget_password_mail/forget_password_mail.dart';
+import '../../../authentication/screens/forget_password/forget_password_options/forget_password_model_bottom_sheet.dart';
 import '../../controllers/profile_controller.dart';
 
 // TODO: Add all the form fields, show the right timestamps not a hardcoded value, check if the username is already taken, and add a confirm popup before deleting the account.
@@ -35,7 +35,6 @@ class ProfileFormScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final _db = FirebaseFirestore.instance;
     final controller = Get.put(ProfileController());
 
     return Form(
@@ -67,7 +66,11 @@ class ProfileFormScreen extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                Get.to(() => ForgetPasswordMailScreen(email: email.text.trim(),));
+                ForgetPasswordScreen.buildShowModalBottomSheet(
+                  context,
+                  email: email.text,
+                  enableEdit: false,
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.grey.withOpacity(0.3),

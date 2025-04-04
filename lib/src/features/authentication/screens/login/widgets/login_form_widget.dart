@@ -60,7 +60,7 @@ class LoginFormWidget extends StatelessWidget {
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
-                onPressed: () => ForgetPasswordScreen.buildShowModalBottomSheet(context),
+                onPressed: () => ForgetPasswordScreen.buildShowModalBottomSheet(context, email: controller.email.text, enableEdit: true),
                 child: const Text(tForgotPassword),
               ),
             ),

@@ -1,11 +1,9 @@
-import 'package:fit_office/src/common_widgets/form/form_divider_widget.dart';
 import 'package:fit_office/src/features/authentication/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/image_strings.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/authentication/screens/signup/widgets/signup_form_widget.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import '../../../../common_widgets/buttons/clickable_richtext_widget.dart';
 import '../../../../common_widgets/form/form_header_widget.dart';
 import '../../../../constants/colors.dart';
@@ -18,8 +16,6 @@ class SignupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     var mediaQuery = MediaQuery.of(context);
-    var width = mediaQuery.size.width;
-    var height = mediaQuery.size.height;
     var brightness = mediaQuery.platformBrightness;
     final isDarkMode = brightness == Brightness.dark;
 
@@ -39,7 +35,6 @@ class SignupScreen extends StatelessWidget {
                     subTitle: tSignUpSubTitle,
                     imageHeight: 0.2
                 ),
-                const SizedBox(height: tDefaultSpace * 2),
                 const SignUpFormWidget(),
                 ClickableRichTextWidget(
                   text1: tAlreadyHaveAnAccount,
