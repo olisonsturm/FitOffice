@@ -112,6 +112,7 @@ class _DashboardState extends State<Dashboard> {
                     const SizedBox(height: tDashboardPadding),
 
                     // Banner
+                    Text(tDashboardInformation, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
                     DashboardBanners(txtTheme: txtTheme, isDark: isDark),
                     const SizedBox(height: tDashboardPadding),
 

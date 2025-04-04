@@ -115,6 +115,7 @@ const String tDashboardButton = "View All";
 const String tDashboardStatistics = "Statistiken";
 const String tDashboardPhysicalExercisesTitle = "Übungen für deine körperliche Gesundheit";
 const String tDashboardPsychologicalExercisesTitle = "Übungen für deine geistige Gesundheit";
+const String tDashboardInformation = "Informationen";
 
 
 
