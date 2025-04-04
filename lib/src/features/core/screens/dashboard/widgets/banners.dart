@@ -41,7 +41,7 @@ class DashboardBanners extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Flexible(child: Image(image: AssetImage(tBookmarkIcon))),
-                    Flexible(child: Image(image: AssetImage(tBannerImage1))),
+                    Flexible(child: Icon(Icons.monitor_heart, size: 50,)),
                   ],
                 ),
                 const SizedBox(height: 25),
@@ -74,7 +74,7 @@ class DashboardBanners extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Flexible(child: Image(image: AssetImage(tBookmarkIcon))),
-                      Flexible(child: Image(image: AssetImage(tBannerImage1))),
+                      Flexible(child: Icon(Icons.bolt, size: 50,)),
                     ],
                   ),
                   const SizedBox(height: 25),
