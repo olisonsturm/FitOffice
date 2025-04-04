@@ -5,7 +5,6 @@ import 'package:fit_office/src/constants/image_strings.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/authentication/screens/signup/signup_screen.dart';
 import '../../../../common_widgets/buttons/clickable_richtext_widget.dart';
-import '../../../../common_widgets/form/form_divider_widget.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/sizes.dart';
 import 'widgets/login_form_widget.dart';
@@ -17,8 +16,6 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     var mediaQuery = MediaQuery.of(context);
-    var width = mediaQuery.size.width;
-    var height = mediaQuery.size.height;
     var brightness = mediaQuery.platformBrightness;
     final isDarkMode = brightness == Brightness.dark;
 

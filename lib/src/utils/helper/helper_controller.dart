@@ -41,7 +41,7 @@ class Helper extends GetxController {
       user.name@dhbw-loerrach.de
       sample_user@stud.dhbw-villingen-schwenningen.de
       another.example@dhbw-mosbach.de
-   */
+   *////
   static String? validateEmail(value) {
     if (value == null || value.isEmpty) return tEmailCannotEmpty;
     if (!GetUtils.isEmail(value)) return tInvalidEmailFormat;

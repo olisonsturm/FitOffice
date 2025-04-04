@@ -121,6 +121,7 @@ const String tDashboardTopCourses = "Top Courses";
 
 // -- Profile Screen - Text
 const String tProfile = "Profile";
+const String tEditProfile = "Edit Profile";
 const String tSaveProfile = "Save Profile";
 const String tLogoutDialogHeading = "Logout";
 // -- Menu
