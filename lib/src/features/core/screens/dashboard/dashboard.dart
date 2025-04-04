@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/image_strings.dart';
 import 'package:fit_office/src/constants/sizes.dart';
@@ -43,12 +42,12 @@ class Dashboard extends StatelessWidget {
 
                       //Controllers
                       final email = user.email;
-                      final fullName = user.fullName;
+                      final userName = user.userName;
 
                       return UserAccountsDrawerHeader(
                         currentAccountPicture: const Image(image: AssetImage(tLogoImage)),
                         currentAccountPictureSize: const Size(100, 100),
-                        accountName: Text(fullName),
+                        accountName: Text(userName),
                         accountEmail: Text(email),
                         decoration: const BoxDecoration(color: tSecondaryColor),
                       );
@@ -73,7 +72,7 @@ class Dashboard extends StatelessWidget {
                 }
               ),
               ListTile(leading: const Icon(Icons.verified_user), title: const Text('Profile'), onTap: () { Get.to(() => ProfileScreen()); }),
-              ListTile(leading: const Icon(Icons.favorite), title: const Text('Friends')),
+              const ListTile(leading: Icon(Icons.favorite), title: Text('Friends')),
             ],
           ),
         ),

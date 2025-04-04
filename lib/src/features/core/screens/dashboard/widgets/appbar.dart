@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../../../../constants/colors.dart';
-import '../../../../../constants/image_strings.dart';
 import '../../../../../constants/text_strings.dart';
-import '../../profile/profile_screen.dart';
 
 class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
   const DashboardAppBar({

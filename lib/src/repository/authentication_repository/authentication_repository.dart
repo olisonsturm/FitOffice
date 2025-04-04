@@ -49,7 +49,7 @@ class AuthenticationRepository extends GetxController {
     } else {
       // Check if it's the user's first time, then navigate accordingly
       userStorage.writeIfNull('isFirstTime', true);
-      print(userStorage.read('isFirstTime'));
+      // Remove the splash screen
       userStorage.read('isFirstTime') != true
           ? Get.offAll(() => const WelcomeScreen())
           : Get.offAll(() => const OnBoardingScreen());
@@ -212,6 +212,20 @@ class AuthenticationRepository extends GetxController {
       throw e.message;
     } catch (e) {
       throw 'Unable to logout. Try again.';
+    }
+  }
+
+  /// [DeleteUser] - Valid for any authentication.
+  Future<void> deleteUser() async {
+    try {
+      await _auth.currentUser?.delete();
+      Get.offAll(() => const WelcomeScreen());
+    } on FirebaseAuthException catch (e) {
+      throw e.message!;
+    } on FormatException catch (e) {
+      throw e.message;
+    } catch (e) {
+      throw 'Unable to delete user. Try again.';
     }
   }
 }

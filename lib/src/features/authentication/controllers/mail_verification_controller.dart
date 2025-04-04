@@ -6,7 +6,6 @@ import 'package:fit_office/src/repository/authentication_repository/authenticati
 import 'package:fit_office/src/utils/helper/helper_controller.dart';
 
 class MailVerificationController extends GetxController {
-  late Timer _timer;
 
   @override
   void onInit() {
@@ -26,7 +25,7 @@ class MailVerificationController extends GetxController {
 
   /// -- Set Timer to check if Verification Completed then Redirect
   void setTimerForAutoRedirect() {
-    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+    Timer.periodic(const Duration(seconds: 3), (timer) {
       FirebaseAuth.instance.currentUser?.reload();
       final user = FirebaseAuth.instance.currentUser;
       if (user!.emailVerified) {
