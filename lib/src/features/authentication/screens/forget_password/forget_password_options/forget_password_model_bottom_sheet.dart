@@ -8,12 +8,19 @@ class ForgetPasswordScreen {
   static Future<dynamic> buildShowModalBottomSheet(BuildContext context, {required bool enableEdit, String? email}) {
 return showModalBottomSheet(
   context: context,
-  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+  shape: const RoundedRectangleBorder(
+    borderRadius: BorderRadius.only(
+      topLeft: Radius.circular(25.0),
+      topRight: Radius.circular(25.0),
+      bottomLeft: Radius.zero,
+      bottomRight: Radius.zero,
+    ),
+  ),
   builder: (context) => Container(
     padding: const EdgeInsets.all(tDefaultSpace),
     child: Column(
       children: [
-        const SizedBox(height: tDefaultSpace * 4),
+        const SizedBox(height: tDefaultSpace),
         const FormHeaderWidget(
           title: tForgotPassword,
           subTitle: tForgotPasswordSubTitle,
@@ -41,15 +48,18 @@ return showModalBottomSheet(
                     if (email != null && email.isNotEmpty) {
                       try {
                         await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+                        // TODO Fix this with Helper class
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Password reset email sent')),
                         );
                       } catch (e) {
+                        // TODO Fix this with Helper class
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Failed to send password reset email: $e')),
                         );
                       }
                     } else {
+                      // TODO Fix this with Helper class
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Please enter your email')),
                       );
