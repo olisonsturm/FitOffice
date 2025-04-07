@@ -26,6 +26,8 @@ class StatisticsWidget extends StatelessWidget{
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildStreakCard(controller),
+        SizedBox(height: 10,),
+        _buildLastExerciseCard(controller)
       ],
     );
   }
@@ -59,6 +61,51 @@ class StatisticsWidget extends StatelessWidget{
                   iconColor: Colors.grey,
                   title: 'Aktiver Streak',
                   content: 'Kein aktiver Streak gefunden.',
+                );
+              }
+            },
+          );
+        } else {
+          return _styledCard(
+            icon: Icons.error,
+            iconColor: Colors.red,
+            title: 'Fehler',
+            content: 'Fehler beim Laden der Nutzerdaten.',
+          );
+        }
+      },
+    );
+  }
+
+  /// Last-Exercise-Card
+  Widget _buildLastExerciseCard(ProfileController controller) {
+    return FutureBuilder(
+      future: controller.getUserData(),
+      builder: (context, userSnapshot) {
+        if (userSnapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (userSnapshot.hasData) {
+          final user = userSnapshot.data as UserModel;
+          final dbController = DbController()..user = user;
+
+          return FutureBuilder<String?>(
+            future: dbController.lastExerciseOfUser(),
+            builder: (context, stepsSnapshot) {
+              if (stepsSnapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (stepsSnapshot.hasData && stepsSnapshot.data != null) {
+                return _styledCard(
+                  icon: Icons.schedule,
+                  iconColor: Colors.white,
+                  title: 'Letzte Übung',
+                  content: stepsSnapshot.data!,
+                );
+              } else {
+                return _styledCard(
+                  icon: Icons.schedule,
+                  iconColor: Colors.white,
+                  title: 'Aktiver Streak',
+                  content: 'Keine Übungen vorhanden.',
                 );
               }
             },

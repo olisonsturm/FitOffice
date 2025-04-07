@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../authentication/models/user_model.dart';
+import 'package:intl/intl.dart';
 
 class DbController {
   late UserModel user;
@@ -39,4 +40,45 @@ class DbController {
 
     return "0";
   }
+
+  String timestampToString(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+    String formattedDate = DateFormat('dd.MM.yyyy HH:mm').format(dateTime);
+    return formattedDate;
+  }
+
+  Future<String?> lastExerciseOfUser() async {
+    try {
+      final userId = user.id;
+
+      //Query needs to be edited if database structure changes
+      final exerciseHistoryRef = FirebaseFirestore.instance
+          .collection('Users')
+          .doc(userId)
+          .collection('exerciseHistory');
+
+      final querySnapshot = await exerciseHistoryRef
+          .orderBy('completedAt', descending: true)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final doc = querySnapshot.docs.first;
+
+        final startedAt = doc.data()['startedAt'];
+
+        if (startedAt != null && startedAt is Timestamp) {
+          String startedAtString = timestampToString(startedAt);
+          return "Zeitpunkt: " + startedAtString;
+        } else {
+          return "Kein gültiges Datum verfügbar.";
+        }
+      } else {
+        return "Keine Übungen absolviert.";
+      }
+    } catch (e) {
+      return "Fehler beim Abrufen der letzten Übung.";
+    }
+  }
+
 }
