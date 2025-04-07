@@ -1,3 +1,4 @@
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_streak.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -13,6 +14,7 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/top_cours
 import 'package:fit_office/src/features/core/screens/profile/profile_screen.dart';
 
 import '../../../authentication/models/user_model.dart';
+import '../../controllers/db_controller.dart';
 import '../../controllers/profile_controller.dart';
 
 class Dashboard extends StatefulWidget {
@@ -116,9 +118,9 @@ class _DashboardState extends State<Dashboard> {
                     DashboardBanners(txtTheme: txtTheme, isDark: isDark),
                     const SizedBox(height: tDashboardPadding),
 
-                    // Top Courses
+                    // Statistics
                     Text(tDashboardStatistics, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
-                    DashboardTopCourses(txtTheme: txtTheme, isDark: isDark),
+                    ActiveStreakWidget(txtTheme: txtTheme, isDark: isDark),
                   ],
                 ),
               ),
@@ -154,4 +156,5 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
+
 }
