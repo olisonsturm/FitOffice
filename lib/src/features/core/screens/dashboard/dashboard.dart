@@ -1,4 +1,4 @@
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_streak.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/statistics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -120,7 +120,7 @@ class _DashboardState extends State<Dashboard> {
 
                     // Statistics
                     Text(tDashboardStatistics, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
-                    ActiveStreakWidget(txtTheme: txtTheme, isDark: isDark),
+                    StatisticsWidget(txtTheme: txtTheme, isDark: isDark),
                   ],
                 ),
               ),
