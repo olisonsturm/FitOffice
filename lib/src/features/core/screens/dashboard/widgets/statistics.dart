@@ -26,8 +26,10 @@ class StatisticsWidget extends StatelessWidget{
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildStreakCard(controller),
-        SizedBox(height: 10,),
-        _buildLastExerciseCard(controller)
+        const SizedBox(height: 10,),
+        _buildLastExerciseCard(controller),
+        const SizedBox(height: 10,),
+        _buildDurationCard(controller),
       ],
     );
   }
@@ -97,14 +99,59 @@ class StatisticsWidget extends StatelessWidget{
                 return _styledCard(
                   icon: Icons.schedule,
                   iconColor: Colors.white,
-                  title: 'Letzte Übung',
+                  title: 'Zeitpunkt der letzten Übung',
                   content: stepsSnapshot.data!,
                 );
               } else {
                 return _styledCard(
                   icon: Icons.schedule,
                   iconColor: Colors.white,
-                  title: 'Aktiver Streak',
+                  title: 'Zeitpunkt der letzten Übung',
+                  content: 'Keine Übungen vorhanden.',
+                );
+              }
+            },
+          );
+        } else {
+          return _styledCard(
+            icon: Icons.error,
+            iconColor: Colors.red,
+            title: 'Fehler',
+            content: 'Fehler beim Laden der Nutzerdaten.',
+          );
+        }
+      },
+    );
+  }
+
+  /// Duration-of-Last-Exercise-Card
+  Widget _buildDurationCard(ProfileController controller) {
+    return FutureBuilder(
+      future: controller.getUserData(),
+      builder: (context, userSnapshot) {
+        if (userSnapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (userSnapshot.hasData) {
+          final user = userSnapshot.data as UserModel;
+          final dbController = DbController()..user = user;
+
+          return FutureBuilder<String?>(
+            future: dbController.durationOfLastExercise(),
+            builder: (context, stepsSnapshot) {
+              if (stepsSnapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (stepsSnapshot.hasData && stepsSnapshot.data != null) {
+                return _styledCard(
+                  icon: Icons.run_circle,
+                  iconColor: Colors.white,
+                  title: 'Dauer der letzten Übung',
+                  content: stepsSnapshot.data!,
+                );
+              } else {
+                return _styledCard(
+                  icon: Icons.run_circle,
+                  iconColor: Colors.white,
+                  title: 'Dauer der letzten Übung',
                   content: 'Keine Übungen vorhanden.',
                 );
               }

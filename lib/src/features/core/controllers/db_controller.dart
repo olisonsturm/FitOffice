@@ -47,6 +47,20 @@ class DbController {
     return formattedDate;
   }
 
+  String _formatDuration(Duration duration) {
+    int hours = duration.inHours;
+    int minutes = duration.inMinutes.remainder(60);
+    int seconds = duration.inSeconds.remainder(60);
+
+    if (hours > 0) {
+      return '${hours}h ${minutes}m ${seconds}s';
+    } else if (minutes > 0) {
+      return '${minutes}m ${seconds}s';
+    } else {
+      return '${seconds}s';
+    }
+  }
+
   Future<String?> lastExerciseOfUser() async {
     try {
       final userId = user.id;
@@ -69,7 +83,7 @@ class DbController {
 
         if (startedAt != null && startedAt is Timestamp) {
           String startedAtString = timestampToString(startedAt);
-          return "Zeitpunkt: " + startedAtString;
+          return startedAtString;
         } else {
           return "Kein gültiges Datum verfügbar.";
         }
@@ -81,4 +95,39 @@ class DbController {
     }
   }
 
+  Future<String?> durationOfLastExercise() async {
+    final userId = user.id;
+
+    //Query needs to be edited if database structure changes
+    final exerciseHistoryRef = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(userId)
+        .collection('exerciseHistory');
+
+    final querySnapshot = await exerciseHistoryRef
+        .orderBy('completedAt', descending: true)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final doc = querySnapshot.docs.first;
+      final data = doc.data();
+
+      final Timestamp? startedAt = data['startedAt'];
+      final Timestamp? completedAt = data['completedAt'];
+
+      if (startedAt != null && completedAt != null) {
+        final DateTime start = startedAt.toDate();
+        final DateTime end = completedAt.toDate();
+
+        final Duration duration = end.difference(start);
+        String formattedDuration = _formatDuration(duration);
+
+        return formattedDuration;
+      } else {
+        return 'Zeitstempel fehlen';
+      }
+    }
+    return null;
+  }
 }
