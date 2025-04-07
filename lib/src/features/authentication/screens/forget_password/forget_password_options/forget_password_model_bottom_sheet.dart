@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fit_office/src/utils/helper/helper_controller.dart';
 import 'package:flutter/material.dart';
 import '../../../../../common_widgets/form/form_header_widget.dart';
 import '../../../../../constants/sizes.dart';
@@ -48,21 +49,15 @@ return showModalBottomSheet(
                     if (email != null && email.isNotEmpty) {
                       try {
                         await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-                        // TODO Fix this with Helper class
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Password reset email sent')),
-                        );
+                        // TODO Is it working like this?
+                        Helper.successSnackBar(title: 'Success', message: 'Password reset email sent');
                       } catch (e) {
-                        // TODO Fix this with Helper class
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Failed to send password reset email: $e')),
-                        );
+                        // TODO Is it working like this?
+                        Helper.errorSnackBar(title: tOhSnap, message: e.toString());
                       }
                     } else {
-                      // TODO Fix this with Helper class
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please enter your email')),
-                      );
+                      // TODO Is it working like this?
+                      Helper.warningSnackBar(title: 'Warning', message: 'Please enter your email');
                     }
                   },
                   child: const Text(tYes),
