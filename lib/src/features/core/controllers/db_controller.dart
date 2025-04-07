@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../authentication/models/user_model.dart';
 
@@ -11,19 +13,30 @@ class DbController {
         .doc(userId)
         .collection('streaks');
 
-    final querySnapshot = await streaksRef
-        .where('active', isEqualTo: true)
-        .limit(1)
-        .get();
+    try {
+      final querySnapshot = await streaksRef
+          .where('active', isEqualTo: true)
+          .limit(1)
+          .get();
 
-    if (querySnapshot.docs.isNotEmpty) {
-      final doc = querySnapshot.docs.first;
-      final steps = doc.data()['steps'];
-      if (steps is String) {
-        return steps;
+      if (querySnapshot.docs.isNotEmpty) {
+        final doc = querySnapshot.docs.first;
+        final steps = doc.data()['steps'];
+        if (steps is String) {
+          return steps;
+        }
       }
+    }on SocketException catch (e) {
+      // Network error occurred, handle accordingly
+      return "Keine Internetverbindung.";  // You can return a custom message
+    } on FirebaseException catch (e) {
+      // Handle other Firestore specific exceptions
+      return "Datenbankfehler.";
+    } catch (e) {
+      // Catch all other errors
+      return "Unerwarteter Fehler.";
     }
 
-    return null;
+    return "0";
   }
 }
