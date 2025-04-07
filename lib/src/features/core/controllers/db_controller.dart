@@ -130,4 +130,40 @@ class DbController {
     }
     return null;
   }
+
+  Future<String> getNumberOfExercisesUpperBody() async {
+    final numberOfExercisesUpperBody = await FirebaseFirestore.instance
+        .collection('exercises')
+        .where('category', isEqualTo: 'upper-body')
+        .count()
+        .get();
+    return numberOfExercisesUpperBody.count.toString();
+  }
+
+  Future<String> getNumberOfExercisesLowerBody() async {
+    final numberOfExercisesLowerBody = await FirebaseFirestore.instance
+        .collection('exercises')
+        .where('category', isEqualTo: 'lower-body')
+        .count()
+        .get();
+    return numberOfExercisesLowerBody.count.toString();
+  }
+
+  Future<String> getNumberOfExercisesFullBody() async {
+    final numberOfExercisesLowerBody = await FirebaseFirestore.instance
+        .collection('exercises')
+        .where('category', isEqualTo: 'full-body')
+        .count()
+        .get();
+    return numberOfExercisesLowerBody.count.toString();
+  }
+
+  Future<String> getNumberOfPsychologicalExercises() async {
+    final numberOfExercisesLowerBody = await FirebaseFirestore.instance
+        .collection('exercises')
+        .where('category', isEqualTo: 'mental')
+        .count()
+        .get();
+    return numberOfExercisesLowerBody.count.toString();
+  }
 }
