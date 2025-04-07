@@ -15,6 +15,10 @@ class DashboardCategoriesModel{
   ];
 
   static List<DashboardCategoriesModel> listPsychologicalExercises = [
-    DashboardCategoriesModel("GG", "Geist", "0 Lessons", null),
+    DashboardCategoriesModel("🧠", "Geist", "0 Lessons", null),
+  ];
+
+  static List<DashboardCategoriesModel> listFavouriteExercises = [
+    DashboardCategoriesModel("❤", "Favoriten", "0 Lessons", null)
   ];
 }
