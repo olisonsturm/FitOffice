@@ -1,4 +1,5 @@
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/statistics.dart';
+import 'package:fit_office/src/features/core/screens/progress/progress.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/colors.dart';
@@ -9,11 +10,9 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.da
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/banners.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/categories.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/search.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/top_courses.dart';
 import 'package:fit_office/src/features/core/screens/profile/profile_screen.dart';
 
 import '../../../authentication/models/user_model.dart';
-import '../../controllers/db_controller.dart';
 import '../../controllers/profile_controller.dart';
 
 class Dashboard extends StatefulWidget {
@@ -129,7 +128,7 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
-            Center(child: Text('Search Page')),
+            ProgressScreen(),
             ProfileScreen(),
           ],
         ),
@@ -152,7 +151,7 @@ class _DashboardState extends State<Dashboard> {
               label: 'Progress',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
+              icon: Icon(Icons.person_add),
               label: 'Profile',
             ),
           ],
@@ -160,5 +159,4 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
-
 }
