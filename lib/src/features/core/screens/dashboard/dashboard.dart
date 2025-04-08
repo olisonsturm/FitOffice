@@ -129,7 +129,13 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             ProgressScreen(),
-            ProfileScreen(),
+            ListTile(
+              leading: const Icon(Icons.favorite),
+              title: const Text('Friends'),
+              onTap: () {
+                // Add functionality for "Friends" here
+              },
+            ),
           ],
         ),
 
@@ -152,7 +158,7 @@ class _DashboardState extends State<Dashboard> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person_add),
-              label: 'Profile',
+              label: 'Friends',
             ),
           ],
         ),
