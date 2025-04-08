@@ -4,6 +4,7 @@ import '../../../../../constants/colors.dart';
 import '../../../../../constants/sizes.dart';
 import '../../../models/dashboard/courses_model.dart';
 
+//TODO: Class isn't used at the moment
 class DashboardTopCourses extends StatelessWidget {
   const DashboardTopCourses({
     super.key,
