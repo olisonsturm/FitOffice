@@ -1,7 +1,6 @@
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/statistics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/image_strings.dart';
 import 'package:fit_office/src/constants/sizes.dart';
@@ -47,11 +46,16 @@ class _DashboardState extends State<Dashboard> {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.hasData) {
                       UserModel user = snapshot.data as UserModel;
+
+                      //Controllers
+                      final email = user.email;
+                      final fullName = user.fullName;
+                      
                       return UserAccountsDrawerHeader(
                         currentAccountPicture: const Image(image: AssetImage(tLogoImage)),
                         currentAccountPictureSize: const Size(100, 100),
-                        accountName: Text(user.fullName),
-                        accountEmail: Text(user.email),
+                        accountName: Text(fullName),
+                        accountEmail: Text(email),
                         decoration: const BoxDecoration(color: tSecondaryColor),
                       );
                     } else {

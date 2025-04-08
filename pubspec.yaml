@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   line_awesome_flutter: ^2.0.0
   flutter_native_splash: ^2.4.0
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:

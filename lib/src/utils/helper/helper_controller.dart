@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -8,10 +9,44 @@ import '../../constants/text_strings.dart';
 class Helper extends GetxController {
 
   /* -- ============= VALIDATIONS ================ -- */
+  static String? validateUsername(value) {
+    if (value!.isEmpty) return tUserNameCannotEmpty;
+    if (!RegExp(r'^[a-z0-9._]+$').hasMatch(value)) return tInvalidUserName;
+    if (value.length < 4) return tUserNameLength;
+    return null;
+  }
 
+  static Future<bool> isUsernameTaken(String username) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('username', isEqualTo: username)
+        .get();
+
+    return querySnapshot.docs.isNotEmpty;
+  }
+
+  static String? validateFullName(value) {
+    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) return tInvalidFullName;
+    return null;
+  }
+
+  /**
+      student@stud.dhbw-ravensburg.de
+      john.doe@dhbw.de
+      jane_doe@stud.dhbw.de
+      user123@dhbw-karlsruhe.de
+      example.user@stud.dhbw-mannheim.de
+      firstname.lastname@dhbw-stuttgart.de
+      test.email@stud.dhbw-heilbronn.de
+      user.name@dhbw-loerrach.de
+      sample_user@stud.dhbw-villingen-schwenningen.de
+      another.example@dhbw-mosbach.de
+   *////
   static String? validateEmail(value) {
     if (value == null || value.isEmpty) return tEmailCannotEmpty;
     if (!GetUtils.isEmail(value)) return tInvalidEmailFormat;
+    // TODO: Uncomment this line to restrict email domains after development phase
+    //if (!RegExp(r'^[\w\.-]+@[\w\.-]*dhbw[\w\.-]*\.de$').hasMatch(value)) return tOnlyDHBWEmailAllowed;
     return null;
   }
 
@@ -21,7 +56,7 @@ class Helper extends GetxController {
     String pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
     RegExp regex = RegExp(pattern);
     if (!regex.hasMatch(value)) {
-      return 'Password must be 8 characters, with an uppercase letter, number and symbol';
+      return tPasswordRequirements;
     }
     return null;
   }

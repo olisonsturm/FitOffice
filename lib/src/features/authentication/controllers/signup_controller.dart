@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
@@ -15,8 +16,8 @@ class SignUpController extends GetxController {
   // TextField Controllers to get data from TextFields
   final email = TextEditingController();
   final password = TextEditingController();
+  final userName = TextEditingController();
   final fullName = TextEditingController();
-  final phoneNo = TextEditingController();
 
   /// Loader
   final isLoading = false.obs;
@@ -35,16 +36,17 @@ class SignUpController extends GetxController {
         return;
       }
 
-      /// For Phone Authentication
-      // SignUpController.instance.phoneAuthentication(controller.phoneNo.text.trim());
-      // Get.to(() => const OTPScreen());
-
       // Get User and Pass it to Controller
       final user = UserModel(
         email: email.text.trim(),
         password: password.text.trim(),
+        userName: userName.text.trim(),
         fullName: fullName.text.trim(),
-        phoneNo: phoneNo.text.trim(),
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+        fitnessLevel: "Beginner",
+        completedExercises: 0,
+        profilePicture: "",
       );
 
       // Authenticate User first

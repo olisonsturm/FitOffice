@@ -18,7 +18,7 @@ class AllUsers extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: tPrimaryColor,
         leading: IconButton(onPressed: () => Get.back(), icon: const Icon(LineAwesomeIcons.angle_left,)),
-        title: Text("Users", style: Theme.of(context).textTheme.headlineMedium),
+        title: Text("users", style: Theme.of(context).textTheme.headlineMedium),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -57,11 +57,11 @@ class AllUsers extends StatelessWidget {
                                       ),
                                       child: const Icon(LineAwesomeIcons.user_1, color: Colors.black),
                                     ),
-                                    title: Text(snapshot.data![index].fullName, style: Theme.of(context).textTheme.headlineMedium,),
+                                    title: Text(snapshot.data![index].userName, style: Theme.of(context).textTheme.headlineMedium,),
                                     subtitle: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(snapshot.data![index].phoneNo),
+                                        Text(snapshot.data![index].fullName),
                                         Text(snapshot.data![index].email, overflow: TextOverflow.ellipsis),
                                       ],
                                     ),
