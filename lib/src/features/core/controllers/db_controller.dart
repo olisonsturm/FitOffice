@@ -27,10 +27,10 @@ class DbController {
           return steps;
         }
       }
-    }on SocketException catch (e) {
+    }on SocketException {
       // Network error occurred, handle accordingly
       return "Keine Internetverbindung.";  // You can return a custom message
-    } on FirebaseException catch (e) {
+    } on FirebaseException {
       // Handle other Firestore specific exceptions
       return "Datenbankfehler.";
     } catch (e) {
