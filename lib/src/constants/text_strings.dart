@@ -110,7 +110,7 @@ const String tBackToLogin = "Back to login";
 // -- Dashboard Screen - Text
 const String tDashboardTitle = "Hey,";
 const String tDashboardHeading = "Explore Exercises";
-const String tDashboardSearch = "Search...";
+const String tDashboardSearch = "Suche🔍";
 const String tDashboardBannerTitle2 = "Energieschub für Zwischendurch";
 const String tDashboardBannerTitle1 = "Unterstütze deine langfristige Gesundheit";
 const String tDashboardBannerSubTitle = "10 Lessons";

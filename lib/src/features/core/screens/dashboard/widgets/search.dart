@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../../constants/text_strings.dart';
 
-class DashboardSearchBox extends StatelessWidget {
+class DashboardSearchBox extends StatefulWidget {
   const DashboardSearchBox({
     super.key,
     required this.txtTheme,
@@ -10,16 +10,75 @@ class DashboardSearchBox extends StatelessWidget {
   final TextTheme txtTheme;
 
   @override
+  _DashboardSearchBoxState createState() => _DashboardSearchBoxState();
+}
+
+class _DashboardSearchBoxState extends State<DashboardSearchBox> {
+  late FocusNode _focusNode;
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(border: Border(left: BorderSide(width: 4))),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(tDashboardSearch, style: txtTheme.displayMedium?.apply(color: Colors.grey.withOpacity(0.5))),
-          const Icon(Icons.mic, size: 25),
-        ],
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: Row(
+          children: [
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  _focusNode.requestFocus();
+                },
+                child: TextField(
+                  controller: _controller,
+                  focusNode: _focusNode,
+                  decoration: InputDecoration(
+                    hintText: tDashboardSearch,
+                    hintStyle: widget.txtTheme.displayMedium?.apply(color: Colors.white),
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    suffixIcon: _controller.text.isNotEmpty
+                        ? IconButton(
+                      icon: const Icon(Icons.clear, size: 20),
+                      onPressed: () {
+                        setState(() {
+                          _controller.clear();
+                          _focusNode.unfocus();
+                        });
+                      },
+                    )
+                        : null,
+                  ),
+                  autofocus: false,
+                  onEditingComplete: () {
+                    _focusNode.unfocus();
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
