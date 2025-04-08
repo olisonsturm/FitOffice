@@ -19,8 +19,14 @@ class DashboardBanners extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: tDashboardCardPadding),
         //1st banner
         Expanded(
+          child: GestureDetector(
+          onTap: () {
+            // Insert link to information page for long-term health here
+            //Navigator.pushNamed(context, '/detailPage');
+          },
           child: Container(
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
               //For Dark Color
@@ -35,7 +41,7 @@ class DashboardBanners extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Flexible(child: Image(image: AssetImage(tBookmarkIcon))),
-                    Flexible(child: Image(image: AssetImage(tBannerImage1))),
+                    Flexible(child: Icon(Icons.monitor_heart, size: 50,)),
                   ],
                 ),
                 const SizedBox(height: 25),
@@ -44,44 +50,39 @@ class DashboardBanners extends StatelessWidget {
               ],
             ),
           ),
+          ),
         ),
         const SizedBox(width: tDashboardCardPadding),
         //2nd Banner
         Expanded(
-          child: Column(
-            children: [
-              //Card
-              Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
-                  //For Dark Color
-                  color: isDark ? tSecondaryColor : tCardBgColor,
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(child: Image(image: AssetImage(tBookmarkIcon))),
-                        Flexible(child: Image(image: AssetImage(tBannerImage2))),
-                      ],
-                    ),
-                    Text(tDashboardBannerTitle2, style: txtTheme.headlineMedium, overflow: TextOverflow.ellipsis),
-                    Text(tDashboardBannerSubTitle, style: txtTheme.bodyMedium, overflow: TextOverflow.ellipsis),
-                  ],
-                ),
+          child: GestureDetector(
+            onTap: () {
+              // Insert link to information page for short-term health here
+              //Navigator.pushNamed(context, '/detailPage');
+            },
+            child: Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
+                //For Dark Color
+                color: isDark ? tSecondaryColor : tCardBgColor,
               ),
-              const SizedBox(height: 5),
-              SizedBox(
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: OutlinedButton(onPressed: () {}, child: const Text(tDashboardButton)),
-                ),
-              )
-            ],
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(child: Image(image: AssetImage(tBookmarkIcon))),
+                      Flexible(child: Icon(Icons.bolt, size: 50,)),
+                    ],
+                  ),
+                  const SizedBox(height: 25),
+                  Text(tDashboardBannerTitle2, style: txtTheme.headlineMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
+                  Text(tDashboardBannerSubTitle, style: txtTheme.bodyMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
+                ],
+              ),
+            ),
           ),
         ),
       ],

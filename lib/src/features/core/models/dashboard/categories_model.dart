@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../controllers/db_controller.dart';
 
 class DashboardCategoriesModel{
   final String title;
@@ -8,9 +9,7 @@ class DashboardCategoriesModel{
 
   DashboardCategoriesModel(this.title, this.heading, this.subHeading, this.onPress);
 
-  static List<DashboardCategoriesModel> list = [
-    DashboardCategoriesModel("OK", "Oberkörper", "10 Lessons", null),
-    DashboardCategoriesModel("UK", "Unterkörper", "11 Lessons", null),
-    DashboardCategoriesModel("GK", "Ganzkörper", "8 Lessons", null),
+  static List<DashboardCategoriesModel> listFavouriteExercises = [
+    DashboardCategoriesModel("❤", "Favoriten", "0 Lessons", null)
   ];
 }

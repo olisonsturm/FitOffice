@@ -11,7 +11,7 @@ class DashboardTopCoursesModel{
   DashboardTopCoursesModel(this.title, this.heading, this.subHeading, this.image, this.onPress);
 
   static List<DashboardTopCoursesModel> list = [
-    DashboardTopCoursesModel("Armdrücken", "3 Sections", "Oberkörper", tTopCourseImage1, (){}),
+    DashboardTopCoursesModel("Streak 🔥", "3 Sections", "Oberkörper", tTopCourseImage1, (){}),
     DashboardTopCoursesModel("Kinebeugen", "Eine Section", "Unterkörper", tTopCourseImage2, null),
     DashboardTopCoursesModel("Burpee", "4 Sections", "Ganzkörper", tTopCourseImage1, (){}),
   ];
