@@ -1,9 +1,25 @@
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/search.dart';
 import 'package:flutter/material.dart';
 
-class SearchPage extends StatelessWidget {
+class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
+
+  @override
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  List<Map<String, dynamic>> _searchResults = [];
+
+  void _performSearch(String query) async {
+    final dbController = DbController();
+    final results = await dbController.getExercises(query);
+    setState(() {
+      _searchResults = results;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +41,30 @@ class SearchPage extends StatelessWidget {
           children: [
             DashboardSearchBox(
               txtTheme: Theme.of(context).textTheme,
-              onSearchSubmitted: (query) {
-
-              },
+              onSearchSubmitted: _performSearch,
             ),
             const SizedBox(height: 20),
-            const Text('Suchergebnisse oder Inhalt hier...'),
+            Expanded(
+              child: _searchResults.isEmpty
+                  ? const Text('Keine Ergebnisse gefunden.')
+                  : ListView.builder(
+                itemCount: _searchResults.length,
+                itemBuilder: (context, index) {
+                  final exercise = _searchResults[index];
+                  return Card(
+                    child: ListTile(
+                      title: Text(exercise['name'] ?? 'Unbenannt',
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      subtitle: Text(
+                          'Kategorie: ${exercise['category'] ?? 'keine'}\n'
+                            'Beschreibung: ${exercise['description'] ?? 'keine'}\n'
+                              'Video: ${exercise['video'] ?? 'keine'}\n'
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),

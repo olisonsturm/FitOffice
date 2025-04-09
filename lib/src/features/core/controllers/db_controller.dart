@@ -167,4 +167,17 @@ class DbController {
         .get();
     return numberOfExercisesLowerBody.count.toString();
   }
+
+  Future<List<Map<String, dynamic>>> getExercises(String exerciseName) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('exercises')
+        .get();
+
+    final results = snapshot.docs.where((doc) {
+      final value = doc['name'] as String;
+      return value.toLowerCase().contains(exerciseName.toLowerCase());
+    }).map((doc) => doc.data()).toList();
+
+    return results;
+  }
 }
