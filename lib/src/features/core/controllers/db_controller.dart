@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import '../../authentication/models/user_model.dart';
 import 'package:intl/intl.dart';
+import 'package:string_similarity/string_similarity.dart';
 
 class DbController {
   late UserModel user;
@@ -174,8 +175,12 @@ class DbController {
         .get();
 
     final results = snapshot.docs.where((doc) {
-      final value = doc['name'] as String;
-      return value.toLowerCase().contains(exerciseName.toLowerCase());
+      final name = doc['name'] as String;
+      final similarity = StringSimilarity.compareTwoStrings(
+        name.toLowerCase(),
+        exerciseName.toLowerCase(),
+      );
+      return similarity > 0.4;
     }).map((doc) => doc.data()).toList();
 
     return results;

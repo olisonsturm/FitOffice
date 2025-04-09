@@ -46,7 +46,7 @@ class _SearchPageState extends State<SearchPage> {
             const SizedBox(height: 20),
             Expanded(
               child: _searchResults.isEmpty
-                  ? const Text('Keine Ergebnisse gefunden.')
+                  ? const Text(tDashboardNoResultsFound)
                   : ListView.builder(
                 itemCount: _searchResults.length,
                 itemBuilder: (context, index) {

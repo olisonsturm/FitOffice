@@ -127,6 +127,7 @@ const String tDashboardNoValidDate = "No valid date available";
 const String tDashboardNoExercisesDone = "No exercises done yet.";
 const String tDashboardExceptionLoadingExercise = "Could not load last exercise";
 const String tDashboardTimestampsMissing = "Timestamps are missing.";
+const String tDashboardNoResultsFound = "No exercises were found";
 
 
 
