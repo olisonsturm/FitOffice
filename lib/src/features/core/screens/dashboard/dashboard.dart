@@ -9,21 +9,19 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.da
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/banners.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/categories.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/search.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/top_courses.dart';
 import 'package:fit_office/src/features/core/screens/profile/profile_screen.dart';
 
 import '../../../authentication/models/user_model.dart';
-import '../../controllers/db_controller.dart';
 import '../../controllers/profile_controller.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
   @override
-  _DashboardState createState() => _DashboardState();
+  DashboardState createState() => DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
 
   @override
@@ -76,7 +74,7 @@ class _DashboardState extends State<Dashboard> {
                   onTap: () {
                     Get.to(() => ProfileScreen());
                   }),
-              ListTile(leading: const Icon(Icons.favorite), title: const Text('Friends')),
+              const ListTile(leading: Icon(Icons.favorite), title: Text('Friends')),
             ],
           ),
         ),
@@ -129,7 +127,7 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
-            Center(child: Text('Search Page')),
+            const Center(child: Text('Search Page')),
             ProfileScreen(),
           ],
         ),

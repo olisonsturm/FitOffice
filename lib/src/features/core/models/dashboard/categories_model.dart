@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../controllers/db_controller.dart';
 
 class DashboardCategoriesModel{
   final String title;
