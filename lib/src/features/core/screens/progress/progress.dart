@@ -153,10 +153,11 @@ class _PathPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.indigo
+      ..color = const Color(0x33333333) // DHBW-Rot
       ..style = PaintingStyle.stroke
       ..strokeWidth = 5.0
       ..strokeCap = StrokeCap.round;
+
     canvas.drawPath(path, paint);
   }
 
@@ -172,18 +173,18 @@ class LevelBubble extends StatelessWidget {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: Colors.orangeAccent,
+        color: const Color(0xFFE30613), // DHBW-Rot
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: Colors.orange.withOpacity(0.6),
+            color: Colors.redAccent.withOpacity(0.6),
             blurRadius: 8,
-            offset: Offset(2, 2),
+            offset: const Offset(2, 2),
           ),
         ],
       ),
-      child: Center(
-        child: Icon(Icons.star, color: Colors.white, size: 22),
+      child: const Center(
+        child: Icon(Icons.school, color: Colors.white, size: 22), // Icon angepasst
       ),
     );
   }
@@ -194,19 +195,22 @@ class AnimatedAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 30,
-      height: 30,
+      width: 40,
+      height: 40,
       decoration: BoxDecoration(
-        color: Colors.deepPurple,
+        color: const Color(0xFFFF6F00), // fuchsiges Orange
         shape: BoxShape.circle,
         border: Border.all(color: Colors.white, width: 2),
         boxShadow: [
           BoxShadow(
-            color: Colors.deepPurpleAccent.withOpacity(0.5),
+            color: Colors.deepOrangeAccent.withOpacity(0.5),
             blurRadius: 6,
             spreadRadius: 1,
           ),
         ],
+      ),
+      child: const Center(
+        child: Icon(Icons.pets, color: Colors.white, size: 20), // 🦊 Symbolisch
       ),
     );
   }
