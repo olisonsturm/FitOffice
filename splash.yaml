@@ -1,6 +1,6 @@
 flutter_native_splash:
-  color: "#8A1218"
-  color_dark: "#79848B"
+  color: "#ffffff"
+  color_dark: "#2e2e2e"
   image: assets/logo/dhbw.png
   image_dark: assets/logo/dhbw.png
   android: true
