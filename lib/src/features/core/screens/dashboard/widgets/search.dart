@@ -1,3 +1,4 @@
+import 'package:fit_office/src/features/core/screens/dashboard/search_page.dart';
 import 'package:flutter/material.dart';
 import '../../../../../constants/text_strings.dart';
 
@@ -5,9 +6,11 @@ class DashboardSearchBox extends StatefulWidget {
   const DashboardSearchBox({
     super.key,
     required this.txtTheme,
+    required this.onSearchSubmitted,
   });
 
   final TextTheme txtTheme;
+  final void Function(String) onSearchSubmitted;
 
   @override
   _DashboardSearchBoxState createState() => _DashboardSearchBoxState();
@@ -71,8 +74,14 @@ class _DashboardSearchBoxState extends State<DashboardSearchBox> {
                         : null,
                   ),
                   autofocus: false,
-                  onEditingComplete: () {
-                    _focusNode.unfocus();
+                  onSubmitted: (value) {
+                    if (value.trim().isNotEmpty) {
+                      widget.onSearchSubmitted(value);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Bitte gib einen Suchbegriff ein.')),
+                      );
+                    }
                   },
                 ),
               ),

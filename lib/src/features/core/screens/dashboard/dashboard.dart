@@ -1,3 +1,4 @@
+import 'package:fit_office/src/features/core/screens/dashboard/search_page.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/statistics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -109,7 +110,17 @@ class DashboardState extends State<Dashboard> {
                     const SizedBox(height: tDashboardPadding),
 
                     // Search
-                    DashboardSearchBox(txtTheme: txtTheme),
+                    DashboardSearchBox(
+                      txtTheme: Theme.of(context).textTheme,
+                      onSearchSubmitted: (query) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SearchPage(),
+                          ),
+                        );
+                      },
+                    ),
                     const SizedBox(height: tDashboardPadding),
 
                     // Categories
