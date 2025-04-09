@@ -176,11 +176,16 @@ class DbController {
 
     final results = snapshot.docs.where((doc) {
       final name = doc['name'] as String;
-      final similarity = StringSimilarity.compareTwoStrings(
+      final description = doc['description'] as String;
+      final nameSimilarity = StringSimilarity.compareTwoStrings(
         name.toLowerCase(),
         exerciseName.toLowerCase(),
       );
-      return similarity > 0.4;
+      final descriptionSimilarity = StringSimilarity.compareTwoStrings(
+        description.toLowerCase(),
+        exerciseName.toLowerCase(),
+      );
+      return nameSimilarity > 0.4 || descriptionSimilarity > 0.4;
     }).map((doc) => doc.data()).toList();
 
     return results;
