@@ -1,13 +1,16 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ProgressScreen extends StatefulWidget {
+  const ProgressScreen({super.key});
+
   @override
-  _ProgressScreenState createState() => _ProgressScreenState();
+  ProgressScreenState createState() => ProgressScreenState();
 }
 
-class _ProgressScreenState extends State<ProgressScreen>
+class ProgressScreenState extends State<ProgressScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   Path? _path;
@@ -46,7 +49,9 @@ class _ProgressScreenState extends State<ProgressScreen>
 
   Future<void> _initPath() async {
     try {
-      print("Initializing path...");
+      if (kDebugMode) {
+        print("Initializing path...");
+      }
       final size = MediaQuery.of(context).size;
       _path = Path()
         ..moveTo(size.width * 0.5, size.height * 0.1)
@@ -77,11 +82,15 @@ class _ProgressScreenState extends State<ProgressScreen>
         if (pos != null) _levelOffsets.add(pos);
       }
 
-      print("Path initialized successfully.");
+      if (kDebugMode) {
+        print("Path initialized successfully.");
+      }
       // Start the animation after path initialization
       _controller.repeat(reverse: false);
     } catch (e) {
-      print("Error initializing path: $e");
+      if (kDebugMode) {
+        print("Error initializing path: $e");
+      }
     }
   }
 
@@ -127,13 +136,13 @@ class _ProgressScreenState extends State<ProgressScreen>
                   ..._levelOffsets.map((offset) => Positioned(
                     left: offset.dx - 20,
                     top: offset.dy - 20,
-                    child: LevelBubble(),
+                    child: const LevelBubble(),
                   )),
                   if (_avatarPosition != null)
                     Positioned(
                       left: _avatarPosition!.dx - 15,
                       top: _avatarPosition!.dy - 15,
-                      child: AnimatedAvatar(),
+                      child: const AnimatedAvatar(),
                     ),
                 ],
               ),
@@ -167,6 +176,8 @@ class _PathPainter extends CustomPainter {
 
 // 🟣 A "Level Bubble"
 class LevelBubble extends StatelessWidget {
+  const LevelBubble({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -192,6 +203,8 @@ class LevelBubble extends StatelessWidget {
 
 // 🟠 The Animated Avatar
 class AnimatedAvatar extends StatelessWidget {
+  const AnimatedAvatar({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(

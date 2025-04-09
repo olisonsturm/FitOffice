@@ -13,6 +13,7 @@ import 'package:fit_office/src/features/core/screens/profile/profile_screen.dart
 
 import '../../../authentication/models/user_model.dart';
 import '../../controllers/profile_controller.dart';
+import '../progress/progress.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -127,7 +128,7 @@ class DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
-            ProgressScreen(),
+            const ProgressScreen(),
             ListTile(
               leading: const Icon(Icons.favorite),
               title: const Text('Friends'),
