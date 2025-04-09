@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fit_office/src/constants/text_strings.dart';
 import '../../authentication/models/user_model.dart';
 import 'package:intl/intl.dart';
 
@@ -29,13 +30,13 @@ class DbController {
       }
     }on SocketException {
       // Network error occurred, handle accordingly
-      return "Keine Internetverbindung.";  // You can return a custom message
+      return tDashboardNoInternetConnection;
     } on FirebaseException {
       // Handle other Firestore specific exceptions
-      return "Datenbankfehler.";
+      return tDashboardDatabaseException;
     } catch (e) {
       // Catch all other errors
-      return "Unerwarteter Fehler.";
+      return tDashboardUnexpectedError;
     }
 
     return "0";
@@ -85,13 +86,13 @@ class DbController {
           String startedAtString = timestampToString(startedAt);
           return startedAtString;
         } else {
-          return "Kein gültiges Datum verfügbar.";
+          return tDashboardNoValidDate;
         }
       } else {
-        return "Keine Übungen absolviert.";
+        return tDashboardNoExercisesDone;
       }
     } catch (e) {
-      return "Fehler beim Abrufen der letzten Übung.";
+      return tDashboardExceptionLoadingExercise;
     }
   }
 
@@ -125,7 +126,7 @@ class DbController {
 
         return formattedDuration;
       } else {
-        return 'Zeitstempel fehlen';
+        return tDashboardTimestampsMissing;
       }
     }
     return null;
