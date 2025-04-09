@@ -49,14 +49,21 @@ class _ProgressScreenState extends State<ProgressScreen>
       print("Initializing path...");
       final size = MediaQuery.of(context).size;
       _path = Path()
-        ..moveTo(0, size.height * 0.2)
+        ..moveTo(size.width * 0.5, size.height * 0.1)
         ..cubicTo(
-          size.width * 0.25,
-          size.height * 0.05,
-          size.width * 0.75,
-          size.height * 0.35,
-          size.width,
-          size.height * 0.2,
+          size.width * 0.3, size.height * 0.2,
+          size.width * 0.7, size.height * 0.3,
+          size.width * 0.5, size.height * 0.4,
+        )
+        ..cubicTo(
+          size.width * 0.3, size.height * 0.5,
+          size.width * 0.7, size.height * 0.6,
+          size.width * 0.5, size.height * 0.7,
+        )
+        ..cubicTo(
+          size.width * 0.3, size.height * 0.8,
+          size.width * 0.7, size.height * 0.9,
+          size.width * 0.5, size.height * 1.0,
         );
 
       _pathMetric = _path!.computeMetrics().first;
@@ -87,50 +94,50 @@ class _ProgressScreenState extends State<ProgressScreen>
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _pathInitializationFuture, // Use the initialized Future
+      future: _pathInitializationFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          // Show a loading indicator until the path is initialized
           return Scaffold(
             backgroundColor: Colors.grey[100],
-            body: const Center(
-              child: CircularProgressIndicator(),
-            ),
+            body: const Center(child: CircularProgressIndicator()),
           );
         }
 
-        // Ensure _path and _pathMetric are not null before using them
         if (_path == null || _pathMetric == null) {
           return Scaffold(
             backgroundColor: Colors.grey[100],
-            body: const Center(
-              child: Text("Error: Path not initialized"),
-            ),
+            body: const Center(child: Text("Error: Path not initialized")),
           );
         }
 
+        final size = MediaQuery.of(context).size;
+        final canvasHeight = size.height * 1.5; // größerer Bereich für Scroll
+
         return Scaffold(
           backgroundColor: Colors.grey[100],
-          body: Stack(
-            children: [
-              CustomPaint(
-                size: MediaQuery.of(context).size,
-                painter: _PathPainter(path: _path!),
+          body: SingleChildScrollView(
+            child: SizedBox(
+              height: canvasHeight,
+              child: Stack(
+                children: [
+                  CustomPaint(
+                    size: Size(size.width, canvasHeight),
+                    painter: _PathPainter(path: _path!),
+                  ),
+                  ..._levelOffsets.map((offset) => Positioned(
+                    left: offset.dx - 20,
+                    top: offset.dy - 20,
+                    child: LevelBubble(),
+                  )),
+                  if (_avatarPosition != null)
+                    Positioned(
+                      left: _avatarPosition!.dx - 15,
+                      top: _avatarPosition!.dy - 15,
+                      child: AnimatedAvatar(),
+                    ),
+                ],
               ),
-              ..._levelOffsets
-                  .map((offset) => Positioned(
-                left: offset.dx - 20,
-                top: offset.dy - 20,
-                child: LevelBubble(),
-              ))
-                  .toList(),
-              if (_avatarPosition != null)
-                Positioned(
-                  left: _avatarPosition!.dx - 15,
-                  top: _avatarPosition!.dy - 15,
-                  child: AnimatedAvatar(),
-                ),
-            ],
+            ),
           ),
         );
       },
