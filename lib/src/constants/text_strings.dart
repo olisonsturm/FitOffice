@@ -120,6 +120,13 @@ const String tDashboardPhysicalExercisesTitle = "Übungen für deine körperlich
 const String tDashboardPsychologicalExercisesTitle = "Übungen für deine geistige Gesundheit";
 const String tDashboardInformation = "Informationen";
 const String tDashboardFavouriteExercises = "Favorisierte Übungen";
+const String tDashboardNoInternetConnection = "No internet connection";
+const String tDashboardDatabaseException = "Database Exception";
+const String tDashboardUnexpectedError = "Unexpected Error.";
+const String tDashboardNoValidDate = "No valid date available";
+const String tDashboardNoExercisesDone = "No exercises done yet.";
+const String tDashboardExceptionLoadingExercise = "Could not load last exercise";
+const String tDashboardTimestampsMissing = "Timestamps are missing.";
 
 
 

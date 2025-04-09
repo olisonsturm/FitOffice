@@ -1,5 +1,4 @@
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/statistics.dart';
-import 'package:fit_office/src/features/core/screens/progress/progress.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/colors.dart';
@@ -19,10 +18,10 @@ class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
   @override
-  _DashboardState createState() => _DashboardState();
+  DashboardState createState() => DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
 
   @override
@@ -75,7 +74,7 @@ class _DashboardState extends State<Dashboard> {
                   onTap: () {
                     Get.to(() => ProfileScreen());
                   }),
-              ListTile(leading: const Icon(Icons.favorite), title: const Text('Friends')),
+              const ListTile(leading: Icon(Icons.favorite), title: Text('Friends')),
             ],
           ),
         ),
