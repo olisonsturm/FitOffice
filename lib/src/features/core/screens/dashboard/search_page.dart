@@ -4,7 +4,8 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/search.da
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+  final String query;
+  const SearchPage({super.key, required this.query});
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -12,6 +13,12 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   List<Map<String, dynamic>> _searchResults = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _performSearch(widget.query);
+  }
 
   void _performSearch(String query) async {
     final dbController = DbController();

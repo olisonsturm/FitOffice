@@ -1,4 +1,3 @@
-import 'package:fit_office/src/features/core/screens/dashboard/search_page.dart';
 import 'package:flutter/material.dart';
 import '../../../../../constants/text_strings.dart';
 
