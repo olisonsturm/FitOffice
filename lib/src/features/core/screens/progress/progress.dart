@@ -30,14 +30,15 @@ class ProgressScreenState extends State<ProgressScreen>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 6),
-    )..addListener(() {
-      if (_pathMetric != null) {
-        final offset = _pathMetric!.getTangentForOffset(
-          _pathMetric!.length * _controller.value,
-        )?.position;
-        setState(() => _avatarPosition = offset);
-      }
-    });
+    )
+      ..addListener(() {
+        if (_pathMetric != null) {
+          final offset = _pathMetric!.getTangentForOffset(
+            _pathMetric!.length * _controller.value,
+          )?.position;
+          setState(() => _avatarPosition = offset);
+        }
+      });
 
     // Delay path initialization until after the first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -52,32 +53,43 @@ class ProgressScreenState extends State<ProgressScreen>
       if (kDebugMode) {
         print("Initializing path...");
       }
-      final size = MediaQuery.of(context).size;
+
+      final size = MediaQuery
+          .of(context)
+          .size;
+      final double startX = size.width * 0.1;
+      final double endX = size.width * 0.9;
+      final double heightStep = size.height * 0.2; // Höhe bleibt konstant
+
+      // Beginne den Pfad an einem festen Punkt
       _path = Path()
-        ..moveTo(size.width * 0.5, size.height * 0.1)
-        ..cubicTo(
-          size.width * 0.3, size.height * 0.2,
-          size.width * 0.7, size.height * 0.3,
-          size.width * 0.5, size.height * 0.4,
-        )
-        ..cubicTo(
-          size.width * 0.3, size.height * 0.5,
-          size.width * 0.7, size.height * 0.6,
-          size.width * 0.5, size.height * 0.7,
-        )
-        ..cubicTo(
-          size.width * 0.3, size.height * 0.8,
-          size.width * 0.7, size.height * 0.9,
-          size.width * 0.5, size.height * 1.0,
+        ..moveTo(startX, size.height * 0.1);
+
+      for (int i = 0; i < numberOfLevels - 1; i++) {
+        // Konstanten y-Werte für die Kurvenhöhe
+        final double y1 = size.height * 0.1 + heightStep * i;
+        final double y2 = y1 + heightStep;
+
+        // Alterniere zwischen Start- und End-X
+        final double x1 = (i % 2 == 0) ? endX : startX;
+        final double xMid = (startX + endX) / 2;
+
+        // Kurve erstellen mit konstanten Steuerelementen
+        _path!.cubicTo(
+          x1, y1 + heightStep * 0.3, // Kontrollpunkt 1
+          x1, y1 + heightStep * 0.7, // Kontrollpunkt 2
+          xMid, y2, // Endpunkt
         );
+      }
 
       _pathMetric = _path!.computeMetrics().first;
 
-      // Calculate level offsets
+      // Berechne die Level-Offsets
       _levelOffsets.clear();
       for (int i = 0; i < numberOfLevels; i++) {
         final pos = _pathMetric!
-            .getTangentForOffset(_pathMetric!.length * (i / (numberOfLevels - 1)))
+            .getTangentForOffset(
+            _pathMetric!.length * (i / (numberOfLevels - 1)))
             ?.position;
         if (pos != null) _levelOffsets.add(pos);
       }
@@ -85,8 +97,10 @@ class ProgressScreenState extends State<ProgressScreen>
       if (kDebugMode) {
         print("Path initialized successfully.");
       }
-      // Start the animation after path initialization
-      _controller.repeat(reverse: false);
+
+      // Initialisierung abgeschlossen, aber Animation bleibt pausiert
+      _controller.value = 0.0; // Setze die Animation auf den Startpunkt
+      _moveToNextLevel();
     } catch (e) {
       if (kDebugMode) {
         print("Error initializing path: $e");
@@ -94,10 +108,12 @@ class ProgressScreenState extends State<ProgressScreen>
     }
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  void _moveToNextLevel() {
+    if (_controller.isAnimating || _controller.value >= 1.0) return;
+
+    final nextStep = (_controller.value + 1.0 / (numberOfLevels - 1)).clamp(
+        0.0, 1.0);
+    _controller.animateTo(nextStep, duration: const Duration(seconds: 1));
   }
 
   @override
@@ -119,7 +135,9 @@ class ProgressScreenState extends State<ProgressScreen>
           );
         }
 
-        final size = MediaQuery.of(context).size;
+        final size = MediaQuery
+            .of(context)
+            .size;
         final canvasHeight = size.height * 1.5; // größerer Bereich für Scroll
 
         return Scaffold(
@@ -133,17 +151,26 @@ class ProgressScreenState extends State<ProgressScreen>
                     size: Size(size.width, canvasHeight),
                     painter: _PathPainter(path: _path!),
                   ),
-                  ..._levelOffsets.map((offset) => Positioned(
-                    left: offset.dx - 20,
-                    top: offset.dy - 20,
-                    child: const LevelBubble(),
-                  )),
+                  ..._levelOffsets.map((offset) =>
+                      Positioned(
+                        left: offset.dx - 50, // Center für 100x100
+                        top: offset.dy - 50,
+                        child: const LevelBubble(),
+                      )),
                   if (_avatarPosition != null)
                     Positioned(
-                      left: _avatarPosition!.dx - 15,
-                      top: _avatarPosition!.dy - 15,
+                      left: _avatarPosition!.dx - 50,
+                      top: _avatarPosition!.dy - 50,
                       child: const AnimatedAvatar(),
                     ),
+                  Positioned(
+                    bottom: 20,
+                    left: size.width * 0.5 - 50,
+                    child: ElevatedButton(
+                      onPressed: _moveToNextLevel,
+                      child: const Text('Next Level'),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -181,21 +208,21 @@ class LevelBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 40,
-      height: 40,
+      width: 100,
+      height: 100,
       decoration: BoxDecoration(
         color: const Color(0xFFE30613), // DHBW-Rot
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
             color: Colors.redAccent.withOpacity(0.6),
-            blurRadius: 8,
-            offset: const Offset(2, 2),
+            blurRadius: 12,
+            offset: const Offset(4, 4),
           ),
         ],
       ),
       child: const Center(
-        child: Icon(Icons.school, color: Colors.white, size: 22), // Icon angepasst
+        child: Icon(Icons.school, color: Colors.white, size: 48),
       ),
     );
   }
@@ -208,22 +235,22 @@ class AnimatedAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 40,
-      height: 40,
+      width: 100,
+      height: 100,
       decoration: BoxDecoration(
-        color: const Color(0xFFFF6F00), // fuchsiges Orange
+        color: const Color(0xFFFF6F00),
         shape: BoxShape.circle,
-        border: Border.all(color: Colors.white, width: 2),
+        border: Border.all(color: Colors.white, width: 4),
         boxShadow: [
           BoxShadow(
             color: Colors.deepOrangeAccent.withOpacity(0.5),
-            blurRadius: 6,
-            spreadRadius: 1,
+            blurRadius: 10,
+            spreadRadius: 2,
           ),
         ],
       ),
       child: const Center(
-        child: Icon(Icons.pets, color: Colors.white, size: 20), // 🦊 Symbolisch
+        child: Icon(Icons.pets, color: Colors.white, size: 50),
       ),
     );
   }
