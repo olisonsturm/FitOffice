@@ -60,6 +60,9 @@ class _SearchPageState extends State<SearchPage> {
                   final exercise = _searchResults[index];
                   return Card(
                     child: ListTile(
+                      onTap: () => {
+                        // TODO: Add link to exercise here
+                      },
                       title: Text(exercise['name'] ?? 'Unbenannt',
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       subtitle: Text(
