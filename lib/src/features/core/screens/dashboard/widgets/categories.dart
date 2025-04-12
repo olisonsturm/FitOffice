@@ -1,4 +1,5 @@
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/categories_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 
@@ -36,23 +37,43 @@ class _DashboardCategoriesState extends State<DashboardCategories> {
     String countFullBody = await _dbController.getNumberOfExercisesFullBody();
     String countPsychological = await _dbController.getNumberOfPsychologicalExercises();
     setState(() {
-      upperBodyCount = "$countUpperBody Einheiten";
-      lowerBodyCount = "$countLowerBody Einheiten";
-      fullBodyCount = "$countFullBody Einheiten";
-      psychologicalCount = "$countPsychological Einheiten";
+      upperBodyCount = "$countUpperBody Units";
+      lowerBodyCount = "$countLowerBody Units";
+      fullBodyCount = "$countFullBody Units";
+      psychologicalCount = "$countPsychological Units";
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final list = [
-      DashboardCategoriesModel("OK", "Oberkörper", upperBodyCount, null),
-      DashboardCategoriesModel("UK", "Unterkörper", lowerBodyCount, null),
-      DashboardCategoriesModel("GK", "Ganzkörper", fullBodyCount, null),
+      DashboardCategoriesModel("UB", tDasboardUpperBody, upperBodyCount, () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const CategoriesPage(category: "upper-body", heading: "Oberkörper"),
+        ),
+      ),),
+      DashboardCategoriesModel("LB", tDashboardLowerBody, lowerBodyCount, () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const CategoriesPage(category: "lower-body", heading: "Unterkörper"),
+        ),
+      ),),
+      DashboardCategoriesModel("CB", tDashboardCompleteBody, fullBodyCount, () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const CategoriesPage(category: "complete-body", heading: "Ganzkörper"),
+        ),
+      ),),
     ];
     
     final listPsychologicalExercises = [
-      DashboardCategoriesModel("🧠", "Geist", psychologicalCount, null),
+      DashboardCategoriesModel("🧠", tDashboardMind, psychologicalCount, () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const CategoriesPage(category: "mental", heading: "Geist"),
+        ),
+      ),),
     ];
 
     final listFavouriteExercises = DashboardCategoriesModel.listFavouriteExercises;

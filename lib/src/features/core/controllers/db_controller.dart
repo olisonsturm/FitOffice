@@ -190,4 +190,23 @@ class DbController {
 
     return results;
   }
+
+  Future<List<Map<String, dynamic>>> getAllExercisesOfCategory(String categoryName) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('exercises')
+        .where('category', isEqualTo: categoryName)
+        .get();
+
+    return snapshot.docs.map((doc) => doc.data()).toList();
+  }
+
+  Future<List<Map<String, dynamic>>?> getFavouriteExercises(String userName) async {
+    // TODO: Implement query to get all favourite exercises of user in here
+    return null;
+  }
+
+  Future<String?> countFavouriteExercises(String user) async {
+    // TODO: Implement query to count favourite exercises of user here
+    return null;
+  }
 }
