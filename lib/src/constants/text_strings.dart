@@ -100,7 +100,7 @@ const String tOtpMessage = "Enter the verification code sent at ";
 
 // -- Email Verification
 const String tEmailVerificationTitle = "Verify your email address";
-const String tEmailVerificationSubTitle = "We have just send email verification link on your email. Please check email and click on that link to verify your Email address. \n\n If not auto redirected after verification, click on the Continue button.";
+const String tEmailVerificationSubTitle = "We have just sent an email verification link on your email. Please check email and click on that link to verify your Email address. \n\n If not auto redirected after verification, click on the Continue button.";
 const String tResendEmailLink = "Resend E-Mail Link";
 const String tBackToLogin = "Back to login";
 

@@ -14,19 +14,20 @@ class ProfileController extends GetxController {
   final _userRepo = UserRepository.instance;
 
   /// Get User Email and pass to UserRepository to fetch user record.
-  getUserData() async {
+  Future<UserModel> getUserData() async {
     try {
       final currentUserEmail = _authRepo.getUserEmail;
       if (currentUserEmail.isNotEmpty) {
         return await _userRepo.getUserDetails(currentUserEmail);
       } else {
         Helper.warningSnackBar(title: 'Error', message: 'No user found!');
-        return;
-      }
-    } catch (e) {
-      Helper.errorSnackBar(title: 'Error', message: e.toString());
+        throw Exception('No user found!');
     }
+  } catch (e) {
+    Helper.errorSnackBar(title: 'Error', message: e.toString());
+    rethrow;
   }
+}
 
   /// Fetch List of user records.
   Future<List<UserModel>> getAllUsers() async => await _userRepo.allUsers();
