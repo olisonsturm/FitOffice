@@ -1,3 +1,4 @@
+import 'package:fit_office/src/features/core/screens/dashboard/search_page.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/statistics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,7 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/search.da
 import 'package:fit_office/src/features/core/screens/profile/profile_screen.dart';
 
 import '../../../authentication/models/user_model.dart';
+import '../../controllers/db_controller.dart';
 import '../../controllers/profile_controller.dart';
 import '../progress/progress.dart';
 
@@ -24,6 +26,15 @@ class Dashboard extends StatefulWidget {
 
 class DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
+  List<Map<String, dynamic>> _searchResults = [];
+
+  void _performSearch(String query) async {
+    final dbController = DbController();
+    final results = await dbController.getExercises(query);
+    setState(() {
+      _searchResults = results;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +120,18 @@ class DashboardState extends State<Dashboard> {
                     const SizedBox(height: tDashboardPadding),
 
                     // Search
-                    DashboardSearchBox(txtTheme: txtTheme),
+                    DashboardSearchBox(
+                      txtTheme: Theme.of(context).textTheme,
+                      onSearchSubmitted: (query) {
+                        _performSearch(query);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SearchPage(query: query),
+                          ),
+                        );
+                      },
+                    ),
                     const SizedBox(height: tDashboardPadding),
 
                     // Categories

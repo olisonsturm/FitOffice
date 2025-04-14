@@ -110,16 +110,16 @@ const String tBackToLogin = "Back to login";
 // -- Dashboard Screen - Text
 const String tDashboardTitle = "Hey,";
 const String tDashboardHeading = "Explore Exercises";
-const String tDashboardSearch = "Search...";
+const String tDashboardSearch = "Search🔍";
 const String tDashboardBannerTitle2 = "Energieschub für Zwischendurch";
 const String tDashboardBannerTitle1 = "Unterstütze deine langfristige Gesundheit";
 const String tDashboardBannerSubTitle = "10 Lessons";
 const String tDashboardButton = "View All";
-const String tDashboardStatistics = "Statistiken";
-const String tDashboardPhysicalExercisesTitle = "Übungen für deine körperliche Gesundheit";
-const String tDashboardPsychologicalExercisesTitle = "Übungen für deine geistige Gesundheit";
-const String tDashboardInformation = "Informationen";
-const String tDashboardFavouriteExercises = "Favorisierte Übungen";
+const String tDashboardStatistics = "Statistics";
+const String tDashboardPhysicalExercisesTitle = "Exercises for your physical health";
+const String tDashboardPsychologicalExercisesTitle = "Exercises for your mental health";
+const String tDashboardInformation = "Information";
+const String tDashboardFavouriteExercises = "Favourite Exercises";
 const String tDashboardNoInternetConnection = "No internet connection";
 const String tDashboardDatabaseException = "Database Exception";
 const String tDashboardUnexpectedError = "Unexpected Error.";
@@ -127,6 +127,12 @@ const String tDashboardNoValidDate = "No valid date available";
 const String tDashboardNoExercisesDone = "No exercises done yet.";
 const String tDashboardExceptionLoadingExercise = "Could not load last exercise";
 const String tDashboardTimestampsMissing = "Timestamps are missing.";
+const String tDashboardNoResultsFound = "No exercises were found";
+const String tDasboardUpperBody = "Upper Body";
+const String tDashboardLowerBody = "Lower Body";
+const String tDashboardCompleteBody = "Complete Body";
+const String tDashboardMind = "Mind";
+const String tDashboardFavourites = "Favourites";
 
 
 

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import '../../authentication/models/user_model.dart';
 import 'package:intl/intl.dart';
+import 'package:string_similarity/string_similarity.dart';
 
 class DbController {
   late UserModel user;
@@ -166,5 +167,46 @@ class DbController {
         .count()
         .get();
     return numberOfExercisesLowerBody.count.toString();
+  }
+
+  Future<List<Map<String, dynamic>>> getExercises(String exerciseName) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('exercises')
+        .get();
+
+    final results = snapshot.docs.where((doc) {
+      final name = doc['name'] as String;
+      final description = doc['description'] as String;
+      final nameSimilarity = StringSimilarity.compareTwoStrings(
+        name.toLowerCase(),
+        exerciseName.toLowerCase(),
+      );
+      final descriptionSimilarity = StringSimilarity.compareTwoStrings(
+        description.toLowerCase(),
+        exerciseName.toLowerCase(),
+      );
+      return nameSimilarity > 0.4 || descriptionSimilarity > 0.4;
+    }).map((doc) => doc.data()).toList();
+
+    return results;
+  }
+
+  Future<List<Map<String, dynamic>>> getAllExercisesOfCategory(String categoryName) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('exercises')
+        .where('category', isEqualTo: categoryName)
+        .get();
+
+    return snapshot.docs.map((doc) => doc.data()).toList();
+  }
+
+  Future<List<Map<String, dynamic>>?> getFavouriteExercises(String userName) async {
+    // TODO: Implement query to get all favourite exercises of user in here
+    return null;
+  }
+
+  Future<String?> countFavouriteExercises(String user) async {
+    // TODO: Implement query to count favourite exercises of user here
+    return null;
   }
 }
