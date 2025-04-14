@@ -24,6 +24,7 @@ class _DashboardCategoriesState extends State<DashboardCategories> {
   String lowerBodyCount = '';
   String fullBodyCount = '';
   String psychologicalCount = '';
+  String favoriteExercises = '';
 
   @override
   void initState() {
@@ -36,11 +37,16 @@ class _DashboardCategoriesState extends State<DashboardCategories> {
     String countLowerBody = await _dbController.getNumberOfExercisesLowerBody();
     String countFullBody = await _dbController.getNumberOfExercisesFullBody();
     String countPsychological = await _dbController.getNumberOfPsychologicalExercises();
+    String countFavorites = await _dbController.countFavouriteExercises();
+
+    print("Loaded Counts - UpperBody: $countUpperBody, LowerBody: $countLowerBody, FullBody: $countFullBody, Psychological: $countPsychological, Favorites: $countFavorites");
+
     setState(() {
       upperBodyCount = "$countUpperBody Units";
       lowerBodyCount = "$countLowerBody Units";
       fullBodyCount = "$countFullBody Units";
       psychologicalCount = "$countPsychological Units";
+      favoriteExercises = "$countFavorites Units";
     });
   }
 
@@ -76,6 +82,14 @@ class _DashboardCategoriesState extends State<DashboardCategories> {
       ),),
     ];
 
+    /*final listFavouriteExercises = [
+      DashboardCategoriesModel("❤", tDashboardFavourites, favoriteExercises, () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const CategoriesPage(category: "mental", heading: "Geist"),
+        ),
+      ),)
+    ];*/
     final listFavouriteExercises = DashboardCategoriesModel.listFavouriteExercises;
 
     return Column(

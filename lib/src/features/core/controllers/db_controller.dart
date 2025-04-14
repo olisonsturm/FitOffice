@@ -12,7 +12,7 @@ class DbController {
     final userId = user.id;
     //This query must be edited when database structure is defined
     final streaksRef = FirebaseFirestore.instance
-        .collection('Users')
+        .collection('users')
         .doc(userId)
         .collection('streaks');
 
@@ -69,7 +69,7 @@ class DbController {
 
       //Query needs to be edited if database structure changes
       final exerciseHistoryRef = FirebaseFirestore.instance
-          .collection('Users')
+          .collection('users')
           .doc(userId)
           .collection('exerciseHistory');
 
@@ -102,7 +102,7 @@ class DbController {
 
     //Query needs to be edited if database structure changes
     final exerciseHistoryRef = FirebaseFirestore.instance
-        .collection('Users')
+        .collection('users')
         .doc(userId)
         .collection('exerciseHistory');
 
@@ -200,13 +200,35 @@ class DbController {
     return snapshot.docs.map((doc) => doc.data()).toList();
   }
 
-  Future<List<Map<String, dynamic>>?> getFavouriteExercises(String userName) async {
-    // TODO: Implement query to get all favourite exercises of user in here
+  Future<List<Map<String, dynamic>>?> getFavouriteExercises() async {
+    final userQuery = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: user.email)
+        .get();
+
+    if (userQuery.docs.isNotEmpty) {
+      final userDoc = userQuery.docs.first;
+
+      final favoritesSnapshot = await userDoc.reference
+          .collection('favorites')
+          .get();
+
+      final favorites = favoritesSnapshot.docs.map((doc) => doc.data()).toList();
+
+      return favorites;
+    }
     return null;
   }
 
-  Future<String?> countFavouriteExercises(String user) async {
-    // TODO: Implement query to count favourite exercises of user here
-    return null;
+  Future<String> countFavouriteExercises() async {
+    final countSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.id)
+        .collection('favorites')
+        .count()
+        .get();
+
+    final count = countSnapshot.count;
+    return count.toString();
   }
 }
