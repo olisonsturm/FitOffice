@@ -1,6 +1,5 @@
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/search.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesPage extends StatefulWidget {
