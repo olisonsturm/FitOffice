@@ -147,3 +147,11 @@ const String tMenu3 = "User Management";
 const String tDelete = "Delete";
 const String tJoined = "Joined";
 const String tJoinedAt = " 31 October 2022";
+
+// -- Account Screen - Text
+const String tFriendsSearchHint = "Search for friends";
+const String tAccountGreeting = "Hello,";
+const String tNoResults = "No users found";
+const String tAddFriendsButton = "ADD FRIENDS";
+const String tSearchError = "Search error";
+const String tAddFriendsHeader = "Add Friends";

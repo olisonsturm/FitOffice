@@ -10,7 +10,7 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/banners.d
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/categories.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/search.dart';
 import 'package:fit_office/src/features/core/screens/profile/profile_screen.dart';
-import 'package:fit_office/src/features/core/screens/friends/friends.dart';
+import 'package:fit_office/src/features/core/screens/account/account.dart';
 
 import '../../../authentication/models/user_model.dart';
 import '../../controllers/profile_controller.dart';
@@ -86,7 +86,11 @@ class DashboardState extends State<Dashboard> {
         body: IndexedStack(
           index: _selectedIndex,
           children: [
-            // 0: Dashboard/Home
+            // 0: Progress Screen
+            const ProgressScreen(),
+
+
+            // 1: Dashboard/Home
             SingleChildScrollView(
               child: Container(
                 padding: const EdgeInsets.all(tDashboardPadding),
@@ -135,10 +139,6 @@ class DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
-
-            // 1: Progress Screen
-            const ProgressScreen(),
-
             // 2: Statistics Screen
             Scaffold(
               body: Padding(
@@ -172,21 +172,21 @@ class DashboardState extends State<Dashboard> {
           selectedItemColor: tBottomNavBarSelectedColor,
           unselectedItemColor: tBottomNavBarUnselectedColor,
           items: const [
+             BottomNavigationBarItem(
+              icon: Icon(Icons.route),
+              label: 'Progress',
+            ),
             BottomNavigationBarItem(
               icon: Icon(Icons.book),
               label: 'Library',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.route),
-              label: 'Progress',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.insert_chart),
               label: 'Statistics',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person_add),
-              label: 'Friends',
+              icon: Icon(Icons.person),
+              label: 'Profile',
             ),
           ],
         ),
