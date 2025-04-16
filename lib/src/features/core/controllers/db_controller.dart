@@ -229,4 +229,45 @@ class DbController {
     }
     return exerciseList;
   }
+
+  Future<void> addFavorite(String email, String exerciseName) async {
+    final exerciseQuery = await FirebaseFirestore.instance
+        .collection('exercises')
+        .where('name', isEqualTo: exerciseName)
+        .get();
+    final exerciseDoc = exerciseQuery.docs.first;
+    final exerciseId = exerciseDoc.id;
+    
+    final userQuery = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+    final userDoc = userQuery.docs.first;
+    await userDoc.reference
+        .collection('favorites')
+        .add({'exercise': FirebaseFirestore.instance.doc('exercises/$exerciseId'), 'addedAt': FieldValue.serverTimestamp()});
+  }
+
+  Future<void> removeFavorite(String email, String exerciseName) async {
+    final exerciseQuery = await FirebaseFirestore.instance
+        .collection('exercises')
+        .where('name', isEqualTo: exerciseName)
+        .get();
+
+    final exerciseDoc = exerciseQuery.docs.first;
+    final exerciseRef = exerciseDoc.reference;
+
+    final userQuery = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+
+    final userDoc = userQuery.docs.first;
+
+    final favoriteQuery = await userDoc.reference
+        .collection('favorites')
+        .where('exercise', isEqualTo: exerciseRef).get();
+
+    await favoriteQuery.docs.first.reference.delete();
+  }
 }
