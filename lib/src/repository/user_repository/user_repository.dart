@@ -15,7 +15,7 @@ class UserRepository extends GetxController {
       // It is recommended to use Authentication Id as DocumentId of the Users Collection.
       // To store a new user you first have to authenticate and get uID (e.g: Check Authentication Repository)
       // Add user like this: await _db.collection("users").doc(uID).set(user.toJson());
-      await recordExist(user.email) ? throw "Record Already Exists" : await _db.collection("users").add(user.toJson());
+      await recordExist(user.email) ? throw "Record Already Exists" : (await _db.collection("users").add(user.toJson()));
     } on FirebaseAuthException catch (e) {
       final result = TExceptions.fromCode(e.code);
       throw result.message;

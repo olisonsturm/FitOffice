@@ -10,6 +10,6 @@ class DashboardCategoriesModel{
   DashboardCategoriesModel(this.title, this.heading, this.subHeading, this.onPress);
 
   static List<DashboardCategoriesModel> listFavouriteExercises = [
-    DashboardCategoriesModel("❤", tDashboardFavourites, "0 Lessons", null)
+    DashboardCategoriesModel("❤", tDashboardFavourites, "Favourites", null)
   ];
 }

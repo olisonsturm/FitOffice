@@ -3,8 +3,10 @@ import 'package:fit_office/src/features/core/screens/dashboard/categories_page.d
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 
+import '../../../../authentication/models/user_model.dart';
 import '../../../controllers/db_controller.dart';
 import '../../../models/dashboard/categories_model.dart';
+import '../favorites_page.dart';
 
 class DashboardCategories extends StatefulWidget {
   const DashboardCategories({
@@ -19,12 +21,12 @@ class DashboardCategories extends StatefulWidget {
 }
 
 class _DashboardCategoriesState extends State<DashboardCategories> {
+  late UserModel user;
   final DbController _dbController = DbController();
   String upperBodyCount = '';
   String lowerBodyCount = '';
   String fullBodyCount = '';
   String psychologicalCount = '';
-  String favoriteExercises = '';
 
   @override
   void initState() {
@@ -37,16 +39,11 @@ class _DashboardCategoriesState extends State<DashboardCategories> {
     String countLowerBody = await _dbController.getNumberOfExercisesLowerBody();
     String countFullBody = await _dbController.getNumberOfExercisesFullBody();
     String countPsychological = await _dbController.getNumberOfPsychologicalExercises();
-    String countFavorites = await _dbController.countFavouriteExercises();
-
-    print("Loaded Counts - UpperBody: $countUpperBody, LowerBody: $countLowerBody, FullBody: $countFullBody, Psychological: $countPsychological, Favorites: $countFavorites");
-
     setState(() {
       upperBodyCount = "$countUpperBody Units";
       lowerBodyCount = "$countLowerBody Units";
       fullBodyCount = "$countFullBody Units";
       psychologicalCount = "$countPsychological Units";
-      favoriteExercises = "$countFavorites Units";
     });
   }
 
@@ -72,7 +69,7 @@ class _DashboardCategoriesState extends State<DashboardCategories> {
         ),
       ),),
     ];
-    
+
     final listPsychologicalExercises = [
       DashboardCategoriesModel("🧠", tDashboardMind, psychologicalCount, () => Navigator.push(
         context,
@@ -82,14 +79,6 @@ class _DashboardCategoriesState extends State<DashboardCategories> {
       ),),
     ];
 
-    /*final listFavouriteExercises = [
-      DashboardCategoriesModel("❤", tDashboardFavourites, favoriteExercises, () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const CategoriesPage(category: "mental", heading: "Geist"),
-        ),
-      ),)
-    ];*/
     final listFavouriteExercises = DashboardCategoriesModel.listFavouriteExercises;
 
     return Column(
@@ -224,7 +213,17 @@ class _DashboardCategoriesState extends State<DashboardCategories> {
             itemCount: listFavouriteExercises.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) => GestureDetector(
-              onTap: listFavouriteExercises[index].onPress,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const FavoritesPage(
+                      category: "favorites",
+                      heading: "Favorites",
+                    ),
+                  ),
+                );
+              },
               child: SizedBox(
                 width: 170,
                 height: 45,

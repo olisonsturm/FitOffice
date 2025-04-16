@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import '../../authentication/models/user_model.dart';
 import 'package:intl/intl.dart';
@@ -200,35 +201,32 @@ class DbController {
     return snapshot.docs.map((doc) => doc.data()).toList();
   }
 
-  Future<List<Map<String, dynamic>>?> getFavouriteExercises() async {
+  Future<List<Map<String, dynamic>>> getFavouriteExercises(String email) async {
     final userQuery = await FirebaseFirestore.instance
         .collection('users')
-        .where('email', isEqualTo: user.email)
+        .where('email', isEqualTo: email)
         .get();
 
-    if (userQuery.docs.isNotEmpty) {
-      final userDoc = userQuery.docs.first;
+    if (userQuery.docs.isEmpty) return [];
 
-      final favoritesSnapshot = await userDoc.reference
-          .collection('favorites')
-          .get();
+    final userDoc = userQuery.docs.first;
 
-      final favorites = favoritesSnapshot.docs.map((doc) => doc.data()).toList();
-
-      return favorites;
-    }
-    return null;
-  }
-
-  Future<String> countFavouriteExercises() async {
-    final countSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.id)
+    final favoritesSnapshot = await userDoc.reference
         .collection('favorites')
-        .count()
         .get();
 
-    final count = countSnapshot.count;
-    return count.toString();
+    List<Map<String, dynamic>> exerciseList = [];
+
+    for (var favDoc in favoritesSnapshot.docs) {
+      final exerciseRef = favDoc.data()['exercise'];
+
+      if (exerciseRef is DocumentReference) {
+        final exerciseSnap = await exerciseRef.get();
+        if (exerciseSnap.exists) {
+          exerciseList.add(exerciseSnap.data() as Map<String, dynamic>);
+        }
+      }
+    }
+    return exerciseList;
   }
 }
