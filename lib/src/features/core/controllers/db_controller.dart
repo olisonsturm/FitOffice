@@ -9,10 +9,11 @@ import 'package:string_similarity/string_similarity.dart';
 
 class DbController {
   late UserModel user;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
   Future<String?> fetchActiveStreakSteps() async {
     final userId = user.id;
     //This query must be edited when database structure is defined
-    final streaksRef = FirebaseFirestore.instance
+    final streaksRef = firestore
         .collection('users')
         .doc(userId)
         .collection('streaks');
@@ -69,7 +70,7 @@ class DbController {
       final userId = user.id;
 
       //Query needs to be edited if database structure changes
-      final exerciseHistoryRef = FirebaseFirestore.instance
+      final exerciseHistoryRef = firestore
           .collection('users')
           .doc(userId)
           .collection('exerciseHistory');
@@ -102,7 +103,7 @@ class DbController {
     final userId = user.id;
 
     //Query needs to be edited if database structure changes
-    final exerciseHistoryRef = FirebaseFirestore.instance
+    final exerciseHistoryRef = firestore
         .collection('users')
         .doc(userId)
         .collection('exerciseHistory');
@@ -135,7 +136,7 @@ class DbController {
   }
 
   Future<String> getNumberOfExercisesUpperBody() async {
-    final numberOfExercisesUpperBody = await FirebaseFirestore.instance
+    final numberOfExercisesUpperBody = await firestore
         .collection('exercises')
         .where('category', isEqualTo: 'upper-body')
         .count()
@@ -144,7 +145,7 @@ class DbController {
   }
 
   Future<String> getNumberOfExercisesLowerBody() async {
-    final numberOfExercisesLowerBody = await FirebaseFirestore.instance
+    final numberOfExercisesLowerBody = await firestore
         .collection('exercises')
         .where('category', isEqualTo: 'lower-body')
         .count()
@@ -153,7 +154,7 @@ class DbController {
   }
 
   Future<String> getNumberOfExercisesFullBody() async {
-    final numberOfExercisesLowerBody = await FirebaseFirestore.instance
+    final numberOfExercisesLowerBody = await firestore
         .collection('exercises')
         .where('category', isEqualTo: 'full-body')
         .count()
@@ -162,7 +163,7 @@ class DbController {
   }
 
   Future<String> getNumberOfPsychologicalExercises() async {
-    final numberOfExercisesLowerBody = await FirebaseFirestore.instance
+    final numberOfExercisesLowerBody = await firestore
         .collection('exercises')
         .where('category', isEqualTo: 'mental')
         .count()
@@ -171,7 +172,7 @@ class DbController {
   }
 
   Future<List<Map<String, dynamic>>> getExercises(String exerciseName) async {
-    final snapshot = await FirebaseFirestore.instance
+    final snapshot = await firestore
         .collection('exercises')
         .get();
 
@@ -193,7 +194,7 @@ class DbController {
   }
 
   Future<List<Map<String, dynamic>>> getAllExercisesOfCategory(String categoryName) async {
-    final snapshot = await FirebaseFirestore.instance
+    final snapshot = await firestore
         .collection('exercises')
         .where('category', isEqualTo: categoryName)
         .get();
@@ -202,7 +203,7 @@ class DbController {
   }
 
   Future<List<Map<String, dynamic>>> getFavouriteExercises(String email) async {
-    final userQuery = await FirebaseFirestore.instance
+    final userQuery = await firestore
         .collection('users')
         .where('email', isEqualTo: email)
         .get();
@@ -231,14 +232,14 @@ class DbController {
   }
 
   Future<void> addFavorite(String email, String exerciseName) async {
-    final exerciseQuery = await FirebaseFirestore.instance
+    final exerciseQuery = await firestore
         .collection('exercises')
         .where('name', isEqualTo: exerciseName)
         .get();
     final exerciseDoc = exerciseQuery.docs.first;
     final exerciseId = exerciseDoc.id;
     
-    final userQuery = await FirebaseFirestore.instance
+    final userQuery = await firestore
         .collection('users')
         .where('email', isEqualTo: email)
         .get();
@@ -249,7 +250,7 @@ class DbController {
   }
 
   Future<void> removeFavorite(String email, String exerciseName) async {
-    final exerciseQuery = await FirebaseFirestore.instance
+    final exerciseQuery = await firestore
         .collection('exercises')
         .where('name', isEqualTo: exerciseName)
         .get();
@@ -257,7 +258,7 @@ class DbController {
     final exerciseDoc = exerciseQuery.docs.first;
     final exerciseRef = exerciseDoc.reference;
 
-    final userQuery = await FirebaseFirestore.instance
+    final userQuery = await firestore
         .collection('users')
         .where('email', isEqualTo: email)
         .get();
