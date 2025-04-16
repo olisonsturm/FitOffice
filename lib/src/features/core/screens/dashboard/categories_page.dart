@@ -2,7 +2,6 @@ import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../../../authentication/models/user_model.dart';
 import '../../controllers/profile_controller.dart';

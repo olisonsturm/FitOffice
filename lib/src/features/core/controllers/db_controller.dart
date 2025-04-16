@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import '../../authentication/models/user_model.dart';
 import 'package:intl/intl.dart';

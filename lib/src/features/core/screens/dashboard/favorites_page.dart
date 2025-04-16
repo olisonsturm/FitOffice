@@ -3,7 +3,6 @@ import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../../../authentication/models/user_model.dart';
 import '../../controllers/profile_controller.dart';
@@ -43,11 +42,22 @@ class _FavoritesPage extends State<FavoritesPage> {
     });
   }
 
-
   void _loadUser() async {
     final user = await _profileController.getUserData();
     setState(() {
       _user = user;
+    });
+  }
+
+  void _toggleFavorite(String exerciseName) async {
+    final dbController = DbController();
+    final user = _user;
+    if (user == null) return;
+
+    await dbController.removeFavorite(user.email, exerciseName);
+
+    setState(() {
+      _searchResults.removeWhere((element) => element['name'] == exerciseName);
     });
   }
 
@@ -88,6 +98,10 @@ class _FavoritesPage extends State<FavoritesPage> {
                           'Category: ${exercise['category'] ?? 'No category.'}\n'
                               'Description: ${exercise['description'] ?? 'No description.'}\n'
                               'Video: ${exercise['video'] ?? 'No video.'}\n'
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.favorite, color: Colors.red),
+                        onPressed: () => _toggleFavorite(exercise['name']),
                       ),
                     ),
                   );
