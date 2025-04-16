@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/sizes.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
-import 'package:fit_office/src/constants/colors.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'widgets/add_friends_button.dart';
 import '../../../authentication/models/user_model.dart';
 import '../../controllers/profile_controller.dart';
-import 'add_friends.dart';
 
 class FriendsScreen extends StatefulWidget {
   const FriendsScreen({super.key});

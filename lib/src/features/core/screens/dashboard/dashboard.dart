@@ -6,7 +6,6 @@ import 'package:fit_office/src/constants/image_strings.dart';
 import 'package:fit_office/src/constants/sizes.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/banners.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/categories.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/search.dart';
 import 'package:fit_office/src/features/core/screens/profile/profile_screen.dart';
@@ -131,10 +130,6 @@ class DashboardState extends State<Dashboard> {
 //                  //Text(tDashboardInformation, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
 //                  //DashboardBanners(txtTheme: txtTheme, isDark: isDark),
 //                  //const SizedBox(height: tDashboardPadding),
-
-//                  // Statistics
-//                  //Text(tDashboardStatistics, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
-//                  //StatisticsWidget(txtTheme: txtTheme, isDark: isDark),
                   ],
                 ),
               ),
@@ -194,102 +189,3 @@ class DashboardState extends State<Dashboard> {
     );
   }
 }
-
-//         body: IndexedStack(
-//           index: _selectedIndex,
-//           children: [
-//             SingleChildScrollView(
-//               child: Container(
-//                 padding: const EdgeInsets.all(tDashboardPadding),
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     // Header
-//                     FutureBuilder(
-//                       future: controller.getUserData(),
-//                       builder: (context, snapshot) {
-//                         if (snapshot.connectionState == ConnectionState.done) {
-//                           if (snapshot.hasData) {
-//                             UserModel user = snapshot.data as UserModel;
-//                             return Text('$tDashboardTitle ${user.fullName}', style: txtTheme.bodyMedium);
-//                           } else {
-//                             return const Center(child: Text('Something went wrong'));
-//                           }
-//                         } else {
-//                           return Text('$tDashboardTitle ...', style: txtTheme.bodyMedium);
-//                         }
-//                       },
-//                     ),
-//                     Text(tDashboardHeading, style: txtTheme.displayMedium),
-//                     const SizedBox(height: tDashboardPadding),
-
-//                     // Search
-//                     DashboardSearchBox(txtTheme: txtTheme),
-//                     const SizedBox(height: tDashboardPadding),
-
-//                     // Categories
-//                     DashboardCategories(txtTheme: txtTheme),
-//                     const SizedBox(height: tDashboardPadding),
-
-//                     // Banner  --> woanders einbauen? oder wo/wofür nötig?
-//                     //Text(tDashboardInformation, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
-//                     //DashboardBanners(txtTheme: txtTheme, isDark: isDark),
-//                     //const SizedBox(height: tDashboardPadding),
-
-//                     // Statistics
-//                     //Text(tDashboardStatistics, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
-//                     //StatisticsWidget(txtTheme: txtTheme, isDark: isDark),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//             //Progress Screen
-//             const ProgressScreen(),
-//             ListTile(
-//               leading: const Icon(Icons.favorite),
-//               title: const Text('Friends'),
-//               onTap: () {
-//                 // Add functionality for "Friends" here
-//               },
-//             ),
-//             const StatisticsScreen(),
-//             ListTile(
-//               leading: const Icon(Icons.apple),
-//               title: const Text('Test'),
-//               onTap: () {
-//                 // Add functionality for "Settings" here
-//               },
-//             ),
-//           ],
-//         ),
-
-//         bottomNavigationBar: BottomNavigationBar(
-//           currentIndex: _selectedIndex,
-//           onTap: (index) {
-//             setState(() {
-//               _selectedIndex = index;
-//             });
-//           },
-//           items: const [
-//             BottomNavigationBarItem(
-//               icon: Icon(Icons.book),
-//               label: 'Library',
-//             ),
-//             BottomNavigationBarItem(
-//               icon: Icon(Icons.route),
-//               label: 'Progress',
-//             ),
-//             BottomNavigationBarItem(
-//               icon: Icon(Icons.insert_chart),
-//               label: 'Statitics',
-//             ),
-//             BottomNavigationBarItem(
-//               icon: Icon(Icons.person_add),
-//               label: 'Friends',
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
