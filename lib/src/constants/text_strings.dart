@@ -100,7 +100,7 @@ const String tOtpMessage = "Enter the verification code sent at ";
 
 // -- Email Verification
 const String tEmailVerificationTitle = "Verify your email address";
-const String tEmailVerificationSubTitle = "We have just send email verification link on your email. Please check email and click on that link to verify your Email address. \n\n If not auto redirected after verification, click on the Continue button.";
+const String tEmailVerificationSubTitle = "We have just sent an email verification link on your email. Please check email and click on that link to verify your Email address. \n\n If not auto redirected after verification, click on the Continue button.";
 const String tResendEmailLink = "Resend E-Mail Link";
 const String tBackToLogin = "Back to login";
 
@@ -153,3 +153,11 @@ const String tMenu3 = "User Management";
 const String tDelete = "Delete";
 const String tJoined = "Joined";
 const String tJoinedAt = " 31 October 2022";
+
+// -- Account Screen - Text
+const String tFriendsSearchHint = "Search for friends";
+const String tAccountGreeting = "Hello,";
+const String tNoResults = "No users found";
+const String tAddFriendsButton = "ADD FRIENDS";
+const String tSearchError = "Search error";
+const String tAddFriendsHeader = "Add Friends";
