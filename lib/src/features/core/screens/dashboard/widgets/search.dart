@@ -35,6 +35,7 @@ class _DashboardSearchBoxState extends State<DashboardSearchBox> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -57,7 +58,9 @@ class _DashboardSearchBoxState extends State<DashboardSearchBox> {
                   focusNode: _focusNode,
                   decoration: InputDecoration(
                     hintText: tDashboardSearch,
-                    hintStyle: widget.txtTheme.displayMedium?.apply(color: Colors.white),
+                    hintStyle: widget.txtTheme.displayMedium?.copyWith(
+                      color: isDark ? Colors.white70 : Colors.grey[700],
+                    ),
                     border: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     suffixIcon: _controller.text.isNotEmpty

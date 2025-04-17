@@ -3,8 +3,10 @@ import 'package:fit_office/src/features/core/screens/dashboard/categories_page.d
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 
+import '../../../../authentication/models/user_model.dart';
 import '../../../controllers/db_controller.dart';
 import '../../../models/dashboard/categories_model.dart';
+import '../favorites_page.dart';
 
 class DashboardCategories extends StatefulWidget {
   const DashboardCategories({
@@ -19,6 +21,7 @@ class DashboardCategories extends StatefulWidget {
 }
 
 class _DashboardCategoriesState extends State<DashboardCategories> {
+  late UserModel user;
   final DbController _dbController = DbController();
   String upperBodyCount = '';
   String lowerBodyCount = '';
@@ -32,10 +35,10 @@ class _DashboardCategoriesState extends State<DashboardCategories> {
   }
 
   void _loadExerciseCount() async {
-    String countUpperBody = await _dbController.getNumberOfExercisesUpperBody();
-    String countLowerBody = await _dbController.getNumberOfExercisesLowerBody();
-    String countFullBody = await _dbController.getNumberOfExercisesFullBody();
-    String countPsychological = await _dbController.getNumberOfPsychologicalExercises();
+    String countUpperBody = await _dbController.getNumberOfExercisesByCategory('upper-body');
+    String countLowerBody = await _dbController.getNumberOfExercisesByCategory('lower-body');
+    String countFullBody = await _dbController.getNumberOfExercisesByCategory('full-body');
+    String countPsychological = await _dbController.getNumberOfExercisesByCategory('mental');
     setState(() {
       upperBodyCount = "$countUpperBody Units";
       lowerBodyCount = "$countLowerBody Units";
@@ -66,7 +69,7 @@ class _DashboardCategoriesState extends State<DashboardCategories> {
         ),
       ),),
     ];
-    
+
     final listPsychologicalExercises = [
       DashboardCategoriesModel("🧠", tDashboardMind, psychologicalCount, () => Navigator.push(
         context,
@@ -210,7 +213,17 @@ class _DashboardCategoriesState extends State<DashboardCategories> {
             itemCount: listFavouriteExercises.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) => GestureDetector(
-              onTap: listFavouriteExercises[index].onPress,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const FavoritesPage(
+                      category: "favorites",
+                      heading: "Favorites",
+                    ),
+                  ),
+                );
+              },
               child: SizedBox(
                 width: 170,
                 height: 45,
