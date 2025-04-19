@@ -25,8 +25,29 @@ class Dashboard extends StatefulWidget {
 }
 
 class DashboardState extends State<Dashboard> {
+  final GlobalKey<DashboardCategoriesState> _categoriesKey =
+      GlobalKey<DashboardCategoriesState>();
+
   int _selectedIndex = 0;
   List<Map<String, dynamic>> _searchResults = [];
+
+  final ProfileController _controller = Get.put(ProfileController());
+  UserModel? _user;
+  bool _isUserLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  void _loadUserData() async {
+    final userData = await _controller.getUserData();
+    setState(() {
+      _user = userData;
+      _isUserLoaded = true;
+    });
+  }
 
   void _performSearch(String query) async {
     final dbController = DbController();
@@ -41,8 +62,6 @@ class DashboardState extends State<Dashboard> {
     final txtTheme = Theme.of(context).textTheme;
     final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
-    final controller = Get.put(ProfileController());
-
     return SafeArea(
       child: Scaffold(
         appBar: DashboardAppBar(isDark: isDark),
@@ -50,42 +69,26 @@ class DashboardState extends State<Dashboard> {
           backgroundColor: tWhiteColor,
           child: ListView(
             children: [
-              FutureBuilder(
-                future: controller.getUserData(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.hasData) {
-                      UserModel user = snapshot.data as UserModel;
-
-                      //Controllers
-                      final email = user.email;
-                      final fullName = user.fullName;
-
-                      return UserAccountsDrawerHeader(
-                        currentAccountPicture:
-                            const Image(image: AssetImage(tLogoImage)),
-                        currentAccountPictureSize: const Size(100, 100),
-                        accountName: Text(fullName),
-                        accountEmail: Text(email),
-                        decoration: const BoxDecoration(color: tSecondaryColor),
-                      );
-                    } else {
-                      return const Center(child: Text('Something went wrong'));
-                    }
-                  } else {
-                    return const UserAccountsDrawerHeader(
+              _isUserLoaded
+                  ? UserAccountsDrawerHeader(
+                      currentAccountPicture:
+                          const Image(image: AssetImage(tLogoImage)),
+                      currentAccountPictureSize: const Size(100, 100),
+                      accountName: Text(_user?.fullName ?? ''),
+                      accountEmail: Text(_user?.email ?? ''),
+                      decoration: const BoxDecoration(color: tSecondaryColor),
+                    )
+                  : const UserAccountsDrawerHeader(
                       currentAccountPicture:
                           Image(image: AssetImage(tLogoImage)),
                       accountName: Text('Loading...'),
                       accountEmail: Text('Loading...'),
-                    );
-                  }
-                },
-              ),
+                    ),
               ListTile(
                   leading: const Icon(Icons.verified_user),
                   title: const Text('Profile'),
                   onTap: () {
+                    FocusScope.of(context).unfocus(); // <-- Fokus entfernen
                     Get.to(() => ProfileScreen());
                   }),
               const ListTile(
@@ -99,60 +102,62 @@ class DashboardState extends State<Dashboard> {
             // 0: Progress Screen
             const ProgressScreen(),
 
-
             // 1: Dashboard/Home
-            SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.all(tDashboardPadding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Header
-                    FutureBuilder(
-                      future: controller.getUserData(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          if (snapshot.hasData) {
-                            UserModel user = snapshot.data as UserModel;
-                            return Text('$tDashboardTitle ${user.fullName}',
-                                style: txtTheme.bodyMedium);
-                          } else {
-                            return const Center(
-                                child: Text('Something went wrong'));
-                          }
-                        } else {
-                          return Text('$tDashboardTitle ...',
-                              style: txtTheme.bodyMedium);
-                        }
-                      },
-                    ),
-                    Text(tDashboardHeading, style: txtTheme.displayMedium),
-                    const SizedBox(height: tDashboardPadding),
+            GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                FocusScope.of(context).unfocus();
+              },
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: const EdgeInsets.all(tDashboardPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header
+                      _isUserLoaded
+                          ? Text('$tDashboardTitle ${_user?.fullName ?? ''}',
+                              style: txtTheme.bodyMedium)
+                          : const CircularProgressIndicator(),
+                      Text(tDashboardHeading, style: txtTheme.displayMedium),
+                      const SizedBox(height: tDashboardPadding),
 
-                    // Search
-                    DashboardSearchBox(
-                      txtTheme: Theme.of(context).textTheme,
-                      onSearchSubmitted: (query) {
-                        _performSearch(query);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SearchPage(query: query),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: tDashboardPadding),
+                      // Search
+                      DashboardSearchBox(
+                        txtTheme: Theme.of(context).textTheme,
+                        onSearchSubmitted: (query) {
+                          _performSearch(query);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchPage(query: query),
+                            ),
+                          );
+                        },
+                        onTextChanged: (query) {
+                          _performSearch(query);
+                          _categoriesKey.currentState?.updateSearchQuery(
+                              query); // <- Diese Zeile hinzufügen!
+                        },
+                      ),
 
-                    // Categories
-                    DashboardCategories(txtTheme: txtTheme),
-                    const SizedBox(height: tDashboardPadding),
+                      const SizedBox(height: tDashboardPadding),
+
+                      // Categories
+                      DashboardCategories(
+                        key: _categoriesKey,
+                        txtTheme: txtTheme,
+                        onSearchChanged: (text) {}, // <--- das hat gefehlt!
+                      ),
+
+                      const SizedBox(height: tDashboardPadding),
 
                     // Banner  --> woanders einbauen? oder wo/wofür nötig?
-//                  //Text(tDashboardInformation, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
-//                  //DashboardBanners(txtTheme: txtTheme, isDark: isDark),
-//                  //const SizedBox(height: tDashboardPadding),
-                  ],
+                    //Text(tDashboardInformation, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
+                    //DashboardBanners(txtTheme: txtTheme, isDark: isDark),
+                    //const SizedBox(height: tDashboardPadding),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -180,16 +185,17 @@ class DashboardState extends State<Dashboard> {
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _selectedIndex,
           onTap: (index) {
+            FocusScope.of(context)
+                .unfocus(); // <-- Fokus entfernen bei Navigation
             setState(() {
               _selectedIndex = index;
             });
           },
-          type: BottomNavigationBarType
-              .fixed, // <- sicherstellen, dass alle Icons angezeigt werden
+          type: BottomNavigationBarType.fixed,
           selectedItemColor: tBottomNavBarSelectedColor,
           unselectedItemColor: tBottomNavBarUnselectedColor,
           items: const [
-             BottomNavigationBarItem(
+            BottomNavigationBarItem(
               icon: Icon(Icons.route),
               label: 'Progress',
             ),

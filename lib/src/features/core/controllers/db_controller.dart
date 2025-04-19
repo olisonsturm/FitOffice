@@ -243,4 +243,15 @@ class DbController {
 
     await favoriteQuery.docs.first.reference.delete();
   }
+
+  Future<List<Map<String, dynamic>>> getAllExercises() async {
+  try {
+    final snapshot = await FirebaseFirestore.instance.collection('exercises').get();
+    return snapshot.docs.map((doc) => doc.data()).toList();
+  } catch (e) {
+    print('Fehler beim Abrufen aller Übungen: $e');
+    return [];
+  }
+}
+
 }

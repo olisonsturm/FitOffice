@@ -82,10 +82,6 @@ class _SearchPageState extends State<SearchPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DashboardSearchBox(
-              txtTheme: Theme.of(context).textTheme,
-              onSearchSubmitted: _performSearch,
-            ),
             const SizedBox(height: 20),
             Expanded(
               child: _searchResults.isEmpty
@@ -103,9 +99,9 @@ class _SearchPageState extends State<SearchPage> {
                       title: Text(exercise['name'] ?? 'Unbenannt',
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       subtitle: Text(
-                          'Kategorie: ${exercise['category'] ?? 'keine'}\n'
-                            'Beschreibung: ${exercise['description'] ?? 'keine'}\n'
-                              'Video: ${exercise['video'] ?? 'keine'}\n'
+                          '$tDashboardExerciseCategory ${exercise['category'] ?? 'keine'}\n'
+                            '$tDashboardExerciseDescription: ${exercise['description'] ?? 'keine'}\n'
+                              '$tDashboardExerciseVideo: ${exercise['video'] ?? 'keine'}\n'
                       ),
                       trailing: IconButton(
                         icon: Icon(

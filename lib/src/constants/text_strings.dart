@@ -110,7 +110,7 @@ const String tBackToLogin = "Back to login";
 // -- Dashboard Screen - Text
 const String tDashboardTitle = "Hey,";
 const String tDashboardHeading = "Explore Exercises";
-const String tDashboardSearch = "Search🔍";
+const String tDashboardSearch = "Search";
 const String tDashboardBannerTitle2 = "Energieschub für Zwischendurch";
 const String tDashboardBannerTitle1 = "Unterstütze deine langfristige Gesundheit";
 const String tDashboardBannerSubTitle = "10 Lessons";
@@ -119,7 +119,7 @@ const String tDashboardStatistics = "Statistics";
 const String tDashboardPhysicalExercisesTitle = "Exercises for your physical health";
 const String tDashboardPsychologicalExercisesTitle = "Exercises for your mental health";
 const String tDashboardInformation = "Information";
-const String tDashboardFavouriteExercises = "Favourite Exercises";
+const String tDashboardFavouriteExercises = "Favorite Exercises";
 const String tDashboardNoInternetConnection = "No internet connection";
 const String tDashboardDatabaseException = "Database Exception";
 const String tDashboardUnexpectedError = "Unexpected Error.";
@@ -132,7 +132,12 @@ const String tDasboardUpperBody = "Upper Body";
 const String tDashboardLowerBody = "Lower Body";
 const String tDashboardCompleteBody = "Complete Body";
 const String tDashboardMind = "Mind";
-const String tDashboardFavourites = "Favourites";
+const String tDashboardFavourites = "Favorites";
+const String tDashboardAllExercises = "All Exercises";
+const String tDashboardExerciseCategory = "Category";
+const String tDashboardExerciseVideo = "Video";
+const String tDashboardExerciseDescription = "Description";
+const String tDashboardExerciseUnits = "Units";
 
 
 

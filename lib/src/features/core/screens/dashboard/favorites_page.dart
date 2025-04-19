@@ -36,7 +36,7 @@ class _FavoritesPage extends State<FavoritesPage> {
       _user = user;
     });
 
-    final results = await dbController.getFavouriteExercises(user.email!);
+    final results = await dbController.getFavouriteExercises(user.email);
     setState(() {
       _searchResults = results;
     });
@@ -108,7 +108,7 @@ class _FavoritesPage extends State<FavoritesPage> {
                 },
               ),
             ),
-            SizedBox(
+            /* SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
@@ -124,9 +124,9 @@ class _FavoritesPage extends State<FavoritesPage> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                     side: const BorderSide(color: Colors.grey, width: 2)
                 ),
-                child: const Text("Add favourites"),
+                child: const Text("Add favorites"),
               ),
-            ),
+            ), */
           ],
         ),
       ),
