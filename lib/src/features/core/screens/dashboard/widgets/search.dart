@@ -1,5 +1,6 @@
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:string_similarity/string_similarity.dart';
 import '../../../../../constants/text_strings.dart';
 
 class DashboardSearchBox extends StatefulWidget {
@@ -48,7 +49,7 @@ class _DashboardSearchBoxState extends State<DashboardSearchBox> {
     final input = _controller.text.toLowerCase();
     setState(() {
       _suggestions = _allExercises
-          .where((name) => name.toLowerCase().contains(input))
+          .where((name) => name.toLowerCase().contains(input) || name.similarityTo(input) > 0.4)
           .toList();
     });
   }
@@ -122,7 +123,7 @@ class _DashboardSearchBoxState extends State<DashboardSearchBox> {
               margin: const EdgeInsets.only(top: 5),
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? Colors.black : Colors.white,
                 border: Border.all(color: Colors.grey.shade300),
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -132,7 +133,8 @@ class _DashboardSearchBoxState extends State<DashboardSearchBox> {
                 itemCount: _suggestions.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(_suggestions[index]),
+                    title: Text(_suggestions[index],
+                    style: TextStyle(color: isDark ? Colors.white : Colors.black),),
                     onTap: () {
                       _controller.text = _suggestions[index];
                       widget.onSearchSubmitted(_suggestions[index]);
@@ -147,7 +149,6 @@ class _DashboardSearchBoxState extends State<DashboardSearchBox> {
             ),
         ],
       ),
-
     );
   }
 }
