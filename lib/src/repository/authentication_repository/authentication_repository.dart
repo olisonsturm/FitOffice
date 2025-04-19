@@ -78,7 +78,18 @@ class AuthenticationRepository extends GetxController {
   /// [EmailAuthentication] - REGISTER
   Future<void> registerWithEmailAndPassword(String email, String password) async {
     try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      await _auth.createUserWithEmailAndPassword(email: email, password: password).then((userCredential) async {
+        final user = userCredential.user;
+
+        // Wait for 2 seconds to ensure the onCreate function is executed
+        await Future.delayed(const Duration(seconds: 2));
+
+        // Fetch the ID token with force refresh
+        final idToken = await user?.getIdToken(true);
+
+        // Log the new ID token with claims
+        print("New ID Token with Claims: $idToken");
+      });
     } on FirebaseAuthException catch (e) {
       final ex = TExceptions.fromCode(e.code);
       throw ex.message;

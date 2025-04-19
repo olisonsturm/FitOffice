@@ -12,10 +12,10 @@ class DashboardSearchBox extends StatefulWidget {
   final void Function(String) onSearchSubmitted;
 
   @override
-  _DashboardSearchBoxState createState() => _DashboardSearchBoxState();
+  DashboardSearchBoxState createState() => DashboardSearchBoxState();
 }
 
-class _DashboardSearchBoxState extends State<DashboardSearchBox> {
+class DashboardSearchBoxState extends State<DashboardSearchBox> {
   late FocusNode _focusNode;
   late TextEditingController _controller;
 

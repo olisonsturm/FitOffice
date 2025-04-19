@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import 'package:fit_office/src/repository/user_repository/user_repository.dart';
 import '../../../repository/authentication_repository/authentication_repository.dart';
+import '../../../repository/supabase_repository/supabase_service.dart';
 
 class SignUpController extends GetxController {
   static SignUpController get instance => Get.find();
@@ -53,6 +54,10 @@ class SignUpController extends GetxController {
       final auth = AuthenticationRepository.instance;
       await auth.registerWithEmailAndPassword(user.email, user.password!);
       await UserRepository.instance.createUser(user);
+
+      // Create user in Supabase??? TODO
+
+      // Once the user Signed In, Check if the User Data is already stored in Firestore Collection('Users')
       auth.setInitialScreen(auth.firebaseUser);
 
     } catch (e) {

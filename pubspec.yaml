@@ -38,10 +38,15 @@ dependencies:
   line_awesome_flutter: ^2.0.0
   flutter_native_splash: ^2.4.0
   string_similarity: ^2.1.1
+  supabase_flutter: ^2.8.4
+  image_picker: ^1.1.2
+  image_cropper: ^9.1.0
+  cached_network_image: ^3.4.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.3
 
 flutter:
   uses-material-design: true
