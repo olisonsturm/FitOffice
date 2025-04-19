@@ -133,7 +133,6 @@ const String tDashboardLowerBody = "Lower Body";
 const String tDashboardCompleteBody = "Complete Body";
 const String tDashboardMind = "Mind";
 const String tDashboardFavourites = "Favourites";
-const String tDashboardInsertSearch = "Insert your search in here";
 
 
 

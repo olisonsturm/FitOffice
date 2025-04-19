@@ -42,172 +42,176 @@ class DashboardState extends State<Dashboard> {
     final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     final controller = Get.put(ProfileController());
+    return GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: SafeArea(
+          child: Scaffold(
+            appBar: DashboardAppBar(isDark: isDark),
+            drawer: Drawer(
+              backgroundColor: tWhiteColor,
+              child: ListView(
+                children: [
+                  FutureBuilder(
+                    future: controller.getUserData(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.hasData) {
+                          UserModel user = snapshot.data as UserModel;
 
-    return SafeArea(
-      child: Scaffold(
-        appBar: DashboardAppBar(isDark: isDark),
-        drawer: Drawer(
-          backgroundColor: tWhiteColor,
-          child: ListView(
-            children: [
-              FutureBuilder(
-                future: controller.getUserData(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.hasData) {
-                      UserModel user = snapshot.data as UserModel;
+                          //Controllers
+                          final email = user.email;
+                          final fullName = user.fullName;
 
-                      //Controllers
-                      final email = user.email;
-                      final fullName = user.fullName;
-
-                      return UserAccountsDrawerHeader(
-                        currentAccountPicture:
-                            const Image(image: AssetImage(tLogoImage)),
-                        currentAccountPictureSize: const Size(100, 100),
-                        accountName: Text(fullName),
-                        accountEmail: Text(email),
-                        decoration: const BoxDecoration(color: tSecondaryColor),
-                      );
-                    } else {
-                      return const Center(child: Text('Something went wrong'));
-                    }
-                  } else {
-                    return const UserAccountsDrawerHeader(
-                      currentAccountPicture:
-                          Image(image: AssetImage(tLogoImage)),
-                      accountName: Text('Loading...'),
-                      accountEmail: Text('Loading...'),
-                    );
-                  }
-                },
-              ),
-              ListTile(
-                  leading: const Icon(Icons.verified_user),
-                  title: const Text('Profile'),
-                  onTap: () {
-                    Get.to(() => ProfileScreen());
-                  }),
-              const ListTile(
-                  leading: Icon(Icons.favorite), title: Text('Friends')),
-            ],
-          ),
-        ),
-        body: IndexedStack(
-          index: _selectedIndex,
-          children: [
-            // 0: Progress Screen
-            const ProgressScreen(),
-
-
-            // 1: Dashboard/Home
-            SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.all(tDashboardPadding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Header
-                    FutureBuilder(
-                      future: controller.getUserData(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          if (snapshot.hasData) {
-                            UserModel user = snapshot.data as UserModel;
-                            return Text('$tDashboardTitle ${user.fullName}',
-                                style: txtTheme.bodyMedium);
-                          } else {
-                            return const Center(
-                                child: Text('Something went wrong'));
-                          }
+                          return UserAccountsDrawerHeader(
+                            currentAccountPicture:
+                                const Image(image: AssetImage(tLogoImage)),
+                            currentAccountPictureSize: const Size(100, 100),
+                            accountName: Text(fullName),
+                            accountEmail: Text(email),
+                            decoration:
+                                const BoxDecoration(color: tSecondaryColor),
+                          );
                         } else {
-                          return Text('$tDashboardTitle ...',
-                              style: txtTheme.bodyMedium);
+                          return const Center(
+                              child: Text('Something went wrong'));
                         }
-                      },
-                    ),
-                    Text(tDashboardHeading, style: txtTheme.displayMedium),
-                    const SizedBox(height: tDashboardPadding),
-
-                    // Search
-                    DashboardSearchBox(
-                      txtTheme: Theme.of(context).textTheme,
-                      onSearchSubmitted: (query) {
-                        _performSearch(query);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SearchPage(query: query),
-                          ),
+                      } else {
+                        return const UserAccountsDrawerHeader(
+                          currentAccountPicture:
+                              Image(image: AssetImage(tLogoImage)),
+                          accountName: Text('Loading...'),
+                          accountEmail: Text('Loading...'),
                         );
-                      },
-                    ),
-                    const SizedBox(height: tDashboardPadding),
+                      }
+                    },
+                  ),
+                  ListTile(
+                      leading: const Icon(Icons.verified_user),
+                      title: const Text('Profile'),
+                      onTap: () {
+                        Get.to(() => ProfileScreen());
+                      }),
+                  const ListTile(
+                      leading: Icon(Icons.favorite), title: Text('Friends')),
+                ],
+              ),
+            ),
+            body: IndexedStack(
+              index: _selectedIndex,
+              children: [
+                // 0: Progress Screen
+                const ProgressScreen(),
 
-                    // Categories
-                    DashboardCategories(txtTheme: txtTheme),
-                    const SizedBox(height: tDashboardPadding),
+                // 1: Dashboard/Home
+                SingleChildScrollView(
+                  child: Container(
+                    padding: const EdgeInsets.all(tDashboardPadding),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Header
+                        FutureBuilder(
+                          future: controller.getUserData(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              if (snapshot.hasData) {
+                                UserModel user = snapshot.data as UserModel;
+                                return Text('$tDashboardTitle ${user.fullName}',
+                                    style: txtTheme.bodyMedium);
+                              } else {
+                                return const Center(
+                                    child: Text('Something went wrong'));
+                              }
+                            } else {
+                              return Text('$tDashboardTitle ...',
+                                  style: txtTheme.bodyMedium);
+                            }
+                          },
+                        ),
+                        Text(tDashboardHeading, style: txtTheme.displayMedium),
+                        const SizedBox(height: tDashboardPadding),
 
-                    // Banner  --> woanders einbauen? oder wo/wofür nötig?
+                        // Search
+                        DashboardSearchBox(
+                          txtTheme: Theme.of(context).textTheme,
+                          onSearchSubmitted: (query) {
+                            _performSearch(query);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SearchPage(query: query),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: tDashboardPadding),
+
+                        // Categories
+                        DashboardCategories(txtTheme: txtTheme),
+                        const SizedBox(height: tDashboardPadding),
+
+                        // Banner  --> woanders einbauen? oder wo/wofür nötig?
 //                  //Text(tDashboardInformation, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
 //                  //DashboardBanners(txtTheme: txtTheme, isDark: isDark),
 //                  //const SizedBox(height: tDashboardPadding),
-                  ],
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            // 2: Statistics Screen
-            Scaffold(
-              body: Padding(
-                padding: const EdgeInsets.all(tDashboardPadding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(tDashboardStatistics,
-                        style: txtTheme.headlineMedium
-                            ?.apply(fontSizeFactor: 1.2)),
-                    const SizedBox(height: 20),
-                    StatisticsWidget(txtTheme: txtTheme, isDark: isDark),
-                  ],
+                // 2: Statistics Screen
+                Scaffold(
+                  body: Padding(
+                    padding: const EdgeInsets.all(tDashboardPadding),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(tDashboardStatistics,
+                            style: txtTheme.headlineMedium
+                                ?.apply(fontSizeFactor: 1.2)),
+                        const SizedBox(height: 20),
+                        StatisticsWidget(txtTheme: txtTheme, isDark: isDark),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
 
-            // 3: Friends
-            const FriendsScreen(),
-          ],
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          },
-          type: BottomNavigationBarType
-              .fixed, // <- sicherstellen, dass alle Icons angezeigt werden
-          selectedItemColor: tBottomNavBarSelectedColor,
-          unselectedItemColor: tBottomNavBarUnselectedColor,
-          items: const [
-             BottomNavigationBarItem(
-              icon: Icon(Icons.route),
-              label: 'Progress',
+                // 3: Friends
+                const FriendsScreen(),
+              ],
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.book),
-              label: 'Library',
+            bottomNavigationBar: BottomNavigationBar(
+              currentIndex: _selectedIndex,
+              onTap: (index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+              type: BottomNavigationBarType.fixed,
+              // <- sicherstellen, dass alle Icons angezeigt werden
+              selectedItemColor: tBottomNavBarSelectedColor,
+              unselectedItemColor: tBottomNavBarUnselectedColor,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.route),
+                  label: 'Progress',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.book),
+                  label: 'Library',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.insert_chart),
+                  label: 'Statistics',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Profile',
+                ),
+              ],
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.insert_chart),
-              label: 'Statistics',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }

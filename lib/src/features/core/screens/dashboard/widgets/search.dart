@@ -49,7 +49,9 @@ class _DashboardSearchBoxState extends State<DashboardSearchBox> {
     final input = _controller.text.toLowerCase();
     setState(() {
       _suggestions = _allExercises
-          .where((name) => name.toLowerCase().contains(input) || name.similarityTo(input) > 0.4)
+          .where((name) =>
+              name.toLowerCase().contains(input) ||
+              name.similarityTo(input) > 0.4)
           .toList();
     });
   }
@@ -57,98 +59,85 @@ class _DashboardSearchBoxState extends State<DashboardSearchBox> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _controller,
+                  focusNode: _focusNode,
+                  decoration: InputDecoration(
+                    hintText: tDashboardSearch,
+                    hintStyle: widget.txtTheme.displayMedium?.copyWith(
+                      color: isDark ? Colors.white70 : Colors.grey[700],
+                    ),
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    suffixIcon: _controller.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear, size: 20),
+                            onPressed: () {
+                              setState(() {
+                                _controller.clear();
+                                _focusNode.unfocus();
+                                _suggestions.clear();
+                              });
+                            },
+                          )
+                        : null,
+                  ),
+                  autofocus: false,
+                  onSubmitted: (value) {
+                    if (value.trim().isNotEmpty) {
+                      widget.onSearchSubmitted(value);
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (_controller.text.isNotEmpty && _suggestions.isNotEmpty)
           Container(
+            margin: const EdgeInsets.only(top: 5),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
+              color: isDark ? Colors.black : Colors.white,
+              border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(8),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            child: Row(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      _focusNode.requestFocus();
-                    },
-                    child: TextField(
-                      controller: _controller,
-                      focusNode: _focusNode,
-                      decoration: InputDecoration(
-                        hintText: tDashboardSearch,
-                        hintStyle: widget.txtTheme.displayMedium?.copyWith(
-                          color: isDark ? Colors.white70 : Colors.grey[700],
-                        ),
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        suffixIcon: _controller.text.isNotEmpty
-                            ? IconButton(
-                          icon: const Icon(Icons.clear, size: 20),
-                          onPressed: () {
-                            setState(() {
-                              _controller.clear();
-                              _focusNode.unfocus();
-                              _suggestions.clear();
-                            });
-                          },
-                        )
-                            : null,
-                      ),
-                      autofocus: false,
-                      onSubmitted: (value) {
-                        if (value.trim().isNotEmpty) {
-                          widget.onSearchSubmitted(value);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(tDashboardInsertSearch),
-                            ),
-                          );
-                        }
-                      },
-                    ),
+            constraints: const BoxConstraints(maxHeight: 200),
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: _suggestions.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(
+                    _suggestions[index],
+                    style:
+                        TextStyle(color: isDark ? Colors.white : Colors.black),
                   ),
-                ),
-              ],
+                  onTap: () {
+                    _controller.text = _suggestions[index];
+                    widget.onSearchSubmitted(_suggestions[index]);
+                    setState(() {
+                      _suggestions.clear();
+                      _focusNode.unfocus();
+                    });
+                  },
+                );
+              },
             ),
           ),
-          if (_controller.text.isNotEmpty && _suggestions.isNotEmpty)
-            Container(
-              margin: const EdgeInsets.only(top: 5),
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: isDark ? Colors.black : Colors.white,
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              constraints: const BoxConstraints(maxHeight: 200),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _suggestions.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_suggestions[index],
-                    style: TextStyle(color: isDark ? Colors.white : Colors.black),),
-                    onTap: () {
-                      _controller.text = _suggestions[index];
-                      widget.onSearchSubmitted(_suggestions[index]);
-                      setState(() {
-                        _suggestions.clear();
-                        _focusNode.unfocus();
-                      });
-                    },
-                  );
-                },
-              ),
-            ),
-        ],
-      ),
+      ],
     );
   }
 }

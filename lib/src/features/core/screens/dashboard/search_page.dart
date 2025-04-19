@@ -8,6 +8,7 @@ import '../../controllers/profile_controller.dart';
 
 class SearchPage extends StatefulWidget {
   final String query;
+
   const SearchPage({super.key, required this.query});
 
   @override
@@ -34,6 +35,7 @@ class _SearchPageState extends State<SearchPage> {
       _searchResults = results;
     });
   }
+
   void _loadUserAndSearch(String query) async {
     _user = await _profileController.getUserData();
     final dbController = DbController();
@@ -66,62 +68,71 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(tDashboardSearch),
-        backgroundColor: Colors.grey,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DashboardSearchBox(
-              txtTheme: Theme.of(context).textTheme,
-              onSearchSubmitted: _performSearch,
+    return GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text(tDashboardSearch),
+            backgroundColor: Colors.grey,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: _searchResults.isEmpty
-                  ? const Text(tDashboardNoResultsFound)
-                  : ListView.builder(
-                itemCount: _searchResults.length,
-                itemBuilder: (context, index) {
-                  final exercise = _searchResults[index];
-                  final isFavorite = _userFavorites.contains(exercise['name']);
-                  return Card(
-                    child: ListTile(
-                      onTap: () => {
-                        // TODO: Add link to exercise here
-                      },
-                      title: Text(exercise['name'] ?? 'Unbenannt',
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      subtitle: Text(
-                          'Kategorie: ${exercise['category'] ?? 'keine'}\n'
-                            'Beschreibung: ${exercise['description'] ?? 'keine'}\n'
-                              'Video: ${exercise['video'] ?? 'keine'}\n'
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(
-                          isFavorite ? Icons.favorite : Icons.favorite_border,
-                          color: isFavorite ? Colors.red : Colors.grey,
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DashboardSearchBox(
+                  txtTheme: Theme.of(context).textTheme,
+                  onSearchSubmitted: _performSearch,
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: _searchResults.isEmpty
+                      ? const Text(tDashboardNoResultsFound)
+                      : ListView.builder(
+                          itemCount: _searchResults.length,
+                          itemBuilder: (context, index) {
+                            final exercise = _searchResults[index];
+                            final isFavorite =
+                                _userFavorites.contains(exercise['name']);
+                            return Card(
+                              child: ListTile(
+                                onTap: () => {
+                                  // TODO: Add link to exercise here
+                                },
+                                title: Text(exercise['name'] ?? 'Unbenannt',
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)),
+                                subtitle: Text(
+                                    'Kategorie: ${exercise['category'] ?? 'keine'}\n'
+                                    'Beschreibung: ${exercise['description'] ?? 'keine'}\n'
+                                    'Video: ${exercise['video'] ?? 'keine'}\n'),
+                                trailing: IconButton(
+                                  icon: Icon(
+                                    isFavorite
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color:
+                                        isFavorite ? Colors.red : Colors.grey,
+                                  ),
+                                  onPressed: () =>
+                                      _toggleFavorite(exercise['name']),
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                        onPressed: () => _toggleFavorite(exercise['name']),
-                      ),
-                    ),
-                  );
-                },
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }
