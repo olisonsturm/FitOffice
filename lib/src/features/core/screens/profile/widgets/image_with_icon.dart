@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crop_your_image/crop_your_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit_office/src/repository/firebase_storage/storage_service.dart';
+import 'package:fit_office/src/utils/helper/helper_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -25,10 +26,20 @@ class ImageWithIconSate extends State<ImageWithIcon> {
   final StorageService _storageService = StorageService();
 
   File? _selectedImage;
-  late String _currentAvatarUrl =
-      'https://eycjcipufiabddbzaqip.supabase.co/storage/v1/object/public/avatars/${FirebaseAuth.instance.currentUser!.uid}.jpg?timestamp=${DateTime.now().millisecondsSinceEpoch}';
-  //TODO String _currentAvatarUrl = SupabaseService().getProfilePictureUrl(FirebaseAuth.instance.currentUser!.uid) as String;
+  String _currentAvatarUrl = '';
 
+  @override
+  void initState() {
+    super.initState();
+    _loadAvatarUrl();
+  }
+
+  Future<void> _loadAvatarUrl() async {
+    final url = await _storageService.getProfilePictureUrl(_user.uid);
+    setState(() {
+      _currentAvatarUrl = url ?? '';
+    });
+  }
 
   Future<void> _pickAndCropImage() async {
     final picker = ImagePicker();
@@ -86,11 +97,15 @@ class ImageWithIconSate extends State<ImageWithIcon> {
       if (croppedImage != null) {
         setState(() {
           _selectedImage = croppedImage;
+          Helper.successSnackBar(title: 'Success', message: 'Avatar updated successfully');
         });
 
-        setState(() {
-          _currentAvatarUrl =
-            'https://eycjcipufiabddbzaqip.supabase.co/storage/v1/object/public/avatars/${FirebaseAuth.instance.currentUser!.uid}.jpg?timestamp=${DateTime.now().millisecondsSinceEpoch}';
+        StorageService().getProfilePictureUrl(_user.uid).then((url) {
+          setState(() {
+            _currentAvatarUrl = url;
+          });
+        }).catchError((error) {
+          debugPrint('Error fetching profile picture URL: $error');
         });
       }
     }
