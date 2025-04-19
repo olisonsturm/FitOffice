@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import 'package:fit_office/src/repository/user_repository/user_repository.dart';
 import '../../../repository/authentication_repository/authentication_repository.dart';
-import '../../../repository/supabase_repository/supabase_service.dart';
 
 class SignUpController extends GetxController {
   static SignUpController get instance => Get.find();

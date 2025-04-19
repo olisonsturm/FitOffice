@@ -1,3 +1,4 @@
+import 'package:fit_office/src/repository/firebase_storage/storage_service.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/features/authentication/controllers/login_controller.dart';
 import 'package:fit_office/src/features/authentication/controllers/on_boarding_controller.dart';
@@ -5,14 +6,13 @@ import 'package:fit_office/src/features/authentication/controllers/otp_controlle
 import 'package:fit_office/src/features/authentication/controllers/signup_controller.dart';
 import 'package:fit_office/src/repository/user_repository/user_repository.dart';
 import '../repository/authentication_repository/authentication_repository.dart';
-import '../repository/supabase_repository/supabase_service.dart';
 
 class InitialBinding extends Bindings{
   @override
   void dependencies() {
     Get.lazyPut(() => AuthenticationRepository(), fenix: true);
     Get.lazyPut(() => UserRepository(), fenix: true);
-    Get.lazyPut(() => SupabaseService(), fenix: true);
+    Get.lazyPut(() => StorageService(), fenix: true);
 
     Get.lazyPut(() => OnBoardingController(), fenix: true);
 

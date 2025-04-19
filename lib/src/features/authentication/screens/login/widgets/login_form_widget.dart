@@ -70,11 +70,9 @@ class LoginFormWidget extends StatelessWidget {
               () => TPrimaryButton(
                 isLoading: controller.isLoading.value ? true : false,
                 text: tLogin.tr,
-                onPressed: controller.isFacebookLoading.value || controller.isGoogleLoading.value
+                onPressed: controller.isLoading.value
                     ? () {}
-                    : controller.isLoading.value
-                        ? () {}
-                        : () => controller.login(),
+                    : () => controller.login(),
               ),
             ),
           ],

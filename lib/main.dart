@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
@@ -26,18 +28,20 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
       .then((_) => Get.put(AuthenticationRepository()));
 
-  /// -- README(Docs[3]) -- Initialize Supabase
-  await Supabase.initialize(
-    url: 'https://eycjcipufiabddbzaqip.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Y2pjaXB1ZmlhYmRkYnphcWlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2MTYyMTcsImV4cCI6MjA2MDE5MjIxN30.YDkhOPz7P-km4uR3-tdamYKOimU4yYBHzcPfGQRda8k',
-    debug: false,
-    accessToken: () async {
-      final token = await FirebaseAuth.instance.currentUser?.getIdToken();
-      return token;
-    },
-  );
+  /// -- README(Docs[3]) -- Initialize Firebase Storage
+  if (defaultTargetPlatform != TargetPlatform.windows) {
+    // window currently don't support storage emulator
+    final emulatorHost =
+    (!kIsWeb && defaultTargetPlatform == TargetPlatform.android)
+        ? '10.0.2.2'
+        : 'localhost';
+
+    await FirebaseStorage.instance.useStorageEmulator(emulatorHost, 9199);
+  }
+
 
   /// -- Main App Starts here (app.dart) ...
   runApp(const App());
 
 }
+

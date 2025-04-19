@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:crop_your_image/crop_your_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fit_office/src/repository/firebase_storage/storage_service.dart';
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import '../../../../../constants/colors.dart';
-import '../../../../../repository/supabase_repository/supabase_service.dart';
 import 'avatar.dart';
 
 class ImageWithIcon extends StatefulWidget {
@@ -20,9 +20,13 @@ class ImageWithIcon extends StatefulWidget {
 
 class ImageWithIconSate extends State<ImageWithIcon> {
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final User _user = FirebaseAuth.instance.currentUser!;
+  final StorageService _storageService = StorageService();
+
   File? _selectedImage;
-  String _currentAvatarUrl =
-      'https://eycjcipufiabddbzaqip.supabase.co/storage/v1/object/public/users/'+ FirebaseAuth.instance.currentUser!.uid +'/avatar.png';
+  late String _currentAvatarUrl =
+      'https://eycjcipufiabddbzaqip.supabase.co/storage/v1/object/public/avatars/${FirebaseAuth.instance.currentUser!.uid}.jpg?timestamp=${DateTime.now().millisecondsSinceEpoch}';
   //TODO String _currentAvatarUrl = SupabaseService().getProfilePictureUrl(FirebaseAuth.instance.currentUser!.uid) as String;
 
 
@@ -31,33 +35,63 @@ class ImageWithIconSate extends State<ImageWithIcon> {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      final croppedFile = await ImageCropper().cropImage(
-        sourcePath: pickedFile.path,
-        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
-        uiSettings: [
-          AndroidUiSettings(
-            toolbarTitle: 'Crop Image',
-            toolbarColor: Colors.black,
-            toolbarWidgetColor: Colors.white,
-            lockAspectRatio: true,
+      final imageBytes = await pickedFile.readAsBytes();
+      final cropController = CropController();
+
+      final croppedImage = await Navigator.push<File?>(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.pop(context, null), // Rückgabe von null bei Abbruch
+              ),
+              title: const Text('Crop Image'),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.done),
+                  onPressed: () => cropController.crop(), // Cropping auslösen
+                ),
+              ],
+            ),
+            body: Crop(
+              image: imageBytes,
+              controller: cropController,
+              aspectRatio: 1,
+              onCropped: (result) async {
+                switch (result) {
+                  case CropSuccess(:final croppedImage):
+                    final tempDir = Directory.systemTemp;
+                    final uniqueFileName = 'cropped_image_${DateTime.now().millisecondsSinceEpoch}.jpg';
+                    final tempFile = File('${tempDir.path}/$uniqueFileName');
+                    await tempFile.writeAsBytes(croppedImage);
+
+                    // TODO hochladen des neuen Avatars
+                    StorageService().uploadProfilePicture(_user.uid, XFile(tempFile.path));
+
+                    Navigator.pop(context, tempFile); // Rückgabe des zugeschnittenen Bildes
+                    break;
+                  case CropFailure(:final cause):
+                    debugPrint('Crop failed: $cause');
+                    Navigator.pop(context, null); // Rückgabe von null bei Fehler
+                    break;
+                }
+              },
+            ),
           ),
-          IOSUiSettings(
-            title: 'Crop Image',
-            aspectRatioLockEnabled: true,
-          ),
-        ],
+        ),
       );
 
-      if (croppedFile != null) {
+      if (croppedImage != null) {
         setState(() {
-          _selectedImage = File(croppedFile.path);
+          _selectedImage = croppedImage;
         });
 
-        // Upload the new avatar
-        await SupabaseService().uploadProfilePicture(
-          FirebaseAuth.instance.currentUser!.uid,
-          croppedFile as File,
-        );
+        setState(() {
+          _currentAvatarUrl =
+            'https://eycjcipufiabddbzaqip.supabase.co/storage/v1/object/public/avatars/${FirebaseAuth.instance.currentUser!.uid}.jpg?timestamp=${DateTime.now().millisecondsSinceEpoch}';
+        });
       }
     }
   }
