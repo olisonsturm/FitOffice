@@ -243,4 +243,15 @@ class DbController {
 
     await favoriteQuery.docs.first.reference.delete();
   }
+
+  Future<List<String>> getAllExerciseNames() async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('exercises')
+        .get();
+
+    final List<String> exerciseNames = querySnapshot.docs
+        .map((doc) => doc['name'] as String)
+        .toList();
+    return exerciseNames;
+  }
 }

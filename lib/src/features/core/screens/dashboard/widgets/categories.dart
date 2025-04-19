@@ -50,7 +50,7 @@ class _DashboardCategoriesState extends State<DashboardCategories> {
   @override
   Widget build(BuildContext context) {
     final list = [
-      DashboardCategoriesModel("UB", tDasboardUpperBody, upperBodyCount, () => Navigator.push(
+      DashboardCategoriesModel("UB", tDashboardUpperBody, upperBodyCount, () => Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => const CategoriesPage(category: "upper-body", heading: "Oberkörper"),

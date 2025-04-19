@@ -128,11 +128,12 @@ const String tDashboardNoExercisesDone = "No exercises done yet.";
 const String tDashboardExceptionLoadingExercise = "Could not load last exercise";
 const String tDashboardTimestampsMissing = "Timestamps are missing.";
 const String tDashboardNoResultsFound = "No exercises were found";
-const String tDasboardUpperBody = "Upper Body";
+const String tDashboardUpperBody = "Upper Body";
 const String tDashboardLowerBody = "Lower Body";
 const String tDashboardCompleteBody = "Complete Body";
 const String tDashboardMind = "Mind";
 const String tDashboardFavourites = "Favourites";
+const String tDashboardInsertSearch = "Insert your search in here";
 
 
 
