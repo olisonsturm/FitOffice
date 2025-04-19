@@ -53,6 +53,10 @@ class SignUpController extends GetxController {
       final auth = AuthenticationRepository.instance;
       await auth.registerWithEmailAndPassword(user.email, user.password!);
       await UserRepository.instance.createUser(user);
+
+      // Create user in Supabase??? TODO
+
+      // Once the user Signed In, Check if the User Data is already stored in Firestore Collection('Users')
       auth.setInitialScreen(auth.firebaseUser);
 
     } catch (e) {

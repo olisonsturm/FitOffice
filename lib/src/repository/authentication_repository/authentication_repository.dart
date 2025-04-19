@@ -1,9 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:fit_office/src/features/authentication/screens/mail_verification/mail_verification.dart';
 import 'package:fit_office/src/features/authentication/screens/welcome/welcome_screen.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/dashboard.dart';
@@ -78,7 +77,20 @@ class AuthenticationRepository extends GetxController {
   /// [EmailAuthentication] - REGISTER
   Future<void> registerWithEmailAndPassword(String email, String password) async {
     try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      await _auth.createUserWithEmailAndPassword(email: email, password: password).then((userCredential) async {
+        final user = userCredential.user;
+
+        // Wait for 2 seconds to ensure the onCreate function is executed
+        await Future.delayed(const Duration(seconds: 2));
+
+        // Fetch the ID token with force refresh
+        final idToken = await user?.getIdToken(true);
+
+        // Log the new ID token with claims
+        if (kDebugMode) {
+          print("New ID Token with Claims: $idToken");
+        }
+      });
     } on FirebaseAuthException catch (e) {
       final ex = TExceptions.fromCode(e.code);
       throw ex.message;
@@ -98,55 +110,6 @@ class AuthenticationRepository extends GetxController {
     } catch (_) {
       const ex = TExceptions();
       throw ex.message;
-    }
-  }
-
-  /* ---------------------------- Federated identity & social sign-in ---------------------------------*/
-
-  /// [GoogleAuthentication] - GOOGLE
-  Future<UserCredential?> signInWithGoogle() async {
-    try {
-      // Trigger the authentication flow
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-      // Obtain the auth details from the request
-      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-
-      // Create a new credential
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-
-      // Once signed in, return the UserCredential
-      return await FirebaseAuth.instance.signInWithCredential(credential);
-    } on FirebaseAuthException catch (e) {
-      final ex = TExceptions.fromCode(e.code);
-      throw ex.message;
-    } catch (_) {
-      const ex = TExceptions();
-      throw ex.message;
-    }
-  }
-
-  ///[FacebookAuthentication] - FACEBOOK
-  Future<UserCredential> signInWithFacebook() async {
-    try {
-      // Trigger the sign-in flow
-      final LoginResult loginResult = await FacebookAuth.instance.login(permissions: ['email']);
-
-      // Create a credential from the access token
-      final AccessToken accessToken = loginResult.accessToken!;
-      final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(accessToken.token);
-
-      // Once signed in, return the UserCredential
-      return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
-    } on FirebaseAuthException catch (e) {
-      throw e.message!;
-    } on FormatException catch (e) {
-      throw e.message;
-    } catch (e) {
-      throw 'Something went wrong. Try again!';
     }
   }
 
@@ -202,8 +165,6 @@ class AuthenticationRepository extends GetxController {
   /// [LogoutUser] - Valid for any authentication.
   Future<void> logout() async {
     try {
-      await GoogleSignIn().signOut();
-      await FacebookAuth.instance.logOut();
       await FirebaseAuth.instance.signOut();
       Get.offAll(() => const WelcomeScreen());
     } on FirebaseAuthException catch (e) {
