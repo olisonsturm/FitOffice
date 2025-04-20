@@ -1,3 +1,4 @@
+import 'package:fit_office/src/features/core/screens/account/widgets/add_exercises_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/sizes.dart';
@@ -43,6 +44,10 @@ class _FriendsScreenState extends State<FriendsScreen> {
                   children: [
                     Text('$tAccountGreeting ${user.fullName}', style: txtTheme.headlineSmall),
                     const SizedBox(height: tDefaultSize),
+                    if (user.role == "admin") ...[
+                      AddExercisesButton(currentUserId: user.id.toString()),
+                      const SizedBox(height: tDefaultSize),
+                    ],
                     AddFriendsButton(currentUserId: user.id!),
                   ],
                 );

@@ -47,6 +47,7 @@ class SignUpController extends GetxController {
         fitnessLevel: "Beginner",
         completedExercises: 0,
         profilePicture: "",
+        role: "user",
       );
 
       // Authenticate User first
