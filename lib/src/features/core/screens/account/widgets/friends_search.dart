@@ -58,7 +58,6 @@ class _FriendSearchWidgetState extends State<FriendSearchWidget> {
         isSearching = false;
       });
     } catch (e) {
-      print("Fehler bei der Suche: $e");
       setState(() {
         userResults = [];
         fullResults = [];

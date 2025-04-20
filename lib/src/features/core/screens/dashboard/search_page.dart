@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 
 import '../../../authentication/models/user_model.dart';
 import '../../controllers/profile_controller.dart';
+import '../account/edit_exercise.dart';
 
 class SearchPage extends StatefulWidget {
   final String query;
+
   const SearchPage({super.key, required this.query});
 
   @override
@@ -34,6 +36,7 @@ class _SearchPageState extends State<SearchPage> {
       _searchResults = results;
     });
   }
+
   void _loadUserAndSearch(String query) async {
     _user = await _profileController.getUserData();
     final dbController = DbController();
@@ -91,33 +94,55 @@ class _SearchPageState extends State<SearchPage> {
               child: _searchResults.isEmpty
                   ? const Text(tDashboardNoResultsFound)
                   : ListView.builder(
-                itemCount: _searchResults.length,
-                itemBuilder: (context, index) {
-                  final exercise = _searchResults[index];
-                  final isFavorite = _userFavorites.contains(exercise['name']);
-                  return Card(
-                    child: ListTile(
-                      onTap: () => {
-                        // TODO: Add link to exercise here
+                      itemCount: _searchResults.length,
+                      itemBuilder: (context, index) {
+                        final exercise = _searchResults[index];
+                        final isFavorite =
+                            _userFavorites.contains(exercise['name']);
+                        return Card(
+                            child: ListTile(
+                          onTap: () => {
+                            // TODO: Add link to exercise here
+                          },
+                          title: Text(exercise['name'] ?? 'Unbenannt',
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                          subtitle: Text(
+                              'Kategorie: ${exercise['category'] ?? 'keine'}\n'
+                              'Beschreibung: ${exercise['description'] ?? 'keine'}\n'
+                              'Video: ${exercise['video'] ?? 'keine'}\n'),
+                          trailing:
+                              Row(mainAxisSize: MainAxisSize.min, children: [
+                            IconButton(
+                              icon: Icon(
+                                _userFavorites.contains(exercise['name'])
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: _userFavorites.contains(exercise['name'])
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                              onPressed: () =>
+                                  _toggleFavorite(exercise['name']),
+                            ),
+                            if (_user?.role == 'admin')
+                              IconButton(
+                                icon:
+                                    const Icon(Icons.edit, color: Colors.blue),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          EditExercise(exercise: exercise, exerciseName: exercise['name'],),
+                                    ),
+                                  );
+                                },
+                              ),
+                          ]),
+                        ));
                       },
-                      title: Text(exercise['name'] ?? 'Unbenannt',
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      subtitle: Text(
-                          'Kategorie: ${exercise['category'] ?? 'keine'}\n'
-                            'Beschreibung: ${exercise['description'] ?? 'keine'}\n'
-                              'Video: ${exercise['video'] ?? 'keine'}\n'
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(
-                          isFavorite ? Icons.favorite : Icons.favorite_border,
-                          color: isFavorite ? Colors.red : Colors.grey,
-                        ),
-                        onPressed: () => _toggleFavorite(exercise['name']),
-                      ),
                     ),
-                  );
-                },
-              ),
             ),
           ],
         ),

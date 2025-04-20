@@ -36,7 +36,7 @@ class _FavoritesPage extends State<FavoritesPage> {
       _user = user;
     });
 
-    final results = await dbController.getFavouriteExercises(user.email!);
+    final results = await dbController.getFavouriteExercises(user.email);
     setState(() {
       _searchResults = results;
     });

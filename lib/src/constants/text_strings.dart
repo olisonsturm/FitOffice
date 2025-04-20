@@ -171,3 +171,6 @@ const String tAdd = "Add";
 const String tUpperBody = "Upper Body";
 const String tLowerBody = "Lower Body";
 const String tMental = "Mental";
+const String tChangesSaved = "Changes have been saved successfully!";
+const String tEditExerciseHeading = "Edit Exercise";
+const String tSave = "Save";

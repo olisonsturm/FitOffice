@@ -1,9 +1,6 @@
-//TODO: Add functionality to the share button and add colors to constants
 import 'package:fit_office/src/features/core/screens/account/add_exercises.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
-import '../add_friends.dart';
 
 class AddExercisesButton extends StatelessWidget {
   final String currentUserId;
