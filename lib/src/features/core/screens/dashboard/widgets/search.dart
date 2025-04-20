@@ -86,7 +86,7 @@ class _DashboardSearchBoxState extends State<DashboardSearchBox> {
                   });
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Bitte gib einen Suchbegriff ein.')),
+                    const SnackBar(content: Text(tDashboardExerciseSearchNoInput)),
                   );
                 }
               },

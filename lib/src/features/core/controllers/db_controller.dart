@@ -159,7 +159,7 @@ class DbController {
         description.toLowerCase(),
         exerciseName.toLowerCase(),
       );
-      return nameSimilarity > 0.4 || descriptionSimilarity > 0.4;
+      return nameSimilarity > 0.2 || descriptionSimilarity > 0.4;
     }).map((doc) => doc.data()).toList();
 
     return results;

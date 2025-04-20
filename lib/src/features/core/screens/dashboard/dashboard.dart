@@ -64,7 +64,15 @@ class DashboardState extends State<Dashboard> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: DashboardAppBar(isDark: isDark),
+        appBar: TimerAwareAppBar(
+          normalAppBar: AppBar(
+            title: Text(tAppName,
+                style: Theme.of(context).textTheme.headlineMedium),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
+          showBackButton: false,
+        ),
         drawer: Drawer(
           backgroundColor: tWhiteColor,
           child: ListView(
@@ -132,12 +140,13 @@ class DashboardState extends State<Dashboard> {
                             MaterialPageRoute(
                               builder: (context) => SearchPage(query: query),
                             ),
-                          );
+                          ).then((_) {
+                            _categoriesKey.currentState?.refreshData();
+                          });
                         },
                         onTextChanged: (query) {
                           _performSearch(query);
-                          _categoriesKey.currentState?.updateSearchQuery(
-                              query); // <- Diese Zeile hinzufügen!
+                          _categoriesKey.currentState?.updateSearchQuery(query);
                         },
                       ),
 
@@ -147,15 +156,15 @@ class DashboardState extends State<Dashboard> {
                       DashboardCategories(
                         key: _categoriesKey,
                         txtTheme: txtTheme,
-                        onSearchChanged: (text) {}, // <--- das hat gefehlt!
+                        onSearchChanged: (text) {},
                       ),
 
                       const SizedBox(height: tDashboardPadding),
 
-                    // Banner  --> woanders einbauen? oder wo/wofür nötig?
-                    //Text(tDashboardInformation, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
-                    //DashboardBanners(txtTheme: txtTheme, isDark: isDark),
-                    //const SizedBox(height: tDashboardPadding),
+                      // Banner  --> woanders einbauen? oder wo/wofür nötig?
+                      //Text(tDashboardInformation, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
+                      //DashboardBanners(txtTheme: txtTheme, isDark: isDark),
+                      //const SizedBox(height: tDashboardPadding),
                     ],
                   ),
                 ),
@@ -179,7 +188,7 @@ class DashboardState extends State<Dashboard> {
             ),
 
             // 3: Friends
-            const FriendsScreen(),
+            const AccountScreen(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(

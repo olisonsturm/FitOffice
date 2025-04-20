@@ -11,16 +11,19 @@ import '../../../controllers/profile_controller.dart';
 import '../../../models/dashboard/categories_model.dart';
 import '../favorites_page.dart';
 import 'exercises_list.dart';
+import 'sections/physicals_filter.dart';
+import 'sections/mental_filter.dart';
+import 'sections/favorites_filter.dart';
 
 class DashboardCategories extends StatefulWidget {
   const DashboardCategories({
     super.key,
     required this.txtTheme,
-    required this.onSearchChanged, // NEU
+    required this.onSearchChanged,
   });
 
   final TextTheme txtTheme;
-  final void Function(String) onSearchChanged; // NEU
+  final void Function(String) onSearchChanged;
 
   @override
   State<DashboardCategories> createState() => DashboardCategoriesState();
@@ -34,6 +37,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
   String lowerBodyCount = '';
   String fullBodyCount = '';
   String psychologicalCount = '';
+  String favoriteCount = '';
 
   List<Map<String, dynamic>> _allExercises = [];
   List<Map<String, dynamic>> _filteredExercises = [];
@@ -51,13 +55,13 @@ class DashboardCategoriesState extends State<DashboardCategories> {
 
   void _loadExerciseCount() async {
     String countUpperBody =
-        await _dbController.getNumberOfExercisesByCategory('upper-body');
+        await _dbController.getNumberOfExercisesByCategory(tUpperBody);
     String countLowerBody =
-        await _dbController.getNumberOfExercisesByCategory('lower-body');
+        await _dbController.getNumberOfExercisesByCategory(tLowerBody);
     String countFullBody =
-        await _dbController.getNumberOfExercisesByCategory('full-body');
+        await _dbController.getNumberOfExercisesByCategory(tFullBody);
     String countPsychological =
-        await _dbController.getNumberOfExercisesByCategory('mental');
+        await _dbController.getNumberOfExercisesByCategory(tMind);
 
     setState(() {
       upperBodyCount = "$countUpperBody $tDashboardExerciseUnits";
@@ -78,9 +82,12 @@ class DashboardCategoriesState extends State<DashboardCategories> {
   void _loadUserFavorites() async {
     final user = await _profileController.getUserData();
     final userFavorites = await _dbController.getFavouriteExercises(user.email);
+    final favoriteNames =
+        userFavorites.map((e) => e['name'] as String).toList();
 
     setState(() {
-      _userFavorites = userFavorites.map((e) => e['name'] as String).toList();
+      _userFavorites = favoriteNames;
+      favoriteCount = "${favoriteNames.length} $tDashboardExerciseUnits";
     });
   }
 
@@ -114,23 +121,27 @@ class DashboardCategoriesState extends State<DashboardCategories> {
       _filteredExercises = _filterExercises(query, _allExercises);
     });
 
-    widget.onSearchChanged(
-        query); // Optional, falls man es wieder zurückreichen möchte
+    widget.onSearchChanged(query);
   }
+
+  void refreshData() {
+  _loadUserFavorites();
+  _loadAllExercises();
+}
 
   @override
   Widget build(BuildContext context) {
     final list = [
       DashboardCategoriesModel(
-        "UB",
-        tDasboardUpperBody,
+        tAbbreviationUpperBody,
+        tUpperBody,
         upperBodyCount,
         () => Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => const CategoriesPage(
-              category: "upper-body",
-              heading: "Oberkörper",
+              category: tUpperBody,
+              heading: tUpperBody,
             ),
           ),
         ).then((_) {
@@ -139,15 +150,15 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         }),
       ),
       DashboardCategoriesModel(
-        "LB",
-        tDashboardLowerBody,
+        tAbbreviationLowerBody,
+        tLowerBody,
         lowerBodyCount,
         () => Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => const CategoriesPage(
-              category: "lower-body",
-              heading: "Unterkörper",
+              category: tLowerBody,
+              heading: tLowerBody,
             ),
           ),
         ).then((_) {
@@ -156,15 +167,15 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         }),
       ),
       DashboardCategoriesModel(
-        "CB",
-        tDashboardCompleteBody,
+        tAbbreviationFullBody,
+        tFullBody,
         fullBodyCount,
         () => Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => const CategoriesPage(
-              category: "complete-body",
-              heading: "Ganzkörper",
+              category: tFullBody,
+              heading: tFullBody,
             ),
           ),
         ).then((_) {
@@ -176,15 +187,15 @@ class DashboardCategoriesState extends State<DashboardCategories> {
 
     final listPsychologicalExercises = [
       DashboardCategoriesModel(
-        "🧠",
-        tDashboardMind,
+        tAbbreviationMind,
+        tMind,
         psychologicalCount,
         () => Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => const CategoriesPage(
-              category: "mental",
-              heading: "Geist",
+              category: tMind,
+              heading: tMind,
             ),
           ),
         ).then((_) {
@@ -194,8 +205,27 @@ class DashboardCategoriesState extends State<DashboardCategories> {
       ),
     ];
 
-    final listFavouriteExercises =
-        DashboardCategoriesModel.listFavouriteExercises;
+    final listFavouriteExercises = [
+      DashboardCategoriesModel(
+        tAbbreviationFavorites,
+        tFavorites,
+        favoriteCount,
+        () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const FavoritesPage(
+                category: tFavorites,
+                heading: tFavorites,
+              ),
+            ),
+          ).then((_) {
+            _loadUserFavorites(); 
+            _loadAllExercises();
+          });
+        },
+      ),
+    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,58 +235,9 @@ class DashboardCategoriesState extends State<DashboardCategories> {
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
-        // Körperliche Übungen (horizontal)
-        SizedBox(
-          height: 45,
-          child: ListView.builder(
-            itemCount: list.length,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) => GestureDetector(
-              onTap: list[index].onPress,
-              child: SizedBox(
-                width: 170,
-                height: 45,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 45,
-                      height: 45,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: tDarkColor,
-                      ),
-                      child: Center(
-                        child: Text(
-                          list[index].title,
-                          style: widget.txtTheme.titleLarge
-                              ?.apply(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            list[index].heading,
-                            style: widget.txtTheme.titleLarge,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            list[index].subHeading,
-                            style: widget.txtTheme.bodyMedium,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+        DashboardPhysicalSection(
+          categories: list,
+          txtTheme: widget.txtTheme,
         ),
         const SizedBox(height: 20),
         const Text(
@@ -264,57 +245,9 @@ class DashboardCategoriesState extends State<DashboardCategories> {
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
-        SizedBox(
-          height: 45,
-          child: ListView.builder(
-            itemCount: listPsychologicalExercises.length,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) => GestureDetector(
-              onTap: listPsychologicalExercises[index].onPress,
-              child: SizedBox(
-                width: 170,
-                height: 45,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 45,
-                      height: 45,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: tDarkColor,
-                      ),
-                      child: Center(
-                        child: Text(
-                          listPsychologicalExercises[index].title,
-                          style: widget.txtTheme.titleLarge
-                              ?.apply(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            listPsychologicalExercises[index].heading,
-                            style: widget.txtTheme.titleLarge,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            listPsychologicalExercises[index].subHeading,
-                            style: widget.txtTheme.bodyMedium,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+        DashboardMentalSection(
+          categories: listPsychologicalExercises,
+          txtTheme: widget.txtTheme,
         ),
         const SizedBox(height: 20),
         const Text(
@@ -322,70 +255,9 @@ class DashboardCategoriesState extends State<DashboardCategories> {
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
-        SizedBox(
-          height: 45,
-          child: ListView.builder(
-            itemCount: listFavouriteExercises.length,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) => GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const FavoritesPage(
-                      category: "favorites",
-                      heading: "Favorites",
-                    ),
-                  ),
-                ).then((_) {
-                  _loadUserFavorites();
-                  _loadAllExercises();
-                });
-              },
-              child: SizedBox(
-                width: 170,
-                height: 45,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 45,
-                      height: 45,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: tDarkColor,
-                      ),
-                      child: Center(
-                        child: Text(
-                          listFavouriteExercises[index].title,
-                          style: widget.txtTheme.titleLarge
-                              ?.apply(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            listFavouriteExercises[index].heading,
-                            style: widget.txtTheme.titleLarge,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            listFavouriteExercises[index].subHeading,
-                            style: widget.txtTheme.bodyMedium,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+        DashboardFavoritesSection(
+          categories: listFavouriteExercises,
+          txtTheme: widget.txtTheme,
         ),
         const SizedBox(height: 20),
         const Text(
@@ -393,7 +265,6 @@ class DashboardCategoriesState extends State<DashboardCategories> {
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
-
         AllExercisesList(
           exercises: _allExercises,
           favorites: _userFavorites,

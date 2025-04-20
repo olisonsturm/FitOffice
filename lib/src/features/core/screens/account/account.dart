@@ -7,14 +7,14 @@ import 'widgets/add_friends_button.dart';
 import '../../../authentication/models/user_model.dart';
 import '../../controllers/profile_controller.dart';
 
-class FriendsScreen extends StatefulWidget {
-  const FriendsScreen({super.key});
+class AccountScreen extends StatefulWidget {
+  const AccountScreen({super.key});
 
   @override
-  State<FriendsScreen> createState() => _FriendsScreenState();
+  State<AccountScreen> createState() => _FriendsScreenState();
 }
 
-class _FriendsScreenState extends State<FriendsScreen> {
+class _FriendsScreenState extends State<AccountScreen> {
   final controller = Get.put(ProfileController());
   late Future<UserModel> _userFuture;
 

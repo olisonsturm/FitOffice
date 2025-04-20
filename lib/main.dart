@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:fit_office/firebase_options.dart';
 import 'package:fit_office/src/repository/authentication_repository/authentication_repository.dart';
 
+import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'app.dart';
 
 /// ------ For Docs & Updates Check ------
@@ -22,7 +23,10 @@ Future<void> main() async {
 
   /// -- README(Docs[2]) -- Initialize Firebase & Authentication Repository
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
-      .then((_) => Get.put(AuthenticationRepository()));
+      .then((_) {
+    Get.put(AuthenticationRepository());
+    Get.put(ExerciseTimerController()); // ⬅️ NEU: Timer global verfügbar machen
+  });
 
   /// -- Main App Starts here (app.dart) ...
   runApp(const App());

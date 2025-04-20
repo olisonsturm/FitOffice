@@ -2,6 +2,8 @@ import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/search.dart';
 import 'package:flutter/material.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/exercises_list.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.dart';
 
 import '../../../authentication/models/user_model.dart';
 import '../../controllers/profile_controller.dart';
@@ -34,6 +36,7 @@ class _SearchPageState extends State<SearchPage> {
       _searchResults = results;
     });
   }
+
   void _loadUserAndSearch(String query) async {
     _user = await _profileController.getUserData();
     final dbController = DbController();
@@ -67,15 +70,16 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(tDashboardSearch),
-        backgroundColor: Colors.grey,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+      appBar: TimerAwareAppBar(
+        normalAppBar: AppBar(
+          title: const Text(tDashboardSearch),  //den Text evtl anpassen was größe etc angeht...
+          backgroundColor: Colors.grey,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
+        showBackButton: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -86,34 +90,12 @@ class _SearchPageState extends State<SearchPage> {
             Expanded(
               child: _searchResults.isEmpty
                   ? const Text(tDashboardNoResultsFound)
-                  : ListView.builder(
-                itemCount: _searchResults.length,
-                itemBuilder: (context, index) {
-                  final exercise = _searchResults[index];
-                  final isFavorite = _userFavorites.contains(exercise['name']);
-                  return Card(
-                    child: ListTile(
-                      onTap: () => {
-                        // TODO: Add link to exercise here
-                      },
-                      title: Text(exercise['name'] ?? 'Unbenannt',
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      subtitle: Text(
-                          '$tDashboardExerciseCategory ${exercise['category'] ?? 'keine'}\n'
-                            '$tDashboardExerciseDescription: ${exercise['description'] ?? 'keine'}\n'
-                              '$tDashboardExerciseVideo: ${exercise['video'] ?? 'keine'}\n'
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(
-                          isFavorite ? Icons.favorite : Icons.favorite_border,
-                          color: isFavorite ? Colors.red : Colors.grey,
-                        ),
-                        onPressed: () => _toggleFavorite(exercise['name']),
-                      ),
+                  : AllExercisesList(
+                      exercises: _searchResults,
+                      favorites: _userFavorites,
+                      onToggleFavorite: _toggleFavorite,
+                      query: widget.query,
                     ),
-                  );
-                },
-              ),
             ),
           ],
         ),
