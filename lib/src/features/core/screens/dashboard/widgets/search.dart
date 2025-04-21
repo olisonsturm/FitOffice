@@ -14,12 +14,26 @@ class DashboardSearchBox extends StatefulWidget {
   final void Function(String) onTextChanged;
 
   @override
-  State<DashboardSearchBox> createState() => _DashboardSearchBoxState();
+  DashboardSearchBoxState createState() => DashboardSearchBoxState();
 }
 
-class _DashboardSearchBoxState extends State<DashboardSearchBox> {
-  final TextEditingController _controller = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
+class DashboardSearchBoxState extends State<DashboardSearchBox> {
+  late FocusNode _focusNode;
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    _controller = TextEditingController();
+  }
+//   State<DashboardSearchBox> createState() => _DashboardSearchBoxState();
+// }
+
+// class _DashboardSearchBoxState extends State<DashboardSearchBox> {
+//   final TextEditingController _controller = TextEditingController();
+//   final FocusNode _focusNode = FocusNode();
+
 
   @override
   void dispose() {
