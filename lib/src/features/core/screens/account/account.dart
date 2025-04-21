@@ -1,4 +1,5 @@
 import 'package:fit_office/src/features/core/screens/account/widgets/add_exercises_button.dart';
+import 'package:fit_office/src/features/core/screens/account/widgets/add_user_button.dart';
 import 'package:fit_office/src/features/core/screens/account/widgets/delete_user_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -49,6 +50,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                       AddExercisesButton(currentUserId: user.id.toString()),
                       const SizedBox(height: tDefaultSize),
                       const DeleteUserButton(),
+                      const SizedBox(height: tDefaultSize),
+                      const CreateUserButton(),
                       const SizedBox(height: tDefaultSize),
                     ],
                     AddFriendsButton(currentUserId: user.id!),

@@ -272,5 +272,8 @@ class DbController {
       });
     }
   }
-
+  Future<void> saveUserRecord(UserModel user) async {
+    final docRef = FirebaseFirestore.instance.collection('users').doc();
+    await docRef.set(user.toJson());
+  }
 }

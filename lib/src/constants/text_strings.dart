@@ -181,3 +181,6 @@ const String tDeleteEditUser = "DELETE/EDIT USER";
 const String tDeleteEditUserHeading = "Delete/Edit User";
 const String tAllUsers = "All Users";
 const String tNoUsersFound = "No users found.";
+const String tAddUser = "CREATE NEW USER";
+const String tSaveChanges = "Save changes";
+const String tCreateUser = "Create User";
