@@ -23,9 +23,9 @@ class _AddExercisesScreenState extends State<AddExercises> {
   bool isLoading = false;
 
   final Map<String, String> categoryMap = {
-    tUpperBody: 'upper-body',
-    tLowerBody: 'lower-body',
-    tMental: 'mental',
+    tUpperBody: 'Upper-Body',
+    tLowerBody: 'Lower-Body',
+    tMental: 'Mind',
   };
 
   Future<void> _addExercise() async {

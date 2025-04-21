@@ -35,10 +35,10 @@ class _DashboardCategoriesState extends State<DashboardCategories> {
   }
 
   void _loadExerciseCount() async {
-    String countUpperBody = await _dbController.getNumberOfExercisesByCategory('upper-body');
-    String countLowerBody = await _dbController.getNumberOfExercisesByCategory('lower-body');
+    String countUpperBody = await _dbController.getNumberOfExercisesByCategory('Upper-Body');
+    String countLowerBody = await _dbController.getNumberOfExercisesByCategory('Lower-Body');
     String countFullBody = await _dbController.getNumberOfExercisesByCategory('full-body');
-    String countPsychological = await _dbController.getNumberOfExercisesByCategory('mental');
+    String countPsychological = await _dbController.getNumberOfExercisesByCategory('Mind');
     setState(() {
       upperBodyCount = "$countUpperBody Units";
       lowerBodyCount = "$countLowerBody Units";
@@ -53,13 +53,13 @@ class _DashboardCategoriesState extends State<DashboardCategories> {
       DashboardCategoriesModel("UB", tDasboardUpperBody, upperBodyCount, () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const CategoriesPage(category: "upper-body", heading: "Oberkörper"),
+          builder: (context) => const CategoriesPage(category: "Upper-Body", heading: "Oberkörper"),
         ),
       ),),
       DashboardCategoriesModel("LB", tDashboardLowerBody, lowerBodyCount, () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const CategoriesPage(category: "lower-body", heading: "Unterkörper"),
+          builder: (context) => const CategoriesPage(category: "Lower-Body", heading: "Unterkörper"),
         ),
       ),),
       DashboardCategoriesModel("CB", tDashboardCompleteBody, fullBodyCount, () => Navigator.push(
@@ -74,7 +74,7 @@ class _DashboardCategoriesState extends State<DashboardCategories> {
       DashboardCategoriesModel("🧠", tDashboardMind, psychologicalCount, () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const CategoriesPage(category: "mental", heading: "Geist"),
+          builder: (context) => const CategoriesPage(category: "Mind", heading: "Geist"),
         ),
       ),),
     ];

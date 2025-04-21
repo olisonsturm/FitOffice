@@ -174,3 +174,6 @@ const String tMental = "Mental";
 const String tChangesSaved = "Changes have been saved successfully!";
 const String tEditExerciseHeading = "Edit Exercise";
 const String tSave = "Save";
+const String tGotDeleted = "Exercise got deleted.";
+const String tDeleteExercise = "Delete Exercise";
+const String tCancel = "Cancel";

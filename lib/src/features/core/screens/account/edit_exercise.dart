@@ -23,15 +23,15 @@ class _EditExerciseState extends State<EditExercise> {
   String? _selectedCategory;
 
   final Map<String, String> categoryMap = {
-    tUpperBody: 'upper-body',
-    tLowerBody: 'lower-body',
-    tMental: 'mental',
+    tUpperBody: 'Upper-Body',
+    tLowerBody: 'Lower-Body',
+    tMental: 'Mind',
   };
 
   final Map<String, String> reverseCategoryMap = {
-    'upper-body': tUpperBody,
-    'lower-body': tLowerBody,
-    'mental': tMental,
+    'Upper-Body': tUpperBody,
+    'Lower-Body': tLowerBody,
+    'Mind': tMental,
   };
 
   bool isLoading = false;

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../../authentication/models/user_model.dart';
 import '../../controllers/profile_controller.dart';
+import '../account/delete_exercise.dart';
 import '../account/edit_exercise.dart';
 
 class SearchPage extends StatefulWidget {
@@ -125,7 +126,7 @@ class _SearchPageState extends State<SearchPage> {
                               onPressed: () =>
                                   _toggleFavorite(exercise['name']),
                             ),
-                            if (_user?.role == 'admin')
+                            if (_user?.role == 'admin') ...[
                               IconButton(
                                 icon:
                                     const Icon(Icons.edit, color: Colors.blue),
@@ -133,12 +134,30 @@ class _SearchPageState extends State<SearchPage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) =>
-                                          EditExercise(exercise: exercise, exerciseName: exercise['name'],),
+                                      builder: (_) => EditExercise(
+                                        exercise: exercise,
+                                        exerciseName: exercise['name'],
+                                      ),
                                     ),
                                   );
                                 },
                               ),
+                              IconButton(
+                                icon:
+                                    const Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => DeleteExercise(
+                                        exercise: exercise,
+                                        exerciseName: exercise['name'],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ]
                           ]),
                         ));
                       },
