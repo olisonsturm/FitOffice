@@ -243,4 +243,19 @@ class DbController {
 
     await favoriteQuery.docs.first.reference.delete();
   }
+  Future<List<UserModel>> getAllUsers() async {
+    final snapshot = await firestore.collection('users').get();
+    return snapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).toList();
+  }
+
+  Future<void> deleteUser(String userEmail) async {
+    final snapshot = await firestore
+        .collection('users')
+        .where('email', isEqualTo: userEmail)
+        .get();
+    final userDoc = snapshot.docs.first;
+    final userRef = userDoc.reference;
+    await userRef.delete();
+  }
+
 }

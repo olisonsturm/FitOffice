@@ -177,3 +177,7 @@ const String tSave = "Save";
 const String tGotDeleted = "Exercise got deleted.";
 const String tDeleteExercise = "Delete Exercise";
 const String tCancel = "Cancel";
+const String tDeleteUser = "DELETE USER";
+const String tDeleteUserHeading = "Delete User";
+const String tAllUsers = "All Users";
+const String tNoUsersFound = "No users found.";
