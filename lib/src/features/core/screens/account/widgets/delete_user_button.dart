@@ -38,7 +38,7 @@ class DeleteUserButton extends StatelessWidget {
               },
               icon: const Icon(Icons.delete, color: Colors.blue),
               label: const Text(
-                tDeleteUser,
+                tDeleteEditUser,
                 style: TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.w800,

@@ -258,4 +258,19 @@ class DbController {
     await userRef.delete();
   }
 
+  Future<void> updateUser(UserModel user) async {
+    final query = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: user.email)
+        .get();
+
+    if (query.docs.isNotEmpty) {
+      final docId = query.docs.first.id;
+      await FirebaseFirestore.instance.collection('users').doc(docId).update({
+        'fullName': user.fullName,
+        'role': user.role,
+      });
+    }
+  }
+
 }
