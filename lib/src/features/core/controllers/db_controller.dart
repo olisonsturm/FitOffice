@@ -249,7 +249,6 @@ class DbController {
     final snapshot = await FirebaseFirestore.instance.collection('exercises').get();
     return snapshot.docs.map((doc) => doc.data()).toList();
   } catch (e) {
-    print('Fehler beim Abrufen aller Übungen: $e');
     return [];
   }
 }
