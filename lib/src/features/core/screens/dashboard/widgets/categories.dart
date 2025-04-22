@@ -1,15 +1,14 @@
 import 'package:fit_office/src/constants/text_strings.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/categories_page.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/exercise_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:get/get.dart';
+import 'package:string_similarity/string_similarity.dart';
 
 import '../../../../authentication/models/user_model.dart';
-import '../../../controllers/db_controller.dart';
 import '../../../controllers/profile_controller.dart';
 import '../../../models/dashboard/categories_model.dart';
-import '../favorites_page.dart';
 import 'exercises_list.dart';
 import 'sections/physicals_filter.dart';
 import 'sections/mental_filter.dart';
@@ -20,10 +19,14 @@ class DashboardCategories extends StatefulWidget {
     super.key,
     required this.txtTheme,
     required this.onSearchChanged,
+    this.forceShowExercisesOnly = false,
+    this.onReturnedFromFilter,
   });
 
+  final VoidCallback? onReturnedFromFilter;
   final TextTheme txtTheme;
   final void Function(String) onSearchChanged;
+  final bool forceShowExercisesOnly;
 
   @override
   State<DashboardCategories> createState() => DashboardCategoriesState();
@@ -75,7 +78,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
     final all = await _dbController.getAllExercises();
     setState(() {
       _allExercises = all;
-      _filteredExercises = _filterExercises(_searchQuery, all);
+      _filteredExercises = _filterExercises(_searchQuery, all); // <- wichtig!
     });
   }
 
@@ -108,10 +111,24 @@ class DashboardCategoriesState extends State<DashboardCategories> {
       String query, List<Map<String, dynamic>> exercises) {
     if (query.trim().isEmpty) return exercises;
     final lower = query.toLowerCase();
+
     return exercises.where((exercise) {
       final name = (exercise['name'] ?? '').toString().toLowerCase();
       final desc = (exercise['description'] ?? '').toString().toLowerCase();
-      return name.contains(lower) || desc.contains(lower);
+
+      if (query.length == 1) {
+        return name.startsWith(lower) || desc.startsWith(lower);
+      }
+
+      final nameSimilarity = name.similarityTo(lower);
+      final descSimilarity = desc.similarityTo(lower);
+
+      return name.startsWith(lower) ||
+          desc.startsWith(lower) ||
+          name.contains(lower) ||
+          desc.contains(lower) ||
+          nameSimilarity > 0.4 ||
+          descSimilarity > 0.4;
     }).toList();
   }
 
@@ -125,12 +142,24 @@ class DashboardCategoriesState extends State<DashboardCategories> {
   }
 
   void refreshData() {
-  _loadUserFavorites();
-  _loadAllExercises();
-}
+    _loadUserFavorites();
+    _loadAllExercises();
+  }
 
   @override
   Widget build(BuildContext context) {
+    bool shouldShowOnlyExercises =
+        _searchQuery.trim().isNotEmpty || widget.forceShowExercisesOnly;
+
+    if (shouldShowOnlyExercises) {
+      return AllExercisesList(
+        exercises: _filteredExercises,
+        favorites: _userFavorites,
+        onToggleFavorite: _toggleFavorite,
+        query: _searchQuery,
+      );
+    }
+
     final list = [
       DashboardCategoriesModel(
         tAbbreviationUpperBody,
@@ -139,7 +168,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const CategoriesPage(
+            builder: (context) => const ExerciseFilter(
               category: tUpperBody,
               heading: tUpperBody,
             ),
@@ -147,6 +176,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         ).then((_) {
           _loadUserFavorites();
           _loadAllExercises();
+          widget.onReturnedFromFilter?.call();
         }),
       ),
       DashboardCategoriesModel(
@@ -156,7 +186,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const CategoriesPage(
+            builder: (context) => const ExerciseFilter(
               category: tLowerBody,
               heading: tLowerBody,
             ),
@@ -164,6 +194,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         ).then((_) {
           _loadUserFavorites();
           _loadAllExercises();
+          widget.onReturnedFromFilter?.call();
         }),
       ),
       DashboardCategoriesModel(
@@ -173,7 +204,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const CategoriesPage(
+            builder: (context) => const ExerciseFilter(
               category: tFullBody,
               heading: tFullBody,
             ),
@@ -181,6 +212,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         ).then((_) {
           _loadUserFavorites();
           _loadAllExercises();
+          widget.onReturnedFromFilter?.call();
         }),
       ),
     ];
@@ -193,7 +225,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const CategoriesPage(
+            builder: (context) => const ExerciseFilter(
               category: tMind,
               heading: tMind,
             ),
@@ -201,6 +233,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         ).then((_) {
           _loadUserFavorites();
           _loadAllExercises();
+          widget.onReturnedFromFilter?.call();
         }),
       ),
     ];
@@ -214,14 +247,15 @@ class DashboardCategoriesState extends State<DashboardCategories> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const FavoritesPage(
-                category: tFavorites,
+              builder: (context) => const ExerciseFilter(
                 heading: tFavorites,
+                showOnlyFavorites: true,
               ),
             ),
           ).then((_) {
-            _loadUserFavorites(); 
+            _loadUserFavorites();
             _loadAllExercises();
+            widget.onReturnedFromFilter?.call();
           });
         },
       ),
@@ -266,7 +300,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         ),
         const SizedBox(height: 10),
         AllExercisesList(
-          exercises: _allExercises,
+          exercises: _filteredExercises,
           favorites: _userFavorites,
           onToggleFavorite: _toggleFavorite,
           query: _searchQuery,

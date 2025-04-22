@@ -1,4 +1,3 @@
-import 'package:fit_office/src/features/core/screens/dashboard/search_page.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/statistics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,9 +26,50 @@ class Dashboard extends StatefulWidget {
 class DashboardState extends State<Dashboard> {
   final GlobalKey<DashboardCategoriesState> _categoriesKey =
       GlobalKey<DashboardCategoriesState>();
+  final GlobalKey<DashboardSearchBoxState> _searchBoxKey =
+      GlobalKey<DashboardSearchBoxState>();
+  final ProfileController _profileController = Get.put(ProfileController());
+  final DbController _dbController = DbController();
+
+  bool _searchHasFocus = false;
+  String _searchText = '';
 
   int _selectedIndex = 0;
-  List<Map<String, dynamic>> _searchResults = [];
+  List<String> _userFavorites = [];
+  String favoriteCount = '';
+
+  void removeSearchFocus() {
+    FocusScope.of(context).unfocus();
+    _searchBoxKey.currentState?.removeFocus();
+    setState(() {
+      _searchHasFocus = false;
+    });
+  }
+
+  void _toggleFavorite(String exerciseName) async {
+    final user = await _profileController.getUserData();
+    final isFavorite = _userFavorites.contains(exerciseName);
+
+    if (isFavorite) {
+      await _dbController.removeFavorite(user.email, exerciseName);
+    } else {
+      await _dbController.addFavorite(user.email, exerciseName);
+    }
+
+    _loadUserFavorites();
+  }
+
+  void _loadUserFavorites() async {
+    final user = await _profileController.getUserData();
+    final userFavorites = await _dbController.getFavouriteExercises(user.email);
+    final favoriteNames =
+        userFavorites.map((e) => e['name'] as String).toList();
+
+    setState(() {
+      _userFavorites = favoriteNames;
+      favoriteCount = "${favoriteNames.length} $tDashboardExerciseUnits";
+    });
+  }
 
   final ProfileController _controller = Get.put(ProfileController());
   UserModel? _user;
@@ -39,6 +79,7 @@ class DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     _loadUserData();
+    _loadUserFavorites();
   }
 
   void _loadUserData() async {
@@ -46,14 +87,6 @@ class DashboardState extends State<Dashboard> {
     setState(() {
       _user = userData;
       _isUserLoaded = true;
-    });
-  }
-
-  void _performSearch(String query) async {
-    final dbController = DbController();
-    final results = await dbController.getExercises(query);
-    setState(() {
-      _searchResults = results;
     });
   }
 
@@ -112,64 +145,121 @@ class DashboardState extends State<Dashboard> {
 
             // 1: Dashboard/Home
             GestureDetector(
-              behavior: HitTestBehavior.translucent,
+              // <-- HINZUGEFÜGT
               onTap: () {
-                FocusScope.of(context).unfocus();
+                FocusScope.of(context).unfocus(); // <-- Fokus entfernen
               },
-              child: SingleChildScrollView(
-                child: Container(
-                  padding: const EdgeInsets.all(tDashboardPadding),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Header
-                      _isUserLoaded
-                          ? Text('$tDashboardTitle ${_user?.fullName ?? ''}',
-                              style: txtTheme.bodyMedium)
-                          : const CircularProgressIndicator(),
-                      Text(tDashboardHeading, style: txtTheme.displayMedium),
-                      const SizedBox(height: tDashboardPadding),
-
-                      // Search
-                      DashboardSearchBox(
-                        txtTheme: Theme.of(context).textTheme,
-                        onSearchSubmitted: (query) {
-                          _performSearch(query);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SearchPage(query: query),
-                            ),
-                          ).then((_) {
-                            _categoriesKey.currentState?.refreshData();
-                          });
-                        },
-                        onTextChanged: (query) {
-                          _performSearch(query);
-                          _categoriesKey.currentState?.updateSearchQuery(query);
-                        },
+              behavior:
+                  HitTestBehavior.translucent, // <-- wichtig für leere Flächen
+              child: CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: tDashboardPadding,
+                          bottom: 4), //noch als constant festlegen
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _isUserLoaded
+                              ? Text(
+                                  '$tDashboardTitle ${_user?.fullName ?? ''}',
+                                  style: txtTheme.bodyMedium)
+                              : const CircularProgressIndicator(),
+                          Text(tDashboardHeading,
+                              style: txtTheme.displayMedium),
+                        ],
                       ),
+                    ),
+                  ),
 
-                      const SizedBox(height: tDashboardPadding),
+                  // Sticky SearchBar
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: _StickySearchBar(
+                      minExtent: 72, // Erhöhe Höhe minimal für Platz + Linie
+                      maxExtent: 72,
+                      child: Column(
+                        children: [
+                          Container(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            padding: const EdgeInsets.only(
+                              top: 10,
+                              left: tDashboardPadding,
+                              right: tDashboardPadding,
+                              bottom: 10, // Abstand zur Linie
+                            ),
+                            child: DashboardSearchBox(
+                              key: _searchBoxKey,
+                              txtTheme: Theme.of(context).textTheme,
+                              onSearchSubmitted: (query) {
+                                _categoriesKey.currentState
+                                    ?.updateSearchQuery(query);
+                                setState(() {
+                                  _searchHasFocus =
+                                      false; // Fokus entfernen nach Enter
+                                  _searchText = query;
+                                });
+                              },
+                              onTextChanged: (query) {
+                                _categoriesKey.currentState
+                                    ?.updateSearchQuery(query);
+                                setState(() {
+                                  _searchText = query;
+                                });
+                              },
+                              onFocusChanged: (hasFocus) {
+                                setState(() {
+                                  _searchHasFocus = hasFocus;
+                                });
+                              },
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width -
+                                  (tDashboardPadding * 2),
+                              height: 2,
+                              decoration: BoxDecoration(
+                                color: Colors.black12,
+                                borderRadius: BorderRadius.circular(1),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
 
-                      // Categories
-                      DashboardCategories(
+                  // Kategorien + All Exercises scrollbar
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: 8.0,
+                        left: tDashboardPadding,
+                        right: tDashboardPadding,
+                        bottom: tDashboardPadding,
+                      ),
+                      child: DashboardCategories(
                         key: _categoriesKey,
                         txtTheme: txtTheme,
                         onSearchChanged: (text) {},
+                        forceShowExercisesOnly:
+                            _searchHasFocus || _searchText.isNotEmpty,
+                        onReturnedFromFilter: removeSearchFocus, // NEU
                       ),
-
-                      const SizedBox(height: tDashboardPadding),
-
-                      // Banner  --> woanders einbauen? oder wo/wofür nötig?
-                      //Text(tDashboardInformation, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
-                      //DashboardBanners(txtTheme: txtTheme, isDark: isDark),
-                      //const SizedBox(height: tDashboardPadding),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
+
+            // Banner  --> woanders einbauen? oder wo/wofür nötig?
+            //Text(tDashboardInformation, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
+            //DashboardBanners(txtTheme: txtTheme, isDark: isDark),
+            //const SizedBox(height: tDashboardPadding),
+
             // 2: Statistics Screen
             Scaffold(
               body: Padding(
@@ -224,5 +314,33 @@ class DashboardState extends State<Dashboard> {
         ),
       ),
     );
+  }
+}
+
+class _StickySearchBar extends SliverPersistentHeaderDelegate {
+  final double minExtent;
+  final double maxExtent;
+  final Widget child;
+
+  _StickySearchBar({
+    required this.minExtent,
+    required this.maxExtent,
+    required this.child,
+  });
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Material(
+      elevation: overlapsContent ? 4 : 0, // Shadow beim Scrollen
+      child: child,
+    );
+  }
+
+  @override
+  bool shouldRebuild(_StickySearchBar oldDelegate) {
+    return oldDelegate.maxExtent != maxExtent ||
+        oldDelegate.minExtent != minExtent ||
+        oldDelegate.child != child;
   }
 }
