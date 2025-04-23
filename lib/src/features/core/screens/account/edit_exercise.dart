@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:fit_office/src/features/core/screens/account/upload_video.dart';
 import 'package:fit_office/src/features/core/screens/account/widgets/confirmation_dialog.dart';
 import 'package:fit_office/src/features/core/screens/account/widgets/save_button.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditExercise extends StatefulWidget {
   final Map<String, dynamic> exercise;
@@ -19,7 +24,6 @@ class EditExercise extends StatefulWidget {
 class _EditExerciseState extends State<EditExercise> {
   late final TextEditingController _nameController;
   late final TextEditingController _descriptionController;
-  late final TextEditingController _videoController;
   late String originalName;
   late String originalDescription;
   late String originalVideo;
@@ -27,6 +31,7 @@ class _EditExerciseState extends State<EditExercise> {
 
   final List<String> _categories = [tUpperBody, tLowerBody, tMental];
   String? _selectedCategory;
+  String? uploadedVideoUrl;
 
   final Map<String, String> categoryMap = {
     tUpperBody: 'Upper-Body',
@@ -49,7 +54,6 @@ class _EditExerciseState extends State<EditExercise> {
     _nameController = TextEditingController(text: widget.exercise['name']);
     _descriptionController =
         TextEditingController(text: widget.exercise['description']);
-    _videoController = TextEditingController(text: widget.exercise['video']);
     _selectedCategory =
         reverseCategoryMap[widget.exercise['category']] ?? tUpperBody;
     originalName = widget.exercise['name'];
@@ -59,14 +63,12 @@ class _EditExerciseState extends State<EditExercise> {
 
     _nameController.addListener(_checkIfChanged);
     _descriptionController.addListener(_checkIfChanged);
-    _videoController.addListener(_checkIfChanged);
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _descriptionController.dispose();
-    _videoController.dispose();
     super.dispose();
   }
 
@@ -82,10 +84,11 @@ class _EditExerciseState extends State<EditExercise> {
   void _saveExercise() async {
     final name = _nameController.text.trim();
     final description = _descriptionController.text.trim();
-    final video = _videoController.text.trim();
     final category = categoryMap[_selectedCategory];
 
-    if (name.isEmpty || description.isEmpty || category == null || video.isEmpty) {
+    String videoUrl = uploadedVideoUrl ?? originalVideo;
+
+    if (name.isEmpty || description.isEmpty || category == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text(tFillOutAllFields)),
       );
@@ -98,8 +101,8 @@ class _EditExerciseState extends State<EditExercise> {
       final updatedData = {
         'name': name,
         'description': description,
-        'video': video,
         'category': category,
+        'video': videoUrl,
       };
 
       await editExercise(widget.exerciseName, updatedData);
@@ -108,7 +111,7 @@ class _EditExerciseState extends State<EditExercise> {
         const SnackBar(content: Text(tChangesSaved)),
       );
 
-      Navigator.pop(context);  // Go back after saving
+      Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('$e')),
@@ -137,10 +140,11 @@ class _EditExerciseState extends State<EditExercise> {
 
 
   void _checkIfChanged() {
-    final hasAnyChanged = _nameController.text.trim() != originalName.trim() ||
-        _descriptionController.text.trim() != originalDescription.trim() ||
-        _videoController.text.trim() != originalVideo.trim() ||
-        _selectedCategory != originalCategory;
+    final hasAnyChanged =
+        _nameController.text.trim() != originalName.trim() ||
+            _descriptionController.text.trim() != originalDescription.trim() ||
+            _selectedCategory != originalCategory ||
+            (uploadedVideoUrl != null && uploadedVideoUrl != originalVideo);
 
     if (hasAnyChanged != hasChanged) {
       setState(() {
@@ -196,36 +200,82 @@ class _EditExerciseState extends State<EditExercise> {
                 },
               ),
               const SizedBox(height: 12),
-              TextField(
-                controller: _videoController,
-                decoration: const InputDecoration(
-                  labelText: tVideoURL,
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 20),
               isLoading
                   ? const CircularProgressIndicator()
-                  : Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: SaveButton(
-                        hasChanges: hasChanged,
-                        onPressed: _showSaveConfirmationDialog,
-                        label: tSave,
-                      )
+                  : Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
                     ),
+                    child: TextButton.icon(
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        foregroundColor: Colors.blue,
+                      ),
+                      onPressed: () async {
+                        String videoUrl = await uploadVideo();
+                        if (videoUrl.isNotEmpty) {
+                          setState(() {
+                            uploadedVideoUrl = videoUrl;
+                          });
+                          _checkIfChanged();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text(tUploadVideoSuccess)),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text(tNoVideoSelected)),
+                          );
+                        }
+                      },
+                      icon: Icon(
+                        Icons.video_call,
+                        color: Colors.blue,
+                      ),
+                      label: Text(
+                        tUploadVideo,
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: SaveButton(
+                      hasChanges: hasChanged,
+                      onPressed: _showSaveConfirmationDialog,
+                      label: tSave,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
