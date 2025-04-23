@@ -1,85 +1,265 @@
 import 'package:fit_office/src/constants/text_strings.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/categories_page.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/exercise_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
+import 'package:fit_office/src/features/core/controllers/db_controller.dart';
+import 'package:get/get.dart';
+import 'package:string_similarity/string_similarity.dart';
 
 import '../../../../authentication/models/user_model.dart';
-import '../../../controllers/db_controller.dart';
+import '../../../controllers/profile_controller.dart';
 import '../../../models/dashboard/categories_model.dart';
-import '../favorites_page.dart';
+import 'exercises_list.dart';
+import 'sections/physicals_filter.dart';
+import 'sections/mental_filter.dart';
+import 'sections/favorites_filter.dart';
 
 class DashboardCategories extends StatefulWidget {
   const DashboardCategories({
     super.key,
     required this.txtTheme,
+    required this.onSearchChanged,
+    this.forceShowExercisesOnly = false,
+    this.onReturnedFromFilter,
   });
 
+  final VoidCallback? onReturnedFromFilter;
   final TextTheme txtTheme;
+  final void Function(String) onSearchChanged;
+  final bool forceShowExercisesOnly;
 
   @override
-  State<DashboardCategories> createState() => _DashboardCategoriesState();
+  State<DashboardCategories> createState() => DashboardCategoriesState();
 }
 
-class _DashboardCategoriesState extends State<DashboardCategories> {
-  late UserModel user;
+class DashboardCategoriesState extends State<DashboardCategories> {
   final DbController _dbController = DbController();
+  final ProfileController _profileController = Get.put(ProfileController());
+
   String upperBodyCount = '';
   String lowerBodyCount = '';
   String fullBodyCount = '';
   String psychologicalCount = '';
+  String favoriteCount = '';
+
+  List<Map<String, dynamic>> _allExercises = [];
+  List<Map<String, dynamic>> _filteredExercises = [];
+  List<String> _userFavorites = [];
+
+  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
     _loadExerciseCount();
+    _loadAllExercises();
+    _loadUserFavorites();
   }
 
   void _loadExerciseCount() async {
-    String countUpperBody = await _dbController.getNumberOfExercisesByCategory('upper-body');
-    String countLowerBody = await _dbController.getNumberOfExercisesByCategory('lower-body');
-    String countFullBody = await _dbController.getNumberOfExercisesByCategory('full-body');
-    String countPsychological = await _dbController.getNumberOfExercisesByCategory('mental');
+    String countUpperBody =
+        await _dbController.getNumberOfExercisesByCategory(tUpperBody);
+    String countLowerBody =
+        await _dbController.getNumberOfExercisesByCategory(tLowerBody);
+    String countFullBody =
+        await _dbController.getNumberOfExercisesByCategory(tFullBody);
+    String countPsychological =
+        await _dbController.getNumberOfExercisesByCategory(tMind);
+
     setState(() {
-      upperBodyCount = "$countUpperBody Units";
-      lowerBodyCount = "$countLowerBody Units";
-      fullBodyCount = "$countFullBody Units";
-      psychologicalCount = "$countPsychological Units";
+      upperBodyCount = "$countUpperBody $tDashboardExerciseUnits";
+      lowerBodyCount = "$countLowerBody $tDashboardExerciseUnits";
+      fullBodyCount = "$countFullBody $tDashboardExerciseUnits";
+      psychologicalCount = "$countPsychological $tDashboardExerciseUnits";
     });
+  }
+
+  void _loadAllExercises() async {
+    final all = await _dbController.getAllExercises();
+    setState(() {
+      _allExercises = all;
+      _filteredExercises = _filterExercises(_searchQuery, all); // <- wichtig!
+    });
+  }
+
+  void _loadUserFavorites() async {
+    final user = await _profileController.getUserData();
+    final userFavorites = await _dbController.getFavouriteExercises(user.email);
+    final favoriteNames =
+        userFavorites.map((e) => e['name'] as String).toList();
+
+    setState(() {
+      _userFavorites = favoriteNames;
+      favoriteCount = "${favoriteNames.length} $tDashboardExerciseUnits";
+    });
+  }
+
+  void _toggleFavorite(String exerciseName) async {
+    final user = await _profileController.getUserData();
+    final isFavorite = _userFavorites.contains(exerciseName);
+
+    if (isFavorite) {
+      await _dbController.removeFavorite(user.email, exerciseName);
+    } else {
+      await _dbController.addFavorite(user.email, exerciseName);
+    }
+
+    _loadUserFavorites();
+  }
+
+  List<Map<String, dynamic>> _filterExercises(
+      String query, List<Map<String, dynamic>> exercises) {
+    if (query.trim().isEmpty) return exercises;
+    final lower = query.toLowerCase();
+
+    return exercises.where((exercise) {
+      final name = (exercise['name'] ?? '').toString().toLowerCase();
+      final desc = (exercise['description'] ?? '').toString().toLowerCase();
+
+      if (query.length == 1) {
+        return name.startsWith(lower) || desc.startsWith(lower);
+      }
+
+      final nameSimilarity = name.similarityTo(lower);
+      final descSimilarity = desc.similarityTo(lower);
+
+      return name.startsWith(lower) ||
+          desc.startsWith(lower) ||
+          name.contains(lower) ||
+          desc.contains(lower) ||
+          nameSimilarity > 0.4 ||
+          descSimilarity > 0.4;
+    }).toList();
+  }
+
+  void updateSearchQuery(String query) {
+    setState(() {
+      _searchQuery = query;
+      _filteredExercises = _filterExercises(query, _allExercises);
+    });
+
+    widget.onSearchChanged(query);
+  }
+
+  void refreshData() {
+    _loadUserFavorites();
+    _loadAllExercises();
   }
 
   @override
   Widget build(BuildContext context) {
+    bool shouldShowOnlyExercises =
+        _searchQuery.trim().isNotEmpty || widget.forceShowExercisesOnly;
+
+    if (shouldShowOnlyExercises) {
+      return AllExercisesList(
+        exercises: _filteredExercises,
+        favorites: _userFavorites,
+        onToggleFavorite: _toggleFavorite,
+        query: _searchQuery,
+      );
+    }
+
     final list = [
-      DashboardCategoriesModel("UB", tDasboardUpperBody, upperBodyCount, () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const CategoriesPage(category: "upper-body", heading: "Oberkörper"),
-        ),
-      ),),
-      DashboardCategoriesModel("LB", tDashboardLowerBody, lowerBodyCount, () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const CategoriesPage(category: "lower-body", heading: "Unterkörper"),
-        ),
-      ),),
-      DashboardCategoriesModel("CB", tDashboardCompleteBody, fullBodyCount, () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const CategoriesPage(category: "complete-body", heading: "Ganzkörper"),
-        ),
-      ),),
+      DashboardCategoriesModel(
+        tAbbreviationUpperBody,
+        tUpperBody,
+        upperBodyCount,
+        () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ExerciseFilter(
+              category: tUpperBody,
+              heading: tUpperBody,
+            ),
+          ),
+        ).then((_) {
+          _loadUserFavorites();
+          _loadAllExercises();
+          widget.onReturnedFromFilter?.call();
+        }),
+      ),
+      DashboardCategoriesModel(
+        tAbbreviationLowerBody,
+        tLowerBody,
+        lowerBodyCount,
+        () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ExerciseFilter(
+              category: tLowerBody,
+              heading: tLowerBody,
+            ),
+          ),
+        ).then((_) {
+          _loadUserFavorites();
+          _loadAllExercises();
+          widget.onReturnedFromFilter?.call();
+        }),
+      ),
+      DashboardCategoriesModel(
+        tAbbreviationFullBody,
+        tFullBody,
+        fullBodyCount,
+        () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ExerciseFilter(
+              category: tFullBody,
+              heading: tFullBody,
+            ),
+          ),
+        ).then((_) {
+          _loadUserFavorites();
+          _loadAllExercises();
+          widget.onReturnedFromFilter?.call();
+        }),
+      ),
     ];
 
     final listPsychologicalExercises = [
-      DashboardCategoriesModel("🧠", tDashboardMind, psychologicalCount, () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const CategoriesPage(category: "mental", heading: "Geist"),
-        ),
-      ),),
+      DashboardCategoriesModel(
+        tAbbreviationMind,
+        tMind,
+        psychologicalCount,
+        () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ExerciseFilter(
+              category: tMind,
+              heading: tMind,
+            ),
+          ),
+        ).then((_) {
+          _loadUserFavorites();
+          _loadAllExercises();
+          widget.onReturnedFromFilter?.call();
+        }),
+      ),
     ];
 
-    final listFavouriteExercises = DashboardCategoriesModel.listFavouriteExercises;
+    final listFavouriteExercises = [
+      DashboardCategoriesModel(
+        tAbbreviationFavorites,
+        tFavorites,
+        favoriteCount,
+        () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ExerciseFilter(
+                heading: tFavorites,
+                showOnlyFavorites: true,
+              ),
+            ),
+          ).then((_) {
+            _loadUserFavorites();
+            _loadAllExercises();
+            widget.onReturnedFromFilter?.call();
+          });
+        },
+      ),
+    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,184 +269,41 @@ class _DashboardCategoriesState extends State<DashboardCategories> {
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
-        SizedBox(
-          height: 45,
-          child: ListView.builder(
-            itemCount: list.length,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) => GestureDetector(
-              onTap: list[index].onPress,
-              child: SizedBox(
-                width: 170,
-                height: 45,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 45,
-                      height: 45,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: tDarkColor,
-                      ),
-                      child: Center(
-                        child: Text(
-                          list[index].title,
-                          style: widget.txtTheme.titleLarge?.apply(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            list[index].heading,
-                            style: widget.txtTheme.titleLarge,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            list[index].subHeading,
-                            style: widget.txtTheme.bodyMedium,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
+        DashboardPhysicalSection(
+          categories: list,
+          txtTheme: widget.txtTheme,
         ),
         const SizedBox(height: 20),
-
-        // Psychological Exercises
         const Text(
           tDashboardPsychologicalExercisesTitle,
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
-        SizedBox(
-          height: 45,
-          child: ListView.builder(
-            itemCount: listPsychologicalExercises.length,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) => GestureDetector(
-              onTap: listPsychologicalExercises[index].onPress,
-              child: SizedBox(
-                width: 170,
-                height: 45,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 45,
-                      height: 45,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: tDarkColor,
-                      ),
-                      child: Center(
-                        child: Text(
-                          listPsychologicalExercises[index].title,
-                          style: widget.txtTheme.titleLarge?.apply(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            listPsychologicalExercises[index].heading,
-                            style: widget.txtTheme.titleLarge,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            listPsychologicalExercises[index].subHeading,
-                            style: widget.txtTheme.bodyMedium,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+        DashboardMentalSection(
+          categories: listPsychologicalExercises,
+          txtTheme: widget.txtTheme,
         ),
         const SizedBox(height: 20),
-
-        // Favourite Exercises
         const Text(
           tDashboardFavouriteExercises,
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
-        SizedBox(
-          height: 45,
-          child: ListView.builder(
-            itemCount: listFavouriteExercises.length,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) => GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const FavoritesPage(
-                      category: "favorites",
-                      heading: "Favorites",
-                    ),
-                  ),
-                );
-              },
-              child: SizedBox(
-                width: 170,
-                height: 45,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 45,
-                      height: 45,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: tDarkColor,
-                      ),
-                      child: Center(
-                        child: Text(
-                          listFavouriteExercises[index].title,
-                          style: widget.txtTheme.titleLarge?.apply(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            listFavouriteExercises[index].heading,
-                            style: widget.txtTheme.titleLarge,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            listFavouriteExercises[index].subHeading,
-                            style: widget.txtTheme.bodyMedium,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+        DashboardFavoritesSection(
+          categories: listFavouriteExercises,
+          txtTheme: widget.txtTheme,
+        ),
+        const SizedBox(height: 20),
+        const Text(
+          tDashboardAllExercises,
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        AllExercisesList(
+          exercises: _filteredExercises,
+          favorites: _userFavorites,
+          onToggleFavorite: _toggleFavorite,
+          query: _searchQuery,
         ),
       ],
     );
