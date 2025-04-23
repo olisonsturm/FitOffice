@@ -1,5 +1,4 @@
 import 'package:fit_office/src/constants/text_strings.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/categories_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -221,12 +220,24 @@ class DashboardCategoriesState extends State<DashboardCategories> {
     ];
 
     final listPsychologicalExercises = [
-      DashboardCategoriesModel("🧠", tAbbreviationMind, psychologicalCount, () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const CategoriesPage(category: "mental", heading: "Geist"),
-        ),
-      ),),
+      DashboardCategoriesModel(
+        tAbbreviationMind,
+        tMind,
+        psychologicalCount,
+            () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ExerciseFilter(
+              category: tMind,
+              heading: tMind,
+            ),
+          ),
+        ).then((_) {
+          _loadUserFavorites();
+          _loadAllExercises();
+          widget.onReturnedFromFilter?.call();
+        }),
+      ),
     ];
 
     final listFavouriteExercises = [

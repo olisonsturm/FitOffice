@@ -1,6 +1,5 @@
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -147,25 +146,6 @@ class _FavoritesPage extends State<FavoritesPage> {
                     ),
                   );
                 },
-              ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SearchPage(query: widget.category),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                    side: const BorderSide(color: Colors.grey, width: 2)
-                ),
-                child: const Text("Add favourites"),
               ),
             ),
           ],
