@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:fit_office/src/features/core/screens/account/widgets/confirmation_dialog.dart';
+import 'package:fit_office/src/features/core/screens/account/widgets/save_button.dart';
 import 'package:flutter/material.dart';
 
 class EditExercise extends StatefulWidget {
@@ -69,28 +71,11 @@ class _EditExerciseState extends State<EditExercise> {
   }
 
   void _showSaveConfirmationDialog() {
-    showDialog(
+    showConfirmationDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text(tSaveChanges),
-        content: const Text(tSaveChanges),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(tCancel),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);  // Close the dialog
-              _saveExercise();         // Call the save method
-            },
-            child: const Text(
-              tSave,
-              style: TextStyle(color: Colors.blue),
-            ),
-          ),
-        ],
-      ),
+      title: tSaveChanges,
+      content: tSaveChangesQuestion,
+      onConfirm: _saveExercise,
     );
   }
 
@@ -235,26 +220,11 @@ class _EditExerciseState extends State<EditExercise> {
                           ),
                         ],
                       ),
-                      child: TextButton.icon(
-                        onPressed: hasChanged ? _showSaveConfirmationDialog : null,
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          foregroundColor:
-                              hasChanged ? Colors.blue : Colors.grey,
-                        ),
-                        icon: Icon(
-                          Icons.save,
-                          color: hasChanged ? Colors.blue : Colors.grey,
-                        ),
-                        label: Text(
-                          tSave,
-                          style: TextStyle(
-                            color: hasChanged ? Colors.blue : Colors.grey,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
+                      child: SaveButton(
+                        hasChanges: hasChanged,
+                        onPressed: _showSaveConfirmationDialog,
+                        label: tSave,
+                      )
                     ),
             ],
           ),

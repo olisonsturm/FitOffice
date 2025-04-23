@@ -224,3 +224,4 @@ const String tPasswordRequired = "Password is required";
 const String tEditUser = "Edit User";
 const String tUserCreated = "User created";
 const String tUserUpdated = "User updated";
+const String tSaveExerciseConfirmation = "Do you like to add this exercise?";

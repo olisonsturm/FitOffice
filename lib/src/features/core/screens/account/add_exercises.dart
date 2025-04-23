@@ -1,7 +1,8 @@
-import 'package:fit_office/src/constants/colors.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fit_office/src/constants/text_strings.dart';
+
+import '../../../../constants/colors.dart';
 
 class AddExercises extends StatefulWidget {
   final String currentUserId;
@@ -27,6 +28,15 @@ class _AddExercisesScreenState extends State<AddExercises> {
     tLowerBody: 'Lower-Body',
     tMental: 'Mind',
   };
+
+  void _showConfirmationDialog() {
+    showConfirmationDialog(
+      context: context,
+      title: tSaveChanges,
+      content: tSaveExerciseConfirmation,
+      onConfirm: _addExercise,
+    );
+  }
 
   Future<void> _addExercise() async {
     final name = _nameController.text.trim();
@@ -120,7 +130,7 @@ class _AddExercisesScreenState extends State<AddExercises> {
                 onChanged: (value) => setState(() => _selectedCategory = value),
               ),
               const SizedBox(height: 12),
-              // TODO: Functionality to add video needs to be added here
+              // TODO: Funktionalität für das Video hinzufügen
               TextField(
                 controller: _videoController,
                 decoration: const InputDecoration(
@@ -149,7 +159,7 @@ class _AddExercisesScreenState extends State<AddExercises> {
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  onPressed: _addExercise,
+                  onPressed: _showConfirmationDialog, // Dialog aufrufen
                   icon: const Icon(Icons.add, color: Colors.blue),
                   label: const Text(
                     tAdd,
@@ -167,4 +177,36 @@ class _AddExercisesScreenState extends State<AddExercises> {
       ),
     );
   }
+}
+
+// Dialog-Funktion für Bestätigung vor dem Speichern
+void showConfirmationDialog({
+  required BuildContext context,
+  required String title,
+  required String content,
+  required VoidCallback onConfirm,
+}) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(title),
+      content: Text(content),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text(tCancel),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+            onConfirm(); // Bestätigung und Funktion ausführen
+          },
+          child: const Text(
+            tSave,
+            style: TextStyle(color: Colors.blue),
+          ),
+        ),
+      ],
+    ),
+  );
 }

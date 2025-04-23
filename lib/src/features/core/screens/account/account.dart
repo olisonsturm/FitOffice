@@ -1,11 +1,12 @@
-import 'package:fit_office/src/features/core/screens/account/widgets/add_exercises_button.dart';
-import 'package:fit_office/src/features/core/screens/account/widgets/add_user_button.dart';
-import 'package:fit_office/src/features/core/screens/account/widgets/delete_user_button.dart';
+import 'package:fit_office/src/features/core/screens/account/widgets/all_users.dart';
+import 'package:fit_office/src/features/core/screens/account/widgets/navigation_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/sizes.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 
+import 'add_exercises.dart';
+import 'edit_user_page.dart';
 import 'widgets/add_friends_button.dart';
 import '../../../authentication/models/user_model.dart';
 import '../../controllers/profile_controller.dart';
@@ -47,11 +48,23 @@ class _FriendsScreenState extends State<AccountScreen> {
                     Text('$tAccountGreeting ${user.fullName}', style: txtTheme.headlineSmall),
                     const SizedBox(height: tDefaultSize),
                     if (user.role == "admin") ...[
-                      AddExercisesButton(currentUserId: user.id.toString()),
+                      NavigationButton(
+                        icon: Icons.add,
+                        label: tAddExercises,
+                        destinationBuilder: (context) => AddExercises(currentUserId: user.id!),
+                      ),
                       const SizedBox(height: tDefaultSize),
-                      const DeleteUserButton(),
+                      NavigationButton(
+                        icon: Icons.delete,
+                        label: tDeleteEditUser,
+                        destinationBuilder: (context) => const AllUsersPage(),
+                      ),
                       const SizedBox(height: tDefaultSize),
-                      const CreateUserButton(),
+                      NavigationButton(
+                        icon: Icons.person_add,
+                        label: tAddUser,
+                        destinationBuilder: (context) => const EditUserPage(),
+                      ),
                       const SizedBox(height: tDefaultSize),
                     ],
                     AddFriendsButton(currentUserId: user.id!),

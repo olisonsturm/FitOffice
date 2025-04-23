@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fit_office/src/features/authentication/controllers/signup_controller.dart';
+import 'package:fit_office/src/features/core/screens/account/widgets/confirmation_dialog.dart';
+import 'package:fit_office/src/features/core/screens/account/widgets/save_button.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
@@ -28,7 +30,7 @@ class _EditUserPageState extends State<EditUserPage> {
   final SignUpController _signUpController = SignUpController.instance;
 
   bool isLoading = false;
-  bool hasChanges = false;
+  bool hasChanged = false;
 
   final List<String> _roles = ['user', 'admin'];
   String? _selectedRole;
@@ -73,7 +75,7 @@ class _EditUserPageState extends State<EditUserPage> {
         _selectedRole != widget.user?.role;
 
     setState(() {
-      hasChanges = hasAnyChanged;
+      hasChanged = hasAnyChanged;
     });
   }
 
@@ -120,28 +122,11 @@ class _EditUserPageState extends State<EditUserPage> {
   }
 
   void _showSaveConfirmationDialog() {
-    showDialog(
+    showConfirmationDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text(tSaveChanges),
-        content: const Text(tSaveChangesQuestion),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(tCancel),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _saveChanges();
-            },
-            child: const Text(
-              tSave,
-              style: TextStyle(color: Colors.blue),
-            ),
-          ),
-        ],
-      ),
+      title: tSaveChanges,
+      content: tSaveChangesQuestion,
+      onConfirm: _saveChanges,
     );
   }
 
@@ -252,26 +237,11 @@ class _EditUserPageState extends State<EditUserPage> {
                       ),
                     ],
                   ),
-                  child: TextButton.icon(
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      foregroundColor: hasChanges ? Colors.blue : Colors.grey,
-                      shadowColor: Colors.transparent,
-                    ),
-                    onPressed: hasChanges ? _showSaveConfirmationDialog : null,
-                    icon: Icon(
-                      Icons.save,
-                      color: hasChanges ? Colors.blue : Colors.grey,
-                    ),
-                    label: Text(
-                      isEditMode ? tSaveChanges : tCreateUser,
-                      style: TextStyle(
-                        color: hasChanges ? Colors.blue : Colors.grey,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
+                  child: SaveButton(
+                    hasChanges: hasChanged,
+                    onPressed: _showSaveConfirmationDialog,
+                    label: tSave,
+                  )
 
                 ),
               ],

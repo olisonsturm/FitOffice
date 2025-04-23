@@ -1,9 +1,16 @@
-import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:flutter/material.dart';
-import '../edit_user_page.dart';
 
-class CreateUserButton extends StatelessWidget {
-  const CreateUserButton({super.key});
+class NavigationButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Widget Function(BuildContext context) destinationBuilder;
+
+  const NavigationButton({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.destinationBuilder,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,15 +37,13 @@ class CreateUserButton extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => const EditUserPage(),
-                  ),
+                  MaterialPageRoute(builder: (_) => destinationBuilder(context)),
                 );
               },
-              icon: const Icon(Icons.person_add, color: Colors.blue),
-              label: const Text(
-                tAddUser,
-                style: TextStyle(
+              icon: Icon(icon, color: Colors.blue),
+              label: Text(
+                label,
+                style: const TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.w800,
                   fontSize: 16,
