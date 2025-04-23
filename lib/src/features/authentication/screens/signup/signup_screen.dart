@@ -19,30 +19,28 @@ class SignupScreen extends StatelessWidget {
     var brightness = mediaQuery.platformBrightness;
     final isDarkMode = brightness == Brightness.dark;
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: isDarkMode ? tSecondaryColor : tWhiteColor,
-        body: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.all(tDefaultSpace),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const FormHeaderWidget(
-                    image: tWelcomeScreenImage,
-                    heightBetween: tFormHeight * 2,
-                    title: tSignUpTitle,
-                    subTitle: tSignUpSubTitle,
-                    imageHeight: 0.2
-                ),
-                const SignUpFormWidget(),
-                ClickableRichTextWidget(
-                  text1: tAlreadyHaveAnAccount,
-                  text2: tLogin,
-                  onPressed: () => Get.off(() => const LoginScreen()),
-                ),
-              ],
-            ),
+    return Scaffold(
+      backgroundColor: isDarkMode ? tSecondaryColor : tWhiteColor,
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(tDefaultSpace),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const FormHeaderWidget(
+                  image: tWelcomeScreenImage,
+                  heightBetween: tFormHeight * 2,
+                  title: tSignUpTitle,
+                  subTitle: tSignUpSubTitle,
+                  imageHeight: 0.2
+              ),
+              const SignUpFormWidget(),
+              ClickableRichTextWidget(
+                text1: tAlreadyHaveAnAccount,
+                text2: tLogin,
+                onPressed: () => Get.off(() => const LoginScreen()),
+              ),
+            ],
           ),
         ),
       ),

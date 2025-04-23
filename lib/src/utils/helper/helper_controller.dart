@@ -90,7 +90,7 @@ class Helper extends GetxController {
       snackPosition: SnackPosition.BOTTOM,
       duration: const Duration(seconds: 6),
       margin: const EdgeInsets.all(tDefaultSpace - 10),
-      icon: const Icon(LineAwesomeIcons.exclamation_circle, color: tWhiteColor),
+      icon: Icon(LineAwesomeIcons.exclamation_circle_solid, color: tWhiteColor),
     );
   }
 

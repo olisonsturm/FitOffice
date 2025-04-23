@@ -50,13 +50,13 @@ class ProfileFormScreen extends StatelessWidget {
           TextFormField(
             controller: fullName,
             validator: Helper.validateFullName,
-            decoration: const InputDecoration(label: Text(tFullName), prefixIcon: Icon(LineAwesomeIcons.user_tag)),
+            decoration: const InputDecoration(label: Text(tFullName), prefixIcon: Icon(LineAwesomeIcons.user_tag_solid)),
           ),
           const SizedBox(height: tFormHeight - 20),
           TextFormField(
             controller: email,
             validator: Helper.validateEmail,
-            decoration: const InputDecoration(label: Text(tEmail), prefixIcon: Icon(LineAwesomeIcons.envelope_1)),
+            decoration: const InputDecoration(label: Text(tEmail), prefixIcon: Icon(LineAwesomeIcons.envelope)),
             enabled: false,
           ),
           const SizedBox(height: tFormHeight - 20),

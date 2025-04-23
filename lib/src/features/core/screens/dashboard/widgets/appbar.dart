@@ -1,37 +1,126 @@
 import 'package:flutter/material.dart';
-import '../../../../../constants/colors.dart';
-import '../../../../../constants/text_strings.dart';
+import 'package:get/get.dart';
+import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/end_exercise.dart';
 
-class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const DashboardAppBar({
+class TimerAwareAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final PreferredSizeWidget normalAppBar;
+  final bool showBackButton;
+
+  const TimerAwareAppBar({
     super.key,
-    required this.isDark,
+    required this.normalAppBar,
+    this.showBackButton = false,
   });
-
-  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      elevation: 0,
-      centerTitle: true,
-      backgroundColor: Colors.transparent,
-      title: Text(tAppName, style: Theme.of(context).textTheme.headlineMedium),
-      actions: [
-        Container(
-          margin: const EdgeInsets.only(right: 20, top: 7),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: isDark ? tSecondaryColor : tCardBgColor,
-          ),
-          child: Container(
-          ),
-        )
-      ],
-    );
+    final timerController = Get.find<ExerciseTimerController>();
+
+    return Obx(() {
+      final isRunning = timerController.isRunning.value;
+
+      if (!isRunning) return normalAppBar;
+
+      return AppBar(
+        elevation: 0,
+        backgroundColor: Colors.orange,
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: Stack(
+          alignment: Alignment.center,
+          children: [
+            /// CENTER: Übungsname + Kategorie (immer zentriert)
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  timerController.exerciseName.value,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  timerController.exerciseCategory.value,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+
+            /// LEFT: zurück-Button (optional) + Timer
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (showBackButton)
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12, right: 12),
+                    child: Text(
+                      timerController.formattedTime.value,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            /// RIGHT: Pause + Stop
+            Align(
+              alignment: Alignment.centerRight,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      timerController.isPaused.value
+                          ? Icons.play_arrow
+                          : Icons.pause,
+                      size: 28,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      timerController.isPaused.value
+                          ? timerController.resume()
+                          : timerController.pause();
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.stop, size: 28, color: Colors.white),
+                    onPressed: () async {
+                      final confirmed = await showDialog<bool>(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) =>
+                            const EndExerciseDialog(),
+                      );
+                      if (confirmed == true) timerController.stop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   @override
-  // TODO: implement preferredSize
-  Size get preferredSize => const Size.fromHeight(55);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

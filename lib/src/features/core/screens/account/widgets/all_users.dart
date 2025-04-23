@@ -5,6 +5,7 @@ import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:fit_office/src/features/core/controllers/profile_controller.dart';
 
+import '../../dashboard/widgets/categories.dart';
 import '../../dashboard/widgets/search.dart';
 import '../edit_user_page.dart';
 
@@ -18,9 +19,13 @@ class AllUsersPage extends StatefulWidget {
 class _AllUsersPageState extends State<AllUsersPage> {
   final DbController _dbController = DbController();
   final ProfileController _profileController = Get.put(ProfileController());
+  final GlobalKey<DashboardCategoriesState> _categoriesKey =
+  GlobalKey<DashboardCategoriesState>();
 
   late UserModel _currentUser;
   bool isUserLoaded = false;
+  bool _searchHasFocus = false;
+  String _searchText = '';
 
   List<UserModel> _allUsers = [];
   List<UserModel> _filteredUsers = [];
@@ -68,6 +73,18 @@ class _AllUsersPageState extends State<AllUsersPage> {
             DashboardSearchBox(
               txtTheme: Theme.of(context).textTheme,
               onSearchSubmitted: _searchUsers,
+              onTextChanged: (query) {
+                _categoriesKey.currentState
+                    ?.updateSearchQuery(query);
+                setState(() {
+                  _searchText = query;
+                });
+              },
+              onFocusChanged: (hasFocus) {
+                setState(() {
+                  _searchHasFocus = hasFocus;
+                });
+              },
             ),
             const SizedBox(height: 16),
             _filteredUsers.isEmpty

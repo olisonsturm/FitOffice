@@ -39,7 +39,7 @@ class ProfileMenuWidget extends StatelessWidget {
       title: Text(title, style: Theme.of(context).textTheme.bodyLarge?.apply(color: textColor)),
       trailing: endIcon
           ? const SizedBox(
-              width: 30, height: 30, child: Icon(LineAwesomeIcons.angle_right, size: 18.0, color: Colors.grey))
+              width: 30, height: 30, child: Icon(LineAwesomeIcons.angle_right_solid, size: 18.0, color: Colors.grey))
           : null,
     );
   }

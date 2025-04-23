@@ -20,32 +20,45 @@ class ProgressScreenState extends State<ProgressScreen>
   final int numberOfLevels = 5;
   final List<Offset> _levelOffsets = [];
   late Future<void> _pathInitializationFuture;
+  
+  bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
-    _pathInitializationFuture = _initPath();
+    //_pathInitializationFuture = _initPath();
 
     // Initialize the animation controller
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 6),
-    )
-      ..addListener(() {
+    )..addListener(() {
         if (_pathMetric != null) {
-          final offset = _pathMetric!.getTangentForOffset(
-            _pathMetric!.length * _controller.value,
-          )?.position;
+          final offset = _pathMetric!
+              .getTangentForOffset(
+                _pathMetric!.length * _controller.value,
+              )
+              ?.position;
           setState(() => _avatarPosition = offset);
         }
       });
 
     // Delay path initialization until after the first frame
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        _pathInitializationFuture = _initPath();
-      });
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   setState(() {
+    //     //_pathInitializationFuture = _initPath();
+    //   });
+    // });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!_initialized) {
+      _pathInitializationFuture = _initPath();
+      _initialized = true;
+    }
   }
 
   Future<void> _initPath() async {
@@ -54,16 +67,13 @@ class ProgressScreenState extends State<ProgressScreen>
         print("Initializing path...");
       }
 
-      final size = MediaQuery
-          .of(context)
-          .size;
+      final size = MediaQuery.of(context).size;
       final double startX = size.width * 0.1;
       final double endX = size.width * 0.9;
       final double heightStep = size.height * 0.2; // Höhe bleibt konstant
 
       // Beginne den Pfad an einem festen Punkt
-      _path = Path()
-        ..moveTo(startX, size.height * 0.1);
+      _path = Path()..moveTo(startX, size.height * 0.1);
 
       for (int i = 0; i < numberOfLevels - 1; i++) {
         // Konstanten y-Werte für die Kurvenhöhe
@@ -89,7 +99,7 @@ class ProgressScreenState extends State<ProgressScreen>
       for (int i = 0; i < numberOfLevels; i++) {
         final pos = _pathMetric!
             .getTangentForOffset(
-            _pathMetric!.length * (i / (numberOfLevels - 1)))
+                _pathMetric!.length * (i / (numberOfLevels - 1)))
             ?.position;
         if (pos != null) _levelOffsets.add(pos);
       }
@@ -111,8 +121,8 @@ class ProgressScreenState extends State<ProgressScreen>
   void _moveToNextLevel() {
     if (_controller.isAnimating || _controller.value >= 1.0) return;
 
-    final nextStep = (_controller.value + 1.0 / (numberOfLevels - 1)).clamp(
-        0.0, 1.0);
+    final nextStep =
+        (_controller.value + 1.0 / (numberOfLevels - 1)).clamp(0.0, 1.0);
     _controller.animateTo(nextStep, duration: const Duration(seconds: 1));
   }
 
@@ -135,9 +145,7 @@ class ProgressScreenState extends State<ProgressScreen>
           );
         }
 
-        final size = MediaQuery
-            .of(context)
-            .size;
+        final size = MediaQuery.of(context).size;
         final canvasHeight = size.height * 1.5; // größerer Bereich für Scroll
 
         return Scaffold(
@@ -151,8 +159,7 @@ class ProgressScreenState extends State<ProgressScreen>
                     size: Size(size.width, canvasHeight),
                     painter: _PathPainter(path: _path!),
                   ),
-                  ..._levelOffsets.map((offset) =>
-                      Positioned(
+                  ..._levelOffsets.map((offset) => Positioned(
                         left: offset.dx - 50, // Center für 100x100
                         top: offset.dy - 50,
                         child: const LevelBubble(),

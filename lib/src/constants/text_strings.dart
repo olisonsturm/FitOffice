@@ -110,7 +110,7 @@ const String tBackToLogin = "Back to login";
 // -- Dashboard Screen - Text
 const String tDashboardTitle = "Hey,";
 const String tDashboardHeading = "Explore Exercises";
-const String tDashboardSearch = "Search🔍";
+const String tDashboardSearch = "Search";
 const String tDashboardBannerTitle2 = "Energieschub für Zwischendurch";
 const String tDashboardBannerTitle1 = "Unterstütze deine langfristige Gesundheit";
 const String tDashboardBannerSubTitle = "10 Lessons";
@@ -119,7 +119,7 @@ const String tDashboardStatistics = "Statistics";
 const String tDashboardPhysicalExercisesTitle = "Exercises for your physical health";
 const String tDashboardPsychologicalExercisesTitle = "Exercises for your mental health";
 const String tDashboardInformation = "Information";
-const String tDashboardFavouriteExercises = "Favourite Exercises";
+const String tDashboardFavouriteExercises = "Favorite Exercises";
 const String tDashboardNoInternetConnection = "No internet connection";
 const String tDashboardDatabaseException = "Database Exception";
 const String tDashboardUnexpectedError = "Unexpected Error.";
@@ -128,11 +128,13 @@ const String tDashboardNoExercisesDone = "No exercises done yet.";
 const String tDashboardExceptionLoadingExercise = "Could not load last exercise";
 const String tDashboardTimestampsMissing = "Timestamps are missing.";
 const String tDashboardNoResultsFound = "No exercises were found";
-const String tDasboardUpperBody = "Upper Body";
-const String tDashboardLowerBody = "Lower Body";
-const String tDashboardCompleteBody = "Complete Body";
-const String tDashboardMind = "Mind";
-const String tDashboardFavourites = "Favourites";
+const String tDashboardAllExercises = "All Exercises";
+const String tDashboardExerciseCategory = "Category";
+const String tDashboardExerciseVideo = "Video";
+const String tDashboardExerciseDescription = "Description";
+const String tDashboardExerciseUnits = "Units";
+const String tDashboardExerciseNotFound = "The exercise you are looking for was not found.";
+const String tDashboardExerciseSearchNoInput = "Please enter a search term.";
 
 
 
@@ -161,6 +163,37 @@ const String tNoResults = "No users found";
 const String tAddFriendsButton = "ADD FRIENDS";
 const String tSearchError = "Search error";
 const String tAddFriendsHeader = "Add Friends";
+
+// -- Exercise Timer - Text
+const String tEndExercisePopUp = "End exercise";
+const String tEndExerciseConfirmation = "Are you sure you want to end the exercise?";
+const String tEndExercisePositive = "Yes";
+const String tEndExerciseNegative = "No";
+const String tStartExercisePopUp = "Start exercise";
+const String tStartExerciseConfirmation = "Are you sure you want to start this exercise:";
+const String tStartExercisePositive = "Yes";
+const String tStartExerciseNegative = "No";
+
+
+// -- Categories - Text
+const String tUpperBody = "Upper-Body";
+const String tLowerBody = "Lower-Body";
+const String tFullBody = "Full-Body";
+const String tMind = "Mind";
+const String tFavorites = "Favorites";
+const String tAbbreviationUpperBody = "UB";
+const String tAbbreviationLowerBody = "LB";
+const String tAbbreviationFullBody = "FB";
+const String tAbbreviationMind = "🧠";
+const String tAbbreviationFavorites = "❤️";
+
+
+// -- Active Exercises - Text
+const String tActiveExercise = "Active Exercise";
+const String tActiveExerciseErrorMsg = "An exercise is already running. Please finish or stop it before you start a new one.";
+const String tActiveExerciseAnswer = "OK";
+
+// -- Admin Text
 const String tAddExercises = "ADD EXERCISES";
 const String tAddExercisesHeader = "Add Exercises";
 const String tFillOutAllFields = "Please fill out all fields.";
@@ -168,8 +201,6 @@ const String tExerciseAdded = "Exercise has been successfully added.";
 const String tDescription = "Description";
 const String tCategory = "Category";
 const String tAdd = "Add";
-const String tUpperBody = "Upper Body";
-const String tLowerBody = "Lower Body";
 const String tMental = "Mental";
 const String tChangesSaved = "Changes have been saved successfully!";
 const String tEditExerciseHeading = "Edit Exercise";

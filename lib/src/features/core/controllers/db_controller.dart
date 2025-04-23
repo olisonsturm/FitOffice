@@ -243,10 +243,6 @@ class DbController {
 
     await favoriteQuery.docs.first.reference.delete();
   }
-  Future<List<UserModel>> getAllUsers() async {
-    final snapshot = await firestore.collection('users').get();
-    return snapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).toList();
-  }
 
   Future<void> deleteUser(String userEmail) async {
     final snapshot = await firestore
@@ -272,8 +268,60 @@ class DbController {
       });
     }
   }
-  Future<void> saveUserRecord(UserModel user) async {
-    final docRef = FirebaseFirestore.instance.collection('users').doc();
-    await docRef.set(user.toJson());
+
+  Future<List<UserModel>> getAllUsers() async {
+    final snapshot = await firestore.collection('users').get();
+    return snapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).toList();
+  }
+
+  Future<List<Map<String, dynamic>>> getAllExercises() async {
+    try {
+      final snapshot =
+      await FirebaseFirestore.instance.collection('exercises').get();
+      return snapshot.docs.map((doc) => doc.data()).toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<Map<String, dynamic>> getFilteredExercises({
+    required String email,
+    String? category,
+    bool onlyFavorites = false,
+  }) async {
+    final allExercises = await getAllExercises();
+    final favoritesRaw = await getFavouriteExercises(email);
+    final favoriteNames = favoritesRaw.map((e) => e['name'] as String).toList();
+
+    List<Map<String, dynamic>> filtered;
+
+    if (onlyFavorites) {
+      filtered = allExercises.where((exercise) {
+        return favoriteNames.contains(exercise['name']);
+      }).toList();
+    } else if (category != null) {
+      filtered = allExercises.where((exercise) {
+        return exercise['category'] == category;
+      }).toList();
+    } else {
+      filtered = allExercises;
+    }
+
+    return {
+      'exercises': filtered,
+      'favorites': favoriteNames,
+    };
+  }
+
+  Future<void> toggleFavorite({
+    required String email,
+    required String exerciseName,
+    required bool isCurrentlyFavorite,
+  }) async {
+    if (isCurrentlyFavorite) {
+      await removeFavorite(email, exerciseName);
+    } else {
+      await addFavorite(email, exerciseName);
+    }
   }
 }

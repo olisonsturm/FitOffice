@@ -1,10 +1,6 @@
 # FitOffice@DHBW
 
-The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.
- 
-## Troubleshooting
-1. Wenn du auf den Fehler [The current Flutter SDK version is 3.10.6. Because fit_office depends on get >=4.6.6 <5.0.0-beta.1 which requires Flutter SDK version >=3.13.0, version solving failed.] stößt:  
-   **[Lösung]:** Führe `flutter upgrade` aus, um dein Flutter SDK auf die neueste Version zu aktualisieren. Stelle sicher, dass eine aktive Internetverbindung besteht.
+The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg. Brought to life by health management students as a business information systems semester project.
 
 ## Docs
 1. **Splash Screen anzeigen, bis Daten geladen sind, und nach dem Laden `FlutterNativeSplash.remove()` aufrufen:**  

@@ -1,5 +1,6 @@
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/categories.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/search.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,11 @@ class _SearchPageState extends State<SearchPage> {
   final ProfileController _profileController = ProfileController();
   List<String> _userFavorites = [];
   UserModel? _user;
+  final GlobalKey<DashboardCategoriesState> _categoriesKey =
+  GlobalKey<DashboardCategoriesState>();
+
+  bool _searchHasFocus = false;
+  String _searchText = '';
 
   @override
   void initState() {
@@ -89,6 +95,18 @@ class _SearchPageState extends State<SearchPage> {
             DashboardSearchBox(
               txtTheme: Theme.of(context).textTheme,
               onSearchSubmitted: _performSearch,
+              onTextChanged: (query) {
+                _categoriesKey.currentState
+                    ?.updateSearchQuery(query);
+                setState(() {
+                  _searchText = query;
+                });
+              },
+              onFocusChanged: (hasFocus) {
+                setState(() {
+                  _searchHasFocus = hasFocus;
+                });
+              },
             ),
             const SizedBox(height: 20),
             Expanded(

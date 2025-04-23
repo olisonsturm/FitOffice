@@ -23,7 +23,7 @@ class ProfileScreen extends StatelessWidget {
     var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: () => Get.back(), icon: const Icon(LineAwesomeIcons.angle_left)),
+        leading: IconButton(onPressed: () => Get.back(), icon: const Icon(LineAwesomeIcons.angle_left_solid)),
         title: Text(tProfile, style: Theme.of(context).textTheme.headlineMedium),
         actions: [IconButton(onPressed: () {}, icon: Icon(isDark ? LineAwesomeIcons.sun : LineAwesomeIcons.moon))],
       ),
@@ -92,23 +92,23 @@ class ProfileScreen extends StatelessWidget {
 
                   /// -- MENU
                   ProfileMenuWidget(title: "Settings",
-                      icon: LineAwesomeIcons.cog,
+                      icon: LineAwesomeIcons.cog_solid,
                       onPress: () {}),
                   ProfileMenuWidget(title: "Billing Details",
-                      icon: LineAwesomeIcons.wallet,
+                      icon: LineAwesomeIcons.wallet_solid,
                       onPress: () {}),
                   ProfileMenuWidget(
                       title: "User Management",
-                      icon: LineAwesomeIcons.user_check,
+                      icon: LineAwesomeIcons.user_check_solid,
                       onPress: () => Get.to(() => AllUsers())),
                   const Divider(),
                   const SizedBox(height: 10),
                   ProfileMenuWidget(title: "Information",
-                      icon: LineAwesomeIcons.info,
+                      icon: LineAwesomeIcons.info_solid,
                       onPress: () {}),
                   ProfileMenuWidget(
                     title: "Logout",
-                    icon: LineAwesomeIcons.alternate_sign_out,
+                    icon: LineAwesomeIcons.sign_out_alt_solid,
                     textColor: Colors.red,
                     endIcon: false,
                     onPress: () => _showLogoutModal(),
