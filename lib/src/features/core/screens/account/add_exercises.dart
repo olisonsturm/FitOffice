@@ -91,7 +91,7 @@ class _AddExercisesScreenState extends State<AddExercises> {
               TextField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: 'Name',
+                  labelText: tName,
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -124,7 +124,7 @@ class _AddExercisesScreenState extends State<AddExercises> {
               TextField(
                 controller: _videoController,
                 decoration: const InputDecoration(
-                  labelText: 'Video URL',
+                  labelText: tVideoURL,
                   border: OutlineInputBorder(),
                 ),
               ),

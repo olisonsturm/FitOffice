@@ -1,13 +1,9 @@
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:flutter/material.dart';
-import 'package:fit_office/src/constants/colors.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:get/get.dart';
 import 'package:string_similarity/string_similarity.dart';
 
-import '../../../../authentication/models/user_model.dart';
-import '../../../controllers/profile_controller.dart';
 import '../../../controllers/profile_controller.dart';
 import '../../../models/dashboard/categories_model.dart';
 import '../exercise_filter.dart';

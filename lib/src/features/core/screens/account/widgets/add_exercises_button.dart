@@ -11,7 +11,6 @@ class AddExercisesButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        // ADD FRIENDS BUTTON
         Expanded(
           child: Container(
             decoration: BoxDecoration(

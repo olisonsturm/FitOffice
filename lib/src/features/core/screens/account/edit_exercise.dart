@@ -18,6 +18,10 @@ class _EditExerciseState extends State<EditExercise> {
   late final TextEditingController _nameController;
   late final TextEditingController _descriptionController;
   late final TextEditingController _videoController;
+  late String originalName;
+  late String originalDescription;
+  late String originalVideo;
+  late String originalCategory;
 
   final List<String> _categories = [tUpperBody, tLowerBody, tMental];
   String? _selectedCategory;
@@ -35,6 +39,7 @@ class _EditExerciseState extends State<EditExercise> {
   };
 
   bool isLoading = false;
+  bool hasChanged = false;
 
   @override
   void initState() {
@@ -43,9 +48,16 @@ class _EditExerciseState extends State<EditExercise> {
     _descriptionController =
         TextEditingController(text: widget.exercise['description']);
     _videoController = TextEditingController(text: widget.exercise['video']);
-
     _selectedCategory =
         reverseCategoryMap[widget.exercise['category']] ?? tUpperBody;
+    originalName = widget.exercise['name'];
+    originalDescription = widget.exercise['description'];
+    originalVideo = widget.exercise['video'];
+    originalCategory = _selectedCategory!;
+
+    _nameController.addListener(_checkIfChanged);
+    _descriptionController.addListener(_checkIfChanged);
+    _videoController.addListener(_checkIfChanged);
   }
 
   @override
@@ -56,16 +68,39 @@ class _EditExerciseState extends State<EditExercise> {
     super.dispose();
   }
 
+  void _showSaveConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(tSaveChanges),
+        content: const Text(tSaveChanges),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(tCancel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);  // Close the dialog
+              _saveExercise();         // Call the save method
+            },
+            child: const Text(
+              tSave,
+              style: TextStyle(color: Colors.blue),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _saveExercise() async {
     final name = _nameController.text.trim();
     final description = _descriptionController.text.trim();
     final video = _videoController.text.trim();
     final category = categoryMap[_selectedCategory];
 
-    if (name.isEmpty ||
-        description.isEmpty ||
-        category == null ||
-        video.isEmpty) {
+    if (name.isEmpty || description.isEmpty || category == null || video.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text(tFillOutAllFields)),
       );
@@ -88,10 +123,10 @@ class _EditExerciseState extends State<EditExercise> {
         const SnackBar(content: Text(tChangesSaved)),
       );
 
-      Navigator.pop(context);
+      Navigator.pop(context);  // Go back after saving
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Fehler: $e')),
+        SnackBar(content: Text('$e')),
       );
     }
 
@@ -115,6 +150,20 @@ class _EditExerciseState extends State<EditExercise> {
     }
   }
 
+
+  void _checkIfChanged() {
+    final hasAnyChanged = _nameController.text.trim() != originalName.trim() ||
+        _descriptionController.text.trim() != originalDescription.trim() ||
+        _videoController.text.trim() != originalVideo.trim() ||
+        _selectedCategory != originalCategory;
+
+    if (hasAnyChanged != hasChanged) {
+      setState(() {
+        hasChanged = hasAnyChanged;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,7 +179,7 @@ class _EditExerciseState extends State<EditExercise> {
               TextField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: 'Name',
+                  labelText: tName,
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -158,13 +207,14 @@ class _EditExerciseState extends State<EditExercise> {
                 }).toList(),
                 onChanged: (value) {
                   setState(() => _selectedCategory = value);
+                  _checkIfChanged();
                 },
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: _videoController,
                 decoration: const InputDecoration(
-                  labelText: 'Video URL',
+                  labelText: tVideoURL,
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -186,15 +236,20 @@ class _EditExerciseState extends State<EditExercise> {
                         ],
                       ),
                       child: TextButton.icon(
+                        onPressed: hasChanged ? _showSaveConfirmationDialog : null,
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
+                          foregroundColor:
+                              hasChanged ? Colors.blue : Colors.grey,
                         ),
-                        onPressed: _saveExercise,
-                        icon: const Icon(Icons.save, color: Colors.blue),
-                        label: const Text(
+                        icon: Icon(
+                          Icons.save,
+                          color: hasChanged ? Colors.blue : Colors.grey,
+                        ),
+                        label: Text(
                           tSave,
                           style: TextStyle(
-                            color: Colors.blue,
+                            color: hasChanged ? Colors.blue : Colors.grey,
                             fontWeight: FontWeight.w800,
                             fontSize: 16,
                           ),

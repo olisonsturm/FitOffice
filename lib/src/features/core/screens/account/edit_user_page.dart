@@ -28,6 +28,7 @@ class _EditUserPageState extends State<EditUserPage> {
   final SignUpController _signUpController = SignUpController.instance;
 
   bool isLoading = false;
+  bool hasChanges = false;
 
   final List<String> _roles = ['user', 'admin'];
   String? _selectedRole;
@@ -43,29 +44,39 @@ class _EditUserPageState extends State<EditUserPage> {
     _fitnessLevelController = TextEditingController(text: widget.user?.fitnessLevel ?? '');
     _passwordController = TextEditingController();
     _selectedRole = widget.user?.role ?? 'user';
+
+    _nameController.addListener(_checkChanges);
+    _userNameController.addListener(_checkChanges);
+    _emailController.addListener(_checkChanges);
+    _fitnessLevelController.addListener(_checkChanges);
+    _passwordController.addListener(_checkChanges);
+
+    _checkChanges();
   }
 
-  Future<void> createUserAsAdmin({
-    required String email,
-    required String password,
-  }) async {
-    final FirebaseApp tempApp = await Firebase.initializeApp(
-      name: 'tempApp',
-      options: Firebase.app().options,
-    );
-
-    final FirebaseAuth tempAuth = FirebaseAuth.instanceFor(app: tempApp);
-
-    try {
-      await tempAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } finally {
-      await tempAuth.signOut();
-      await tempApp.delete();
-    }
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _userNameController.dispose();
+    _fitnessLevelController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
+
+  void _checkChanges() {
+    final hasAnyChanged = _nameController.text != widget.user?.fullName ||
+        _userNameController.text != widget.user?.userName ||
+        _emailController.text != widget.user?.email ||
+        _fitnessLevelController.text != widget.user?.fitnessLevel ||
+        _passwordController.text.isNotEmpty ||
+        _selectedRole != widget.user?.role;
+
+    setState(() {
+      hasChanges = hasAnyChanged;
+    });
+  }
+
 
   Future<void> _saveChanges() async {
     if (_formKey.currentState!.validate()) {
@@ -84,7 +95,7 @@ class _EditUserPageState extends State<EditUserPage> {
         if (isEditMode) {
           await _dbController.updateUser(userData);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('User updated')),
+            const SnackBar(content: Text(tUserUpdated)),
           );
         } else {
           _signUpController.userName.text = _userNameController.text.trim();
@@ -94,17 +105,13 @@ class _EditUserPageState extends State<EditUserPage> {
 
           await _signUpController.createUser();
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('User created')),
-          );
-          await createUserAsAdmin(
-            email: _emailController.text.trim(),
-            password: _passwordController.text.trim(),
+            const SnackBar(content: Text(tUserCreated)),
           );
         }
         Navigator.pop(context);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Fehler: $e')),
+          SnackBar(content: Text('$e')),
         );
       }
 
@@ -112,11 +119,37 @@ class _EditUserPageState extends State<EditUserPage> {
     }
   }
 
+  void _showSaveConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(tSaveChanges),
+        content: const Text(tSaveChangesQuestion),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(tCancel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _saveChanges();
+            },
+            child: const Text(
+              tSave,
+              style: TextStyle(color: Colors.blue),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEditMode ? "Edit User" : "Create User"),
+        title: Text(isEditMode ? tEditUser : tCreateUser),
         backgroundColor: tCardBgColor,
       ),
       body: Padding(
@@ -129,10 +162,10 @@ class _EditUserPageState extends State<EditUserPage> {
                 TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(
-                    labelText: 'Full Name',
+                    labelText: tFullName,
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+                  validator: (value) => value == null || value.isEmpty ? tRequired : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
@@ -141,17 +174,17 @@ class _EditUserPageState extends State<EditUserPage> {
                     labelText: tUserName,
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+                  validator: (value) => value == null || value.isEmpty ? tRequired : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _emailController,
                   readOnly: isEditMode,
                   decoration: const InputDecoration(
-                    labelText: 'Email',
+                    labelText: tEmail,
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+                  validator: (value) => value == null || value.isEmpty ? tRequired : null,
                 ),
                 const SizedBox(height: 12),
                 if (!isEditMode)
@@ -159,15 +192,15 @@ class _EditUserPageState extends State<EditUserPage> {
                     controller: _passwordController,
                     obscureText: true,
                     decoration: const InputDecoration(
-                      labelText: 'Password',
+                      labelText: tPassword,
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Password is required';
+                        return tPasswordRequired;
                       }
                       if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
+                        return tPasswordLength;
                       }
                       return null;
                     },
@@ -185,8 +218,13 @@ class _EditUserPageState extends State<EditUserPage> {
                     child: Text(role),
                   ))
                       .toList(),
-                  onChanged: (value) => setState(() => _selectedRole = value),
-                  validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedRole = value;
+                    });
+                    _checkChanges();
+                  },
+                  validator: (value) => value == null || value.isEmpty ? tRequired : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
@@ -195,7 +233,7 @@ class _EditUserPageState extends State<EditUserPage> {
                     labelText: 'Fitness Level',
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+                  validator: (value) => value == null || value.isEmpty ? tRequired : null,
                 ),
                 const SizedBox(height: 20),
                 isLoading
@@ -217,18 +255,24 @@ class _EditUserPageState extends State<EditUserPage> {
                   child: TextButton.icon(
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
+                      foregroundColor: hasChanges ? Colors.blue : Colors.grey,
+                      shadowColor: Colors.transparent,
                     ),
-                    onPressed: _saveChanges,
-                    icon: const Icon(Icons.save, color: Colors.blue),
+                    onPressed: hasChanges ? _showSaveConfirmationDialog : null,
+                    icon: Icon(
+                      Icons.save,
+                      color: hasChanges ? Colors.blue : Colors.grey,
+                    ),
                     label: Text(
                       isEditMode ? tSaveChanges : tCreateUser,
-                      style: const TextStyle(
-                        color: Colors.blue,
+                      style: TextStyle(
+                        color: hasChanges ? Colors.blue : Colors.grey,
                         fontWeight: FontWeight.w800,
                         fontSize: 16,
                       ),
                     ),
                   ),
+
                 ),
               ],
             ),
