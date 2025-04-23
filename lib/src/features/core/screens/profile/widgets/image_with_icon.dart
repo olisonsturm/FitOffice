@@ -21,7 +21,7 @@ class ImageWithIcon extends StatefulWidget {
 
 class ImageWithIconSate extends State<ImageWithIcon> {
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  // final FirebaseAuth _auth = FirebaseAuth.instance;
   final User _user = FirebaseAuth.instance.currentUser!;
   final StorageService _storageService = StorageService();
 
@@ -37,7 +37,7 @@ class ImageWithIconSate extends State<ImageWithIcon> {
   Future<void> _loadAvatarUrl() async {
     final url = await _storageService.getProfilePictureUrl(_user.uid);
     setState(() {
-      _currentAvatarUrl = url ?? '';
+      _currentAvatarUrl = url;
     });
   }
 
@@ -156,7 +156,7 @@ class ImageWithIconSate extends State<ImageWithIcon> {
                 color: tPrimaryColor,
               ),
               child: const Icon(
-                LineAwesomeIcons.alternate_pencil,
+                LineAwesomeIcons.pencil_alt_solid,
                 color: Colors.black,
                 size: 20,
               ),

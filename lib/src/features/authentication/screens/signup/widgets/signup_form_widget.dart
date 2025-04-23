@@ -50,7 +50,7 @@ class SignUpFormWidget extends StatelessWidget {
               validator: Helper.validateFullName,
               decoration: const InputDecoration(
                 label: Text(tFullName),
-                prefixIcon: Icon(LineAwesomeIcons.user_tag),
+                prefixIcon: Icon(LineAwesomeIcons.user_tag_solid),
               ),
             ),
             const SizedBox(height: tFormHeight - 20),
