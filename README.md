@@ -1,6 +1,6 @@
 # FitOffice@DHBW
 
-The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg. Brought to life for health management students as a business information systems semester project.
+The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg. Brought to life by health management students as a business information systems semester project.
 
 ## Docs
 1. **Splash Screen anzeigen, bis Daten geladen sind, und nach dem Laden `FlutterNativeSplash.remove()` aufrufen:**  
