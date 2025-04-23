@@ -191,5 +191,5 @@ const String tAbbreviationFavorites = "❤️";
 
 // -- Active Exercises - Text
 const String tActiveExercise = "Active Exercise";
-const String tActiveExerciseErrorMsg= "An exercise is already running. Please finish or stop it before you start a new one.";
-const String tActiveExerciseAnswer= "OK";
+const String tActiveExerciseErrorMsg = "An exercise is already running. Please finish or stop it before you start a new one.";
+const String tActiveExerciseAnswer = "OK";
