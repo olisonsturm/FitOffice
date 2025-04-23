@@ -98,8 +98,8 @@ class DashboardState extends State<Dashboard> {
     return Scaffold(
       appBar: TimerAwareAppBar(
         normalAppBar: AppBar(
-          title: Text(tAppName,
-              style: Theme.of(context).textTheme.headlineMedium),
+          title:
+              Text(tAppName, style: Theme.of(context).textTheme.headlineMedium),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
@@ -119,8 +119,7 @@ class DashboardState extends State<Dashboard> {
                     decoration: const BoxDecoration(color: tSecondaryColor),
                   )
                 : const UserAccountsDrawerHeader(
-                    currentAccountPicture:
-                        Image(image: AssetImage(tLogoImage)),
+                    currentAccountPicture: Image(image: AssetImage(tLogoImage)),
                     accountName: Text('Loading...'),
                     accountEmail: Text('Loading...'),
                   ),
@@ -161,12 +160,10 @@ class DashboardState extends State<Dashboard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _isUserLoaded
-                            ? Text(
-                                '$tDashboardTitle ${_user?.fullName ?? ''}',
+                            ? Text('$tDashboardTitle ${_user?.fullName ?? ''}',
                                 style: txtTheme.bodyMedium)
                             : const CircularProgressIndicator(),
-                        Text(tDashboardHeading,
-                            style: txtTheme.displayMedium),
+                        Text(tDashboardHeading, style: txtTheme.displayMedium),
                       ],
                     ),
                   ),
@@ -176,8 +173,8 @@ class DashboardState extends State<Dashboard> {
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: _StickySearchBar(
-                    minExtent: 72, // Erhöhe Höhe minimal für Platz + Linie
-                    maxExtent: 72,
+                    minExtent: 74, // +2 Pixel für Divider
+                    maxExtent: 74,
                     child: Column(
                       children: [
                         Container(
@@ -186,7 +183,7 @@ class DashboardState extends State<Dashboard> {
                             top: 10,
                             left: tDashboardPadding,
                             right: tDashboardPadding,
-                            bottom: 10, // Abstand zur Linie
+                            bottom: 10,
                           ),
                           child: DashboardSearchBox(
                             key: _searchBoxKey,
@@ -195,8 +192,7 @@ class DashboardState extends State<Dashboard> {
                               _categoriesKey.currentState
                                   ?.updateSearchQuery(query);
                               setState(() {
-                                _searchHasFocus =
-                                    false; // Fokus entfernen nach Enter
+                                _searchHasFocus = false;
                                 _searchText = query;
                               });
                             },
@@ -214,17 +210,12 @@ class DashboardState extends State<Dashboard> {
                             },
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width -
-                                (tDashboardPadding * 2),
-                            height: 2,
-                            decoration: BoxDecoration(
-                              color: Colors.black12,
-                              borderRadius: BorderRadius.circular(1),
-                            ),
-                          ),
+                        const Divider(
+                          thickness: 1.8,
+                          height: 0.8, // wichtig für Layout-Stabilität
+                          color: Color.fromARGB(255, 190, 190, 190),
+                          indent: 0,
+                          endIndent: 0,
                         ),
                       ],
                     ),
@@ -246,7 +237,7 @@ class DashboardState extends State<Dashboard> {
                       onSearchChanged: (text) {},
                       forceShowExercisesOnly:
                           _searchHasFocus || _searchText.isNotEmpty,
-                      onReturnedFromFilter: removeSearchFocus, // NEU
+                      onReturnedFromFilter: removeSearchFocus, 
                     ),
                   ),
                 ),
@@ -267,8 +258,8 @@ class DashboardState extends State<Dashboard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(tDashboardStatistics,
-                      style: txtTheme.headlineMedium
-                          ?.apply(fontSizeFactor: 1.2)),
+                      style:
+                          txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
                   const SizedBox(height: 20),
                   StatisticsWidget(txtTheme: txtTheme, isDark: isDark),
                 ],
@@ -316,7 +307,9 @@ class DashboardState extends State<Dashboard> {
 }
 
 class _StickySearchBar extends SliverPersistentHeaderDelegate {
+  @override
   final double minExtent;
+  @override
   final double maxExtent;
   final Widget child;
 

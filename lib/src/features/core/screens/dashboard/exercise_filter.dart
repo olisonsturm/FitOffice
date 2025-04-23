@@ -107,6 +107,7 @@ class _ExerciseFilterState extends State<ExerciseFilter> {
                 favorites: _userFavorites,
                 onToggleFavorite: _toggleFavorite,
                 query: "",
+                showGroupedAlphabetically: false, // 👈 ganz wichtig!
               ),
             ),
 
