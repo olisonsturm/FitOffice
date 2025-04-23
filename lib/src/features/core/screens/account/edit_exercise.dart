@@ -10,6 +10,8 @@ import 'package:fit_office/src/features/core/screens/account/widgets/save_button
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../dashboard/widgets/video_thumbnail.dart';
+
 class EditExercise extends StatefulWidget {
   final Map<String, dynamic> exercise;
   final String exerciseName;
@@ -204,6 +206,20 @@ class _EditExerciseState extends State<EditExercise> {
                   ? const CircularProgressIndicator()
                   : Column(
                 children: [
+                  if ((uploadedVideoUrl ?? originalVideo).isNotEmpty) ...[
+                    Container(
+                      height: 200,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: VideoThumbnail(
+                        videoUrl: uploadedVideoUrl ?? originalVideo,
+                      ),
+                    ),
+                    const SizedBox(height: 12)
+                  ],
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
