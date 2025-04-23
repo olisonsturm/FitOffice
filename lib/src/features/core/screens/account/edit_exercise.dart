@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chewie/chewie.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fit_office/src/constants/colors.dart';
@@ -9,6 +10,7 @@ import 'package:fit_office/src/features/core/screens/account/widgets/confirmatio
 import 'package:fit_office/src/features/core/screens/account/widgets/save_button.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
 
 import '../dashboard/widgets/video_thumbnail.dart';
 
@@ -34,6 +36,8 @@ class _EditExerciseState extends State<EditExercise> {
   final List<String> _categories = [tUpperBody, tLowerBody, tMental];
   String? _selectedCategory;
   String? uploadedVideoUrl;
+  VideoPlayerController? _videoPlayerController;
+  ChewieController? _chewieController;
 
   final Map<String, String> categoryMap = {
     tUpperBody: 'Upper-Body',
@@ -65,12 +69,16 @@ class _EditExerciseState extends State<EditExercise> {
 
     _nameController.addListener(_checkIfChanged);
     _descriptionController.addListener(_checkIfChanged);
+
+    initVideoPlayer(widget.exercise['video']);
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _descriptionController.dispose();
+    _videoPlayerController?.dispose();
+    _chewieController?.dispose();
     super.dispose();
   }
 
@@ -140,19 +148,34 @@ class _EditExerciseState extends State<EditExercise> {
     }
   }
 
-
   void _checkIfChanged() {
-    final hasAnyChanged =
-        _nameController.text.trim() != originalName.trim() ||
-            _descriptionController.text.trim() != originalDescription.trim() ||
-            _selectedCategory != originalCategory ||
-            (uploadedVideoUrl != null && uploadedVideoUrl != originalVideo);
+    final hasAnyChanged = _nameController.text.trim() != originalName.trim() ||
+        _descriptionController.text.trim() != originalDescription.trim() ||
+        _selectedCategory != originalCategory ||
+        (uploadedVideoUrl != null && uploadedVideoUrl != originalVideo);
 
     if (hasAnyChanged != hasChanged) {
       setState(() {
         hasChanged = hasAnyChanged;
       });
     }
+  }
+
+  Future<void> initVideoPlayer(String url) async {
+    _videoPlayerController?.dispose();
+    _chewieController?.dispose();
+
+    _videoPlayerController = VideoPlayerController.network(url);
+    await _videoPlayerController!.initialize();
+
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController!,
+      autoPlay: false,
+      looping: false,
+      aspectRatio: _videoPlayerController!.value.aspectRatio,
+    );
+
+    setState(() {});
   }
 
   @override
@@ -205,93 +228,95 @@ class _EditExerciseState extends State<EditExercise> {
               isLoading
                   ? const CircularProgressIndicator()
                   : Column(
-                children: [
-                  if ((uploadedVideoUrl ?? originalVideo).isNotEmpty) ...[
-                    Container(
-                      height: 200,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: VideoThumbnail(
-                        videoUrl: uploadedVideoUrl ?? originalVideo,
-                      ),
-                    ),
-                    const SizedBox(height: 12)
-                  ],
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 4,
-                          offset: Offset(0, 2),
+                      children: [
+                        if ((uploadedVideoUrl ?? originalVideo).isNotEmpty &&
+                            _chewieController != null) ...[
+                          Container(
+                            height: 200,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Chewie(controller: _chewieController!),
+                          ),
+                          const SizedBox(height: 12)
+                        ],
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: TextButton.icon(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              foregroundColor: Colors.blue,
+                            ),
+                            onPressed: () async {
+                              String videoUrl = await uploadVideo();
+                              if (videoUrl.isNotEmpty) {
+                                await initVideoPlayer(videoUrl);
+                                setState(() {
+                                  uploadedVideoUrl = videoUrl;
+                                });
+                                _checkIfChanged();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(tUploadVideoSuccess)),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(tNoVideoSelected)),
+                                );
+                              }
+                            },
+                            icon: Icon(
+                              Icons.video_call,
+                              color: Colors.blue,
+                            ),
+                            label: Text(
+                              tUploadVideo,
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: SaveButton(
+                            hasChanges: hasChanged,
+                            onPressed: _showSaveConfirmationDialog,
+                            label: tSave,
+                          ),
                         ),
                       ],
                     ),
-                    child: TextButton.icon(
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        foregroundColor: Colors.blue,
-                      ),
-                      onPressed: () async {
-                        String videoUrl = await uploadVideo();
-                        if (videoUrl.isNotEmpty) {
-                          setState(() {
-                            uploadedVideoUrl = videoUrl;
-                          });
-                          _checkIfChanged();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text(tUploadVideoSuccess)),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text(tNoVideoSelected)),
-                          );
-                        }
-                      },
-                      icon: Icon(
-                        Icons.video_call,
-                        color: Colors.blue,
-                      ),
-                      label: Text(
-                        tUploadVideo,
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 4,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: SaveButton(
-                      hasChanges: hasChanged,
-                      onPressed: _showSaveConfirmationDialog,
-                      label: tSave,
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
         ),

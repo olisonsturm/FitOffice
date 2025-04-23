@@ -1,6 +1,9 @@
+import 'package:fit_office/src/features/core/screens/account/upload_video.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:video_player/video_player.dart';
+import 'package:chewie/chewie.dart';
 
 import '../../../../constants/colors.dart';
 
@@ -20,6 +23,9 @@ class _AddExercisesScreenState extends State<AddExercises> {
 
   final List<String> _categories = [tUpperBody, tLowerBody, tMental];
   String? _selectedCategory;
+  String? uploadedVideoUrl;
+  VideoPlayerController? _videoPlayerController;
+  ChewieController? _chewieController;
 
   bool isLoading = false;
 
@@ -28,6 +34,23 @@ class _AddExercisesScreenState extends State<AddExercises> {
     tLowerBody: 'Lower-Body',
     tMental: 'Mind',
   };
+
+  Future<void> initVideoPlayer(String url) async {
+    _videoPlayerController?.dispose();
+    _chewieController?.dispose();
+
+    _videoPlayerController = VideoPlayerController.network(url);
+    await _videoPlayerController!.initialize();
+
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController!,
+      autoPlay: false,
+      looping: false,
+      aspectRatio: _videoPlayerController!.value.aspectRatio,
+    );
+
+    setState(() {});
+  }
 
   void _showConfirmationDialog() {
     showConfirmationDialog(
@@ -83,6 +106,8 @@ class _AddExercisesScreenState extends State<AddExercises> {
     _nameController.dispose();
     _descriptionController.dispose();
     _videoController.dispose();
+    _videoPlayerController?.dispose();
+    _chewieController?.dispose();
     super.dispose();
   }
 
@@ -131,11 +156,38 @@ class _AddExercisesScreenState extends State<AddExercises> {
               ),
               const SizedBox(height: 12),
               // TODO: Funktionalität für das Video hinzufügen
-              TextField(
-                controller: _videoController,
-                decoration: const InputDecoration(
-                  labelText: tVideoURL,
-                  border: OutlineInputBorder(),
+              if (_chewieController != null)
+                SizedBox(
+                  height: 200,
+                  child: Chewie(controller: _chewieController!),
+                ),
+              const SizedBox(height: 12),
+              TextButton.icon(
+                onPressed: () async {
+                  String videoUrl = await uploadVideo();
+                  if (videoUrl.isNotEmpty) {
+                    await initVideoPlayer(videoUrl);
+                    setState(() {
+                      uploadedVideoUrl = videoUrl;
+                      _videoController.text = videoUrl;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text(tUploadVideoSuccess)),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text(tNoVideoSelected)),
+                    );
+                  }
+                },
+                icon: const Icon(Icons.video_call, color: Colors.blue),
+                label: const Text(
+                  tUploadVideo,
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -159,7 +211,7 @@ class _AddExercisesScreenState extends State<AddExercises> {
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  onPressed: _showConfirmationDialog, // Dialog aufrufen
+                  onPressed: _showConfirmationDialog,
                   icon: const Icon(Icons.add, color: Colors.blue),
                   label: const Text(
                     tAdd,
@@ -179,7 +231,6 @@ class _AddExercisesScreenState extends State<AddExercises> {
   }
 }
 
-// Dialog-Funktion für Bestätigung vor dem Speichern
 void showConfirmationDialog({
   required BuildContext context,
   required String title,
@@ -199,7 +250,7 @@ void showConfirmationDialog({
         TextButton(
           onPressed: () {
             Navigator.pop(context);
-            onConfirm(); // Bestätigung und Funktion ausführen
+            onConfirm();
           },
           child: const Text(
             tSave,
