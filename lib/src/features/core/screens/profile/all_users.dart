@@ -17,7 +17,7 @@ class AllUsers extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: tPrimaryColor,
-        leading: IconButton(onPressed: () => Get.back(), icon: const Icon(LineAwesomeIcons.angle_left,)),
+        leading: IconButton(onPressed: () => Get.back(), icon: const Icon(LineAwesomeIcons.angle_left_solid,)),
         title: Text("users", style: Theme.of(context).textTheme.headlineMedium),
       ),
       body: SingleChildScrollView(
@@ -55,7 +55,7 @@ class AllUsers extends StatelessWidget {
                                         shape: BoxShape.circle,
                                         color: tPrimaryColor,
                                       ),
-                                      child: const Icon(LineAwesomeIcons.user_1, color: Colors.black),
+                                      child: const Icon(LineAwesomeIcons.user, color: Colors.black),
                                     ),
                                     title: Text(snapshot.data![index].userName, style: Theme.of(context).textTheme.headlineMedium,),
                                     subtitle: Column(

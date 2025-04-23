@@ -45,7 +45,7 @@ class MailVerification extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(LineAwesomeIcons.alternate_long_arrow_left),
+                    const Icon(LineAwesomeIcons.long_arrow_alt_left_solid),
                     const SizedBox(width: 5),
                     Text(tBackToLogin.tr.toLowerCase()),
                   ],
