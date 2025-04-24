@@ -6,10 +6,12 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/end_exerc
 class TimerAwareAppBar extends StatelessWidget implements PreferredSizeWidget {
   final PreferredSizeWidget normalAppBar;
   final bool showBackButton;
+    final bool hideIcons; 
 
   const TimerAwareAppBar({
     super.key,
     required this.normalAppBar,
+    this.hideIcons = false,
     this.showBackButton = false,
   });
 
@@ -19,6 +21,8 @@ class TimerAwareAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return Obx(() {
       final isRunning = timerController.isRunning.value;
+      final isInfoTab =
+          ModalRoute.of(context)?.settings.name == '/exercise_info';
 
       if (!isRunning) return normalAppBar;
 
@@ -66,7 +70,7 @@ class TimerAwareAppBar extends StatelessWidget implements PreferredSizeWidget {
                       onPressed: () => Navigator.pop(context),
                     ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 12, right: 12),
+                    padding: const EdgeInsets.only(left: 2, right: 12),
                     child: Text(
                       timerController.formattedTime.value,
                       style: const TextStyle(
@@ -83,37 +87,39 @@ class TimerAwareAppBar extends StatelessWidget implements PreferredSizeWidget {
             /// RIGHT: Pause + Stop
             Align(
               alignment: Alignment.centerRight,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: Icon(
-                      timerController.isPaused.value
-                          ? Icons.play_arrow
-                          : Icons.pause,
-                      size: 28,
-                      color: Colors.white,
+              child: hideIcons
+                  ? const SizedBox.shrink()
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            timerController.isPaused.value
+                                ? Icons.play_arrow
+                                : Icons.pause,
+                            size: 28,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            timerController.isPaused.value
+                                ? timerController.resume()
+                                : timerController.pause();
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.stop,
+                              size: 28, color: Colors.white),
+                          onPressed: () async {
+                            final confirmed = await showDialog<bool>(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (_) => const EndExerciseDialog(),
+                            );
+                            if (confirmed == true) timerController.stop();
+                          },
+                        ),
+                      ],
                     ),
-                    onPressed: () {
-                      timerController.isPaused.value
-                          ? timerController.resume()
-                          : timerController.pause();
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.stop, size: 28, color: Colors.white),
-                    onPressed: () async {
-                      final confirmed = await showDialog<bool>(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (BuildContext context) =>
-                            const EndExerciseDialog(),
-                      );
-                      if (confirmed == true) timerController.stop();
-                    },
-                  ),
-                ],
-              ),
             ),
           ],
         ),

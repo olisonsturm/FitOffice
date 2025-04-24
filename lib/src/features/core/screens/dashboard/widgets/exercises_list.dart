@@ -1,3 +1,4 @@
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/view_exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
@@ -6,7 +7,6 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/start_exe
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 import 'package:string_similarity/string_similarity.dart';
 import 'package:fit_office/src/constants/colors.dart';
-
 
 class FullWidthDivider extends StatelessWidget {
   const FullWidthDivider({super.key});
@@ -64,7 +64,7 @@ class AllExercisesList extends StatelessWidget {
     if (isFiltered || !showGroupedAlphabetically) {
       // Keine Buchstabenüberschrift – einfach sortieren und soft-dividern
       for (int i = 0; i < sortedList.length; i++) {
-        listWidgets.add(_buildExerciseCard(sortedList[i]));
+        listWidgets.add(_buildExerciseCard(context, sortedList[i]));
         if (i < sortedList.length - 1) listWidgets.add(_buildSoftDivider());
       }
     } else {
@@ -78,7 +78,7 @@ class AllExercisesList extends StatelessWidget {
         listWidgets.add(_buildFullDivider());
 
         for (int i = 0; i < buffer.length; i++) {
-          listWidgets.add(_buildExerciseCard(buffer[i]));
+          listWidgets.add(_buildExerciseCard(context, buffer[i]));
           listWidgets.add(i == buffer.length - 1
               ? _buildFullDivider()
               : _buildSoftDivider());
@@ -136,7 +136,8 @@ class AllExercisesList extends StatelessWidget {
         endIndent: 12,
       );
 
-  Widget _buildExerciseCard(Map<String, dynamic> exercise) {
+  Widget _buildExerciseCard(
+      BuildContext context, Map<String, dynamic> exercise) {
     final exerciseName = exercise['name'];
     final exerciseCategory = exercise['category'];
     final isFavorite = favorites.contains(exerciseName);
@@ -150,11 +151,16 @@ class AllExercisesList extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
-          highlightColor: Colors.grey.shade300, 
+          highlightColor: Colors.grey.shade300,
           splashColor: Colors.grey.shade300,
           onTap: () {
-            // Optional: Öffne Details oder führe etwas aus
-          },
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => ExerciseDetailScreen(exerciseData: exercise),
+            ),
+          );
+        },
           child: ListTile(
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 10),

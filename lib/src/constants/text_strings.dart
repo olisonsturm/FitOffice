@@ -193,3 +193,15 @@ const String tAbbreviationFavorites = "❤️";
 const String tActiveExercise = "Active Exercise";
 const String tActiveExerciseErrorMsg = "An exercise is already running. Please finish or stop it before you start a new one.";
 const String tActiveExerciseAnswer = "OK";
+
+
+// -- Exercise_View Texts
+const String tExerciseAbout = "About";
+const String tExerciseHistory = "History";
+const String tExerciseVideo = "Video";
+const String tExerciseDescription = "Description";
+const String tExerciseNoDescription = "No description available";
+const String tExerciseResume = "Resume";
+const String tExerciseStart = "Start";
+const String tExercisePause = "Pause";
+const String tExerciseStop = "Stop";
