@@ -1,18 +1,13 @@
-import 'dart:io';
-
-import 'package:chewie/chewie.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/screens/account/upload_video.dart';
 import 'package:fit_office/src/features/core/screens/account/widgets/confirmation_dialog.dart';
 import 'package:fit_office/src/features/core/screens/account/widgets/save_button.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/video_player.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 
-import '../dashboard/widgets/video_thumbnail.dart';
 
 class EditExercise extends StatefulWidget {
   final Map<String, dynamic> exercise;
@@ -37,7 +32,6 @@ class _EditExerciseState extends State<EditExercise> {
   String? _selectedCategory;
   String? uploadedVideoUrl;
   VideoPlayerController? _videoPlayerController;
-  ChewieController? _chewieController;
 
   final Map<String, String> categoryMap = {
     tUpperBody: 'Upper-Body',
@@ -78,7 +72,6 @@ class _EditExerciseState extends State<EditExercise> {
     _nameController.dispose();
     _descriptionController.dispose();
     _videoPlayerController?.dispose();
-    _chewieController?.dispose();
     super.dispose();
   }
 
@@ -163,20 +156,11 @@ class _EditExerciseState extends State<EditExercise> {
 
   Future<void> initVideoPlayer(String url) async {
     _videoPlayerController?.dispose();
-    _chewieController?.dispose();
-
-    _videoPlayerController = VideoPlayerController.network(url);
+    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(url));
     await _videoPlayerController!.initialize();
-
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController!,
-      autoPlay: false,
-      looping: false,
-      aspectRatio: _videoPlayerController!.value.aspectRatio,
-    );
-
     setState(() {});
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -229,16 +213,11 @@ class _EditExerciseState extends State<EditExercise> {
                   ? const CircularProgressIndicator()
                   : Column(
                       children: [
-                        if ((uploadedVideoUrl ?? originalVideo).isNotEmpty &&
-                            _chewieController != null) ...[
-                          Container(
+                        if ((uploadedVideoUrl ?? originalVideo).isNotEmpty) ...[
+                          SizedBox(
                             height: 200,
                             width: double.infinity,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey.shade300),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Chewie(controller: _chewieController!),
+                            child: VideoPlayerWidget(videoUrl: uploadedVideoUrl ?? originalVideo),
                           ),
                           const SizedBox(height: 12)
                         ],

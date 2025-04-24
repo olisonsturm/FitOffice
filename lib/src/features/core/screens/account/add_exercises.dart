@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:video_player/video_player.dart';
-import 'package:chewie/chewie.dart';
 
 import '../../../../constants/colors.dart';
+import '../dashboard/widgets/video_player.dart';
 
 class AddExercises extends StatefulWidget {
   final String currentUserId;
@@ -25,7 +25,6 @@ class _AddExercisesScreenState extends State<AddExercises> {
   String? _selectedCategory;
   String? uploadedVideoUrl;
   VideoPlayerController? _videoPlayerController;
-  ChewieController? _chewieController;
 
   bool isLoading = false;
 
@@ -37,20 +36,11 @@ class _AddExercisesScreenState extends State<AddExercises> {
 
   Future<void> initVideoPlayer(String url) async {
     _videoPlayerController?.dispose();
-    _chewieController?.dispose();
-
-    _videoPlayerController = VideoPlayerController.network(url);
+    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(url));
     await _videoPlayerController!.initialize();
-
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController!,
-      autoPlay: false,
-      looping: false,
-      aspectRatio: _videoPlayerController!.value.aspectRatio,
-    );
-
     setState(() {});
   }
+
 
   void _showConfirmationDialog() {
     showConfirmationDialog(
@@ -107,7 +97,6 @@ class _AddExercisesScreenState extends State<AddExercises> {
     _descriptionController.dispose();
     _videoController.dispose();
     _videoPlayerController?.dispose();
-    _chewieController?.dispose();
     super.dispose();
   }
 
@@ -155,12 +144,13 @@ class _AddExercisesScreenState extends State<AddExercises> {
                 onChanged: (value) => setState(() => _selectedCategory = value),
               ),
               const SizedBox(height: 12),
-              // TODO: Funktionalität für das Video hinzufügen
-              if (_chewieController != null)
+              if (uploadedVideoUrl != null) ...[
                 SizedBox(
                   height: 200,
-                  child: Chewie(controller: _chewieController!),
+                  child: VideoPlayerWidget(videoUrl: uploadedVideoUrl!),
                 ),
+                const SizedBox(height: 12)
+              ],
               const SizedBox(height: 12),
               TextButton.icon(
                 onPressed: () async {
