@@ -42,6 +42,19 @@ class _AddExercisesScreenState extends State<AddExercises> {
     setState(() {});
   }
 
+  void _resetForm() {
+    _nameController.clear();
+    _descriptionController.clear();
+    _videoController.clear();
+
+    _videoPlayerController?.dispose();
+    _videoPlayerController = null;
+
+    setState(() {
+      _selectedCategory = null;
+      uploadedVideoUrl = null;
+    });
+  }
 
   void _showConfirmationDialog() {
     showConfirmationDialog(
@@ -79,10 +92,7 @@ class _AddExercisesScreenState extends State<AddExercises> {
         const SnackBar(content: Text(tExerciseAdded)),
       );
 
-      _nameController.clear();
-      _descriptionController.clear();
-      _videoController.clear();
-      setState(() => _selectedCategory = null);
+      _resetForm();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('$e')),
