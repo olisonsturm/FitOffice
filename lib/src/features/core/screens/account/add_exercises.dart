@@ -71,7 +71,10 @@ class _AddExercisesScreenState extends State<AddExercises> {
     final category = _selectedCategory;
     final video = _videoController.text.trim();
 
-    if (name.isEmpty || description.isEmpty || category == null || video.isEmpty) {
+    if (name.isEmpty ||
+        description.isEmpty ||
+        category == null ||
+        video.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text(tFillOutAllFields)),
       );
@@ -148,9 +151,9 @@ class _AddExercisesScreenState extends State<AddExercises> {
                 value: _selectedCategory,
                 items: _categories
                     .map((cat) => DropdownMenuItem(
-                  value: cat,
-                  child: Text(cat),
-                ))
+                          value: cat,
+                          child: Text(cat),
+                        ))
                     .toList(),
                 onChanged: (value) => setState(() => _selectedCategory = value),
               ),
@@ -170,15 +173,17 @@ class _AddExercisesScreenState extends State<AddExercises> {
                       child: CircleAvatar(
                         backgroundColor: Colors.white70,
                         child: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
+                            icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () async {
                               if (uploadedVideoUrl != null) {
                                 try {
-                                  final ref = FirebaseStorage.instance.refFromURL(uploadedVideoUrl!);
+                                  final ref = FirebaseStorage.instance
+                                      .refFromURL(uploadedVideoUrl!);
                                   await ref.delete();
 
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text(tVideoDeleteSuccess)),
+                                    const SnackBar(
+                                        content: Text(tVideoDeleteSuccess)),
                                   );
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -186,13 +191,11 @@ class _AddExercisesScreenState extends State<AddExercises> {
                                   );
                                 }
                               }
-
                               setState(() {
                                 uploadedVideoUrl = null;
                                 _videoController.clear();
                               });
-                            }
-                        ),
+                            }),
                       ),
                     ),
                   ],
@@ -200,59 +203,28 @@ class _AddExercisesScreenState extends State<AddExercises> {
                 const SizedBox(height: 12),
               ],
               const SizedBox(height: 12),
-              TextButton.icon(
-                onPressed: () async {
-                  String videoUrl = await uploadVideo();
-                  if (videoUrl.isNotEmpty) {
-                    await initVideoPlayer(videoUrl);
-                    setState(() {
-                      uploadedVideoUrl = videoUrl;
-                      _videoController.text = videoUrl;
-                    });
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text(tUploadVideoSuccess)),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text(tNoVideoSelected)),
-                    );
-                  }
-                },
-                icon: const Icon(Icons.video_call, color: Colors.blue),
-                label: const Text(
-                  tUploadVideo,
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              isLoading
-                  ? const CircularProgressIndicator()
-                  : Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.grey.shade300),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 4,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: TextButton.icon(
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  onPressed: _showConfirmationDialog,
-                  icon: const Icon(Icons.add, color: Colors.blue),
+              if (uploadedVideoUrl == null)
+                TextButton.icon(
+                  onPressed: () async {
+                    String videoUrl = await uploadVideo();
+                    if (videoUrl.isNotEmpty) {
+                      await initVideoPlayer(videoUrl);
+                      setState(() {
+                        uploadedVideoUrl = videoUrl;
+                        _videoController.text = videoUrl;
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text(tUploadVideoSuccess)),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text(tNoVideoSelected)),
+                      );
+                    }
+                  },
+                  icon: const Icon(Icons.video_call, color: Colors.blue),
                   label: const Text(
-                    tAdd,
+                    tUploadVideo,
                     style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.w800,
@@ -260,7 +232,39 @@ class _AddExercisesScreenState extends State<AddExercises> {
                     ),
                   ),
                 ),
-              ),
+              const SizedBox(height: 20),
+              isLoading
+                  ? const CircularProgressIndicator()
+                  : Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: TextButton.icon(
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                        onPressed: _showConfirmationDialog,
+                        icon: const Icon(Icons.add, color: Colors.blue),
+                        label: const Text(
+                          tAdd,
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
             ],
           ),
         ),

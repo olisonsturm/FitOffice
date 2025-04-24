@@ -9,7 +9,6 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/video_pla
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-
 class EditExercise extends StatefulWidget {
   final Map<String, dynamic> exercise;
   final String exerciseName;
@@ -162,7 +161,6 @@ class _EditExerciseState extends State<EditExercise> {
     setState(() {});
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -221,7 +219,9 @@ class _EditExerciseState extends State<EditExercise> {
                               SizedBox(
                                 height: 200,
                                 width: double.infinity,
-                                child: VideoPlayerWidget(videoUrl: uploadedVideoUrl ?? originalVideo),
+                                child: VideoPlayerWidget(
+                                    videoUrl:
+                                        uploadedVideoUrl ?? originalVideo),
                               ),
                               Positioned(
                                 top: 8,
@@ -229,17 +229,25 @@ class _EditExerciseState extends State<EditExercise> {
                                 child: CircleAvatar(
                                   backgroundColor: Colors.white70,
                                   child: IconButton(
-                                    icon: const Icon(Icons.delete, color: Colors.red),
+                                    icon: const Icon(Icons.delete,
+                                        color: Colors.red),
                                     onPressed: () async {
-                                      final videoUrlToDelete = uploadedVideoUrl ?? originalVideo;
+                                      final videoUrlToDelete =
+                                          uploadedVideoUrl ?? originalVideo;
                                       if (videoUrlToDelete.isNotEmpty) {
                                         try {
-                                          final ref = FirebaseFirestore.instance;
-                                          final storageRef = FirebaseStorage.instance.refFromURL(videoUrlToDelete);
+                                          final ref =
+                                              FirebaseFirestore.instance;
+                                          final storageRef = FirebaseStorage
+                                              .instance
+                                              .refFromURL(videoUrlToDelete);
                                           await storageRef.delete();
 
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(content: Text(tVideoDeleteSuccess)),
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                                content:
+                                                    Text(tVideoDeleteSuccess)),
                                           );
 
                                           setState(() {
@@ -249,7 +257,8 @@ class _EditExerciseState extends State<EditExercise> {
 
                                           _checkIfChanged();
                                         } catch (e) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
                                             SnackBar(content: Text("$e")),
                                           );
                                         }
@@ -279,35 +288,52 @@ class _EditExerciseState extends State<EditExercise> {
                           child: TextButton.icon(
                             style: TextButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 16),
-                              foregroundColor: Colors.blue,
+                              foregroundColor: (uploadedVideoUrl == null &&
+                                      originalVideo.isEmpty)
+                                  ? Colors.blue
+                                  : Colors.grey,
                             ),
-                            onPressed: () async {
-                              String videoUrl = await uploadVideo();
-                              if (videoUrl.isNotEmpty) {
-                                await initVideoPlayer(videoUrl);
-                                setState(() {
-                                  uploadedVideoUrl = videoUrl;
-                                });
-                                _checkIfChanged();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(tUploadVideoSuccess)),
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(tNoVideoSelected)),
-                                );
-                              }
-                            },
+                            onPressed: (uploadedVideoUrl == null &&
+                                    originalVideo.isEmpty)
+                                ? () async {
+                                    String videoUrl = await uploadVideo();
+                                    if (videoUrl.isNotEmpty) {
+                                      await initVideoPlayer(videoUrl);
+                                      setState(() {
+                                        uploadedVideoUrl = videoUrl;
+                                      });
+                                      _checkIfChanged();
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content: Text(tUploadVideoSuccess)),
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content: Text(tNoVideoSelected)),
+                                      );
+                                    }
+                                  }
+                                : null,
                             icon: Icon(
                               Icons.video_call,
-                              color: Colors.blue,
+                              color: (uploadedVideoUrl == null &&
+                                      originalVideo.isEmpty)
+                                  ? Colors.blue
+                                  : Colors.grey,
                             ),
                             label: Text(
-                              tUploadVideo,
+                              (uploadedVideoUrl == null &&
+                                      originalVideo.isEmpty)
+                                  ? tUploadVideo
+                                  : tUploadVideo,
                               style: TextStyle(
-                                color: Colors.blue,
+                                color: (uploadedVideoUrl == null &&
+                                        originalVideo.isEmpty)
+                                    ? Colors.blue
+                                    : Colors.grey,
                                 fontWeight: FontWeight.w800,
                                 fontSize: 16,
                               ),
