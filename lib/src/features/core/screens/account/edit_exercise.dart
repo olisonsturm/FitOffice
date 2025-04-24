@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/screens/account/upload_video.dart';
@@ -214,12 +215,52 @@ class _EditExerciseState extends State<EditExercise> {
                   : Column(
                       children: [
                         if ((uploadedVideoUrl ?? originalVideo).isNotEmpty) ...[
-                          SizedBox(
-                            height: 200,
-                            width: double.infinity,
-                            child: VideoPlayerWidget(videoUrl: uploadedVideoUrl ?? originalVideo),
+                          Stack(
+                            alignment: Alignment.topRight,
+                            children: [
+                              SizedBox(
+                                height: 200,
+                                width: double.infinity,
+                                child: VideoPlayerWidget(videoUrl: uploadedVideoUrl ?? originalVideo),
+                              ),
+                              Positioned(
+                                top: 8,
+                                right: 8,
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.white70,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.delete, color: Colors.red),
+                                    onPressed: () async {
+                                      final videoUrlToDelete = uploadedVideoUrl ?? originalVideo;
+                                      if (videoUrlToDelete.isNotEmpty) {
+                                        try {
+                                          final ref = FirebaseFirestore.instance;
+                                          final storageRef = FirebaseStorage.instance.refFromURL(videoUrlToDelete);
+                                          await storageRef.delete();
+
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(content: Text(tVideoDeleteSuccess)),
+                                          );
+
+                                          setState(() {
+                                            uploadedVideoUrl = null;
+                                            originalVideo = '';
+                                          });
+
+                                          _checkIfChanged();
+                                        } catch (e) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text("$e")),
+                                          );
+                                        }
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 12)
+                          const SizedBox(height: 12),
                         ],
                         Container(
                           width: double.infinity,

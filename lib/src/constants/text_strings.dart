@@ -228,3 +228,4 @@ const String tSaveExerciseConfirmation = "Do you like to add this exercise?";
 const String tUploadVideo = "Upload Video";
 const String tUploadVideoSuccess = "Video uploaded successfully";
 const String tNoVideoSelected = "No video has been selected";
+const String tVideoDeleteSuccess = "Video deleted successfully";

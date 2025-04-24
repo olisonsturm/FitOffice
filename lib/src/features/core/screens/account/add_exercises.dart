@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fit_office/src/features/core/screens/account/upload_video.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -145,11 +146,48 @@ class _AddExercisesScreenState extends State<AddExercises> {
               ),
               const SizedBox(height: 12),
               if (uploadedVideoUrl != null) ...[
-                SizedBox(
-                  height: 200,
-                  child: VideoPlayerWidget(videoUrl: uploadedVideoUrl!),
+                Stack(
+                  alignment: Alignment.topRight,
+                  children: [
+                    SizedBox(
+                      height: 200,
+                      width: double.infinity,
+                      child: VideoPlayerWidget(videoUrl: uploadedVideoUrl!),
+                    ),
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white70,
+                        child: IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () async {
+                              if (uploadedVideoUrl != null) {
+                                try {
+                                  final ref = FirebaseStorage.instance.refFromURL(uploadedVideoUrl!);
+                                  await ref.delete();
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text(tVideoDeleteSuccess)),
+                                  );
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text("$e")),
+                                  );
+                                }
+                              }
+
+                              setState(() {
+                                uploadedVideoUrl = null;
+                                _videoController.clear();
+                              });
+                            }
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 12)
+                const SizedBox(height: 12),
               ],
               const SizedBox(height: 12),
               TextButton.icon(
