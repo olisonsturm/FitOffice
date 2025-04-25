@@ -81,12 +81,12 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
 
         final existingQuery = await friendshipRef
             .where('status', isEqualTo: 'accepted')
-            .where('user1', whereIn: [currentUserRef, friendDoc.reference])
+            .where('sender', whereIn: [currentUserRef, friendDoc.reference])
             .get();
 
         final alreadyExists = existingQuery.docs.any((doc) {
-          final u1 = doc['user1'] as DocumentReference;
-          final u2 = doc['user2'] as DocumentReference;
+          final u1 = doc['sender'] as DocumentReference;
+          final u2 = doc['receiver'] as DocumentReference;
           return (u1.id == currentUserRef.id && u2.id == friendDoc.id) ||
               (u1.id == friendDoc.id && u2.id == currentUserRef.id);
         });
@@ -99,10 +99,10 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
         }
 
         await friendshipRef.add({
-          'user1': currentUserRef,
-          'user2': friendDoc.reference,
+          'sender': currentUserRef,
+          'receiver': friendDoc.reference,
           'since': FieldValue.serverTimestamp(),
-          'status': 'accepted',
+          'status': 'pending',
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -115,9 +115,6 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
       );
     }
   }
-
-
-
 
   @override
   void dispose() {

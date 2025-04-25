@@ -26,17 +26,27 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
       final friendshipsRef =
           FirebaseFirestore.instance.collection('friendships');
 
-      final snapshot1 = await friendshipsRef
-          .where('user1', isEqualTo: userRef)
+      final acceptedSnapshot1 = await friendshipsRef
+          .where('sender', isEqualTo: userRef)
           .where('status', isEqualTo: 'accepted')
           .get();
 
-      final snapshot2 = await friendshipsRef
-          .where('user2', isEqualTo: userRef)
+      final acceptedSnapshot2 = await friendshipsRef
+          .where('receiver', isEqualTo: userRef)
           .where('status', isEqualTo: 'accepted')
           .get();
 
-      final allDocs = [...snapshot1.docs, ...snapshot2.docs];
+      final pendingSnapshot = await friendshipsRef
+          .where('sender', isEqualTo: userRef)
+          .where('status', isEqualTo: 'pending')
+          .get();
+
+      final allDocs = [
+        ...acceptedSnapshot1.docs,
+        ...acceptedSnapshot2.docs,
+        ...pendingSnapshot.docs
+      ];
+
 
       List<Map<String, dynamic>> friendsData = [];
 
@@ -44,16 +54,17 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
         final data = doc.data();
         final DocumentReference otherUserRef;
 
-        if ((data['user1'] as DocumentReference).id == widget.currentUserId) {
-          otherUserRef = data['user2'] as DocumentReference;
+        if ((data['sender'] as DocumentReference).id == widget.currentUserId) {
+          otherUserRef = data['receiver'] as DocumentReference;
         } else {
-          otherUserRef = data['user1'] as DocumentReference;
+          otherUserRef = data['sender'] as DocumentReference;
         }
 
         final otherUserSnap = await otherUserRef.get();
         if (otherUserSnap.exists) {
           final userData = otherUserSnap.data() as Map<String, dynamic>;
           userData['friendshipDocId'] = doc.id;
+          userData['status'] = data['status'];
           friendsData.add(userData);
         }
       }
@@ -77,7 +88,7 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
   @override
   Widget build(BuildContext context) {
     final displayedFriends =
-        showAll ? _cachedFriends : _cachedFriends.take(3).toList();
+    showAll ? _cachedFriends : _cachedFriends.take(3).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,8 +109,9 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                 ),
               ),
             IconButton(
-                icon: const Icon(Icons.refresh, color: Colors.blue),
-                onPressed: _fetchFriends),
+              icon: const Icon(Icons.refresh, color: Colors.blue),
+              onPressed: _fetchFriends,
+            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -127,10 +139,12 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
               physics: showAll
                   ? const NeverScrollableScrollPhysics()
                   : const AlwaysScrollableScrollPhysics(),
-              itemCount: _cachedFriends.length,
+              itemCount: displayedFriends.length,
               itemBuilder: (context, index) {
-                final friend = _cachedFriends[index];
+                final friend = displayedFriends[index];
                 final name = friend['username'] ?? tUnknown;
+                final status = friend['status'];
+                final isPending = status == 'pending';
 
                 return ListTile(
                   leading: const Icon(Icons.person, color: Colors.blue),
@@ -141,8 +155,11 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.person_remove, color: Colors.red),
+                  trailing: isPending
+                      ? const Icon(Icons.access_time, color: Colors.grey)
+                      : IconButton(
+                    icon:
+                    const Icon(Icons.person_remove, color: Colors.red),
                     onPressed: () async {
                       final docId = friend['friendshipDocId'];
                       if (docId != null) {
@@ -153,15 +170,18 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                               .delete();
 
                           setState(() {
-                            _cachedFriends.removeAt(index);
+                            _cachedFriends.removeWhere(
+                                    (f) => f['friendshipDocId'] == docId);
                           });
 
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('$name$tFriendDeleted')),
+                            SnackBar(
+                                content: Text('$name$tFriendDeleted')),
                           );
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text(tFriendDeleteException)),
+                            const SnackBar(
+                                content: Text(tFriendDeleteException)),
                           );
                         }
                       }
@@ -174,4 +194,5 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
       ],
     );
   }
+
 }
