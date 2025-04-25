@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/statistics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -111,19 +112,27 @@ class DashboardState extends State<Dashboard> {
           children: [
             _isUserLoaded
                 ? UserAccountsDrawerHeader(
-                    currentAccountPicture:
-                        const Image(image: AssetImage(tLogoImage)),
-                    currentAccountPictureSize: const Size(100, 100),
-                    accountName: Text(_user?.fullName ?? ''),
-                    accountEmail: Text(_user?.email ?? ''),
-                    decoration: const BoxDecoration(color: tSecondaryColor),
-                  )
+              currentAccountPicture: _user?.profilePicture != null &&
+                  _user!.profilePicture!.isNotEmpty
+                  ? CachedNetworkImage(
+                imageUrl: _user!.profilePicture!,
+                placeholder: (context, url) =>
+                const CircularProgressIndicator(),
+                errorWidget: (context, url, error) =>
+                const Icon(Icons.error),
+              )
+                  : const Image(image: AssetImage(tLogoImage)),
+              currentAccountPictureSize: const Size(100, 100),
+              accountName: Text(_user?.fullName ?? ''),
+              accountEmail: Text(_user?.email ?? ''),
+              decoration: const BoxDecoration(color: tSecondaryColor),
+            )
                 : const UserAccountsDrawerHeader(
-                    currentAccountPicture:
-                        Image(image: AssetImage(tLogoImage)),
-                    accountName: Text('Loading...'),
-                    accountEmail: Text('Loading...'),
-                  ),
+              currentAccountPicture:
+              Image(image: AssetImage(tLogoImage)),
+              accountName: Text('Loading...'),
+              accountEmail: Text('Loading...'),
+            ),
             ListTile(
                 leading: const Icon(Icons.verified_user),
                 title: const Text('Profile'),

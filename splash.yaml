@@ -1,15 +1,15 @@
 flutter_native_splash:
   color: "#ffffff"
   color_dark: "#2e2e2e"
-  image: assets/logo/FitOfficeDHBWLogo.png
-  image_dark: assets/logo/FitOfficeDHBWLogo.png
+  image: assets/logo/fit_office.png
+  image_dark: assets/logo/fit_office.png
   android: true
   ios: true
   web: false
 
   android_12:
-    image: assets/logo/FitOfficeDHBWLogo.png
-    image_dark: assets/logo/FitOfficeDHBWLogo.png
+    image: assets/logo/fit_office.png
+    image_dark: assets/logo/fit_office.png
 
 # CREATE - flutter pub run flutter_native_splash:create --path=splash.yaml
 # REMOVE - flutter pub run flutter_native_splash:remove --path=splash.yaml

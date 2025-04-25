@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
@@ -9,8 +10,6 @@ class SignUpController extends GetxController {
   static SignUpController get instance => Get.find();
 
   final showPassword = false.obs;
-  final isGoogleLoading = false.obs;
-  final isFacebookLoading = false.obs;
   GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
 
   // TextField Controllers to get data from TextFields
