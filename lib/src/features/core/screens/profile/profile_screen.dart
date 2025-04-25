@@ -168,6 +168,18 @@ class _AccountScreenState extends State<AccountScreen> {
                           ),
                         ],
                       ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: FactDisplayCard(
+                              icon: Icons.star,
+                              title: "5",
+                              subtitle: "Friend Streaks",
+                              iconColor: Colors.yellow,
+                            ),
+                          ),
+                        ],
+                      ),
                       CustomProfileButton(
                         icon: LineAwesomeIcons.user_plus_solid,  // Icon for adding friends
                         label: "Add Friends",  // Label for the button
