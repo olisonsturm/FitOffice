@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import '../authentication_repository/exceptions/t_exceptions.dart';
@@ -62,8 +63,9 @@ class UserRepository extends GetxController {
       throw result.message;
     } on FirebaseException catch (e) {
       throw e.message.toString();
-    } catch (_) {
-      throw 'Something went wrong. Please Try Again';
+    } catch (e) {
+      debugPrint('Error: $e');
+      throw 'Something went wrong. Please Try Again. Details: $e';
     }
   }
 

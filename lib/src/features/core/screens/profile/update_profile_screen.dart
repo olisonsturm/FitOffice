@@ -4,7 +4,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import 'package:fit_office/src/features/core/controllers/profile_controller.dart';
 import 'package:fit_office/src/features/core/screens/profile/profile_form.dart';
-import 'package:fit_office/src/features/core/screens/profile/widgets/image_with_icon.dart';
+import 'package:fit_office/src/features/core/screens/profile/widgets/avatar_with_edit.dart';
 import '../../../../constants/sizes.dart';
 import '../../../../constants/text_strings.dart';
 
@@ -42,7 +42,7 @@ class UpdateProfileScreen extends StatelessWidget {
                   return Column(
                     children: [
                       /// -- IMAGE with ICON
-                      const ImageWithIcon(),
+                      const AvatarWithEdit(),
                       const SizedBox(height: 50),
 
                       /// -- Form (Get data and pass it to FormScreen)
