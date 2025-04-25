@@ -1,11 +1,12 @@
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../authentication/models/user_model.dart';
 import '../../controllers/profile_controller.dart';
+import '../account/delete_exercise.dart';
+import '../account/edit_exercise.dart';
 
 class FavoritesPage extends StatefulWidget {
   final String category;
@@ -99,32 +100,52 @@ class _FavoritesPage extends State<FavoritesPage> {
                               'Description: ${exercise['description'] ?? 'No description.'}\n'
                               'Video: ${exercise['video'] ?? 'No video.'}\n'
                       ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.favorite, color: Colors.red),
-                        onPressed: () => _toggleFavorite(exercise['name']),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                              icon: const Icon(Icons.favorite, color: Colors.red),
+                              onPressed: () => _toggleFavorite(exercise['name']),
+                          ),
+                          if (_user?.role == 'admin') ...[
+                            IconButton(
+                              icon: const Icon(Icons.edit,
+                                  color: Colors.blue),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => EditExercise(
+                                      exercise: exercise,
+                                      exerciseName:
+                                      exercise['name'],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete,
+                                  color: Colors.red),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => DeleteExercise(
+                                      exercise: exercise,
+                                      exerciseName:
+                                      exercise['name'],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ]
+                        ],
                       ),
                     ),
                   );
                 },
-              ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SearchPage(query: widget.category),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                    side: const BorderSide(color: Colors.grey, width: 2)
-                ),
-                child: const Text("Add favourites"),
               ),
             ),
           ],

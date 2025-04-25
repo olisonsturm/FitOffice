@@ -164,7 +164,6 @@ const String tAddFriendsButton = "ADD FRIENDS";
 const String tSearchError = "Search error";
 const String tAddFriendsHeader = "Add Friends";
 
-
 // -- Exercise Timer - Text
 const String tEndExercisePopUp = "End exercise";
 const String tEndExerciseConfirmation = "Are you sure you want to end the exercise?";
@@ -193,3 +192,36 @@ const String tAbbreviationFavorites = "❤️";
 const String tActiveExercise = "Active Exercise";
 const String tActiveExerciseErrorMsg = "An exercise is already running. Please finish or stop it before you start a new one.";
 const String tActiveExerciseAnswer = "OK";
+
+// -- Admin Text
+const String tAddExercises = "ADD EXERCISES";
+const String tAddExercisesHeader = "Add Exercises";
+const String tFillOutAllFields = "Please fill out all fields.";
+const String tExerciseAdded = "Exercise has been successfully added.";
+const String tDescription = "Description";
+const String tCategory = "Category";
+const String tAdd = "Add";
+const String tMental = "Mental";
+const String tChangesSaved = "Changes have been saved successfully!";
+const String tEditExerciseHeading = "Edit Exercise";
+const String tSave = "Save";
+const String tGotDeleted = "Exercise got deleted.";
+const String tDeleteExercise = "Delete Exercise";
+const String tCancel = "Cancel";
+const String tDeleteEditUser = "DELETE/EDIT USER";
+const String tDeleteEditUserHeading = "Delete/Edit User";
+const String tAllUsers = "All Users";
+const String tNoUsersFound = "No users found.";
+const String tAddUser = "CREATE NEW USER";
+const String tSaveChanges = "Save changes";
+const String tCreateUser = "Create User";
+const String tSaveChangesQuestion = "Do you want to save the changes?";
+const String tName = "Name";
+const String tVideoURL = "Video URL";
+const String tRequired = "Required";
+const String tPasswordLength = "Password must be at least 6 characters";
+const String tPasswordRequired = "Password is required";
+const String tEditUser = "Edit User";
+const String tUserCreated = "User created";
+const String tUserUpdated = "User updated";
+const String tSaveExerciseConfirmation = "Do you like to add this exercise?";

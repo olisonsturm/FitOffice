@@ -1,14 +1,12 @@
 import 'package:fit_office/src/constants/text_strings.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/exercise_filter.dart';
 import 'package:flutter/material.dart';
-import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:get/get.dart';
 import 'package:string_similarity/string_similarity.dart';
 
-import '../../../../authentication/models/user_model.dart';
 import '../../../controllers/profile_controller.dart';
 import '../../../models/dashboard/categories_model.dart';
+import '../exercise_filter.dart';
 import 'exercises_list.dart';
 import 'sections/physicals_filter.dart';
 import 'sections/mental_filter.dart';
@@ -222,7 +220,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         tAbbreviationMind,
         tMind,
         psychologicalCount,
-        () => Navigator.push(
+            () => Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => const ExerciseFilter(

@@ -56,7 +56,6 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
         isSearching = false;
       });
     } catch (e) {
-      print('$tSearchError $e');
       setState(() {
         results = [];
         isSearching = false;

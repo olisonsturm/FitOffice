@@ -12,12 +12,16 @@ class DbController {
   Future<String?> fetchActiveStreakSteps() async {
     final userId = user.id;
     //This query must be edited when database structure is defined
-    final streaksRef =
-        firestore.collection('users').doc(userId).collection('streaks');
+    final streaksRef = firestore
+        .collection('users')
+        .doc(userId)
+        .collection('streaks');
 
     try {
-      final querySnapshot =
-          await streaksRef.where('active', isEqualTo: true).limit(1).get();
+      final querySnapshot = await streaksRef
+          .where('active', isEqualTo: true)
+          .limit(1)
+          .get();
 
       if (querySnapshot.docs.isNotEmpty) {
         final doc = querySnapshot.docs.first;
@@ -26,7 +30,7 @@ class DbController {
           return steps;
         }
       }
-    } on SocketException {
+    }on SocketException {
       // Network error occurred, handle accordingly
       return tDashboardNoInternetConnection;
     } on FirebaseException {
@@ -98,8 +102,10 @@ class DbController {
     final userId = user.id;
 
     //Query needs to be edited if database structure changes
-    final exerciseHistoryRef =
-        firestore.collection('users').doc(userId).collection('exerciseHistory');
+    final exerciseHistoryRef = firestore
+        .collection('users')
+        .doc(userId)
+        .collection('exerciseHistory');
 
     final querySnapshot = await exerciseHistoryRef
         .orderBy('completedAt', descending: true)
@@ -127,7 +133,7 @@ class DbController {
     }
     return null;
   }
-
+  
   Future<String> getNumberOfExercisesByCategory(String category) async {
     final numberOfExercisesByCategory = await firestore
         .collection('exercises')
@@ -138,30 +144,28 @@ class DbController {
   }
 
   Future<List<Map<String, dynamic>>> getExercises(String exerciseName) async {
-    final snapshot = await firestore.collection('exercises').get();
+    final snapshot = await firestore
+        .collection('exercises')
+        .get();
 
-    final results = snapshot.docs
-        .where((doc) {
-          final name = doc['name'] as String;
-          final description = doc['description'] as String;
-          final nameSimilarity = StringSimilarity.compareTwoStrings(
-            name.toLowerCase(),
-            exerciseName.toLowerCase(),
-          );
-          final descriptionSimilarity = StringSimilarity.compareTwoStrings(
-            description.toLowerCase(),
-            exerciseName.toLowerCase(),
-          );
-          return nameSimilarity > 0.2 || descriptionSimilarity > 0.4;
-        })
-        .map((doc) => doc.data())
-        .toList();
+    final results = snapshot.docs.where((doc) {
+      final name = doc['name'] as String;
+      final description = doc['description'] as String;
+      final nameSimilarity = StringSimilarity.compareTwoStrings(
+        name.toLowerCase(),
+        exerciseName.toLowerCase(),
+      );
+      final descriptionSimilarity = StringSimilarity.compareTwoStrings(
+        description.toLowerCase(),
+        exerciseName.toLowerCase(),
+      );
+      return nameSimilarity > 0.4 || descriptionSimilarity > 0.4;
+    }).map((doc) => doc.data()).toList();
 
     return results;
   }
 
-  Future<List<Map<String, dynamic>>> getAllExercisesOfCategory(
-      String categoryName) async {
+  Future<List<Map<String, dynamic>>> getAllExercisesOfCategory(String categoryName) async {
     final snapshot = await firestore
         .collection('exercises')
         .where('category', isEqualTo: categoryName)
@@ -180,8 +184,9 @@ class DbController {
 
     final userDoc = userQuery.docs.first;
 
-    final favoritesSnapshot =
-        await userDoc.reference.collection('favorites').get();
+    final favoritesSnapshot = await userDoc.reference
+        .collection('favorites')
+        .get();
 
     List<Map<String, dynamic>> exerciseList = [];
 
@@ -205,16 +210,15 @@ class DbController {
         .get();
     final exerciseDoc = exerciseQuery.docs.first;
     final exerciseId = exerciseDoc.id;
-
+    
     final userQuery = await firestore
         .collection('users')
         .where('email', isEqualTo: email)
         .get();
     final userDoc = userQuery.docs.first;
-    await userDoc.reference.collection('favorites').add({
-      'exercise': FirebaseFirestore.instance.doc('exercises/$exerciseId'),
-      'addedAt': FieldValue.serverTimestamp()
-    });
+    await userDoc.reference
+        .collection('favorites')
+        .add({'exercise': FirebaseFirestore.instance.doc('exercises/$exerciseId'), 'addedAt': FieldValue.serverTimestamp()});
   }
 
   Future<void> removeFavorite(String email, String exerciseName) async {
@@ -235,16 +239,45 @@ class DbController {
 
     final favoriteQuery = await userDoc.reference
         .collection('favorites')
-        .where('exercise', isEqualTo: exerciseRef)
-        .get();
+        .where('exercise', isEqualTo: exerciseRef).get();
 
     await favoriteQuery.docs.first.reference.delete();
+  }
+
+  Future<void> deleteUser(String userEmail) async {
+    final snapshot = await firestore
+        .collection('users')
+        .where('email', isEqualTo: userEmail)
+        .get();
+    final userDoc = snapshot.docs.first;
+    final userRef = userDoc.reference;
+    await userRef.delete();
+  }
+
+  Future<void> updateUser(UserModel user) async {
+    final query = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: user.email)
+        .get();
+
+    if (query.docs.isNotEmpty) {
+      final docId = query.docs.first.id;
+      await FirebaseFirestore.instance.collection('users').doc(docId).update({
+        'fullName': user.fullName,
+        'role': user.role,
+      });
+    }
+  }
+
+  Future<List<UserModel>> getAllUsers() async {
+    final snapshot = await firestore.collection('users').get();
+    return snapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).toList();
   }
 
   Future<List<Map<String, dynamic>>> getAllExercises() async {
     try {
       final snapshot =
-          await FirebaseFirestore.instance.collection('exercises').get();
+      await FirebaseFirestore.instance.collection('exercises').get();
       return snapshot.docs.map((doc) => doc.data()).toList();
     } catch (e) {
       return [];
