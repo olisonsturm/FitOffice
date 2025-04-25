@@ -20,7 +20,7 @@ class UserModel {
   const UserModel(
       {this.id, required this.email, this.password, required this.userName, required this.fullName, this.createdAt, this.updatedAt, this.fitnessLevel, this.completedExercises, this.profilePicture, this.role});
 
-  /// convert model to Json structure so that you can use it to store data in Firebase
+ /// convert model to Json structure so that you can use it to store data in Firebase
   toJson() {
     final Map<String, dynamic> data = {
       "username": userName,
