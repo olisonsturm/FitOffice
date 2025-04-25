@@ -235,3 +235,6 @@ const String tShowLess = "Show less";
 const String tFriends = "Friends";
 const String tFriendNow = " is your friend now.";
 const String tExceptionAddingFriend = "Couldn't add friend";
+const String tFriendDeleted = " isn't your friend anymore.";
+const String tFriendDeleteException = "Couldn't delete friend.";
+const String tIsAlreadyYourFriend = " is already your friend.";

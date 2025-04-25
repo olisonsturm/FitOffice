@@ -16,26 +16,48 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
   List<Map<String, dynamic>> _cachedFriends = [];
   bool _isLoading = true;
 
-
   Future<void> _fetchFriends() async {
     setState(() => _isLoading = true);
+
     try {
-      final friendsSnapshot = await FirebaseFirestore.instance
+      final userRef = FirebaseFirestore.instance
           .collection('users')
-          .doc(widget.currentUserId)
-          .collection('friends')
-          .orderBy('addedAt', descending: true)
+          .doc(widget.currentUserId);
+      final friendshipsRef =
+          FirebaseFirestore.instance.collection('friendships');
+
+      final snapshot1 = await friendshipsRef
+          .where('user1', isEqualTo: userRef)
+          .where('status', isEqualTo: 'accepted')
           .get();
+
+      final snapshot2 = await friendshipsRef
+          .where('user2', isEqualTo: userRef)
+          .where('status', isEqualTo: 'accepted')
+          .get();
+
+      final allDocs = [...snapshot1.docs, ...snapshot2.docs];
 
       List<Map<String, dynamic>> friendsData = [];
 
-      for (var doc in friendsSnapshot.docs) {
-        final userRef = doc['user'] as DocumentReference;
-        final userSnap = await userRef.get();
-        if (userSnap.exists) {
-          friendsData.add(userSnap.data() as Map<String, dynamic>);
+      for (var doc in allDocs) {
+        final data = doc.data();
+        final DocumentReference otherUserRef;
+
+        if ((data['user1'] as DocumentReference).id == widget.currentUserId) {
+          otherUserRef = data['user2'] as DocumentReference;
+        } else {
+          otherUserRef = data['user1'] as DocumentReference;
+        }
+
+        final otherUserSnap = await otherUserRef.get();
+        if (otherUserSnap.exists) {
+          final userData = otherUserSnap.data() as Map<String, dynamic>;
+          userData['friendshipDocId'] = doc.id;
+          friendsData.add(userData);
         }
       }
+
 
       setState(() {
         _cachedFriends = friendsData;
@@ -45,6 +67,7 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
       setState(() => _isLoading = false);
     }
   }
+
   @override
   void initState() {
     super.initState();
@@ -53,7 +76,8 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final displayedFriends = showAll ? _cachedFriends : _cachedFriends.take(3).toList();
+    final displayedFriends =
+        showAll ? _cachedFriends : _cachedFriends.take(3).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,9 +98,8 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                 ),
               ),
             IconButton(
-              icon: const Icon(Icons.refresh, color: Colors.blue),
-              onPressed: _fetchFriends
-            ),
+                icon: const Icon(Icons.refresh, color: Colors.blue),
+                onPressed: _fetchFriends),
           ],
         ),
         const SizedBox(height: 8),
@@ -101,7 +124,9 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                 : const BoxConstraints(maxHeight: 168),
             child: ListView.builder(
               shrinkWrap: showAll,
-              physics: showAll ? const NeverScrollableScrollPhysics() : const AlwaysScrollableScrollPhysics(),
+              physics: showAll
+                  ? const NeverScrollableScrollPhysics()
+                  : const AlwaysScrollableScrollPhysics(),
               itemCount: _cachedFriends.length,
               itemBuilder: (context, index) {
                 final friend = _cachedFriends[index];
@@ -115,6 +140,32 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                       color: Colors.black87,
                       fontWeight: FontWeight.w600,
                     ),
+                  ),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.person_remove, color: Colors.red),
+                    onPressed: () async {
+                      final docId = friend['friendshipDocId'];
+                      if (docId != null) {
+                        try {
+                          await FirebaseFirestore.instance
+                              .collection('friendships')
+                              .doc(docId)
+                              .delete();
+
+                          setState(() {
+                            _cachedFriends.removeAt(index);
+                          });
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('$name$tFriendDeleted')),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text(tFriendDeleteException)),
+                          );
+                        }
+                      }
+                    },
                   ),
                 );
               },

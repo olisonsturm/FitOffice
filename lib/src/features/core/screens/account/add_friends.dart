@@ -79,7 +79,6 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
 
         final friendshipRef = FirebaseFirestore.instance.collection('friendships');
 
-        // Prüfen, ob diese Freundschaft schon existiert (egal in welcher Reihenfolge)
         final existingQuery = await friendshipRef
             .where('status', isEqualTo: 'accepted')
             .where('user1', whereIn: [currentUserRef, friendDoc.reference])
@@ -94,7 +93,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
 
         if (alreadyExists) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('$friendUsername ist bereits dein Freund.')),
+            SnackBar(content: Text('$friendUsername$tIsAlreadyYourFriend')),
           );
           return;
         }
@@ -116,6 +115,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
       );
     }
   }
+
 
 
 
