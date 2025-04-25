@@ -41,7 +41,7 @@ class AuthenticationRepository extends GetxController {
   }
 
   /// Setting initial screen
-  setInitialScreen(User? user) async {
+  Future<void> setInitialScreen(User? user) async {
     if (user != null) {
 
       user.emailVerified ? Get.offAll(() => const Dashboard()) : Get.offAll(() => const MailVerification());
@@ -114,7 +114,7 @@ class AuthenticationRepository extends GetxController {
   }
 
   /// [PhoneAuthentication] - LOGIN
-  loginWithPhoneNo(String phoneNumber) async {
+  Future<void> loginWithPhoneNo(String phoneNumber) async {
     try {
       await _auth.signInWithPhoneNumber(phoneNumber);
     } on FirebaseAuthException catch (e) {

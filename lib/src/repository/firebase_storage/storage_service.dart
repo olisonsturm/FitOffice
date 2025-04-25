@@ -6,11 +6,11 @@ import 'package:fit_office/src/repository/user_repository/user_repository.dart';
 import 'package:fit_office/src/utils/helper/helper_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../constants/colors.dart';
+import '../../constants/image_strings.dart';
 import '../../features/authentication/models/user_model.dart';
 import '../../features/core/controllers/profile_controller.dart';
 
@@ -84,27 +84,47 @@ class StorageService {
       }
 
       // Fetch the user's Firestore document
-      final userDoc = await firestore.collection('users').doc(user.id).get();
+      final doc = await firestore.collection('users').doc(user.id).get();
 
-      if (!userDoc.exists) {
+      if (!doc.exists) {
         throw Exception('User document not found for userId: ${user.id}');
       }
 
       // Retrieve the profilePicture field (file path) from the document
-      final profilePicturePath = userDoc.data()?['profilePicture'] as String?;
+      final profilePicturePath = doc.data()?['profilePicture'] as String?;
 
       if (profilePicturePath == null || profilePicturePath.isEmpty) {
         // Fallback to a default profile picture from assets
-        return const AssetImage('assets/images/profile/default_avatar.png');
+        return const AssetImage(tDefaultAvatar);
       }
 
       // Dynamically generate the download URL
       final ref = FirebaseStorage.instance.ref(profilePicturePath);
       final downloadUrl = await ref.getDownloadURL();
-      return CachedNetworkImageProvider(downloadUrl);
+
+      if (downloadUrl.startsWith('http')) {
+        final cachedImage = CachedNetworkImage(
+          imageUrl: downloadUrl,
+          placeholder: (context, url) => const Center(
+            child: CupertinoActivityIndicator(
+              color: tPrimaryColor,
+            ),
+          ),
+          errorWidget: (context, url, error) => const Image(
+            image: AssetImage(tDefaultAvatar),
+          ),
+        );
+
+        return CachedNetworkImageProvider(
+          cachedImage.imageUrl,
+          cacheManager: cachedImage.cacheManager,
+        );
+      }
+      // If the URL is not valid, return a default image
+      return const AssetImage(tDefaultAvatar);
     } catch (e) {
       debugPrint('Error fetching profile picture: $e');
-      return const AssetImage('assets/images/profile/default_avatar.png');
+      return const AssetImage(tDefaultAvatar);
     }
   }
 

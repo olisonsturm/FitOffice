@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crop_your_image/crop_your_image.dart';
 import 'package:fit_office/src/repository/firebase_storage/storage_service.dart';
 import 'package:fit_office/src/utils/helper/helper_controller.dart';
@@ -9,21 +8,22 @@ import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import '../../../../../constants/colors.dart';
-import 'avatar.dart';
+import '../../../../../constants/image_strings.dart';
+import 'avatar_zoom.dart';
 
-class ImageWithIcon extends StatefulWidget {
-  const ImageWithIcon({super.key});
+class AvatarWithEdit extends StatefulWidget {
+  const AvatarWithEdit({super.key});
 
   @override
   ImageWithIconSate createState() => ImageWithIconSate();
 }
 
-class ImageWithIconSate extends State<ImageWithIcon> {
+class ImageWithIconSate extends State<AvatarWithEdit> {
 
   final StorageService _storageService = StorageService();
 
   File? _selectedImage;
-  late ImageProvider _currentAvatar = const AssetImage('assets/images/profile/default_avatar.png');
+  late ImageProvider _currentAvatar = const AssetImage(tDefaultAvatar);
 
   @override
   void initState() {
@@ -40,10 +40,11 @@ class ImageWithIconSate extends State<ImageWithIcon> {
     } catch (e) {
       debugPrint('Error loading avatar: $e');
       setState(() {
-        _currentAvatar = const AssetImage('assets/images/profile/default_avatar.png');
+        _currentAvatar = const AssetImage(tDefaultAvatar);
       });
     }
   }
+
 
   Future<void> _pickAndCropImage() async {
     final picker = ImagePicker();
@@ -60,13 +61,13 @@ class ImageWithIconSate extends State<ImageWithIcon> {
             appBar: AppBar(
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context, null), // Rückgabe von null bei Abbruch
+                onPressed: () => Navigator.pop(context, null),
               ),
               title: const Text('Crop Image'),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.done),
-                  onPressed: () => cropController.crop(), // Cropping auslösen
+                  onPressed: () => cropController.crop(),
                 ),
               ],
             ),
@@ -82,14 +83,18 @@ class ImageWithIconSate extends State<ImageWithIcon> {
                     final tempFile = File('${tempDir.path}/$uniqueFileName');
                     await tempFile.writeAsBytes(croppedImage);
 
-                    // TODO hochladen des neuen Avatars
-                    StorageService().uploadProfilePicture(XFile(tempFile.path));
+                    try {
+                      await StorageService().uploadProfilePicture(XFile(tempFile.path));
+                      debugPrint('Avatar uploaded successfully');
+                    } catch (e) {
+                      debugPrint('Error uploading avatar: $e');
+                    }
 
-                    Navigator.pop(context, tempFile); // Rückgabe des zugeschnittenen Bildes
+                    Navigator.pop(context, tempFile);
                     break;
                   case CropFailure(:final cause):
                     debugPrint('Crop failed: $cause');
-                    Navigator.pop(context, null); // Rückgabe von null bei Fehler
+                    Navigator.pop(context, null);
                     break;
                 }
               },
@@ -104,13 +109,14 @@ class ImageWithIconSate extends State<ImageWithIcon> {
           Helper.successSnackBar(title: 'Success', message: 'Avatar updated successfully');
         });
 
-        StorageService().getProfilePicture().then((avatar) {
+        try {
+          final avatar = await StorageService().getProfilePicture();
           setState(() {
             _currentAvatar = avatar;
           });
-        }).catchError((error) {
+        } catch (error) {
           debugPrint('Error fetching profile picture: $error');
-        });
+        }
       }
     }
   }
@@ -127,7 +133,7 @@ class ImageWithIconSate extends State<ImageWithIcon> {
               Navigator.push(
                 context,
                 PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => Avatar(
+                  pageBuilder: (_, __, ___) => AvatarZoom(
                     imageProvider: _selectedImage != null
                         ? FileImage(_selectedImage!)
                         : _currentAvatar,

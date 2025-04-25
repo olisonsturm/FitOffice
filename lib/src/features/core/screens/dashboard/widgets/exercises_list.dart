@@ -8,8 +8,8 @@ import 'package:string_similarity/string_similarity.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 
 import '../../../controllers/profile_controller.dart';
-import '../../account/delete_exercise.dart';
-import '../../account/edit_exercise.dart';
+import '../../profile/admin/delete_exercise.dart';
+import '../../profile/admin/edit_exercise.dart';
 
 class AllExercisesList extends StatelessWidget {
   final List<Map<String, dynamic>> exercises;
