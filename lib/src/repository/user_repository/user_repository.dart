@@ -12,10 +12,16 @@ class UserRepository extends GetxController {
   /// Store user data
   Future<void> createUser(UserModel user) async {
     try {
-      // It is recommended to use Authentication Id as DocumentId of the Users Collection.
-      // To store a new user you first have to authenticate and get uID (e.g: Check Authentication Repository)
-      // Add user like this: await _db.collection("users").doc(uID).set(user.toJson());
-      await recordExist(user.email) ? throw "Record Already Exists" : await _db.collection("users").add(user.toJson());
+      // Get the current authenticated user's UID
+      final auth = FirebaseAuth.instance;
+      final userId = auth.currentUser?.uid;
+
+      if (userId == null) {
+        throw Exception('User is not authenticated');
+      }
+
+      // Use the UID as the document ID in Firestore
+      await _db.collection("users").doc(userId).set(user.toJson());
     } on FirebaseAuthException catch (e) {
       final result = TExceptions.fromCode(e.code);
       throw result.message;
@@ -27,24 +33,19 @@ class UserRepository extends GetxController {
   }
 
   /// Fetch User Specific details
-  Future<UserModel> getUserDetails(String email) async {
+  Future<UserModel> getUserDetails() async {
     try {
-      // It is recommended to use Authentication Id as DocumentId of the Users Collection.
-      // Then when fetching the record you only have to get user authenticationID uID and query as follows.
-      // final snapshot = await _db.collection("users").doc(uID).get();
+      final auth = FirebaseAuth.instance;
+      final userId = auth.currentUser?.uid;
 
-      final snapshot = await _db.collection("users").where("email", isEqualTo: email).get();
-      if (snapshot.docs.isEmpty) throw 'No such user found';
+      if (userId == null) {
+        throw Exception('User is not authenticated');
+      }
 
-      // Single will throw exception if there are two entries when result return.
-      // In case of multiple entries use .first to pick the first one without exception.
-      final userData = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).single;
-      return userData;
-    } on FirebaseAuthException catch (e) {
-      final result = TExceptions.fromCode(e.code);
-      throw result.message;
-    } on FirebaseException catch (e) {
-      throw e.message.toString();
+      final snapshot = await _db.collection("users").doc(userId).get();
+      if (!snapshot.exists) throw 'No such user found';
+
+      return UserModel.fromSnapshot(snapshot);
     } catch (e) {
       throw e.toString().isEmpty ? 'Something went wrong. Please Try Again' : e.toString();
     }
@@ -67,9 +68,9 @@ class UserRepository extends GetxController {
   }
 
   /// Update User details
-  Future<void> updateUserRecord(UserModel user) async {
+  Future<void> updateUserRecord(String userId, Map<String, dynamic> data) async {
     try {
-      await _db.collection("users").doc(user.id).update(user.toJson());
+      await _db.collection("users").doc(userId).update(data);
     } on FirebaseAuthException catch (e) {
       final result = TExceptions.fromCode(e.code);
       throw result.message;

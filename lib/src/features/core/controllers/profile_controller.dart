@@ -18,7 +18,7 @@ class ProfileController extends GetxController {
     try {
       final currentUserEmail = _authRepo.getUserEmail;
       if (currentUserEmail.isNotEmpty) {
-        return await _userRepo.getUserDetails(currentUserEmail);
+        return await _userRepo.getUserDetails();
       } else {
         Helper.warningSnackBar(title: 'Error', message: 'No user found!');
         throw Exception('No user found!');
@@ -33,10 +33,10 @@ class ProfileController extends GetxController {
   Future<List<UserModel>> getAllUsers() async => await _userRepo.allUsers();
 
   /// Update User Data
-  updateRecord(UserModel user) async {
+  Future<void> updateRecord(UserModel user) async {
     try {
-      await _userRepo.updateUserRecord(user);
-      //Show some message or redirect to other screen here...
+      await _userRepo.updateUserRecord(user.id!, user.toJson());
+
       Helper.successSnackBar(title: tCongratulations, message: 'Profile Record has been updated!');
     } catch (e) {
       Helper.errorSnackBar(title: 'Error', message: e.toString());
