@@ -63,6 +63,41 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
     }
   }
 
+  void _addFriend(String friendUsername) async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('username', isEqualTo: friendUsername)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final friendDoc = querySnapshot.docs.first;
+
+        final friendRef = friendDoc.reference;
+
+        final userFriendsRef = FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.currentUserId)
+            .collection('friends');
+
+        await userFriendsRef.add({
+          'user': friendRef,
+          'addedAt': FieldValue.serverTimestamp(),
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('$friendUsername$tFriendNow')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(tExceptionAddingFriend)),
+      );
+    }
+  }
+
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -107,6 +142,10 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                       return ListTile(
                         leading: const Icon(Icons.person),
                         title: Text(username),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.person_add),
+                          onPressed: () => _addFriend(username),
+                        ),
                       );
                     },
                   ),

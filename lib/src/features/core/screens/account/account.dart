@@ -1,4 +1,5 @@
 import 'package:fit_office/src/features/core/screens/account/widgets/all_users.dart';
+import 'package:fit_office/src/features/core/screens/account/widgets/friends_box.dart';
 import 'package:fit_office/src/features/core/screens/account/widgets/navigation_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -68,6 +69,8 @@ class _FriendsScreenState extends State<AccountScreen> {
                       const SizedBox(height: tDefaultSize),
                     ],
                     AddFriendsButton(currentUserId: user.id!),
+                    const SizedBox(height: tDefaultSize),
+                    FriendsBoxWidget(currentUserId: user.id!),
                   ],
                 );
               } else {
