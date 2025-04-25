@@ -95,6 +95,7 @@ class _AddExercisesScreenState extends State<AddExercises> {
         const SnackBar(content: Text(tExerciseAdded)),
       );
 
+
       _resetForm();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
