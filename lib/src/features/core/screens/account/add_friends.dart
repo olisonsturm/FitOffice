@@ -73,17 +73,37 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
 
       if (querySnapshot.docs.isNotEmpty) {
         final friendDoc = querySnapshot.docs.first;
-
-        final friendRef = friendDoc.reference;
-
-        final userFriendsRef = FirebaseFirestore.instance
+        final currentUserRef = FirebaseFirestore.instance
             .collection('users')
-            .doc(widget.currentUserId)
-            .collection('friends');
+            .doc(widget.currentUserId);
 
-        await userFriendsRef.add({
-          'user': friendRef,
-          'addedAt': FieldValue.serverTimestamp(),
+        final friendshipRef = FirebaseFirestore.instance.collection('friendships');
+
+        // Prüfen, ob diese Freundschaft schon existiert (egal in welcher Reihenfolge)
+        final existingQuery = await friendshipRef
+            .where('status', isEqualTo: 'accepted')
+            .where('user1', whereIn: [currentUserRef, friendDoc.reference])
+            .get();
+
+        final alreadyExists = existingQuery.docs.any((doc) {
+          final u1 = doc['user1'] as DocumentReference;
+          final u2 = doc['user2'] as DocumentReference;
+          return (u1.id == currentUserRef.id && u2.id == friendDoc.id) ||
+              (u1.id == friendDoc.id && u2.id == currentUserRef.id);
+        });
+
+        if (alreadyExists) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('$friendUsername ist bereits dein Freund.')),
+          );
+          return;
+        }
+
+        await friendshipRef.add({
+          'user1': currentUserRef,
+          'user2': friendDoc.reference,
+          'since': FieldValue.serverTimestamp(),
+          'status': 'accepted',
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -96,6 +116,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
       );
     }
   }
+
 
 
   @override
