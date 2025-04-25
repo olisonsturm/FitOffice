@@ -1,12 +1,12 @@
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:fit_office/src/features/core/screens/account/upload_video.dart';
+import 'package:fit_office/src/features/core/screens/profile/admin/upload_video.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../../../constants/colors.dart';
-import '../dashboard/widgets/video_player.dart';
+import '../../../../../constants/colors.dart';
+import '../../dashboard/widgets/video_player.dart';
 
 class AddExercises extends StatefulWidget {
   final String currentUserId;
