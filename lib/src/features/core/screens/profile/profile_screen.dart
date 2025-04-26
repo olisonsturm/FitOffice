@@ -270,43 +270,46 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ],
                   const Divider(),
-                  const SizedBox(height: 10),
 
                   Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "FitOffice@DHBW",
-                          textAlign: TextAlign.center,
-                          style: txtTheme.bodyMedium?.copyWith(
-                            color: Colors.grey[600],
-                            fontWeight: FontWeight.bold,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "Proudly crafted with ❤️ and ☕",
+                            textAlign: TextAlign.center,
+                            style: txtTheme.bodyMedium?.copyWith(
+                              color: Colors.blueGrey[700],
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.1,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          "Developed by students of Health Management & Business Informatics",
-                          textAlign: TextAlign.center,
-                          style: txtTheme.bodySmall?.copyWith(
-                            color: Colors.grey,
-                            height: 1.5,
+                          SizedBox(height: 10),
+                          Text(
+                            "by passionate students of\nHealth Management & Business Information Systems\nat DHBW Ravensburg",
+                            textAlign: TextAlign.center,
+                            style: txtTheme.bodySmall?.copyWith(
+                              color: Colors.blueGrey[400],
+                              height: 1.6,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          "Made with ❤️ at DHBW Ravensburg\n© ${DateTime.now().year} FitOffice",
-                          textAlign: TextAlign.center,
-                          style: txtTheme.bodySmall?.copyWith(
-                            color: Colors.grey[500],
-                            fontStyle: FontStyle.italic,
-                            height: 1.5,
+                          SizedBox(height: 16),
+                          Text(
+                            "© ${DateTime.now().year} FitOffice",
+                            textAlign: TextAlign.center,
+                            style: txtTheme.bodySmall?.copyWith(
+                              color: Colors.grey[500],
+                              fontStyle: FontStyle.italic,
+                              fontSize: 12,
+                              letterSpacing: 0.5,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-
                   const SizedBox(height: 20),
                 ],
               ),
