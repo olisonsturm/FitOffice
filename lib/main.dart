@@ -25,7 +25,7 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
       .then((_) {
     Get.put(AuthenticationRepository());
-    Get.put(ExerciseTimerController()); // ⬅️ NEU: Timer global verfügbar machen
+    Get.put(ExerciseTimerController()); 
   });
 
   /// -- README(Docs[3]) -- Initialize Firebase Storage

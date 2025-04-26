@@ -223,6 +223,8 @@ class DbController {
         .where('name', isEqualTo: exerciseName)
         .get();
 
+    if (exerciseQuery.docs.isEmpty) return; // Schutz: Übung existiert nicht
+
     final exerciseDoc = exerciseQuery.docs.first;
     final exerciseRef = exerciseDoc.reference;
 
@@ -231,12 +233,16 @@ class DbController {
         .where('email', isEqualTo: email)
         .get();
 
+    if (userQuery.docs.isEmpty) return; // Schutz: Benutzer existiert nicht
+
     final userDoc = userQuery.docs.first;
 
     final favoriteQuery = await userDoc.reference
         .collection('favorites')
         .where('exercise', isEqualTo: exerciseRef)
         .get();
+
+    if (favoriteQuery.docs.isEmpty) return; // Schutz: Kein Favorit gefunden
 
     await favoriteQuery.docs.first.reference.delete();
   }

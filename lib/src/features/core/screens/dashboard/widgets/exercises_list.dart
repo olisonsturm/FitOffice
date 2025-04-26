@@ -153,14 +153,19 @@ class AllExercisesList extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           highlightColor: Colors.grey.shade300,
           splashColor: Colors.grey.shade300,
-          onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => ExerciseDetailScreen(exerciseData: exercise),
-            ),
-          );
-        },
+          onTap: () async {
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ExerciseDetailScreen(exerciseData: exercise),
+              ),
+            );
+
+            if (result == true) {
+              onToggleFavorite(exercise[
+                  'name']); // <- Wichtig: Favoritenliste neu synchronisieren
+            }
+          },
           child: ListTile(
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 10),

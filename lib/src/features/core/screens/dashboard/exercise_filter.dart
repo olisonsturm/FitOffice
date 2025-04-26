@@ -1,3 +1,4 @@
+import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:fit_office/src/features/core/controllers/profile_controller.dart';
@@ -11,8 +12,8 @@ import '../../../authentication/models/user_model.dart';
 class ExerciseFilter extends StatefulWidget {
   final String heading;
   final String? category; // z. B. 'Upper Body'
-  final bool showOnlyFavorites; // true: zeigt nur Favoriten
-
+  final bool showOnlyFavorites; 
+  
   const ExerciseFilter({
     super.key,
     required this.heading,
@@ -84,10 +85,10 @@ class _ExerciseFilterState extends State<ExerciseFilter> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TimerAwareAppBar(
+      appBar: SliderAppBar(
         normalAppBar: AppBar(
           title: Text(widget.heading),
-          backgroundColor: Colors.grey,
+          backgroundColor: tWhiteColor,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context),
@@ -107,7 +108,7 @@ class _ExerciseFilterState extends State<ExerciseFilter> {
                 favorites: _userFavorites,
                 onToggleFavorite: _toggleFavorite,
                 query: "",
-                showGroupedAlphabetically: false, // 👈 ganz wichtig!
+                showGroupedAlphabetically: false, 
               ),
             ),
 

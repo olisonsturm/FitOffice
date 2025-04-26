@@ -20,7 +20,7 @@ class ProgressScreenState extends State<ProgressScreen>
   final int numberOfLevels = 5;
   final List<Offset> _levelOffsets = [];
   late Future<void> _pathInitializationFuture;
-  
+
   bool _initialized = false;
 
   @override

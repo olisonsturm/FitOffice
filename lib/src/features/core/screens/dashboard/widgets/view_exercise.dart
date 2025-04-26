@@ -5,7 +5,9 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/exercise_history.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.dart';
 import 'package:get/get.dart';
-import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
+
+import '../../../controllers/db_controller.dart';
+import '../../../controllers/profile_controller.dart';
 
 class ExerciseDetailScreen extends StatefulWidget {
   final Map<String, dynamic> exerciseData;
@@ -18,14 +20,59 @@ class ExerciseDetailScreen extends StatefulWidget {
 
 class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   int selectedTab = 0;
+  bool isFavorite = false;
+  bool favoriteChanged = false;
+
+  final DbController _dbController = DbController();
+  final ProfileController _profileController = Get.put(ProfileController());
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavoriteStatus();
+  }
+
+  void _loadFavoriteStatus() async {
+    final user = await _profileController.getUserData();
+    final favorites = await _dbController.getFavouriteExercises(user.email);
+
+    setState(() {
+      isFavorite = favorites
+          .map((e) => e['name'] as String)
+          .contains(widget.exerciseData['name']);
+    });
+  }
+
+  void toggleFavorite() async {
+    final user = await _profileController.getUserData();
+    final exerciseName = widget.exerciseData['name'];
+
+    if (isFavorite) {
+      await _dbController.removeFavorite(user.email, exerciseName);
+    } else {
+      await _dbController.addFavorite(user.email, exerciseName);
+    }
+
+    setState(() {
+      isFavorite = !isFavorite;
+      favoriteChanged = true;
+    });
+  }
+
+  void _handleBack() {
+    Navigator.pop(context, favoriteChanged);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: tWhiteColor,
-      appBar: TimerAwareAppBar(
+      appBar: SliderAppBar(
         showBackButton: true,
-        hideIcons: selectedTab == 0, 
+        showFavoriteIcon: true,
+        isFavorite: isFavorite,
+        onToggleFavorite: toggleFavorite,
+        onBack: _handleBack,
         normalAppBar: AppBar(
           backgroundColor: tWhiteColor,
           elevation: 0,
@@ -43,8 +90,10 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
               ),
               Text(
                 widget.exerciseData['category'] ?? '',
-                style: const TextStyle(
-                    color: tBottomNavBarUnselectedColor, fontSize: 14),
+                style: TextStyle(
+                  color: tBottomNavBarUnselectedColor,
+                  fontSize: 14,
+                ),
               ),
             ],
           ),

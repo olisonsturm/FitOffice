@@ -167,7 +167,7 @@ const String tAddFriendsHeader = "Add Friends";
 
 // -- Exercise Timer - Text
 const String tEndExercisePopUp = "End exercise";
-const String tEndExerciseConfirmation = "Are you sure you want to end the exercise?";
+const String tEndExerciseConfirmation = "Are you sure you want to stop the exercise?";
 const String tEndExercisePositive = "Yes";
 const String tEndExerciseNegative = "No";
 const String tStartExercisePopUp = "Start exercise";
