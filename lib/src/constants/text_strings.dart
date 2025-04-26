@@ -241,3 +241,4 @@ const String tFriendDeleteException = "Couldn't delete friend.";
 const String tIsAlreadyYourFriend = " is already your friend.";
 const String tFriendshipRequests = "Friendships Requests";
 const String tNoRequests = "No requests";
+const String tNoFriendsFound = "No friends found.";

@@ -1,3 +1,4 @@
+import 'package:fit_office/src/features/core/screens/profile/all_friends.dart';
 import 'package:fit_office/src/features/core/screens/profile/widgets/facet_display_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -160,11 +161,12 @@ class ProfileScreen extends StatelessWidget {
                     label: "Add Friends",
                     onPress: () => Get.to(() => AddFriendsScreen(currentUserId: user.id!)),
                   ),
-                  CustomProfileButton(
+                  /*CustomProfileButton(
                     icon: LineAwesomeIcons.user_friends_solid,
                     label: "View Friends",
-                    onPress: () => Get.to(() => const AllUsersPage()),
-                  ),
+                    onPress: () => Get.to(() => FriendsBoxWidget(currentUserId: user.id!)),
+                  ),*/
+                  FriendsBoxWidget(currentUserId: user.id!),
                   const Divider(),
                   const SizedBox(height: 10),
                   Text("Settings", style: txtTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),

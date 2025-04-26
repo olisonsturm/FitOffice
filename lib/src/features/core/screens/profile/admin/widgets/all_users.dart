@@ -1,8 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
-import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:fit_office/src/features/core/controllers/profile_controller.dart';
 
 import '../../../dashboard/widgets/categories.dart';
@@ -10,17 +10,18 @@ import '../../../dashboard/widgets/search.dart';
 import '../edit_user_page.dart';
 
 class AllUsersPage extends StatefulWidget {
-  const AllUsersPage({super.key});
+  final bool showOnlyFriends;
+  final String? currentUserId;
+
+  const AllUsersPage({super.key, this.showOnlyFriends = false, this.currentUserId});
 
   @override
   State<AllUsersPage> createState() => _AllUsersPageState();
 }
 
 class _AllUsersPageState extends State<AllUsersPage> {
-  final DbController _dbController = DbController();
   final ProfileController _profileController = Get.put(ProfileController());
-  final GlobalKey<DashboardCategoriesState> _categoriesKey =
-  GlobalKey<DashboardCategoriesState>();
+  final GlobalKey<DashboardCategoriesState> _categoriesKey = GlobalKey<DashboardCategoriesState>();
 
   late UserModel _currentUser;
   bool isUserLoaded = false;
@@ -38,7 +39,42 @@ class _AllUsersPageState extends State<AllUsersPage> {
 
   void _loadData() async {
     final currentUser = await _profileController.getUserData();
-    final users = await _dbController.getAllUsers();
+
+    List<UserModel> users = [];
+
+    if (widget.showOnlyFriends && widget.currentUserId != null) {
+      // Freunde laden
+      final friendshipsSnapshot = await FirebaseFirestore.instance
+          .collection('friendships')
+          .where('sender', isEqualTo: widget.currentUserId)
+          .get();
+
+      final receiverFriendshipsSnapshot = await FirebaseFirestore.instance
+          .collection('friendships')
+          .where('receiver', isEqualTo: widget.currentUserId)
+          .get();
+
+      final friendIds = <dynamic>{
+        ...friendshipsSnapshot.docs.map((doc) => doc['receiver']),
+        ...receiverFriendshipsSnapshot.docs.map((doc) => doc['sender']),
+      }.toList();
+
+      if (friendIds.isNotEmpty) {
+        final usersSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .where(FieldPath.documentId, whereIn: friendIds)
+            .get();
+
+        users = usersSnapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).toList();
+      }
+    } else {
+      // Alle Nutzer laden
+      final usersSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .get();
+
+      users = usersSnapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).toList();
+    }
 
     setState(() {
       _currentUser = currentUser;
@@ -63,8 +99,7 @@ class _AllUsersPageState extends State<AllUsersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-      AppBar(title: const Text(tAllUsers), backgroundColor: Colors.grey),
+      appBar: AppBar(title: const Text(tAllUsers), backgroundColor: Colors.grey),
       body: isUserLoaded
           ? Padding(
         padding: const EdgeInsets.all(16.0),
@@ -74,8 +109,7 @@ class _AllUsersPageState extends State<AllUsersPage> {
               txtTheme: Theme.of(context).textTheme,
               onSearchSubmitted: _searchUsers,
               onTextChanged: (query) {
-                _categoriesKey.currentState
-                    ?.updateSearchQuery(query);
+                _categoriesKey.currentState?.updateSearchQuery(query);
                 setState(() {
                   _searchText = query;
                 });
@@ -111,56 +145,48 @@ class _AllUsersPageState extends State<AllUsersPage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.edit,
-                                color: Colors.blue),
+                            icon: const Icon(Icons.edit, color: Colors.blue),
                             onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) =>
-                                      EditUserPage(user: user),
+                                  builder: (_) => EditUserPage(user: user),
                                 ),
                               ).then((_) => _loadData());
                             },
                           ),
                           IconButton(
-                            icon: const Icon(Icons.delete,
-                                color: Colors.red),
+                            icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () {
                               showDialog(
                                 context: context,
-                                builder: (context) =>
-                                    AlertDialog(
-                                      title: const Text(
-                                          tDeleteEditUserHeading),
-                                      content: Text(
-                                          'Do you like to delete "${user.fullName}"? The user cannot be restored and will be deleted globally!'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop();
-                                          },
-                                          child:
-                                          const Text(tCancel),
-                                        ),
-                                        TextButton(
-                                          onPressed: () async {
-                                            Navigator.of(context)
-                                                .pop();
-                                            await _dbController
-                                                .deleteUser(
-                                                user.email);
-                                            _loadData();
-                                          },
-                                          child: const Text(
-                                            tDelete,
-                                            style: TextStyle(
-                                                color: Colors.red),
-                                          ),
-                                        ),
-                                      ],
+                                builder: (context) => AlertDialog(
+                                  title: const Text(tDeleteEditUserHeading),
+                                  content: Text(
+                                      'Do you like to delete "${user.fullName}"? The user cannot be restored and will be deleted globally!'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text(tCancel),
                                     ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        Navigator.of(context).pop();
+                                        await FirebaseFirestore.instance
+                                            .collection('users')
+                                            .doc(user.id)
+                                            .delete();
+                                        _loadData();
+                                      },
+                                      child: const Text(
+                                        tDelete,
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               );
                             },
                           )
