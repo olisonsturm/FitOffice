@@ -2,14 +2,12 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/statistic
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/colors.dart';
-import 'package:fit_office/src/constants/image_strings.dart';
 import 'package:fit_office/src/constants/sizes.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/categories.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/search.dart';
 import 'package:fit_office/src/features/core/screens/profile/profile_screen.dart';
-import 'package:fit_office/src/features/core/screens/account/account.dart';
 
 import '../../../authentication/models/user_model.dart';
 import '../../controllers/db_controller.dart';
@@ -37,6 +35,21 @@ class DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
   List<String> _userFavorites = [];
   String favoriteCount = '';
+
+  String _getPageTitle() {
+    switch (_selectedIndex) {
+      case 0:
+        return 'Progress';
+      case 1:
+        return 'Library';
+      case 2:
+        return 'Statistics';
+      case 3:
+        return 'Profile';
+      default:
+        return '';
+    }
+  }
 
   void removeSearchFocus() {
     FocusScope.of(context).unfocus();
@@ -98,43 +111,12 @@ class DashboardState extends State<Dashboard> {
     return Scaffold(
       appBar: TimerAwareAppBar(
         normalAppBar: AppBar(
-          title: Text(tAppName,
+          title: Text(_getPageTitle(),
               style: Theme.of(context).textTheme.headlineMedium),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
         showBackButton: false,
-      ),
-      drawer: Drawer(
-        backgroundColor: tWhiteColor,
-        child: ListView(
-          children: [
-            _isUserLoaded
-                ? UserAccountsDrawerHeader(
-                    currentAccountPicture:
-                        const Image(image: AssetImage(tLogoImage)),
-                    currentAccountPictureSize: const Size(100, 100),
-                    accountName: Text(_user?.fullName ?? ''),
-                    accountEmail: Text(_user?.email ?? ''),
-                    decoration: const BoxDecoration(color: tSecondaryColor),
-                  )
-                : const UserAccountsDrawerHeader(
-                    currentAccountPicture:
-                        Image(image: AssetImage(tLogoImage)),
-                    accountName: Text('Loading...'),
-                    accountEmail: Text('Loading...'),
-                  ),
-            ListTile(
-                leading: const Icon(Icons.verified_user),
-                title: const Text('Profile'),
-                onTap: () {
-                  FocusScope.of(context).unfocus(); // <-- Fokus entfernen
-                  Get.to(() => ProfileScreen());
-                }),
-            const ListTile(
-                leading: Icon(Icons.favorite), title: Text('Friends')),
-          ],
-        ),
       ),
       body: IndexedStack(
         index: _selectedIndex,
@@ -277,7 +259,7 @@ class DashboardState extends State<Dashboard> {
           ),
 
           // 3: Friends
-          const AccountScreen(),
+          ProfileScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -314,6 +296,8 @@ class DashboardState extends State<Dashboard> {
     );
   }
 }
+
+
 
 class _StickySearchBar extends SliverPersistentHeaderDelegate {
   final double minExtent;

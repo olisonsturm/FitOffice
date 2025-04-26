@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
-import 'package:fit_office/src/features/core/screens/account/upload_video.dart';
-import 'package:fit_office/src/features/core/screens/account/widgets/confirmation_dialog.dart';
-import 'package:fit_office/src/features/core/screens/account/widgets/save_button.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/video_player.dart';
+import 'package:fit_office/src/features/core/screens/profile/admin/upload_video.dart';
+import 'package:fit_office/src/features/core/screens/profile/admin/widgets/save_button.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+
+import 'add_exercises.dart';
 
 class EditExercise extends StatefulWidget {
   final Map<String, dynamic> exercise;
@@ -236,8 +237,6 @@ class _EditExerciseState extends State<EditExercise> {
                                           uploadedVideoUrl ?? originalVideo;
                                       if (videoUrlToDelete.isNotEmpty) {
                                         try {
-                                          final ref =
-                                              FirebaseFirestore.instance;
                                           final storageRef = FirebaseStorage
                                               .instance
                                               .refFromURL(videoUrlToDelete);

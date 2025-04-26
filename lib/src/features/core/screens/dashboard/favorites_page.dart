@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 
 import '../../../authentication/models/user_model.dart';
 import '../../controllers/profile_controller.dart';
-import '../account/delete_exercise.dart';
-import '../account/edit_exercise.dart';
+import '../profile/admin/delete_exercise.dart';
+import '../profile/admin/edit_exercise.dart';
 
 class FavoritesPage extends StatefulWidget {
   final String category;

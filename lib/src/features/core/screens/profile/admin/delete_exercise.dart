@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,7 @@ class _DeleteExerciseState extends State<DeleteExercise> {
             final ref = FirebaseStorage.instance.refFromURL(videoUrl);
             await ref.delete();
         }
+
         await FirebaseFirestore.instance.collection('exercises').doc(docId).delete();
       }
 

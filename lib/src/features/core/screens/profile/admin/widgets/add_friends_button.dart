@@ -72,7 +72,7 @@ class AddFriendsButton extends StatelessWidget {
             ],
           ),
           child: IconButton(
-            onPressed: () {}, 
+            onPressed: () {},
             icon: const Icon(CupertinoIcons.share, color: Colors.blue),
           ),
         ),

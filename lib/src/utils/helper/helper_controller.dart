@@ -79,7 +79,7 @@ class Helper extends GetxController {
     );
   }
 
-  static warningSnackBar({required title, message}) {
+  static void warningSnackBar({required String title, message}) {
     Get.snackbar(
       title,
       message,
@@ -94,7 +94,7 @@ class Helper extends GetxController {
     );
   }
 
-  static errorSnackBar({required title, message}) {
+  static void errorSnackBar({required String title, message}) {
     Get.snackbar(
       title,
       message,
@@ -109,7 +109,7 @@ class Helper extends GetxController {
     );
   }
 
-  static modernSnackBar({required title, message}) {
+  static void modernSnackBar({required String title, message}) {
     Get.snackbar(title, message,
         isDismissible: true,
         colorText: tWhiteColor,

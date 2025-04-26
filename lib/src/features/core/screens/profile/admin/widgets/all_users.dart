@@ -5,8 +5,8 @@ import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:fit_office/src/features/core/controllers/profile_controller.dart';
 
-import '../../dashboard/widgets/categories.dart';
-import '../../dashboard/widgets/search.dart';
+import '../../../dashboard/widgets/categories.dart';
+import '../../../dashboard/widgets/search.dart';
 import '../edit_user_page.dart';
 
 class AllUsersPage extends StatefulWidget {

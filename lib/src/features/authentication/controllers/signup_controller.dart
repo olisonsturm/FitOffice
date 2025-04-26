@@ -9,8 +9,6 @@ class SignUpController extends GetxController {
   static SignUpController get instance => Get.find();
 
   final showPassword = false.obs;
-  final isGoogleLoading = false.obs;
-  final isFacebookLoading = false.obs;
   GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
 
   // TextField Controllers to get data from TextFields

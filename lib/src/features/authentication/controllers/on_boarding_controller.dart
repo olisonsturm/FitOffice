@@ -17,11 +17,11 @@ import 'package:get/get.dart';
     RxInt currentPage = 0.obs;
 
     // Functions to trigger Skip, Next and onPageChange Events
-    skip() => controller.jumpToPage(page: 2);
+    dynamic skip() => controller.jumpToPage(page: 2);
 
-    animateToNextSlide() => controller.animateToPage(page: controller.currentPage + 1);
+    dynamic animateToNextSlide() => controller.animateToPage(page: controller.currentPage + 1);
 
-    animateToNextSlideWithLocalStorage() {
+    void animateToNextSlideWithLocalStorage() {
       if (controller.currentPage == 2) {
         userStorage.write('isFirstTime', false);
         if (kDebugMode) {
