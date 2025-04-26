@@ -13,48 +13,60 @@ class ProfileController extends GetxController {
   final _authRepo = AuthenticationRepository.instance;
   final _userRepo = UserRepository.instance;
 
-  /// Get User Email and pass to UserRepository to fetch user record.
-  Future<UserModel> getUserData() async {
+  /// Reactive User Model for global state
+  final user = Rx<UserModel?>(null);
+
+  /// Fetch user data using the authenticated user's ID
+  Future<void> fetchUserData() async {
     try {
-      final currentUserEmail = _authRepo.getUserEmail;
-      if (currentUserEmail.isNotEmpty) {
-        return await _userRepo.getUserDetails();
+      final userId = _authRepo.getUserID;
+      if (userId.isNotEmpty) {
+        final userData = await _userRepo.getUserDetailsById(userId);
+        user.value = userData;
       } else {
         Helper.warningSnackBar(title: 'Error', message: 'No user found!');
         throw Exception('No user found!');
+      }
+    } catch (e) {
+      Helper.errorSnackBar(title: 'Error', message: e.toString());
+      rethrow;
     }
-  } catch (e) {
-    Helper.errorSnackBar(title: 'Error', message: e.toString());
-    rethrow;
   }
-}
 
-  /// Fetch List of user records.
-  Future<List<UserModel>> getAllUsers() async => await _userRepo.allUsers();
+  Future<UserModel> getUserData() async {
+    if (user.value == null) {
+      await fetchUserData();
+    }
+    return user.value!;
+  }
 
-  /// Update User Data
-  Future<void> updateRecord(UserModel user) async {
+  /// Update user data and update the global state
+  Future<void> updateRecord(UserModel updatedUser) async {
     try {
-      await _userRepo.updateUserRecord(user.id!, user.toJson());
-
+      await _userRepo.updateUserRecord(updatedUser.id!, updatedUser.toJson());
+      user.value = updatedUser; // Update global state
       Helper.successSnackBar(title: tCongratulations, message: 'Profile Record has been updated!');
     } catch (e) {
       Helper.errorSnackBar(title: 'Error', message: e.toString());
     }
   }
 
+  /// Delete the authenticated user's account
   Future<void> deleteUser() async {
     try {
-      String uID = _authRepo.getUserID;
-      if (uID.isNotEmpty) {
-        await _userRepo.deleteUser(uID);
-        // You can Logout() or move to other screen here...
+      final userId = _authRepo.getUserID;
+      if (userId.isNotEmpty) {
+        await _userRepo.deleteUser(userId);
+        user.value = null; // Clear global state
         Helper.successSnackBar(title: tCongratulations, message: 'Account has been deleted!');
       } else {
-        Helper.successSnackBar(title: 'Error', message: 'User cannot be deleted!');
+        Helper.warningSnackBar(title: 'Error', message: 'User cannot be deleted!');
       }
     } catch (e) {
       Helper.errorSnackBar(title: 'Error', message: e.toString());
     }
   }
+
+  /// Fetch all users (for admin purposes)
+  Future<List<UserModel>> getAllUsers() async => await _userRepo.allUsers();
 }
