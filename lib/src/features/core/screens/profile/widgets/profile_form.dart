@@ -42,6 +42,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
   late String initialFullName;
   late String initialUserName;
   bool isEdited = false;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -78,6 +79,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
     final controller = Get.put(ProfileController());
 
     return Form(
+      key: _formKey,
       child: Column(
         children: [
           TextFormField(
@@ -122,22 +124,22 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
             label: tSaveProfile,
             onPress: isEdited
                 ? () {
-              final userData = UserModel(
-                id: widget.user.id,
-                email: widget.email.text.trim(),
-                userName: widget.userName.text.trim(),
-                fullName: widget.fullName.text.trim(),
-                updatedAt: Timestamp.now(),
-              );
+                final userData = UserModel(
+                  id: widget.user.id,
+                  email: widget.email.text.trim(),
+                  userName: widget.userName.text.trim(),
+                  fullName: widget.fullName.text.trim(),
+                  updatedAt: Timestamp.now(),
+                );
 
-              // Update the user record and global state
-              controller.updateRecord(userData);
+                // Update the user record and global state
+                controller.updateRecord(userData);
 
-              // Close the modal after saving
-              if (context.mounted) {
-                Navigator.pop(context);
+                // Close the modal after saving
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
               }
-            }
                 : () {}, // Disable the button if no changes were made
             iconColor: Colors.blue,
             textColor: Colors.black,
