@@ -7,7 +7,6 @@ import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/categories.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/search.dart';
-import 'package:fit_office/src/features/core/screens/profile/OLD_profile_screen.dart';
 import 'package:fit_office/src/features/core/screens/profile/profile_screen.dart';
 
 import '../../../authentication/models/user_model.dart';
@@ -260,7 +259,7 @@ class DashboardState extends State<Dashboard> {
           ),
 
           // 3: Friends
-          const AccountScreen(),
+          ProfileScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

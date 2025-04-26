@@ -106,4 +106,18 @@ class UserRepository extends GetxController {
       throw "Error fetching record.";
     }
   }
+
+  Future<UserModel> getUserDetailsById(String userId) async {
+    try {
+      final snapshot = await _db.collection("users").doc(userId).get();
+      if (!snapshot.exists) {
+        throw Exception('No user found with the given ID');
+      }
+      return UserModel.fromSnapshot(snapshot);
+    } on FirebaseException catch (e) {
+      throw e.message.toString();
+    } catch (e) {
+      throw 'Something went wrong. Please try again. Details: $e';
+    }
+  }
 }
