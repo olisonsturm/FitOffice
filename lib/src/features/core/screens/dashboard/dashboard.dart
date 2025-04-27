@@ -266,7 +266,7 @@ class DashboardState extends State<Dashboard> {
               ),
 
               // 3: Friends Screen
-              const AccountScreen(),
+              AccountScreen(),
             ],
           ),
         ],
@@ -275,7 +275,7 @@ class DashboardState extends State<Dashboard> {
         currentIndex: _selectedIndex,
         onTap: (index) {
           FocusScope.of(context)
-              .unfocus(); // <-- Fokus entfernen bei Navigation
+              .unfocus(); 
           setState(() {
             _selectedIndex = index;
           });
