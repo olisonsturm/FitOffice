@@ -205,3 +205,4 @@ const String tExerciseResume = "Resume";
 const String tExerciseStart = "Start";
 const String tExercisePause = "Pause";
 const String tExerciseStop = "Stop";
+const String tExerciseAbort = "Abort exercise";
