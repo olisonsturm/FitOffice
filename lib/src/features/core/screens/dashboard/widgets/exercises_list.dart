@@ -1,21 +1,38 @@
-import 'package:fit_office/src/constants/text_strings.dart';
-import 'package:fit_office/src/features/authentication/models/user_model.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/view_exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/start_exercise.dart';
-import 'package:string_similarity/string_similarity.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
-
+import 'package:string_similarity/string_similarity.dart';
+import 'package:fit_office/src/constants/colors.dart';
 import '../../../controllers/profile_controller.dart';
 import '../../profile/admin/delete_exercise.dart';
 import '../../profile/admin/edit_exercise.dart';
+import 'package:fit_office/src/features/authentication/models/user_model.dart';
+
+class FullWidthDivider extends StatelessWidget {
+  const FullWidthDivider({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      width: MediaQuery.of(context).size.width,
+      height: 1.8,
+      color: const Color.fromARGB(255, 200, 200, 200),
+    );
+  }
+}
 
 class AllExercisesList extends StatelessWidget {
   final List<Map<String, dynamic>> exercises;
   final List<String> favorites;
   final void Function(String exerciseName) onToggleFavorite;
   final String query;
+  final bool showGroupedAlphabetically;
+  
 
   const AllExercisesList({
     super.key,
@@ -23,30 +40,21 @@ class AllExercisesList extends StatelessWidget {
     required this.favorites,
     required this.onToggleFavorite,
     required this.query,
+    this.showGroupedAlphabetically = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    final lowerQuery = query.toLowerCase();
-    final filteredExercises = exercises.where((exercise) {
-      final name = (exercise['name'] ?? '').toString().toLowerCase();
-      final description = (exercise['description'] ?? '')
-          .toString()
-          .toLowerCase();
-      final nameSimilarity = name.similarityTo(lowerQuery);
-      final descriptionSimilarity = description.similarityTo(lowerQuery);
+    final lowerQuery = query.toLowerCase().trim();
+    final isFiltered = lowerQuery.isNotEmpty;
 
-      return name.contains(lowerQuery) ||
-          description.contains(lowerQuery) ||
-          nameSimilarity > 0.4 ||
-          descriptionSimilarity > 0.4;
-    }).toList();
+    final List<Map<String, dynamic>> sortedList =
+        List<Map<String, dynamic>>.from(isFiltered || !showGroupedAlphabetically
+            ? _filtered(exercises, lowerQuery)
+            : exercises);
 
-    if (filteredExercises.isEmpty) {
-      return const Text(tDashboardExerciseNotFound);
-    }
-
-    final timerController = Get.find<ExerciseTimerController>();
+    sortedList.sort((a, b) =>
+        (a['name'] ?? '').toString().compareTo((b['name'] ?? '').toString()));
 
     return FutureBuilder<UserModel?>(
       future: ProfileController().getUserData(),
@@ -58,119 +66,201 @@ class AllExercisesList extends StatelessWidget {
         final user = snapshot.data;
         final isAdmin = user?.role == 'admin';
 
-        return Column(
-          children: filteredExercises.map((exercise) {
-            final exerciseName = exercise['name'];
-            final exerciseCategory = exercise['category'];
-            final isFavorite = favorites.contains(exerciseName);
+        final List<Widget> listWidgets = [];
 
-            return Column(
-              children: [
-                Card(
-                  child: ListTile(
-                    title: Text(
-                      exerciseName ?? 'Unknown',
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text('Category: ${exercise['category'] ??
-                        'No category.'}'),
-                    trailing: Padding(
-                      padding: const EdgeInsets.only(right: 4),
-                      child: IntrinsicWidth(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.play_arrow),
-                              color: Colors.grey,
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(),
-                              onPressed: () async {
-                                if (timerController.isRunning.value ||
-                                    timerController.isPaused.value) {
-                                  await showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (_) => const ActiveTimerDialog(),
-                                  );
-                                  return;
-                                }
+        if (sortedList.isEmpty) {
+          return const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text(tDashboardExerciseNotFound),
+          );
+        }
 
-                                final confirmed = await showDialog<bool>(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (_) =>
-                                      StartExerciseDialog(
-                                        exerciseName: exerciseName ??
-                                            'Unknown exercise',
-                                      ),
-                                );
+        if (isFiltered || !showGroupedAlphabetically) {
+          for (int i = 0; i < sortedList.length; i++) {
+            listWidgets.add(_buildExerciseCard(context, sortedList[i], isAdmin));
+            if (i < sortedList.length - 1) listWidgets.add(_buildSoftDivider());
+          }
+        } else {
+          String lastLetter = '';
+          List<Map<String, dynamic>> buffer = [];
 
-                                if (confirmed == true) {
-                                  timerController.start(
-                                      exerciseName, exerciseCategory);
-                                  Navigator.of(context).popUntil((
-                                      route) => route.isFirst);
-                                }
-                              },
-                            ),
-                            IconButton(
-                              icon: Icon(
-                                isFavorite ? Icons.favorite : Icons
-                                    .favorite_border,
-                                color: isFavorite ? Colors.red : Colors.grey,
-                              ),
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(),
-                              onPressed: () => onToggleFavorite(exerciseName),
-                            ),
-                            if (isAdmin) ...[
-                              IconButton(
-                                icon: const Icon(
-                                    Icons.edit, color: Colors.blue),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          EditExercise(
-                                            exercise: exercise,
-                                            exerciseName: exercise['name'],
-                                          ),
-                                    ),
-                                  );
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(
-                                    Icons.delete, color: Colors.red),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          DeleteExercise(
-                                            exercise: exercise,
-                                            exerciseName: exercise['name'],
-                                          ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ]
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-              ],
-            );
-          }).toList(),
+          void flush(String tag) {
+            listWidgets.add(const SizedBox(height: 16));
+            listWidgets.add(_buildHeader(tag));
+            listWidgets.add(_buildFullDivider());
+
+            for (int i = 0; i < buffer.length; i++) {
+              listWidgets.add(_buildExerciseCard(context, buffer[i], isAdmin));
+              listWidgets.add(i == buffer.length - 1
+                  ? _buildFullDivider()
+                  : _buildSoftDivider());
+            }
+            buffer.clear();
+          }
+
+          for (final exercise in sortedList) {
+            final name = (exercise['name'] ?? '').toString();
+            if (name.isEmpty) continue;
+            final firstLetter = name[0].toUpperCase();
+
+            if (firstLetter != lastLetter) {
+              if (buffer.isNotEmpty) flush(lastLetter);
+              lastLetter = firstLetter;
+            }
+
+            buffer.add(exercise);
+          }
+
+          if (buffer.isNotEmpty) flush(lastLetter);
+        }
+
+        return ListView(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: listWidgets,
         );
       },
+    );
+  }
+
+  List<Map<String, dynamic>> _filtered(
+      List<Map<String, dynamic>> list, String query) {
+    return list.where((exercise) {
+      final name = (exercise['name'] ?? '').toString().toLowerCase();
+      final desc = (exercise['description'] ?? '').toString().toLowerCase();
+      return name.contains(query) ||
+          desc.contains(query) ||
+          name.similarityTo(query) > 0.4 ||
+          desc.similarityTo(query) > 0.4;
+    }).toList();
+  }
+
+  Widget _buildHeader(String letter) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Text(letter,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+      );
+
+  Widget _buildFullDivider() => const FullWidthDivider();
+
+  Widget _buildSoftDivider() => const Divider(
+        thickness: 0.6,
+        color: Color.fromARGB(255, 200, 200, 200),
+        indent: 12,
+        endIndent: 12,
+      );
+
+  Widget _buildExerciseCard(
+      BuildContext context, Map<String, dynamic> exercise, bool isAdmin) {
+    final exerciseName = exercise['name'];
+    final exerciseCategory = exercise['category'];
+    final timerController = Get.find<ExerciseTimerController>();
+    final isFavorite = favorites.contains(exerciseName);
+    
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+      child: Material(
+        color: tWhiteColor,
+        elevation: 2,
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          highlightColor: Colors.grey.shade300,
+          splashColor: Colors.grey.shade300,
+          onTap: () async {
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ExerciseDetailScreen(exerciseData: exercise),
+              ),
+            );
+
+            if (result == true) {
+              onToggleFavorite(exerciseName);
+            }
+          },
+          child: ListTile(
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            title: Text(exerciseName ?? 'Unknown',
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            subtitle: Text(exerciseCategory ?? 'No category',
+                style: const TextStyle(fontSize: 13, color: Color(0xFF777777))),
+            trailing: IntrinsicWidth(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.play_arrow),
+                    color: Colors.grey[800],
+                    onPressed: () async {
+                      if (timerController.isRunning.value ||
+                          timerController.isPaused.value) {
+                        await showDialog(
+                          context: Get.context!,
+                          barrierDismissible: false,
+                          builder: (_) => const ActiveTimerDialog(),
+                        );
+                        return;
+                      }
+                      final confirmed = await showDialog<bool>(
+                        context: Get.context!,
+                        barrierDismissible: false,
+                        builder: (_) => StartExerciseDialog(
+                            exerciseName: exerciseName ?? 'Unknown'),
+                      );
+                      if (confirmed == true) {
+                        timerController.start(exerciseName, exerciseCategory);
+                        Navigator.of(Get.context!)
+                            .popUntil((route) => route.isFirst);
+                      }
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorite ? Colors.red : Colors.grey,
+                    ),
+                    onPressed: () => onToggleFavorite(exerciseName),
+                  ),
+                  if (isAdmin) ...[
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => EditExercise(
+                              exercise: exercise,
+                              exerciseName: exercise['name'],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => DeleteExercise(
+                              exercise: exercise,
+                              exerciseName: exercise['name'],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ]
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

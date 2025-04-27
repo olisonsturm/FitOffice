@@ -1,124 +1,102 @@
+import 'package:fit_office/src/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/end_exercise.dart';
 
-class TimerAwareAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final PreferredSizeWidget normalAppBar;
+class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final String title;
+  final String? subtitle;
   final bool showBackButton;
+  final bool showFavoriteIcon;
+  final bool isFavorite;
+  final VoidCallback? onToggleFavorite;
+  final VoidCallback? onBack;
 
-  const TimerAwareAppBar({
+  const SliderAppBar({
     super.key,
-    required this.normalAppBar,
+    required this.title,
+    this.subtitle,
     this.showBackButton = false,
+    this.showFavoriteIcon = false,
+    this.isFavorite = false,
+    this.onToggleFavorite,
+    this.onBack,
   });
 
   @override
   Widget build(BuildContext context) {
-    final timerController = Get.find<ExerciseTimerController>();
-
-    return Obx(() {
-      final isRunning = timerController.isRunning.value;
-
-      if (!isRunning) return normalAppBar;
-
-      return AppBar(
-        elevation: 0,
-        backgroundColor: Colors.orange,
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        title: Stack(
-          alignment: Alignment.center,
-          children: [
-            /// CENTER: Übungsname + Kategorie (immer zentriert)
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  timerController.exerciseName.value,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  timerController.exerciseCategory.value,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+    final Widget centerTitle = subtitle == null
+        ? Text(
+            title,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold, // IMMER fett
+              color: Colors.black,
             ),
-
-            /// LEFT: zurück-Button (optional) + Timer
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (showBackButton)
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12, right: 12),
-                    child: Text(
-                      timerController.formattedTime.value,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
+            textAlign: TextAlign.center,
+          )
+        : Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold, // IMMER fett
+                  color: Colors.black,
+                ),
               ),
-            ),
+              Text(
+                subtitle!,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold, // SUBTITLE auch fett
+                  color: Colors.black45,
+                ),
+              ),
+            ],
+          );
 
-            /// RIGHT: Pause + Stop
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      automaticallyImplyLeading: false,
+      centerTitle: true,
+      title: Stack(
+        alignment: Alignment.center,
+        children: [
+          centerTitle,
+
+          // ← LINKS: Back-Button wenn showBackButton == true
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Builder(
+              builder: (context) {
+                if (showBackButton) {
+                  return IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.black),
+                    onPressed: onBack ?? () => Navigator.of(context).pop(),
+                  );
+                } else {
+                  return const SizedBox(); // NICHTS anzeigen
+                }
+              },
+            ),
+          ),
+
+          // → RECHTS: Favoriten-Icon
+          if (showFavoriteIcon)
             Align(
               alignment: Alignment.centerRight,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: Icon(
-                      timerController.isPaused.value
-                          ? Icons.play_arrow
-                          : Icons.pause,
-                      size: 28,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      timerController.isPaused.value
-                          ? timerController.resume()
-                          : timerController.pause();
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.stop, size: 28, color: Colors.white),
-                    onPressed: () async {
-                      final confirmed = await showDialog<bool>(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (BuildContext context) =>
-                            const EndExerciseDialog(),
-                      );
-                      if (confirmed == true) timerController.stop();
-                    },
-                  ),
-                ],
+              child: IconButton(
+                icon: Icon(
+                  isFavorite ? Icons.favorite : Icons.favorite_border,
+                  color: isFavorite ? Colors.red : Colors.black54,
+                ),
+                onPressed: onToggleFavorite,
               ),
             ),
-          ],
-        ),
-      );
-    });
+        ],
+      ),
+    );
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:fit_office/src/features/core/controllers/profile_controller.dart';
@@ -5,13 +6,14 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.da
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/exercises_list.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 
 import '../../../authentication/models/user_model.dart';
 
 class ExerciseFilter extends StatefulWidget {
   final String heading;
   final String? category; // z. B. 'Upper Body'
-  final bool showOnlyFavorites; // true: zeigt nur Favoriten
+  final bool showOnlyFavorites;
 
   const ExerciseFilter({
     super.key,
@@ -84,15 +86,8 @@ class _ExerciseFilterState extends State<ExerciseFilter> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TimerAwareAppBar(
-        normalAppBar: AppBar(
-          title: Text(widget.heading),
-          backgroundColor: Colors.grey,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ),
+      appBar: SliderAppBar(
+        title: widget.heading,
         showBackButton: true,
       ),
       body: Padding(
@@ -107,6 +102,7 @@ class _ExerciseFilterState extends State<ExerciseFilter> {
                 favorites: _userFavorites,
                 onToggleFavorite: _toggleFavorite,
                 query: "",
+                showGroupedAlphabetically: false,
               ),
             ),
 
