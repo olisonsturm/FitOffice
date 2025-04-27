@@ -10,7 +10,6 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/categorie
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/search.dart';
 import 'package:fit_office/src/features/core/screens/profile/profile_screen.dart';
 import 'package:fit_office/src/features/core/screens/account/account.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/exercise_pop_up.dart';
 
 import '../../../authentication/models/user_model.dart';
 import '../../controllers/db_controller.dart';
@@ -270,9 +269,6 @@ class DashboardState extends State<Dashboard> {
               const AccountScreen(),
             ],
           ),
-
-          /// NEU: Das Mini-Popup über allem
-          const ExerciseMiniPopup(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

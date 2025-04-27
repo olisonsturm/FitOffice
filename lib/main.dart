@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:fit_office/firebase_options.dart';
 import 'package:fit_office/src/repository/authentication_repository/authentication_repository.dart';
+import 'package:fit_office/global_overlay.dart';
 
 import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'app.dart';
@@ -42,6 +43,10 @@ Future<void> main() async {
 
   /// -- Main App Starts here (app.dart) ...
   runApp(const App());
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+  GlobalExerciseOverlay().init(Get.context!);
+});
 
 }
 

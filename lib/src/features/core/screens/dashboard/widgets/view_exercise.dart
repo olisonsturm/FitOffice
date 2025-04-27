@@ -10,6 +10,10 @@ import '../../../controllers/db_controller.dart';
 import '../../../controllers/profile_controller.dart';
 
 class ExerciseDetailScreen extends StatefulWidget {
+  static RxnString currentExerciseName = RxnString(); // <<< korrekt!
+  static RxInt currentTabIndex =
+      0.obs; // <<< Aktiver Tab: 0 = About, 1 = History
+
   final Map<String, dynamic> exerciseData;
 
   const ExerciseDetailScreen({super.key, required this.exerciseData});
@@ -29,7 +33,21 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ExerciseDetailScreen.currentExerciseName.value =
+          widget.exerciseData['name'];
+      ExerciseDetailScreen.currentTabIndex.value = 0;
+    });
     _loadFavoriteStatus();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ExerciseDetailScreen.currentExerciseName.value = '';
+      ExerciseDetailScreen.currentTabIndex.value = -1;
+    });
+    super.dispose();
   }
 
   void _loadFavoriteStatus() async {
@@ -122,14 +140,20 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                   child: _TabButton(
                     text: tExerciseAbout,
                     isSelected: selectedTab == 0,
-                    onTap: () => setState(() => selectedTab = 0),
+                    onTap: () {
+                      setState(() => selectedTab = 0);
+                      ExerciseDetailScreen.currentTabIndex.value = 0;
+                    },
                   ),
                 ),
                 Expanded(
                   child: _TabButton(
                     text: tExerciseHistory,
                     isSelected: selectedTab == 1,
-                    onTap: () => setState(() => selectedTab = 1),
+                    onTap: () {
+                      setState(() => selectedTab = 1);
+                      ExerciseDetailScreen.currentTabIndex.value = 1;
+                    },
                   ),
                 ),
               ],
