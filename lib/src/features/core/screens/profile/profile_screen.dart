@@ -13,6 +13,7 @@ import 'admin/add_exercises.dart';
 import 'admin/add_friends.dart';
 import 'admin/edit_user_page.dart';
 import 'admin/widgets/all_users.dart';
+import 'admin/widgets/friends_request.dart';
 import 'widgets/custom_profile_button.dart';
 import 'widgets/avatar.dart';
 
@@ -167,6 +168,8 @@ class ProfileScreen extends StatelessWidget {
                     onPress: () => Get.to(() => FriendsBoxWidget(currentUserId: user.id!)),
                   ),*/
                   FriendsBoxWidget(currentUserId: user.id!),
+                  const SizedBox(height: 10),
+                  FriendRequestsWidget(currentUserId: user.id!),
                   const Divider(),
                   const SizedBox(height: 10),
                   Text("Settings", style: txtTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),

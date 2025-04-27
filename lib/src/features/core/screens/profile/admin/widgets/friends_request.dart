@@ -28,7 +28,7 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
 
     final snapshot = await FirebaseFirestore.instance
         .collection('friendships')
-        .where('user2', isEqualTo: currentUserRef)
+        .where('receiver', isEqualTo: currentUserRef)
         .where('status', isEqualTo: 'pending')
         .get();
 
