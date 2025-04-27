@@ -47,7 +47,6 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
         ...pendingSnapshot.docs
       ];
 
-
       List<Map<String, dynamic>> friendsData = [];
 
       for (var doc in allDocs) {
@@ -69,7 +68,6 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
         }
       }
 
-
       setState(() {
         _cachedFriends = friendsData;
         _isLoading = false;
@@ -87,8 +85,7 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final displayedFriends =
-    showAll ? _cachedFriends : _cachedFriends.take(3).toList();
+    final displayedFriends = showAll ? _cachedFriends : _cachedFriends.toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,68 +128,146 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                 ),
               ],
             ),
-            constraints: showAll
-                ? const BoxConstraints()
-                : const BoxConstraints(maxHeight: 168),
-            child: ListView.builder(
-              shrinkWrap: showAll,
-              physics: showAll
-                  ? const NeverScrollableScrollPhysics()
-                  : const AlwaysScrollableScrollPhysics(),
-              itemCount: displayedFriends.length,
-              itemBuilder: (context, index) {
-                final friend = displayedFriends[index];
-                final name = friend['username'] ?? tUnknown;
-                final status = friend['status'];
-                final isPending = status == 'pending';
+            child: showAll
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemCount: _cachedFriends.length,
+                    itemBuilder: (context, index) {
+                      final friend = _cachedFriends[index];
+                      final name = friend['username'] ?? tUnknown;
+                      final status = friend['status'];
+                      final isPending = status == 'pending';
 
-                return ListTile(
-                  leading: const Icon(Icons.person, color: Colors.blue),
-                  title: Text(
-                    name,
-                    style: const TextStyle(
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w600,
+                      return ListTile(
+                        leading: const Icon(Icons.person, color: Colors.blue),
+                        title: Text(
+                          name,
+                          style: const TextStyle(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        trailing: isPending
+                            ? const Icon(Icons.access_time, color: Colors.grey)
+                            : IconButton(
+                                icon: const Icon(Icons.person_remove,
+                                    color: Colors.red),
+                                onPressed: () async {
+                                  final docId = friend['friendshipDocId'];
+                                  if (docId != null) {
+                                    try {
+                                      await FirebaseFirestore.instance
+                                          .collection('friendships')
+                                          .doc(docId)
+                                          .delete();
+                                      setState(() {
+                                        _cachedFriends.removeWhere((f) =>
+                                            f['friendshipDocId'] == docId);
+                                      });
+                                      if (mounted) {
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    '$name$tFriendDeleted')),
+                                          );
+                                        });
+                                      }
+                                    } catch (e) {
+                                      if (mounted) {
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                                content: Text(
+                                                    tFriendDeleteException)),
+                                          );
+                                        });
+                                      }
+                                    }
+                                  }
+                                },
+                              ),
+                      );
+                    },
+                  )
+                : SizedBox(
+                    height: 168,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: displayedFriends.length,
+                      itemBuilder: (context, index) {
+                        final friend = displayedFriends[index];
+                        final name = friend['username'] ?? tUnknown;
+                        final status = friend['status'];
+                        final isPending = status == 'pending';
+
+                        return ListTile(
+                          leading: const Icon(Icons.person, color: Colors.blue),
+                          title: Text(
+                            name,
+                            style: const TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          trailing: isPending
+                              ? const Icon(Icons.access_time,
+                                  color: Colors.grey)
+                              : IconButton(
+                                  icon: const Icon(Icons.person_remove,
+                                      color: Colors.red),
+                                  onPressed: () async {
+                                    final docId = friend['friendshipDocId'];
+                                    if (docId != null) {
+                                      try {
+                                        await FirebaseFirestore.instance
+                                            .collection('friendships')
+                                            .doc(docId)
+                                            .delete();
+
+                                        setState(() {
+                                          _cachedFriends.removeWhere((f) =>
+                                              f['friendshipDocId'] == docId);
+                                        });
+                                        if (mounted) {
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                  content: Text(
+                                                      '$name$tFriendDeleted')),
+                                            );
+                                          });
+                                        }
+                                      } catch (e) {
+                                        if (mounted) {
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                  content: Text(
+                                                      tFriendDeleteException)),
+                                            );
+                                          });
+                                        }
+                                      }
+                                    }
+                                  },
+                                ),
+                        );
+                      },
                     ),
                   ),
-                  trailing: isPending
-                      ? const Icon(Icons.access_time, color: Colors.grey)
-                      : IconButton(
-                    icon:
-                    const Icon(Icons.person_remove, color: Colors.red),
-                    onPressed: () async {
-                      final docId = friend['friendshipDocId'];
-                      if (docId != null) {
-                        try {
-                          await FirebaseFirestore.instance
-                              .collection('friendships')
-                              .doc(docId)
-                              .delete();
-
-                          setState(() {
-                            _cachedFriends.removeWhere(
-                                    (f) => f['friendshipDocId'] == docId);
-                          });
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text('$name$tFriendDeleted')),
-                          );
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text(tFriendDeleteException)),
-                          );
-                        }
-                      }
-                    },
-                  ),
-                );
-              },
-            ),
           ),
       ],
     );
   }
-
 }
