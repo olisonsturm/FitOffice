@@ -113,6 +113,7 @@ class DashboardState extends State<Dashboard> {
         title: _getPageTitle(),
         showBackButton: false,
         showDarkModeToggle: true,
+        showStreak: true,
       ),
       body: Stack(
         children: [

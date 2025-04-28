@@ -13,6 +13,7 @@ const tPaleWhiteColor = Colors.white70;
 const tPaleBlackColor = Colors.black54;
 const tDarkGreyColor = Color(0xFF616161); // Equivalent to Colors.grey.shade700
 const tExerciseDivider = Color.fromARGB(255, 200, 200, 200);
+const tFinishExerciseColor = Color(0xFF4CAF50);
 
 
 // -- SOCIAL Button COLORS

@@ -1,4 +1,5 @@
 import 'package:fit_office/src/constants/colors.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/cancel_exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
@@ -38,10 +39,12 @@ class GlobalExerciseOverlay {
         final isRunning = timerController.isRunning.value;
         final isOnCorrectExercise =
             ExerciseDetailScreen.currentExerciseName.value != null &&
-            ExerciseDetailScreen.currentExerciseName.value == timerController.exerciseName.value;
+                ExerciseDetailScreen.currentExerciseName.value ==
+                    timerController.exerciseName.value;
         final isOnAboutTab = ExerciseDetailScreen.currentTabIndex.value == 0;
 
-        final hideControlButtons = isRunning && isOnCorrectExercise && isOnAboutTab;
+        final hideControlButtons =
+            isRunning && isOnCorrectExercise && isOnAboutTab;
 
         return AnimatedPositioned(
           duration: const Duration(milliseconds: 500),
@@ -148,12 +151,25 @@ class GlobalExerciseOverlay {
                             },
                           ),
                           IconButton(
-                            icon: const Icon(Icons.stop, color: tWhiteColor),
+                            icon: const Icon(Icons.check_circle, color: tWhiteColor),
                             onPressed: () async {
                               final confirmed = await showDialog<bool>(
                                 context: context,
                                 barrierDismissible: false,
                                 builder: (_) => const EndExerciseDialog(),
+                              );
+                              if (confirmed == true) {
+                                timerController.stop();
+                              }
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.cancel, color: tWhiteColor),
+                            onPressed: () async {
+                              final confirmed = await showDialog<bool>(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (_) => const CancelExerciseDialog(),
                               );
                               if (confirmed == true) {
                                 timerController.stop();

@@ -10,6 +10,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showFavoriteIcon;
   final bool showDarkModeToggle;
   final bool showEditOption;
+  final bool showStreak;
   final bool isFavorite;
   final VoidCallback? onToggleFavorite;
   final VoidCallback? onBack;
@@ -23,6 +24,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showFavoriteIcon = false,
     this.showDarkModeToggle = false,
     this.showEditOption = false,
+    this.showStreak = false,
     this.isFavorite = false,
     this.onToggleFavorite,
     this.onBack,
@@ -77,20 +79,50 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
           // ← LINKS: Back-Button wenn showBackButton == true
           Align(
             alignment: Alignment.centerLeft,
-            child: Builder(
-              builder: (context) {
-                if (showBackButton) {
-                  return IconButton(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (showBackButton)
+                  IconButton(
                     icon: Icon(
                       Icons.arrow_back,
                       color: isDarkMode ? tWhiteColor : tDarkColor,
                     ),
                     onPressed: onBack ?? () => Navigator.of(context).pop(),
-                  );
-                } else {
-                  return const SizedBox(); // NICHTS anzeigen
-                }
-              },
+                  ),
+                if (showStreak)
+                  Builder(
+                    builder: (context) {
+                      // Hardcodierte Übungszeit in Minuten (später aus der DB holen!)
+                      int todaysExerciseMinutes = 4;
+
+                      // Überprüfen, ob 5 Minuten erreicht sind
+                      bool hasStreak = todaysExerciseMinutes >= 5;
+
+                      return Row(
+                        children: [
+                          Icon(
+                            Icons.local_fire_department,
+                            color: hasStreak
+                                ? Colors.orange
+                                : (isDarkMode
+                                    ? tWhiteColor
+                                    : tPaleBlackColor),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '$todaysExerciseMinutes', 
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: isDarkMode ? tWhiteColor : tDarkColor,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+              ],
             ),
           ),
 

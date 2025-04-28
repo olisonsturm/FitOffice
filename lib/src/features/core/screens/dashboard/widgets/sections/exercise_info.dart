@@ -1,4 +1,5 @@
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/abort_exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/colors.dart';
@@ -77,7 +78,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                     ),
                     child: Center(
                       child: Text(
-                        'Video aktuell deaktiviert',
+                        tNoVideoAvailable,
                         style: TextStyle(
                           color: isDarkMode ? Colors.white70 : Colors.grey,
                         ),
@@ -101,73 +102,101 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                   ),
                   const SizedBox(height: 24),
                   isThisExerciseRunning
-                      ? Row(
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: tBottomNavBarUnselectedColor,
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 14),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: tBottomNavBarUnselectedColor,
+                                      padding: const EdgeInsets.symmetric(vertical: 14),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      elevation: 0,
+                                      side: BorderSide.none,
+                                    ),
+                                    icon: Icon(
+                                      isPaused ? Icons.play_arrow : Icons.pause,
+                                      color: tWhiteColor,
+                                    ),
+                                    label: Text(
+                                      isPaused ? tExerciseResume : tExercisePause,
+                                      style: const TextStyle(color: tWhiteColor),
+                                    ),
+                                    onPressed: () {
+                                      isPaused
+                                          ? timerController.resume()
+                                          : timerController.pause();
+                                    },
                                   ),
-                                  elevation: 0,
-                                  side: BorderSide.none,
                                 ),
-                                icon: Icon(
-                                  isPaused ? Icons.play_arrow : Icons.pause,
-                                  color: tWhiteColor,
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: tFinishExerciseColor,
+                                      padding: const EdgeInsets.symmetric(vertical: 14),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      elevation: 0,
+                                      side: BorderSide.none,
+                                    ),
+                                    icon: const Icon(Icons.check_circle, color: tWhiteColor),
+                                    label: const Text(
+                                      tExerciseFinish,
+                                      style: TextStyle(color: tWhiteColor),
+                                    ),
+                                    onPressed: () async {
+                                      final confirmed = await showDialog<bool>(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (_) => const EndExerciseDialog(),
+                                      );
+                                      if (confirmed == true) {
+                                        timerController.stop();
+                                      }
+                                    },
+                                  ),
                                 ),
-                                label: Text(
-                                  isPaused ? tExerciseResume : tExercisePause,
-                                  style: const TextStyle(color: tWhiteColor),
-                                ),
-                                onPressed: () {
-                                  isPaused
-                                      ? timerController.resume()
-                                      : timerController.pause();
-                                },
-                              ),
+                              ],
                             ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: tPrimaryColor,
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 14),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  elevation: 0,
-                                  side: BorderSide.none,
+                            const SizedBox(height: 12),
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: tPrimaryColor,
+                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
-                                icon:
-                                    const Icon(Icons.stop, color: tWhiteColor),
-                                label: const Text(
-                                  tExerciseStop,
-                                  style: TextStyle(color: tWhiteColor),
-                                ),
-                                onPressed: () async {
-                                  final confirmed = await showDialog<bool>(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (_) => const EndExerciseDialog(),
-                                  );
-                                  if (confirmed == true) {
-                                    timerController.stop();
-                                  }
-                                },
+                                elevation: 0,
+                                side: BorderSide.none,
                               ),
+                              icon: const Icon(Icons.cancel, color: tWhiteColor),
+                              label: const Text(
+                                'Übung abbrechen',
+                                style: TextStyle(color: tWhiteColor),
+                              ),
+                              onPressed: () async {
+                                final confirmed = await showDialog<bool>(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (_) => const AbortExerciseDialog(),
+                                );
+                                if (confirmed == true) {
+                                  timerController.stop();
+                                }
+                              },
                             ),
                           ],
                         )
                       : SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
-                            icon: const Icon(Icons.play_arrow,
-                                color: tWhiteColor),
+                            icon: const Icon(Icons.play_arrow, color: tWhiteColor),
                             label: const Text(
                               tExerciseStart,
                               style: TextStyle(color: tWhiteColor),
@@ -196,8 +225,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                 context: context,
                                 barrierDismissible: false,
                                 builder: (_) => StartExerciseDialog(
-                                  exerciseName:
-                                      widget.exerciseData['name'] ?? '',
+                                  exerciseName: widget.exerciseData['name'] ?? '',
                                 ),
                               );
                               if (confirmed == true) {

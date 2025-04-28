@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:fit_office/src/constants/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ class ProgressScreenState extends State<ProgressScreen>
   final int numberOfLevels = 5;
   final List<Offset> _levelOffsets = [];
   late Future<void> _pathInitializationFuture;
-  
+
   bool _initialized = false;
 
   @override
@@ -128,19 +129,21 @@ class ProgressScreenState extends State<ProgressScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return FutureBuilder(
       future: _pathInitializationFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return Scaffold(
-            backgroundColor: Colors.grey[100],
+            backgroundColor: isDarkMode ? tBlackColor : Colors.grey[100],
             body: const Center(child: CircularProgressIndicator()),
           );
         }
 
         if (_path == null || _pathMetric == null) {
           return Scaffold(
-            backgroundColor: Colors.grey[100],
+            backgroundColor: isDarkMode ? tBlackColor : Colors.grey[100],
             body: const Center(child: Text("Error: Path not initialized")),
           );
         }
@@ -149,7 +152,7 @@ class ProgressScreenState extends State<ProgressScreen>
         final canvasHeight = size.height * 1.5; // größerer Bereich für Scroll
 
         return Scaffold(
-          backgroundColor: Colors.grey[100],
+          backgroundColor: isDarkMode ? tBlackColor : Colors.grey[100],
           body: SingleChildScrollView(
             child: SizedBox(
               height: canvasHeight,
@@ -157,12 +160,12 @@ class ProgressScreenState extends State<ProgressScreen>
                 children: [
                   CustomPaint(
                     size: Size(size.width, canvasHeight),
-                    painter: _PathPainter(path: _path!),
+                    painter: _PathPainter(path: _path!, isDarkMode: isDarkMode),
                   ),
                   ..._levelOffsets.map((offset) => Positioned(
-                        left: offset.dx - 50, // Center für 100x100
+                        left: offset.dx - 50,
                         top: offset.dy - 50,
-                        child: const LevelBubble(),
+                        child: LevelBubble(isDarkMode: isDarkMode),
                       )),
                   if (_avatarPosition != null)
                     Positioned(
@@ -174,8 +177,22 @@ class ProgressScreenState extends State<ProgressScreen>
                     bottom: 20,
                     left: size.width * 0.5 - 50,
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isDarkMode
+                            ? Colors.deepPurple
+                            : const Color(0xFFE30613),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 4,
+                        side: BorderSide.none,
+                      ),
                       onPressed: _moveToNextLevel,
-                      child: const Text('Next Level'),
+                      child: const Text('Next Level',
+                          style: TextStyle(fontSize: 16)),
                     ),
                   ),
                 ],
@@ -191,12 +208,14 @@ class ProgressScreenState extends State<ProgressScreen>
 // 🎨 The Path Painter
 class _PathPainter extends CustomPainter {
   final Path path;
-  _PathPainter({required this.path});
+  final bool isDarkMode;
+
+  _PathPainter({required this.path, required this.isDarkMode});
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0x33333333) // DHBW-Rot
+      ..color = isDarkMode ? Colors.white24 : const Color(0x33333333)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 5.0
       ..strokeCap = StrokeCap.round;
@@ -210,7 +229,9 @@ class _PathPainter extends CustomPainter {
 
 // 🟣 A "Level Bubble"
 class LevelBubble extends StatelessWidget {
-  const LevelBubble({super.key});
+  final bool isDarkMode;
+
+  const LevelBubble({super.key, required this.isDarkMode});
 
   @override
   Widget build(BuildContext context) {
@@ -218,11 +239,12 @@ class LevelBubble extends StatelessWidget {
       width: 100,
       height: 100,
       decoration: BoxDecoration(
-        color: const Color(0xFFE30613), // DHBW-Rot
+        color: isDarkMode ? Colors.deepPurple : const Color(0xFFE30613),
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: Colors.redAccent.withOpacity(0.6),
+            color: (isDarkMode ? Colors.deepPurpleAccent : Colors.redAccent)
+                .withOpacity(0.6),
             blurRadius: 12,
             offset: const Offset(4, 4),
           ),
@@ -245,7 +267,7 @@ class AnimatedAvatar extends StatelessWidget {
       width: 100,
       height: 100,
       decoration: BoxDecoration(
-        color: const Color(0xFFFF6F00),
+        color: tBottomNavBarSelectedColor,
         shape: BoxShape.circle,
         border: Border.all(color: Colors.white, width: 4),
         boxShadow: [
