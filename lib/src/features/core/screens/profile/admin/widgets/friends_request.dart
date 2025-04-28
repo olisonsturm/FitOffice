@@ -47,14 +47,16 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            const Text(
+            Text(
               tFriendshipRequests,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: isDarkMode ? Colors.white : Colors.black87),
             ),
             const Spacer(),
             IconButton(
@@ -67,16 +69,16 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
         if (_isLoading)
           const Center(child: CircularProgressIndicator())
         else if (_requests.isEmpty)
-          const Text(tNoRequests)
+          Text(tNoRequests, style: TextStyle(color: isDarkMode ? Colors.white70 : Colors.black54))
         else
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey.shade300),
+              color: isDarkMode ? Colors.black : Colors.white,
+              border: Border.all(color: isDarkMode ? Colors.white24 : Colors.grey.shade300),
               borderRadius: BorderRadius.circular(12),
-              boxShadow: const [
+              boxShadow: [
                 BoxShadow(
-                  color: Colors.black12,
+                  color: isDarkMode ? Colors.black54 : Colors.black12,
                   blurRadius: 4,
                   offset: Offset(0, 2),
                 ),
@@ -104,8 +106,8 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
                       leading: const Icon(Icons.person, color: Colors.blue),
                       title: Text(
                         senderName,
-                        style: const TextStyle(
-                          color: Colors.black87,
+                        style: TextStyle(
+                          color: isDarkMode ? Colors.white : Colors.black87,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

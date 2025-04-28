@@ -86,6 +86,8 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
   @override
   Widget build(BuildContext context) {
     final displayedFriends = showAll ? _cachedFriends : _cachedFriends.toList();
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,7 +104,7 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                 onPressed: () => setState(() => showAll = !showAll),
                 child: Text(
                   showAll ? tShowLess : tShowAll,
-                  style: const TextStyle(color: Colors.blue),
+                  style: TextStyle(color: Colors.blue),
                 ),
               ),
             IconButton(
@@ -117,12 +119,12 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
         else
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey.shade300),
+              color: isDarkMode ? Colors.black : Colors.white,
+              border: Border.all(color: isDarkMode ? Colors.white24 : Colors.grey.shade300),
               borderRadius: BorderRadius.circular(12),
-              boxShadow: const [
+              boxShadow: [
                 BoxShadow(
-                  color: Colors.black12,
+                  color: isDarkMode ? Colors.black54 : Colors.black12,
                   blurRadius: 4,
                   offset: Offset(0, 2),
                 ),
@@ -143,8 +145,8 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                         leading: const Icon(Icons.person, color: Colors.blue),
                         title: Text(
                           name,
-                          style: const TextStyle(
-                            color: Colors.black87,
+                          style: TextStyle(
+                            color: isDarkMode ? Colors.white : Colors.black87,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -211,57 +213,52 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                           leading: const Icon(Icons.person, color: Colors.blue),
                           title: Text(
                             name,
-                            style: const TextStyle(
-                              color: Colors.black87,
+                            style: TextStyle(
+                              color: isDarkMode ? Colors.white : Colors.black87,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          trailing: isPending
-                              ? const Icon(Icons.access_time,
-                                  color: Colors.grey)
-                              : IconButton(
-                                  icon: const Icon(Icons.person_remove,
-                                      color: Colors.red),
-                                  onPressed: () async {
-                                    final docId = friend['friendshipDocId'];
-                                    if (docId != null) {
-                                      try {
-                                        await FirebaseFirestore.instance
-                                            .collection('friendships')
-                                            .doc(docId)
-                                            .delete();
-
-                                        setState(() {
-                                          _cachedFriends.removeWhere((f) =>
-                                              f['friendshipDocId'] == docId);
-                                        });
-                                        if (mounted) {
-                                          WidgetsBinding.instance
-                                              .addPostFrameCallback((_) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                  content: Text(
-                                                      '$name$tFriendDeleted')),
-                                            );
-                                          });
-                                        }
-                                      } catch (e) {
-                                        if (mounted) {
-                                          WidgetsBinding.instance
-                                              .addPostFrameCallback((_) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                  content: Text(
-                                                      tFriendDeleteException)),
-                                            );
-                                          });
-                                        }
-                                      }
+                          trailing: SizedBox(
+                            width: 40,
+                            height: 40,
+                            child: isPending
+                                ? const Icon(Icons.access_time, color: Colors.grey)
+                                : IconButton(
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              icon: const Icon(Icons.person_remove, color: Colors.red),
+                              onPressed: () async {
+                                final docId = friend['friendshipDocId'];
+                                if (docId != null) {
+                                  try {
+                                    await FirebaseFirestore.instance
+                                        .collection('friendships')
+                                        .doc(docId)
+                                        .delete();
+                                    setState(() {
+                                      _cachedFriends
+                                          .removeWhere((f) => f['friendshipDocId'] == docId);
+                                    });
+                                    if (mounted) {
+                                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('$name$tFriendDeleted')),
+                                        );
+                                      });
                                     }
-                                  },
-                                ),
+                                  } catch (e) {
+                                    if (mounted) {
+                                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(content: Text(tFriendDeleteException)),
+                                        );
+                                      });
+                                    }
+                                  }
+                                }
+                              },
+                            ),
+                          ),
                         );
                       },
                     ),
