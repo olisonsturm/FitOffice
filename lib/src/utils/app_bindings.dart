@@ -1,3 +1,4 @@
+import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/src/repository/firebase_storage/storage_service.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/features/authentication/controllers/login_controller.dart';
@@ -19,6 +20,8 @@ class InitialBinding extends Bindings{
     Get.lazyPut(() => LoginController(), fenix: true);
     Get.lazyPut(() => SignUpController(), fenix: true);
     Get.lazyPut(() => OTPController(), fenix: true);
+
+    Get.lazyPut(() => ExerciseTimerController(), fenix: true);
   }
 
 }
