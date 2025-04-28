@@ -23,8 +23,9 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
 
   Future<void> _loadRequests() async {
     setState(() => _isLoading = true);
-    final currentUserRef =
-    FirebaseFirestore.instance.collection('users').doc(widget.currentUserId);
+    final currentUserRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.currentUserId);
 
     final snapshot = await FirebaseFirestore.instance
         .collection('friendships')
@@ -49,6 +50,7 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -56,7 +58,11 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
           children: [
             Text(
               tFriendshipRequests,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: isDarkMode ? Colors.white : Colors.black87),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: isDarkMode ? Colors.white : Colors.black87,
+              ),
             ),
             const Spacer(),
             IconButton(
@@ -69,18 +75,24 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
         if (_isLoading)
           const Center(child: CircularProgressIndicator())
         else if (_requests.isEmpty)
-          Text(tNoRequests, style: TextStyle(color: isDarkMode ? Colors.white70 : Colors.black54))
+          Text(
+            tNoRequests,
+            style:
+                TextStyle(color: isDarkMode ? Colors.white70 : Colors.black54),
+          )
         else
           Container(
             decoration: BoxDecoration(
               color: isDarkMode ? Colors.black : Colors.white,
-              border: Border.all(color: isDarkMode ? Colors.white24 : Colors.grey.shade300),
+              border: Border.all(
+                color: isDarkMode ? Colors.white24 : Colors.grey.shade300,
+              ),
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
                   color: isDarkMode ? Colors.black54 : Colors.black12,
                   blurRadius: 4,
-                  offset: Offset(0, 2),
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
@@ -99,17 +111,44 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
                     if (!senderSnap.hasData) return const SizedBox.shrink();
 
                     final senderData =
-                    senderSnap.data!.data() as Map<String, dynamic>;
+                        senderSnap.data!.data() as Map<String, dynamic>;
                     final senderName = senderData['username'] ?? tUnknown;
+
+                    final Timestamp sinceTimestamp = doc['since'] as Timestamp;
+                    final DateTime sinceDate = sinceTimestamp.toDate();
+                    final Duration difference =
+                        DateTime.now().difference(sinceDate);
+
+                    String timeAgo;
+                    if (difference.inDays >= 1) {
+                      timeAgo = '${difference.inDays}d ago';
+                    } else if (difference.inHours >= 1) {
+                      timeAgo = '${difference.inHours}h ago';
+                    } else {
+                      timeAgo = '${difference.inMinutes}min ago';
+                    }
 
                     return ListTile(
                       leading: const Icon(Icons.person, color: Colors.blue),
-                      title: Text(
-                        senderName,
-                        style: TextStyle(
-                          color: isDarkMode ? Colors.white : Colors.black87,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      title: Row(
+                        children: [
+                          Text(
+                            senderName,
+                            style: TextStyle(
+                              color: isDarkMode ? Colors.white : Colors.black87,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            '($timeAgo)',
+                            style: TextStyle(
+                              color:
+                                  isDarkMode ? Colors.white54 : Colors.black54,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,

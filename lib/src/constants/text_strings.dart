@@ -231,6 +231,8 @@ const String tUploadVideoSuccess = "Video uploaded successfully";
 const String tNoVideoSelected = "No video has been selected";
 const String tVideoDeleteSuccess = "Video deleted successfully";
 const String tUnknown = "Unknown";
+
+// -- Friends Text
 const String tShowAll = "Show all";
 const String tShowLess = "Show less";
 const String tFriends = "Friends";
@@ -247,3 +249,4 @@ const String tNoUserFound = "No user found.";
 const String tAllResults = "All results";
 const String tRemoved = " removed";
 const String tExceptionRemoveFriend = "Couldn't remove friend.";
+const String tFriendProfile = "Friend Profile";

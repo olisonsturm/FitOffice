@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:fit_office/src/features/core/screens/profile/friend_profile.dart';
 import 'package:flutter/material.dart';
 
 class FriendsBoxWidget extends StatefulWidget {
@@ -120,7 +121,8 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
           Container(
             decoration: BoxDecoration(
               color: isDarkMode ? Colors.black : Colors.white,
-              border: Border.all(color: isDarkMode ? Colors.white24 : Colors.grey.shade300),
+              border: Border.all(
+                  color: isDarkMode ? Colors.white24 : Colors.grey.shade300),
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
@@ -222,43 +224,63 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                             width: 40,
                             height: 40,
                             child: isPending
-                                ? const Icon(Icons.access_time, color: Colors.grey)
+                                ? const Icon(Icons.access_time,
+                                    color: Colors.grey)
                                 : IconButton(
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(),
-                              icon: const Icon(Icons.person_remove, color: Colors.red),
-                              onPressed: () async {
-                                final docId = friend['friendshipDocId'];
-                                if (docId != null) {
-                                  try {
-                                    await FirebaseFirestore.instance
-                                        .collection('friendships')
-                                        .doc(docId)
-                                        .delete();
-                                    setState(() {
-                                      _cachedFriends
-                                          .removeWhere((f) => f['friendshipDocId'] == docId);
-                                    });
-                                    if (mounted) {
-                                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text('$name$tFriendDeleted')),
-                                        );
-                                      });
-                                    }
-                                  } catch (e) {
-                                    if (mounted) {
-                                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(content: Text(tFriendDeleteException)),
-                                        );
-                                      });
-                                    }
-                                  }
-                                }
-                              },
-                            ),
+                                    padding: EdgeInsets.zero,
+                                    constraints: const BoxConstraints(),
+                                    icon: const Icon(Icons.person_remove,
+                                        color: Colors.red),
+                                    onPressed: () async {
+                                      final docId = friend['friendshipDocId'];
+                                      if (docId != null) {
+                                        try {
+                                          await FirebaseFirestore.instance
+                                              .collection('friendships')
+                                              .doc(docId)
+                                              .delete();
+                                          setState(() {
+                                            _cachedFriends.removeWhere((f) =>
+                                                f['friendshipDocId'] == docId);
+                                          });
+                                          if (mounted) {
+                                            WidgetsBinding.instance
+                                                .addPostFrameCallback((_) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        '$name$tFriendDeleted')),
+                                              );
+                                            });
+                                          }
+                                        } catch (e) {
+                                          if (mounted) {
+                                            WidgetsBinding.instance
+                                                .addPostFrameCallback((_) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                    content: Text(
+                                                        tFriendDeleteException)),
+                                              );
+                                            });
+                                          }
+                                        }
+                                      }
+                                    },
+                                  ),
                           ),
+                          onTap: () {
+                            final userName = friend['username'];
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    FriendProfile(userName: userName),
+                              ),
+                            );
+                          },
                         );
                       },
                     ),
