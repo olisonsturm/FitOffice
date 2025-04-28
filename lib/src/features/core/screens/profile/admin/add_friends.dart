@@ -211,6 +211,45 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
     super.dispose();
   }
 
+  Future<void> _withdrawFriendRequest(String friendUsername) async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('username', isEqualTo: friendUsername)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final friendDoc = querySnapshot.docs.first;
+        final currentUserRef = FirebaseFirestore.instance.collection('users').doc(widget.currentUserId);
+
+        final friendshipRef = FirebaseFirestore.instance.collection('friendships');
+
+        final pendingQuery = await friendshipRef
+            .where('sender', isEqualTo: currentUserRef)
+            .where('receiver', isEqualTo: friendDoc.reference)
+            .where('status', isEqualTo: 'pending')
+            .get();
+
+        if (pendingQuery.docs.isNotEmpty) {
+          await pendingQuery.docs.first.reference.delete();
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('$tFriendshipRequestWithdraw$friendUsername')),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text(tFriendDeleteException)),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -281,15 +320,24 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                               return ListTile(
                                 leading: const Icon(Icons.person),
                                 title: Text(username),
-                                trailing: const Icon(Icons.access_time,
-                                    color: Colors.grey),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.access_time, color: Colors.grey),
+                                    const SizedBox(width: 8),
+                                    IconButton(
+                                      icon: const Icon(Icons.cancel, color: Colors.orange),
+                                      onPressed: () async {
+                                        await _withdrawFriendRequest(username);
+                                      },
+                                    ),
+                                  ],
+                                ),
                                 onTap: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          FriendProfile(userName: username,
-                                              isFriend: false),
+                                      builder: (context) => FriendProfile(userName: username, isFriend: false),
                                     ),
                                   );
                                 },

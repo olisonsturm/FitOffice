@@ -249,6 +249,7 @@ const String tNoUserFound = "No user found.";
 const String tAllResults = "All results";
 const String tRemoved = " removed";
 const String tExceptionRemoveFriend = "Couldn't remove friend.";
+const String tFriendshipRequestWithdraw = "Friendship request for following user has been withdrawn: ";
 
 // -- Exercise_View Texts
 const String tExerciseAbout = "About";
