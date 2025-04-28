@@ -1,5 +1,5 @@
 import 'package:fit_office/src/constants/text_strings.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/abort_exercise.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/cancel_exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/colors.dart';
@@ -7,6 +7,7 @@ import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/start_exercise.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/end_exercise.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 
 class ExerciseInfoTab extends StatefulWidget {
   final Map<String, dynamic> exerciseData;
@@ -177,14 +178,14 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                               ),
                               icon: const Icon(Icons.cancel, color: tWhiteColor),
                               label: const Text(
-                                'Übung abbrechen',
+                                tCancelExercise,
                                 style: TextStyle(color: tWhiteColor),
                               ),
                               onPressed: () async {
                                 final confirmed = await showDialog<bool>(
                                   context: context,
                                   barrierDismissible: false,
-                                  builder: (_) => const AbortExerciseDialog(),
+                                  builder: (_) => const CancelExerciseDialog(),
                                 );
                                 if (confirmed == true) {
                                   timerController.stop();

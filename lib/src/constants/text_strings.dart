@@ -248,5 +248,5 @@ const String tNoVideoAvailable = "No video available";
 // -- Cancel Exercise - Text
 const String tCancelExercise = "Cancel Exercise";
 const String tCancelExerciseMessage = "Do you really want to canel the exercise? Your progress will be lost";
-const String tCancelExercisePositive = "Cancel";
-const String tCancelExerciseNegative = "No";
+const String tCancelExercisePositive = "Cancel, exercise"; //"Ja will die Übung abbrechen";
+const String tCancelExerciseNegative = "Go back"; //"Nein, zurück";
