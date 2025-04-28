@@ -67,6 +67,15 @@ class ProfileScreen extends StatelessWidget {
                             const SizedBox(height: 10),
                             Text(user.fullName, style: txtTheme.headlineSmall),
                             Text(user.email, style: txtTheme.bodyLarge),
+                            FutureBuilder<int>(
+                              future: ProfileController.instance.getNumberOfFriends(user.userName),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const SizedBox.shrink();
+                                }
+                                return Text('${snapshot.data} $tFriends');
+                              },
+                            ),
                           ],
                         ),
                       ),

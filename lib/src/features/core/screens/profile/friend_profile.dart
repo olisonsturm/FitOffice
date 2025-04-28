@@ -40,7 +40,7 @@ class FriendProfile extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(tFriendProfile),
+        title: const Text(tProfile),
         backgroundColor: Colors.grey,
       ),
       body: Padding(
@@ -83,6 +83,19 @@ class FriendProfile extends StatelessWidget {
                       style:
                           txtTheme.bodyLarge?.copyWith(color: Colors.grey[500]),
                     ),
+                  ),
+                  const SizedBox(height: 5),
+                  Center(
+                    child:
+                  FutureBuilder<int>(
+                    future: ProfileController.instance.getNumberOfFriends(userName),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const SizedBox.shrink();
+                      }
+                      return Text('${snapshot.data} $tFriends');
+                    },
+                  ),
                   ),
                   const SizedBox(height: 5),
                   Center(
