@@ -76,7 +76,10 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
               builder: (context) {
                 if (showBackButton) {
                   return IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black),
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: isDarkMode ? tWhiteColor : tDarkColor,
+                    ),
                     onPressed: onBack ?? () => Navigator.of(context).pop(),
                   );
                 } else {

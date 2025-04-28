@@ -11,6 +11,9 @@ const tCardBgColor = Color(0xFF79848B);
 const tBlackColor = Colors.black;
 const tPaleWhiteColor = Colors.white70;
 const tPaleBlackColor = Colors.black54;
+const tDarkGreyColor = Color(0xFF616161); // Equivalent to Colors.grey.shade700
+const tExerciseDivider = Color.fromARGB(255, 200, 200, 200);
+
 
 // -- SOCIAL Button COLORS
 const tGoogleBgColor = Color(0xFFDFEFFF);

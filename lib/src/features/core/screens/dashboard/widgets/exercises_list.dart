@@ -32,7 +32,6 @@ class AllExercisesList extends StatelessWidget {
   final void Function(String exerciseName) onToggleFavorite;
   final String query;
   final bool showGroupedAlphabetically;
-  
 
   const AllExercisesList({
     super.key,
@@ -45,6 +44,8 @@ class AllExercisesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     final lowerQuery = query.toLowerCase().trim();
     final isFiltered = lowerQuery.isNotEmpty;
 
@@ -77,8 +78,10 @@ class AllExercisesList extends StatelessWidget {
 
         if (isFiltered || !showGroupedAlphabetically) {
           for (int i = 0; i < sortedList.length; i++) {
-            listWidgets.add(_buildExerciseCard(context, sortedList[i], isAdmin));
-            if (i < sortedList.length - 1) listWidgets.add(_buildSoftDivider());
+            listWidgets.add(_buildExerciseCard(
+                context, sortedList[i], isAdmin, isDarkMode));
+            if (i < sortedList.length - 1)
+              listWidgets.add(_buildSoftDivider(isDarkMode));
           }
         } else {
           String lastLetter = '';
@@ -86,14 +89,15 @@ class AllExercisesList extends StatelessWidget {
 
           void flush(String tag) {
             listWidgets.add(const SizedBox(height: 16));
-            listWidgets.add(_buildHeader(tag));
+            listWidgets.add(_buildHeader(tag, isDarkMode));
             listWidgets.add(_buildFullDivider());
 
             for (int i = 0; i < buffer.length; i++) {
-              listWidgets.add(_buildExerciseCard(context, buffer[i], isAdmin));
+              listWidgets.add(
+                  _buildExerciseCard(context, buffer[i], isAdmin, isDarkMode));
               listWidgets.add(i == buffer.length - 1
                   ? _buildFullDivider()
-                  : _buildSoftDivider());
+                  : _buildSoftDivider(isDarkMode));
             }
             buffer.clear();
           }
@@ -135,39 +139,42 @@ class AllExercisesList extends StatelessWidget {
     }).toList();
   }
 
-  Widget _buildHeader(String letter) => Padding(
+  Widget _buildHeader(String letter, bool isDarkMode) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Text(letter,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: isDarkMode ? tWhiteColor : tBlackColor,
+            )),
       );
 
   Widget _buildFullDivider() => const FullWidthDivider();
 
-  Widget _buildSoftDivider() => const Divider(
+  Widget _buildSoftDivider(bool isDarkMode) => Divider(
         thickness: 0.6,
-        color: Color.fromARGB(255, 200, 200, 200),
+        color: isDarkMode ? tDarkGreyColor : tExerciseDivider,
         indent: 12,
         endIndent: 12,
       );
 
-  Widget _buildExerciseCard(
-      BuildContext context, Map<String, dynamic> exercise, bool isAdmin) {
+  Widget _buildExerciseCard(BuildContext context, Map<String, dynamic> exercise,
+      bool isAdmin, bool isDarkMode) {
     final exerciseName = exercise['name'];
     final exerciseCategory = exercise['category'];
     final timerController = Get.find<ExerciseTimerController>();
     final isFavorite = favorites.contains(exerciseName);
-    
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
       child: Material(
-        color: tWhiteColor,
+        color: isDarkMode ? Colors.grey.shade900 : tWhiteColor,
         elevation: 2,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
-          highlightColor: Colors.grey.shade300,
-          splashColor: Colors.grey.shade300,
+          highlightColor: isDarkMode ? tDarkGreyColor : Colors.grey.shade300,
+          splashColor: isDarkMode ? tDarkGreyColor : Colors.grey.shade300,
           onTap: () async {
             final result = await Navigator.push(
               context,
@@ -184,17 +191,23 @@ class AllExercisesList extends StatelessWidget {
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             title: Text(exerciseName ?? 'Unknown',
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: isDarkMode ? Colors.white : Colors.black,
+                )),
             subtitle: Text(exerciseCategory ?? 'No category',
-                style: const TextStyle(fontSize: 13, color: Color(0xFF777777))),
+                style: TextStyle(
+                  fontSize: 13,
+                  color: isDarkMode ? tPaleWhiteColor : const Color(0xFF777777),
+                )),
             trailing: IntrinsicWidth(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   IconButton(
                     icon: const Icon(Icons.play_arrow),
-                    color: Colors.grey[800],
+                    color: isDarkMode ? tWhiteColor : tDarkGreyColor,
                     onPressed: () async {
                       if (timerController.isRunning.value ||
                           timerController.isPaused.value) {
@@ -221,13 +234,18 @@ class AllExercisesList extends StatelessWidget {
                   IconButton(
                     icon: Icon(
                       isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: isFavorite ? Colors.red : Colors.grey,
+                      color: isFavorite
+                          ? Colors.red
+                          : (isDarkMode
+                              ? tPaleWhiteColor
+                              : tBottomNavBarUnselectedColor),
                     ),
                     onPressed: () => onToggleFavorite(exerciseName),
                   ),
                   if (isAdmin) ...[
                     IconButton(
-                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      icon: Icon(Icons.edit,
+                          color: isDarkMode ? tWhiteColor : tPaleBlackColor),
                       onPressed: () {
                         Navigator.push(
                           context,
