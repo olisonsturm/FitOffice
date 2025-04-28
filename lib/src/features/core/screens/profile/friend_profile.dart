@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/features/core/controllers/profile_controller.dart';
 import 'package:fit_office/src/features/core/screens/profile/widgets/avatar.dart';
+import 'package:intl/intl.dart';
 
 class FriendProfile extends StatelessWidget {
   final String userName;
@@ -25,6 +26,11 @@ class FriendProfile extends StatelessWidget {
     } else {
       throw Exception(tNoUserFound);
     }
+  }
+
+  String formatTimestamp(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+    return DateFormat('dd.MM.yyyy').format(dateTime);
   }
 
   @override
@@ -77,6 +83,11 @@ class FriendProfile extends StatelessWidget {
                           txtTheme.bodyLarge?.copyWith(color: Colors.grey[500]),
                     ),
                   ),
+                  const SizedBox(height: 5),
+                  Center(
+                      child: Text("$tJoined: ${formatTimestamp(friend.createdAt!)}",
+                          style: txtTheme.bodyLarge
+                              ?.copyWith(color: Colors.grey[500])))
                 ],
               );
             }
