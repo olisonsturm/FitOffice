@@ -9,7 +9,6 @@ import 'package:string_similarity/string_similarity.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import '../../../controllers/profile_controller.dart';
 import '../../profile/admin/delete_exercise.dart';
-import '../../profile/admin/edit_exercise.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 
 class FullWidthDivider extends StatelessWidget {
@@ -168,7 +167,7 @@ class AllExercisesList extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
       child: Material(
-        color: isDarkMode ? Colors.grey.shade900 : tWhiteColor,
+        color: isDarkMode ? tDarkGreyColor : tWhiteColor,
         elevation: 2,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
@@ -243,21 +242,6 @@ class AllExercisesList extends StatelessWidget {
                     onPressed: () => onToggleFavorite(exerciseName),
                   ),
                   if (isAdmin) ...[
-                    IconButton(
-                      icon: Icon(Icons.edit,
-                          color: isDarkMode ? tWhiteColor : tPaleBlackColor),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => EditExercise(
-                              exercise: exercise,
-                              exerciseName: exercise['name'],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
                     IconButton(
                       icon: const Icon(Icons.delete, color: Colors.red),
                       onPressed: () {

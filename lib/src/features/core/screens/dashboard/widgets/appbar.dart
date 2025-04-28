@@ -1,4 +1,5 @@
 import 'package:fit_office/src/constants/colors.dart';
+import 'package:fit_office/src/features/core/screens/profile/admin/edit_exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,9 +9,11 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBackButton;
   final bool showFavoriteIcon;
   final bool showDarkModeToggle;
+  final bool showEditOption;
   final bool isFavorite;
   final VoidCallback? onToggleFavorite;
   final VoidCallback? onBack;
+  final Map<String, dynamic>? exercise;
 
   const SliderAppBar({
     super.key,
@@ -19,9 +22,11 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showBackButton = false,
     this.showFavoriteIcon = false,
     this.showDarkModeToggle = false,
+    this.showEditOption = false,
     this.isFavorite = false,
     this.onToggleFavorite,
     this.onBack,
+    this.exercise,
   });
 
   @override
@@ -34,7 +39,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
             title,
             style: TextStyle(
                 fontSize: 20,
-                fontWeight: FontWeight.bold, // IMMER fett
+                fontWeight: FontWeight.bold,
                 color: isDarkMode ? tWhiteColor : tBlackColor),
             textAlign: TextAlign.center,
           )
@@ -45,14 +50,14 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                 title,
                 style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.bold, // IMMER fett
+                    fontWeight: FontWeight.bold,
                     color: isDarkMode ? tWhiteColor : tBlackColor),
               ),
               Text(
                 subtitle!,
                 style: TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.bold, // SUBTITLE auch fett
+                  fontWeight: FontWeight.bold,
                   color: isDarkMode ? Colors.white70 : Colors.black45,
                 ),
               ),
@@ -95,6 +100,24 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
+                if (showEditOption && exercise != null)
+                  IconButton(
+                    icon: Icon(
+                      Icons.edit,
+                      color: isDarkMode ? tWhiteColor : tPaleBlackColor,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => EditExercise(
+                            exercise: exercise!,
+                            exerciseName: exercise!['name'],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 if (showFavoriteIcon)
                   IconButton(
                     icon: Icon(
