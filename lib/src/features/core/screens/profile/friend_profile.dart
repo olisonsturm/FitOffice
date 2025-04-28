@@ -9,8 +9,9 @@ import 'package:intl/intl.dart';
 
 class FriendProfile extends StatelessWidget {
   final String userName;
+  final bool isFriend;
 
-  FriendProfile({super.key, required this.userName});
+  FriendProfile({super.key, required this.userName, required this.isFriend});
 
   final controller = Get.put(ProfileController());
 
@@ -87,7 +88,12 @@ class FriendProfile extends StatelessWidget {
                   Center(
                       child: Text("$tJoined: ${formatTimestamp(friend.createdAt!)}",
                           style: txtTheme.bodyLarge
-                              ?.copyWith(color: Colors.grey[500])))
+                              ?.copyWith(color: Colors.grey[500]))),
+                  if(isFriend)
+                    // TODO: Statistics, Streak and favourite exercises need to be added here
+                    Center(
+                      child: Text("STATISTICS AND STREAK ETC. HERE")
+                    )
                 ],
               );
             }

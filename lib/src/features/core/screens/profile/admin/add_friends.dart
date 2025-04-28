@@ -1,5 +1,6 @@
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:fit_office/src/features/core/screens/profile/friend_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -265,6 +266,16 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                                       color: Colors.red),
                                   onPressed: () => _removeFriend(username),
                                 ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          FriendProfile(userName: username,
+                                              isFriend: true),
+                                    ),
+                                  );
+                                },
                               );
                             } else if (status == 'pending') {
                               return ListTile(
@@ -272,6 +283,16 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                                 title: Text(username),
                                 trailing: const Icon(Icons.access_time,
                                     color: Colors.grey),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          FriendProfile(userName: username,
+                                              isFriend: false),
+                                    ),
+                                  );
+                                },
                               );
                             } else if (status == "denied") {
                               return ListTile(
@@ -279,6 +300,16 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                                 title: Text(username),
                                 trailing:
                                     Icon(Icons.person_add, color: Colors.grey),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          FriendProfile(userName: username,
+                                              isFriend: false),
+                                    ),
+                                  );
+                                },
                               );
                             }
                           }
@@ -290,6 +321,16 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                                   color: Colors.blue),
                               onPressed: () => _addFriend(username),
                             ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      FriendProfile(userName: username,
+                                          isFriend: false),
+                                ),
+                              );
+                            },
                           );
                         },
                       );

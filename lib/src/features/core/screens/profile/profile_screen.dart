@@ -122,7 +122,7 @@ class ProfileScreen extends StatelessWidget {
                   const SizedBox(height: 10),
                   const Divider(),
                   const SizedBox(height: 10),
-                  Text("Friends", style: txtTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+                  /*Text("Friends", style: txtTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
                   Row(
                     children: [
@@ -156,15 +156,16 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ),
+                  ),*/
+                  FriendsBoxWidget(currentUserId: user.id!),
+                  const SizedBox(height: 10),
+                  FriendRequestsWidget(currentUserId: user.id!),
+                  const SizedBox(height: 10),
                   CustomProfileButton(
                     icon: LineAwesomeIcons.user_plus_solid,
                     label: "Add Friends",
                     onPress: () => Get.to(() => AddFriendsScreen(currentUserId: user.id!)),
                   ),
-                  FriendsBoxWidget(currentUserId: user.id!),
-                  const SizedBox(height: 10),
-                  FriendRequestsWidget(currentUserId: user.id!),
                   const Divider(),
                   const SizedBox(height: 10),
                   Text("Settings", style: txtTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),

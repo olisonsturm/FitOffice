@@ -95,9 +95,9 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
       children: [
         Row(
           children: [
-            const Text(
+            Text(
               tFriends,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: isDarkMode ? Colors.white : Colors.black87),
             ),
             const Spacer(),
             if (_cachedFriends.length > 3)
@@ -273,11 +273,17 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                           ),
                           onTap: () {
                             final userName = friend['username'];
+                            bool isFriend;
+                            if(friend['status'] == "accepted"){
+                              isFriend = true;
+                            }else{
+                              isFriend = false;
+                            }
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    FriendProfile(userName: userName),
+                                    FriendProfile(userName: userName, isFriend: isFriend),
                               ),
                             );
                           },
