@@ -167,7 +167,7 @@ const String tAddFriendsHeader = "Add Friends";
 
 // -- Exercise Timer - Text
 const String tEndExercisePopUp = "End exercise";
-const String tEndExerciseConfirmation = "Are you sure you want to end the exercise?";
+const String tEndExerciseConfirmation = "Are you sure you want to finish the exercise?";
 const String tEndExercisePositive = "Yes";
 const String tEndExerciseNegative = "No";
 const String tStartExercisePopUp = "Start exercise";
@@ -191,7 +191,7 @@ const String tAbbreviationFavorites = "❤️";
 
 // -- Active Exercises - Text
 const String tActiveExercise = "Active Exercise";
-const String tActiveExerciseErrorMsg = "An exercise is already running. Please finish or stop it before you start a new one.";
+const String tActiveExerciseErrorMsg = "An exercise is already running. Please finish or abort it before you start a new one.";
 const String tActiveExerciseAnswer = "OK";
 
 // -- Admin Text
@@ -250,3 +250,15 @@ const String tAllResults = "All results";
 const String tRemoved = " removed";
 const String tExceptionRemoveFriend = "Couldn't remove friend.";
 const String tFriendProfile = "Friend Profile";
+
+// -- Exercise_View Texts
+const String tExerciseAbout = "About";
+const String tExerciseHistory = "History";
+const String tExerciseVideo = "Video";
+const String tExerciseDescription = "Description";
+const String tExerciseNoDescription = "No description available";
+const String tExerciseResume = "Resume";
+const String tExerciseStart = "Start";
+const String tExercisePause = "Pause";
+const String tExerciseStop = "Stop";
+const String tExerciseAbort = "Abort exercise";

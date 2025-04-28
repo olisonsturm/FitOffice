@@ -109,157 +109,150 @@ class DashboardState extends State<Dashboard> {
     final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     return Scaffold(
-      appBar: TimerAwareAppBar(
-        normalAppBar: AppBar(
-          title: Text(_getPageTitle(),
-              style: Theme.of(context).textTheme.headlineMedium),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-        ),
+      appBar: SliderAppBar(
+        title: _getPageTitle(),
         showBackButton: false,
+        showDarkModeToggle: true,
       ),
-      body: IndexedStack(
-        index: _selectedIndex,
+      body: Stack(
         children: [
-          // 0: Progress Screen
-          const ProgressScreen(),
+          IndexedStack(
+            index: _selectedIndex,
+            children: [
+              // 0: Progress Screen
+              const ProgressScreen(),
 
-          // 1: Dashboard/Home
-          GestureDetector(
-            // <-- HINZUGEFÜGT
-            onTap: () {
-              FocusScope.of(context).unfocus(); // <-- Fokus entfernen
-            },
-            behavior:
-                HitTestBehavior.translucent, // <-- wichtig für leere Flächen
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: tDashboardPadding,
-                        bottom: 4), //noch als constant festlegen
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _isUserLoaded
-                            ? Text(
-                                '$tDashboardTitle ${_user?.fullName ?? ''}',
-                                style: txtTheme.bodyMedium)
-                            : const CircularProgressIndicator(),
-                        Text(tDashboardHeading,
-                            style: txtTheme.displayMedium),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Sticky SearchBar
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: _StickySearchBar(
-                    minExtent: 72, // Erhöhe Höhe minimal für Platz + Linie
-                    maxExtent: 72,
-                    child: Column(
-                      children: [
-                        Container(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          padding: const EdgeInsets.only(
-                            top: 10,
-                            left: tDashboardPadding,
-                            right: tDashboardPadding,
-                            bottom: 10, // Abstand zur Linie
-                          ),
-                          child: DashboardSearchBox(
-                            key: _searchBoxKey,
-                            txtTheme: Theme.of(context).textTheme,
-                            onSearchSubmitted: (query) {
-                              _categoriesKey.currentState
-                                  ?.updateSearchQuery(query);
-                              setState(() {
-                                _searchHasFocus =
-                                    false; // Fokus entfernen nach Enter
-                                _searchText = query;
-                              });
-                            },
-                            onTextChanged: (query) {
-                              _categoriesKey.currentState
-                                  ?.updateSearchQuery(query);
-                              setState(() {
-                                _searchText = query;
-                              });
-                            },
-                            onFocusChanged: (hasFocus) {
-                              setState(() {
-                                _searchHasFocus = hasFocus;
-                              });
-                            },
-                          ),
+              // 1: Dashboard/Home
+              GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).unfocus();
+                },
+                behavior: HitTestBehavior.translucent,
+                child: CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: tDashboardPadding,
+                          bottom: 4,
                         ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width -
-                                (tDashboardPadding * 2),
-                            height: 2,
-                            decoration: BoxDecoration(
-                              color: Colors.black12,
-                              borderRadius: BorderRadius.circular(1),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _isUserLoaded
+                                ? Text(
+                                    '$tDashboardTitle ${_user?.fullName ?? ''}',
+                                    style: txtTheme.bodyMedium)
+                                : const CircularProgressIndicator(),
+                            Text(tDashboardHeading,
+                                style: txtTheme.displayMedium),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // Sticky SearchBar
+                    SliverPersistentHeader(
+                      pinned: true,
+                      delegate: _StickySearchBar(
+                        minExtent: 74,
+                        maxExtent: 74,
+                        child: Column(
+                          children: [
+                            Container(
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                              padding: const EdgeInsets.only(
+                                top: 10,
+                                left: tDashboardPadding,
+                                right: tDashboardPadding,
+                                bottom: 10,
+                              ),
+                              child: DashboardSearchBox(
+                                key: _searchBoxKey,
+                                txtTheme: Theme.of(context).textTheme,
+                                onSearchSubmitted: (query) {
+                                  _categoriesKey.currentState
+                                      ?.updateSearchQuery(query);
+                                  setState(() {
+                                    _searchHasFocus = false;
+                                    _searchText = query;
+                                  });
+                                },
+                                onTextChanged: (query) {
+                                  _categoriesKey.currentState
+                                      ?.updateSearchQuery(query);
+                                  setState(() {
+                                    _searchText = query;
+                                  });
+                                },
+                                onFocusChanged: (hasFocus) {
+                                  setState(() {
+                                    _searchHasFocus = hasFocus;
+                                  });
+                                },
+                              ),
                             ),
-                          ),
+                            const Divider(
+                              thickness: 1.8,
+                              height: 0.8,
+                              color: Color.fromARGB(255, 190, 190, 190),
+                              indent: 0,
+                              endIndent: 0,
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+
+                    // Kategorien + All Exercises
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          top: 8.0,
+                          left: tDashboardPadding,
+                          right: tDashboardPadding,
+                          bottom: tDashboardPadding,
+                        ),
+                        child: DashboardCategories(
+                          key: _categoriesKey,
+                          txtTheme: txtTheme,
+                          onSearchChanged: (text) {},
+                          forceShowExercisesOnly:
+                              _searchHasFocus || _searchText.isNotEmpty,
+                          onReturnedFromFilter: removeSearchFocus,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-
-                // Kategorien + All Exercises scrollbar
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 8.0,
-                      left: tDashboardPadding,
-                      right: tDashboardPadding,
-                      bottom: tDashboardPadding,
-                    ),
-                    child: DashboardCategories(
-                      key: _categoriesKey,
-                      txtTheme: txtTheme,
-                      onSearchChanged: (text) {},
-                      forceShowExercisesOnly:
-                          _searchHasFocus || _searchText.isNotEmpty,
-                      onReturnedFromFilter: removeSearchFocus, // NEU
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Banner  --> woanders einbauen? oder wo/wofür nötig?
-          //Text(tDashboardInformation, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
-          //DashboardBanners(txtTheme: txtTheme, isDark: isDark),
-          //const SizedBox(height: tDashboardPadding),
-
-          // 2: Statistics Screen
-          Scaffold(
-            body: Padding(
-              padding: const EdgeInsets.all(tDashboardPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(tDashboardStatistics,
-                      style: txtTheme.headlineMedium
-                          ?.apply(fontSizeFactor: 1.2)),
-                  const SizedBox(height: 20),
-                  StatisticsWidget(txtTheme: txtTheme, isDark: isDark),
-                ],
               ),
-            ),
-          ),
 
-          // 3: Friends
-          ProfileScreen(),
+              // Banner  --> woanders einbauen? oder wo/wofür nötig?
+              //Text(tDashboardInformation, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
+              //DashboardBanners(txtTheme: txtTheme, isDark: isDark),
+              //const SizedBox(height: tDashboardPadding),
+
+              // 2: Statistics Screen
+              Scaffold(
+                body: Padding(
+                  padding: const EdgeInsets.all(tDashboardPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(tDashboardStatistics,
+                          style: txtTheme.headlineMedium
+                              ?.apply(fontSizeFactor: 1.2)),
+                      const SizedBox(height: 20),
+                      StatisticsWidget(txtTheme: txtTheme, isDark: isDark),
+                    ],
+                  ),
+                ),
+              ),
+
+              // 3: Friends
+              ProfileScreen(),
+            ],
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -297,10 +290,10 @@ class DashboardState extends State<Dashboard> {
   }
 }
 
-
-
 class _StickySearchBar extends SliverPersistentHeaderDelegate {
+  @override
   final double minExtent;
+  @override
   final double maxExtent;
   final Widget child;
 

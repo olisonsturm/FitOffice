@@ -155,6 +155,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         favorites: _userFavorites,
         onToggleFavorite: _toggleFavorite,
         query: _searchQuery,
+        showGroupedAlphabetically: false,
       );
     }
 
@@ -220,7 +221,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         tAbbreviationMind,
         tMind,
         psychologicalCount,
-            () => Navigator.push(
+        () => Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => const ExerciseFilter(
@@ -296,7 +297,6 @@ class DashboardCategoriesState extends State<DashboardCategories> {
           tDashboardAllExercises,
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 10),
         AllExercisesList(
           exercises: _filteredExercises,
           favorites: _userFavorites,
