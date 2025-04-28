@@ -112,6 +112,7 @@ class DashboardState extends State<Dashboard> {
       appBar: SliderAppBar(
         title: _getPageTitle(),
         showBackButton: false,
+        showDarkModeToggle: true,
       ),
       body: Stack(
         children: [

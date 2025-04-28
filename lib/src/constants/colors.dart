@@ -10,6 +10,7 @@ const tDarkColor = Color(0xff262627);
 const tCardBgColor = Color(0xFF79848B);
 const tBlackColor = Colors.black;
 const tPaleWhiteColor = Colors.white70;
+const tPaleBlackColor = Colors.black54;
 
 // -- SOCIAL Button COLORS
 const tGoogleBgColor = Color(0xFFDFEFFF);

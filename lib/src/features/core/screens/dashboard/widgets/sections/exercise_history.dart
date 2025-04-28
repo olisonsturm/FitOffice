@@ -8,6 +8,8 @@ class ExerciseHistoryTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     final historyEntries = [
       {"date": "08.04.2025", "reps": "3x12", "weight": "40kg"},
       {"date": "05.04.2025", "reps": "3x10", "weight": "37.5kg"},
@@ -24,33 +26,40 @@ class ExerciseHistoryTab extends StatelessWidget {
             width: MediaQuery.of(context).size.width -
                 32, // 16 px horizontal margin
             child: Card(
-              color: tWhiteColor,
-              elevation: 4,
+              color: isDarkMode ? tBlackColor : tWhiteColor,
+              elevation: isDarkMode ? 0 : 4,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
-                side: const BorderSide(color: tBottomNavBarUnselectedColor),
+                side: BorderSide(
+                  color: isDarkMode
+                      ? Colors.grey.shade700
+                      : tBottomNavBarUnselectedColor,
+                ),
               ),
               child: ListTile(
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 title: Text(
                   entry["date"]!,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: isDarkMode ? tWhiteColor : tBlackColor,
                   ),
                 ),
                 subtitle: Text(
                   "Wiederholungen: ${entry["reps"]!}",
-                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: isDarkMode ? Colors.white70 : Colors.grey,
+                  ),
                 ),
                 trailing: Text(
                   entry["weight"]!,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: tBlackColor,
+                    color: isDarkMode ? tWhiteColor : tBlackColor,
                   ),
                 ),
               ),

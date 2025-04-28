@@ -25,6 +25,8 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     final description =
         widget.exerciseData['description'] ?? tExerciseNoDescription;
 
@@ -38,43 +40,64 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
         padding: const EdgeInsets.symmetric(vertical: 8),
         children: [
           Card(
-            color: tWhiteColor,
-            elevation: 4,
+            color: isDarkMode ? tBlackColor : tWhiteColor,
+            elevation: isDarkMode ? 0 : 4,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
-              side: const BorderSide(color: tBottomNavBarUnselectedColor),
+              side: BorderSide(
+                color: isDarkMode
+                    ? Colors.grey.shade700
+                    : tBottomNavBarUnselectedColor,
+              ),
             ),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(tExerciseVideo,
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(tExerciseVideo,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode ? tWhiteColor : tBlackColor,
+                      )),
                   const SizedBox(height: 12),
                   Container(
                     height: 200,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
+                      color: isDarkMode
+                          ? Colors.grey.shade800
+                          : Colors.grey.shade200,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade300),
+                      border: Border.all(
+                        color: isDarkMode
+                            ? Colors.grey.shade700
+                            : Colors.grey.shade300,
+                      ),
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Text(
                         'Video aktuell deaktiviert',
-                        style: TextStyle(color: Colors.grey),
+                        style: TextStyle(
+                          color: isDarkMode ? Colors.white70 : Colors.grey,
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(tExerciseDescription,
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(tExerciseDescription,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode ? tWhiteColor : tBlackColor,
+                      )),
                   const SizedBox(height: 8),
                   Text(
                     description,
-                    style: const TextStyle(fontSize: 16, color: Colors.black87),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: isDarkMode ? Colors.white70 : Colors.black87,
+                    ),
                   ),
                   const SizedBox(height: 24),
                   isThisExerciseRunning
@@ -93,10 +116,13 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                   side: BorderSide.none,
                                 ),
                                 icon: Icon(
-                                    isPaused ? Icons.play_arrow : Icons.pause),
-                                label: Text(isPaused
-                                    ? tExerciseResume
-                                    : tExercisePause),
+                                  isPaused ? Icons.play_arrow : Icons.pause,
+                                  color: tWhiteColor,
+                                ),
+                                label: Text(
+                                  isPaused ? tExerciseResume : tExercisePause,
+                                  style: const TextStyle(color: tWhiteColor),
+                                ),
                                 onPressed: () {
                                   isPaused
                                       ? timerController.resume()
@@ -117,8 +143,12 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                   elevation: 0,
                                   side: BorderSide.none,
                                 ),
-                                icon: const Icon(Icons.stop),
-                                label: const Text(tExerciseStop),
+                                icon:
+                                    const Icon(Icons.stop, color: tWhiteColor),
+                                label: const Text(
+                                  tExerciseStop,
+                                  style: TextStyle(color: tWhiteColor),
+                                ),
                                 onPressed: () async {
                                   final confirmed = await showDialog<bool>(
                                     context: context,
@@ -136,8 +166,12 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                       : SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
-                            icon: const Icon(Icons.play_arrow),
-                            label: const Text(tExerciseStart),
+                            icon: const Icon(Icons.play_arrow,
+                                color: tWhiteColor),
+                            label: const Text(
+                              tExerciseStart,
+                              style: TextStyle(color: tWhiteColor),
+                            ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: tBottomNavBarSelectedColor,
                               padding: const EdgeInsets.symmetric(vertical: 16),

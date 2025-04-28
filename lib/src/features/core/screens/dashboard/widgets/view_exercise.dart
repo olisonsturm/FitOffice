@@ -10,9 +10,8 @@ import '../../../controllers/db_controller.dart';
 import '../../../controllers/profile_controller.dart';
 
 class ExerciseDetailScreen extends StatefulWidget {
-  static RxnString currentExerciseName = RxnString(); // <<< korrekt!
-  static RxInt currentTabIndex =
-      0.obs; // <<< Aktiver Tab: 0 = About, 1 = History
+  static RxnString currentExerciseName = RxnString();
+  static RxInt currentTabIndex = 0.obs;
 
   final Map<String, dynamic> exerciseData;
 
@@ -83,8 +82,10 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: tWhiteColor,
+      backgroundColor: isDarkMode ? Colors.black : tWhiteColor,
       appBar: SliderAppBar(
         title: widget.exerciseData['name'] ?? '',
         subtitle: widget.exerciseData['category'] ?? '',
@@ -100,12 +101,16 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: Colors.grey.shade200,
+              color: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: tBottomNavBarUnselectedColor),
-              boxShadow: const [
+              border: Border.all(
+                color: isDarkMode
+                    ? Colors.grey.shade700
+                    : tBottomNavBarUnselectedColor,
+              ),
+              boxShadow: [
                 BoxShadow(
-                  color: Colors.black12,
+                  color: isDarkMode ? Colors.transparent : Colors.black12,
                   blurRadius: 4,
                   offset: Offset(0, 2),
                 ),
@@ -163,6 +168,8 @@ class _TabButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -176,7 +183,9 @@ class _TabButton extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-            color: isSelected ? Colors.white : Colors.black,
+            color: isSelected
+                ? Colors.white
+                : (isDarkMode ? Colors.white70 : Colors.black),
             fontWeight: FontWeight.w600,
           ),
         ),

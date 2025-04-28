@@ -7,7 +7,6 @@ import 'package:fit_office/firebase_options.dart';
 import 'package:fit_office/src/repository/authentication_repository/authentication_repository.dart';
 import 'package:fit_office/global_overlay.dart';
 
-import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'app.dart';
 
 /// ------ For Docs & Updates Check ------
