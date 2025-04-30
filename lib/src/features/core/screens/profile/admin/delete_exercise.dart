@@ -1,113 +1,86 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
-import 'package:fit_office/src/constants/colors.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:fit_office/src/constants/text_strings.dart';
 
-class DeleteExercise extends StatefulWidget {
-  final Map<String, dynamic> exercise;
-  final String exerciseName;
+Future<void> showDeleteExerciseDialog({
+  required BuildContext context,
+  required Map<String, dynamic> exercise,
+  required String exerciseName,
+  VoidCallback? onSuccess,
+}) async {
+  bool isDeleting = false;
 
-  const DeleteExercise({
-    super.key,
-    required this.exercise,
-    required this.exerciseName,
-  });
+  await showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (ctx) {
+      return StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text(tDeleteExercise),
+          content: isDeleting
+              ? const SizedBox(
+                  height: 60,
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              : Text(
+                  'Möchtest du "${exerciseName}" wirklich löschen?\n\nDiese Übung wird unwiderruflich für alle Benutzer entfernt.'),
+          actions: isDeleting
+              ? []
+              : [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text(tCancel),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      setState(() => isDeleting = true);
 
-  @override
-  State<DeleteExercise> createState() => _DeleteExerciseState();
-}
+                      try {
+                        final querySnapshot = await FirebaseFirestore.instance
+                            .collection('exercises')
+                            .where('name', isEqualTo: exerciseName)
+                            .get();
 
-class _DeleteExerciseState extends State<DeleteExercise> {
-  bool isLoading = false;
+                        if (querySnapshot.docs.isNotEmpty) {
+                          final docId = querySnapshot.docs.first.id;
+                          final videoUrl = exercise['video'];
 
-  Future<void> _deleteExercise() async {
-    setState(() => isLoading = true);
+                          if (videoUrl != null && videoUrl.isNotEmpty) {
+                            final ref =
+                                FirebaseStorage.instance.refFromURL(videoUrl);
+                            await ref.delete();
+                          }
 
-    try {
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('exercises')
-          .where('name', isEqualTo: widget.exerciseName)
-          .get();
+                          await FirebaseFirestore.instance
+                              .collection('exercises')
+                              .doc(docId)
+                              .delete();
+                        }
 
-      if (querySnapshot.docs.isNotEmpty) {
-        final docId = querySnapshot.docs.first.id;
-        final videoUrl = widget.exercise['video'];
-        if (videoUrl != null && videoUrl.isNotEmpty) {
-            final ref = FirebaseStorage.instance.refFromURL(videoUrl);
-            await ref.delete();
-        }
+                        Navigator.of(context).pop(); // Dialog schließen
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text(tGotDeleted)),
+                        );
 
-        await FirebaseFirestore.instance.collection('exercises').doc(docId).delete();
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(tGotDeleted)),
-      );
-
-      Navigator.pop(context);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('$e')),
-      );
-    }
-
-    setState(() => isLoading = false);
-  }
-
-  void _showDeleteDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text(tDeleteExercise),
-        content: Text('Do you want to delete "${widget.exerciseName}"? The exercise cannot be restored and will be deleted for every user!'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(tCancel),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _deleteExercise();
-            },
-            child: const Text(
-              tDelete,
-              style: TextStyle(color: Colors.red),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(tDeleteExercise),
-        backgroundColor: tCardBgColor,
-      ),
-      body: Center(
-        child: isLoading
-            ? const CircularProgressIndicator()
-            : ElevatedButton.icon(
-          onPressed: _showDeleteDialog,
-          icon: const Icon(Icons.delete, color: Colors.white),
-          label: const Text(
-            tDeleteExercise,
-            style: TextStyle(fontSize: 16),
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
+                        if (onSuccess != null) {
+                          onSuccess();
+                        }
+                      } catch (e) {
+                        Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Fehler: $e')),
+                        );
+                      }
+                    },
+                    child: const Text(
+                      tDelete,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ],
         ),
-      ),
-    );
-  }
+      );
+    },
+  );
 }

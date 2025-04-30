@@ -1,4 +1,8 @@
+import 'package:fit_office/global_overlay.dart';
 import 'package:fit_office/src/constants/colors.dart';
+import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
+import 'package:fit_office/src/features/core/screens/profile/admin/delete_exercise.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/edit_exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,12 +13,12 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBackButton;
   final bool showFavoriteIcon;
   final bool showDarkModeToggle;
-  final bool showEditOption;
   final bool showStreak;
   final bool isFavorite;
   final VoidCallback? onToggleFavorite;
   final VoidCallback? onBack;
   final Map<String, dynamic>? exercise;
+  final bool isAdmin;
 
   const SliderAppBar({
     super.key,
@@ -23,12 +27,12 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showBackButton = false,
     this.showFavoriteIcon = false,
     this.showDarkModeToggle = false,
-    this.showEditOption = false,
     this.showStreak = false,
     this.isFavorite = false,
     this.onToggleFavorite,
     this.onBack,
     this.exercise,
+    this.isAdmin = false,
   });
 
   @override
@@ -90,13 +94,20 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     onPressed: onBack ?? () => Navigator.of(context).pop(),
                   ),
+                if (isAdmin && showFavoriteIcon)
+                  IconButton(
+                    icon: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorite
+                          ? Colors.red
+                          : (isDarkMode ? tPaleWhiteColor : tPaleBlackColor),
+                    ),
+                    onPressed: onToggleFavorite,
+                  ),
                 if (showStreak)
                   Builder(
                     builder: (context) {
-                      // Hardcodierte Übungszeit in Minuten (später aus der DB holen!)
                       int todaysExerciseMinutes = 4;
-
-                      // Überprüfen, ob 5 Minuten erreicht sind
                       bool hasStreak = todaysExerciseMinutes >= 5;
 
                       return Row(
@@ -105,13 +116,11 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                             Icons.local_fire_department,
                             color: hasStreak
                                 ? Colors.orange
-                                : (isDarkMode
-                                    ? tWhiteColor
-                                    : tPaleBlackColor),
+                                : (isDarkMode ? tWhiteColor : tPaleBlackColor),
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '$todaysExerciseMinutes', 
+                            '$todaysExerciseMinutes',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -132,13 +141,34 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (showEditOption && exercise != null)
+                if (!isAdmin && showFavoriteIcon)
+                  IconButton(
+                    icon: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorite
+                          ? Colors.red
+                          : (isDarkMode ? tPaleWhiteColor : tPaleBlackColor),
+                    ),
+                    onPressed: onToggleFavorite,
+                  ),
+                if (isAdmin && exercise != null) ...[
                   IconButton(
                     icon: Icon(
                       Icons.edit,
                       color: isDarkMode ? tWhiteColor : tPaleBlackColor,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      final timerController =
+                          Get.find<ExerciseTimerController>();
+                      if (timerController.isRunning.value ||
+                          timerController.isPaused.value) {
+                        await showDialogWithTimerPause(
+                          context: context,
+                          builder: (_) => ActiveTimerDialog.forAction('edit'),
+                        );
+                        return;
+                      }
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -150,16 +180,32 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                       );
                     },
                   ),
-                if (showFavoriteIcon)
                   IconButton(
-                    icon: Icon(
-                      isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: isFavorite
-                          ? Colors.red
-                          : (isDarkMode ? tPaleWhiteColor : tPaleBlackColor),
-                    ),
-                    onPressed: onToggleFavorite,
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () async {
+                      final timerController =
+                          Get.find<ExerciseTimerController>();
+                      if (timerController.isRunning.value ||
+                          timerController.isPaused.value) {
+                        await showDialogWithTimerPause(
+                          context: context,
+                          builder: (_) => ActiveTimerDialog.forAction('delete'),
+                        );
+                        return;
+                      }
+
+                      await showDeleteExerciseDialog(
+                        context: context,
+                        exercise: exercise!,
+                        exerciseName: exercise!['name'],
+                        onSuccess: () {
+                          Navigator.of(context)
+                              .pop(); 
+                        },
+                      );
+                    },
                   ),
+                ],
                 if (showDarkModeToggle)
                   IconButton(
                     icon: Icon(

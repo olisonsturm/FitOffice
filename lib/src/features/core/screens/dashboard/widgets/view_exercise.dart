@@ -101,7 +101,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
         showBackButton: true,
         showFavoriteIcon: true,
         isFavorite: isFavorite,
-        showEditOption: isAdmin,
+        isAdmin: isAdmin,
         exercise: widget.exerciseData,
         onToggleFavorite: toggleFavorite,
         onBack: _handleBack,

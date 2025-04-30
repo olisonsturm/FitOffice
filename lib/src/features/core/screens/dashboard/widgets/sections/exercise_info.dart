@@ -10,7 +10,6 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/end_exerc
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 
-
 class ExerciseInfoTab extends StatefulWidget {
   final Map<String, dynamic> exerciseData;
 
@@ -161,7 +160,8 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                       style: TextStyle(color: tWhiteColor),
                                     ),
                                     onPressed: () async {
-                                      final confirmed = await showDialogWithTimerPause<bool>(
+                                      final confirmed =
+                                          await showDialogWithTimerPause<bool>(
                                         context: context,
                                         //barrierDismissible: false,
                                         builder: (_) => EndExerciseDialog(
@@ -196,7 +196,8 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                 style: TextStyle(color: tWhiteColor),
                               ),
                               onPressed: () async {
-                                final confirmed = await showDialogWithTimerPause<bool>(
+                                final confirmed =
+                                    await showDialogWithTimerPause<bool>(
                                   context: context,
                                   //barrierDismissible: false,
                                   builder: (_) => CancelExerciseDialog(
@@ -232,10 +233,10 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                             onPressed: () async {
                               if (timerController.isRunning.value &&
                                   !isThisExerciseRunning) {
-                                await showDialog(
+                                await showDialogWithTimerPause(
                                   context: context,
-                                  barrierDismissible: false,
-                                  builder: (_) => const ActiveTimerDialog(),
+                                  builder: (_) =>
+                                      ActiveTimerDialog.forAction('start'),
                                 );
                                 return;
                               }

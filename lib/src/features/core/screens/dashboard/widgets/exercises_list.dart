@@ -1,3 +1,4 @@
+import 'package:fit_office/global_overlay.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/view_exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -210,22 +211,21 @@ class AllExercisesList extends StatelessWidget {
                     onPressed: () async {
                       if (timerController.isRunning.value ||
                           timerController.isPaused.value) {
-                        await showDialog(
-                          context: Get.context!,
-                          barrierDismissible: false,
-                          builder: (_) => const ActiveTimerDialog(),
+                        await showDialogWithTimerPause(
+                          context: context,
+                          builder: (_) => ActiveTimerDialog.forAction('start'),
                         );
                         return;
                       }
                       final confirmed = await showDialog<bool>(
-                        context: Get.context!,
+                        context: context,
                         barrierDismissible: false,
                         builder: (_) => StartExerciseDialog(
                             exerciseName: exerciseName ?? 'Unknown'),
                       );
                       if (confirmed == true) {
                         timerController.start(exerciseName, exerciseCategory);
-                        Navigator.of(Get.context!)
+                        Navigator.of(context)
                             .popUntil((route) => route.isFirst);
                       }
                     },
@@ -244,15 +244,25 @@ class AllExercisesList extends StatelessWidget {
                   if (isAdmin) ...[
                     IconButton(
                       icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => DeleteExercise(
-                              exercise: exercise,
-                              exerciseName: exercise['name'],
-                            ),
-                          ),
+                      onPressed: () async {
+                        final timerController =
+                            Get.find<ExerciseTimerController>();
+                        if (timerController.isRunning.value ||
+                            timerController.isPaused.value) {
+                          await showDialogWithTimerPause(
+                            context: context,
+                            builder: (_) =>
+                                ActiveTimerDialog.forAction('delete'),
+                          );
+                          return;
+                        }
+
+                        await showDeleteExerciseDialog(
+                          context: context,
+                          exercise: exercise,
+                          exerciseName: exercise['name'],
+                          onSuccess: () => Navigator.of(context)
+                              .pop(), // optional: zur vorherigen Seite zurück
                         );
                       },
                     ),
