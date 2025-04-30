@@ -1,3 +1,4 @@
+import 'package:fit_office/global_overlay.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/cancel_exercise.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/start_exe
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/end_exercise.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+
 
 class ExerciseInfoTab extends StatefulWidget {
   final Map<String, dynamic> exerciseData;
@@ -111,8 +113,10 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                 Expanded(
                                   child: ElevatedButton.icon(
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: tBottomNavBarUnselectedColor,
-                                      padding: const EdgeInsets.symmetric(vertical: 14),
+                                      backgroundColor:
+                                          tBottomNavBarUnselectedColor,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 14),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(16),
                                       ),
@@ -124,8 +128,11 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                       color: tWhiteColor,
                                     ),
                                     label: Text(
-                                      isPaused ? tExerciseResume : tExercisePause,
-                                      style: const TextStyle(color: tWhiteColor),
+                                      isPaused
+                                          ? tExerciseResume
+                                          : tExercisePause,
+                                      style:
+                                          const TextStyle(color: tWhiteColor),
                                     ),
                                     onPressed: () {
                                       isPaused
@@ -139,23 +146,28 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                   child: ElevatedButton.icon(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: tFinishExerciseColor,
-                                      padding: const EdgeInsets.symmetric(vertical: 14),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 14),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(16),
                                       ),
                                       elevation: 0,
                                       side: BorderSide.none,
                                     ),
-                                    icon: const Icon(Icons.check_circle, color: tWhiteColor),
+                                    icon: const Icon(Icons.check_circle,
+                                        color: tWhiteColor),
                                     label: const Text(
                                       tExerciseFinish,
                                       style: TextStyle(color: tWhiteColor),
                                     ),
                                     onPressed: () async {
-                                      final confirmed = await showDialog<bool>(
+                                      final confirmed = await showDialogWithTimerPause<bool>(
                                         context: context,
-                                        barrierDismissible: false,
-                                        builder: (_) => const EndExerciseDialog(),
+                                        //barrierDismissible: false,
+                                        builder: (_) => EndExerciseDialog(
+                                          exerciseName:
+                                              widget.exerciseData['name'] ?? '',
+                                        ),
                                       );
                                       if (confirmed == true) {
                                         timerController.stop();
@@ -169,23 +181,28 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                             ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: tPrimaryColor,
-                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 14),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                                 elevation: 0,
                                 side: BorderSide.none,
                               ),
-                              icon: const Icon(Icons.cancel, color: tWhiteColor),
+                              icon:
+                                  const Icon(Icons.cancel, color: tWhiteColor),
                               label: const Text(
                                 tCancelExercise,
                                 style: TextStyle(color: tWhiteColor),
                               ),
                               onPressed: () async {
-                                final confirmed = await showDialog<bool>(
+                                final confirmed = await showDialogWithTimerPause<bool>(
                                   context: context,
-                                  barrierDismissible: false,
-                                  builder: (_) => const CancelExerciseDialog(),
+                                  //barrierDismissible: false,
+                                  builder: (_) => CancelExerciseDialog(
+                                    exerciseName:
+                                        widget.exerciseData['name'] ?? '',
+                                  ),
                                 );
                                 if (confirmed == true) {
                                   timerController.stop();
@@ -197,7 +214,8 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                       : SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
-                            icon: const Icon(Icons.play_arrow, color: tWhiteColor),
+                            icon: const Icon(Icons.play_arrow,
+                                color: tWhiteColor),
                             label: const Text(
                               tExerciseStart,
                               style: TextStyle(color: tWhiteColor),
@@ -226,7 +244,8 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                 context: context,
                                 barrierDismissible: false,
                                 builder: (_) => StartExerciseDialog(
-                                  exerciseName: widget.exerciseData['name'] ?? '',
+                                  exerciseName:
+                                      widget.exerciseData['name'] ?? '',
                                 ),
                               );
                               if (confirmed == true) {

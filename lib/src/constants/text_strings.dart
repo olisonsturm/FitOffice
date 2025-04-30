@@ -168,11 +168,11 @@ const String tAddFriendsHeader = "Add Friends";
 // -- Exercise Timer - Text
 const String tEndExercisePopUp = "End exercise";
 const String tEndExerciseConfirmation = "Are you sure you want to finish the exercise?";
-const String tEndExercisePositive = "Finish";
+const String tEndExercisePositive = "Finish exercise";
 const String tEndExerciseNegative = "Cancel";
 const String tStartExercisePopUp = "Start exercise";
 const String tStartExerciseConfirmation = "Are you sure you want to start this exercise:";
-const String tStartExercisePositive = "Start";
+const String tStartExercisePositive = "Start exercise";
 const String tStartExerciseNegative = "Cancel";
 
 
@@ -237,16 +237,16 @@ const String tExerciseHistory = "History";
 const String tExerciseVideo = "Video";
 const String tExerciseDescription = "Description";
 const String tExerciseNoDescription = "No description available";
-const String tExerciseResume = "Resume";
-const String tExerciseStart = "Start";
-const String tExercisePause = "Pause";
-const String tExerciseFinish = "Finish";
+const String tExerciseResume = "Resume exercise";
+const String tExerciseStart = "Start exercise";
+const String tExercisePause = "Pause exercise";
+const String tExerciseFinish = "Finish exercise";
 const String tExerciseAbort = "Abort exercise";
 const String tNoVideoAvailable = "No video available";
 
 
 // -- Cancel Exercise - Text
 const String tCancelExercise = "Cancel Exercise";
-const String tCancelExerciseMessage = "Do you really want to canel the exercise? Your progress will be lost";
-const String tCancelExercisePositive = "Cancel, exercise"; //"Ja will die Übung abbrechen";
+const String tCancelExerciseMessage = "Do you really want to canel the exercise? Your progress will be lost!";
+const String tCancelExercisePositive = "Cancel, exercise"; //"Ja ich will die Übung abbrechen";
 const String tCancelExerciseNegative = "Go back"; //"Nein, zurück";

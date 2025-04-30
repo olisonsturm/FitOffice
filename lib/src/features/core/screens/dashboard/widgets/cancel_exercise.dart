@@ -1,31 +1,142 @@
 import 'package:flutter/material.dart';
+import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 
-
 class CancelExerciseDialog extends StatelessWidget {
-  const CancelExerciseDialog({super.key});
+  final String exerciseName;
+
+  const CancelExerciseDialog({super.key, required this.exerciseName});
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (bool didPop, dynamic result) {},
-      child: AlertDialog(
-        title: const Text(tCancelExercise),
-        content: const Text(
-          tCancelExerciseMessage,
-        ),
-        actions: [
-          TextButton(
-            child: const Text(tCancelExerciseNegative),
-            onPressed: () => Navigator.of(context).pop(false),
-          ),
-          TextButton(
-            child: const Text(tCancelExercisePositive),
-            onPressed: () => Navigator.of(context).pop(true),
-          ),
-        ],
-      ),
-    );
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    return Center(
+        child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: 365,
+              minWidth: 300,
+            ),
+            child: Material(
+              borderRadius: BorderRadius.circular(20),
+              color: isDarkMode ? tDarkGreyColor : tWhiteColor,
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Stack(
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(height: 10),
+                        Text(
+                          tCancelExercise,
+                          style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: isDarkMode ? Colors.white : tBlackColor),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          tCancelExerciseMessage,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color:
+                                isDarkMode ? tPaleWhiteColor : tPaleBlackColor,
+                          ),
+                        ),
+                        const SizedBox(height: 22),
+                        Text(
+                          exerciseName,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                            color: isDarkMode ? tWhiteColor : tBlackColor,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 40),
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: isDarkMode ? tGreyColor : tPaleBlackColor,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
+                                  side: BorderSide.none,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                icon: const Icon(Icons.undo_sharp,
+                                    color: Colors.white),
+                                label: const Text(
+                                  tCancelExerciseNegative,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(true),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red.shade500,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
+                                  side: BorderSide.none,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                icon: const Icon(Icons.cancel,
+                                    color: tWhiteColor),
+                                label: Text(
+                                  tCancelExercisePositive,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: tWhiteColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Positioned(
+                      right: -12,
+                      top: -12,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.cancel_outlined,
+                          color: isDarkMode
+                              ? tPaleWhiteColor
+                              : tPaleBlackColor,
+                        ),
+                        onPressed: () => Navigator.of(context).pop(),
+                        iconSize: 28,
+                        padding: EdgeInsets.all(4),
+                        constraints: BoxConstraints(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )));
   }
 }
+

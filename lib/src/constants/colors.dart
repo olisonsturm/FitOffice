@@ -16,6 +16,7 @@ const tLightGreyColor = Color(0xFFBDBDBD); // Equivalent to Colors.grey.shade400
 const tExerciseDivider = Color.fromARGB(255, 200, 200, 200);
 const tFinishExerciseColor = Color(0xFF4CAF50);
 const tStartExerciseColor = Colors.green;
+const tGreyColor = Colors.grey;
 
 
 // -- SOCIAL Button COLORS
