@@ -73,7 +73,7 @@ class EndExerciseDialog extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
-                                icon: const Icon(Icons.play_arrow,
+                                icon: const Icon(Icons.check_circle,
                                     color: Colors.white),
                                 label: const Text(
                                   tEndExercisePositive,

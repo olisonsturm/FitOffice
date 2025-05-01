@@ -15,9 +15,17 @@ Future<T?> showUnifiedDialog<T>({
   final dashboard =
       dashboardState ?? context.findAncestorStateOfType<DashboardState>();
 
-  // Fokus vor Dialog merken
-  final wasFocused = dashboardState?.searchHasFocus ?? false;
-  dashboardState?.wasSearchFocusedBeforeNavigation = wasFocused;
+  // 🧠 Nur merken, wenn der Fokus aktuell NOCH aktiv ist
+  if (dashboard?.searchHasFocus == true) {
+    dashboard?.wasSearchFocusedBeforeNavigation = true;
+  } else {
+    dashboard?.wasSearchFocusedBeforeNavigation = false;
+  }
+
+  dashboard?.forceRedirectFocus();
+
+  FocusManager.instance.primaryFocus?.unfocus();
+  dashboard?.removeSearchFocus();
 
   // Timer pausieren, falls aktiv
   final wasRunning =

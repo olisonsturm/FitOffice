@@ -56,6 +56,15 @@ class DashboardState extends State<Dashboard> {
     }
   }
 
+  void forceRedirectFocus() {
+    final newNode = FocusNode(); // Temporärer leerer Fokuspunkt
+    FocusScope.of(context).requestFocus(newNode);
+    Future.delayed(const Duration(milliseconds: 50), () {
+      newNode.unfocus();
+      newNode.dispose();
+    });
+  }
+
   void handleReturnedFromExercise() {
     if (!wasSearchFocusedBeforeNavigation) {
       removeSearchFocus();

@@ -237,8 +237,10 @@ class AllExercisesList extends StatelessWidget {
 
                       if (confirmed == true) {
                         timerController.start(exerciseName, exerciseCategory);
-                        Navigator.of(context)
-                            .popUntil((route) => route.isFirst);
+                        if (context.mounted) {
+                          Navigator.of(context)
+                              .popUntil((route) => route.isFirst);
+                        }
                       }
                     },
                   ),

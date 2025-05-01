@@ -22,6 +22,7 @@ class DashboardSearchBox extends StatefulWidget {
 class DashboardSearchBoxState extends State<DashboardSearchBox> {
   late FocusNode _focusNode;
   late TextEditingController _controller;
+  late FocusNode _redirectFocusNode;
 
   void requestFocus() {
     _focusNode.requestFocus();
@@ -29,6 +30,7 @@ class DashboardSearchBoxState extends State<DashboardSearchBox> {
 
   void removeFocus() {
     _focusNode.unfocus();
+    FocusManager.instance.primaryFocus?.unfocus(); // <-- Ergänzen!
   }
 
   @override
@@ -36,9 +38,16 @@ class DashboardSearchBoxState extends State<DashboardSearchBox> {
     super.initState();
     _focusNode = FocusNode();
     _controller = TextEditingController();
+    _redirectFocusNode = FocusNode(); // ⬅️ NEU
 
     _focusNode.addListener(() {
-      widget.onFocusChanged(_focusNode.hasFocus);
+      final hasFocus = _focusNode.hasFocus;
+      widget.onFocusChanged(hasFocus);
+
+      // Wenn Fokus verlassen wurde, Redirect setzen
+      if (!hasFocus) {
+        FocusScope.of(context).requestFocus(_redirectFocusNode);
+      }
     });
   }
 

@@ -1,4 +1,5 @@
 import 'package:fit_office/src/constants/colors.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/dashboard.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/cancel_exercise.dart';
 import 'package:fit_office/src/utils/helper/dialog_helper.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/view_exercise.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/end_exercise.dart';
+
 class GlobalExerciseOverlay {
   static final GlobalExerciseOverlay _instance =
       GlobalExerciseOverlay._internal();
@@ -163,14 +165,20 @@ class GlobalExerciseOverlay {
                                     icon: const Icon(Icons.check_circle,
                                         color: tWhiteColor),
                                     onPressed: () async {
+                                      final dashboardState =
+                                          context.findAncestorStateOfType<
+                                              DashboardState>();
+
                                       final confirmed =
                                           await showUnifiedDialog<bool>(
                                         context: context,
+                                        dashboardState: dashboardState,
                                         builder: (_) => EndExerciseDialog(
                                           exerciseName: timerController
                                               .exerciseName.value,
                                         ),
                                       );
+
                                       if (confirmed == true) {
                                         timerController.stop();
                                       }
@@ -180,14 +188,20 @@ class GlobalExerciseOverlay {
                                     icon: const Icon(Icons.cancel,
                                         color: tWhiteColor),
                                     onPressed: () async {
+                                      final dashboardState =
+                                          context.findAncestorStateOfType<
+                                              DashboardState>();
+
                                       final confirmed =
                                           await showUnifiedDialog<bool>(
                                         context: context,
+                                        dashboardState: dashboardState,
                                         builder: (_) => CancelExerciseDialog(
                                           exerciseName: timerController
                                               .exerciseName.value,
                                         ),
                                       );
+
                                       if (confirmed == true) {
                                         timerController.stop();
                                       }
