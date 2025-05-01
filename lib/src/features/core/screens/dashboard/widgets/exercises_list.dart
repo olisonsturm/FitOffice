@@ -1,4 +1,5 @@
 import 'package:fit_office/global_overlay.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/dashboard.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/view_exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -176,16 +177,23 @@ class AllExercisesList extends StatelessWidget {
           highlightColor: isDarkMode ? tDarkGreyColor : Colors.grey.shade300,
           splashColor: isDarkMode ? tDarkGreyColor : Colors.grey.shade300,
           onTap: () async {
+            final dashboardState =
+                context.findAncestorStateOfType<DashboardState>();
+            dashboardState?.wasSearchFocusedBeforeNavigation =
+                dashboardState.searchHasFocus;
+            dashboardState?.removeSearchFocus(); // Fokus ggf. bewusst entfernen
+
             final result = await Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => ExerciseDetailScreen(exerciseData: exercise),
               ),
             );
-
             if (result == true) {
               onToggleFavorite(exerciseName);
             }
+            dashboardState
+                ?.handleReturnedFromExercise(); // Zustand wiederherstellen
           },
           child: ListTile(
             contentPadding:

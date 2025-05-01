@@ -23,6 +23,10 @@ class DashboardSearchBoxState extends State<DashboardSearchBox> {
   late FocusNode _focusNode;
   late TextEditingController _controller;
 
+  void requestFocus() {
+    _focusNode.requestFocus();
+  }
+
   void removeFocus() {
     _focusNode.unfocus();
   }

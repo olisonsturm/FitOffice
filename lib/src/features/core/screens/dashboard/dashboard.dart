@@ -29,6 +29,9 @@ class DashboardState extends State<Dashboard> {
   final ProfileController _profileController = Get.put(ProfileController());
   final DbController _dbController = DbController();
 
+  bool wasSearchFocusedBeforeNavigation = false;
+  bool get searchHasFocus => _searchHasFocus;
+
   bool _searchHasFocus = false;
   String _searchText = '';
 
@@ -48,6 +51,14 @@ class DashboardState extends State<Dashboard> {
         return 'Profile';
       default:
         return '';
+    }
+  }
+
+  void handleReturnedFromExercise() {
+    if (!wasSearchFocusedBeforeNavigation) {
+      removeSearchFocus(); 
+    } else {
+      _searchBoxKey.currentState?.requestFocus();
     }
   }
 
