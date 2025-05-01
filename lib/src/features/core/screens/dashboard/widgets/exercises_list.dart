@@ -12,6 +12,7 @@ import 'package:fit_office/src/constants/colors.dart';
 import '../../../controllers/profile_controller.dart';
 import '../../profile/admin/delete_exercise.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
+import 'package:fit_office/src/utils/helper/dialog_helper.dart';
 
 class FullWidthDivider extends StatelessWidget {
   const FullWidthDivider({super.key});
@@ -219,18 +220,21 @@ class AllExercisesList extends StatelessWidget {
                     onPressed: () async {
                       if (timerController.isRunning.value ||
                           timerController.isPaused.value) {
-                        await showDialogWithTimerPause(
+                        await showUnifiedDialog<void>(
                           context: context,
-                          builder: (_) => ActiveTimerDialog.forAction('start'),
+                          builder: (ctx) =>
+                              ActiveTimerDialog.forAction('start'),
                         );
+
                         return;
                       }
-                      final confirmed = await showDialog<bool>(
+                      final confirmed = await showUnifiedDialog<bool>(
                         context: context,
-                        barrierDismissible: false,
-                        builder: (_) => StartExerciseDialog(
-                            exerciseName: exerciseName ?? 'Unknown'),
+                        builder: (ctx) => StartExerciseDialog(
+                          exerciseName: exerciseName ?? 'Unknown',
+                        ),
                       );
+
                       if (confirmed == true) {
                         timerController.start(exerciseName, exerciseCategory);
                         Navigator.of(context)
@@ -257,20 +261,21 @@ class AllExercisesList extends StatelessWidget {
                             Get.find<ExerciseTimerController>();
                         if (timerController.isRunning.value ||
                             timerController.isPaused.value) {
-                          await showDialogWithTimerPause(
+                          await showUnifiedDialog<void>(
                             context: context,
-                            builder: (_) =>
+                            builder: (ctx) =>
                                 ActiveTimerDialog.forAction('delete'),
                           );
+
                           return;
                         }
 
-                        await showDeleteExerciseDialog(
+                        await showUnifiedDialog<bool>(
                           context: context,
-                          exercise: exercise,
-                          exerciseName: exercise['name'],
-                          onSuccess: () => Navigator.of(context)
-                              .pop(), // optional: zur vorherigen Seite zurück
+                          builder: (ctx) => DeleteExerciseDialog(
+                            exercise: exercise,
+                            exerciseName: exerciseName ?? 'Unknown',
+                          ),
                         );
                       },
                     ),

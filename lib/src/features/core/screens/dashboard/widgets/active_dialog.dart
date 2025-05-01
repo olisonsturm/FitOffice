@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 
+
 class ActiveTimerDialog extends StatelessWidget {
   final String title;
   final String message;

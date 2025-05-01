@@ -1,6 +1,7 @@
 import 'package:fit_office/global_overlay.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/cancel_exercise.dart';
+import 'package:fit_office/src/utils/helper/dialog_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/colors.dart';
@@ -161,7 +162,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                     ),
                                     onPressed: () async {
                                       final confirmed =
-                                          await showDialogWithTimerPause<bool>(
+                                          await showUnifiedDialog<bool>(
                                         context: context,
                                         //barrierDismissible: false,
                                         builder: (_) => EndExerciseDialog(
@@ -197,7 +198,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                               ),
                               onPressed: () async {
                                 final confirmed =
-                                    await showDialogWithTimerPause<bool>(
+                                    await showUnifiedDialog<bool>(
                                   context: context,
                                   //barrierDismissible: false,
                                   builder: (_) => CancelExerciseDialog(
@@ -233,7 +234,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                             onPressed: () async {
                               if (timerController.isRunning.value &&
                                   !isThisExerciseRunning) {
-                                await showDialogWithTimerPause(
+                                await showUnifiedDialog(
                                   context: context,
                                   builder: (_) =>
                                       ActiveTimerDialog.forAction('start'),

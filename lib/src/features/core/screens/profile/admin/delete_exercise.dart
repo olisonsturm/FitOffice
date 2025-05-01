@@ -3,84 +3,92 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 
-Future<void> showDeleteExerciseDialog({
-  required BuildContext context,
-  required Map<String, dynamic> exercise,
-  required String exerciseName,
-  VoidCallback? onSuccess,
-}) async {
+class DeleteExerciseDialog extends StatefulWidget {
+  final Map<String, dynamic> exercise;
+  final String exerciseName;
+  final VoidCallback? onSuccess;
+
+  const DeleteExerciseDialog({
+    super.key,
+    required this.exercise,
+    required this.exerciseName,
+    this.onSuccess,
+  });
+
+  @override
+  State<DeleteExerciseDialog> createState() => _DeleteExerciseDialogState();
+}
+
+class _DeleteExerciseDialogState extends State<DeleteExerciseDialog> {
   bool isDeleting = false;
 
-  await showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (ctx) {
-      return StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: const Text(tDeleteExercise),
-          content: isDeleting
-              ? const SizedBox(
-                  height: 60,
-                  child: Center(child: CircularProgressIndicator()),
-                )
-              : Text(
-                  'Möchtest du "${exerciseName}" wirklich löschen?\n\nDiese Übung wird unwiderruflich für alle Benutzer entfernt.'),
-          actions: isDeleting
-              ? []
-              : [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text(tCancel),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      setState(() => isDeleting = true);
+  Future<void> _deleteExercise() async {
+    setState(() => isDeleting = true);
 
-                      try {
-                        final querySnapshot = await FirebaseFirestore.instance
-                            .collection('exercises')
-                            .where('name', isEqualTo: exerciseName)
-                            .get();
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('exercises')
+          .where('name', isEqualTo: widget.exerciseName)
+          .get();
 
-                        if (querySnapshot.docs.isNotEmpty) {
-                          final docId = querySnapshot.docs.first.id;
-                          final videoUrl = exercise['video'];
+      if (querySnapshot.docs.isNotEmpty) {
+        final docId = querySnapshot.docs.first.id;
+        final videoUrl = widget.exercise['video'];
 
-                          if (videoUrl != null && videoUrl.isNotEmpty) {
-                            final ref =
-                                FirebaseStorage.instance.refFromURL(videoUrl);
-                            await ref.delete();
-                          }
+        if (videoUrl != null && videoUrl.isNotEmpty) {
+          final ref = FirebaseStorage.instance.refFromURL(videoUrl);
+          await ref.delete();
+        }
 
-                          await FirebaseFirestore.instance
-                              .collection('exercises')
-                              .doc(docId)
-                              .delete();
-                        }
+        await FirebaseFirestore.instance
+            .collection('exercises')
+            .doc(docId)
+            .delete();
+      }
 
-                        Navigator.of(context).pop(); // Dialog schließen
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text(tGotDeleted)),
-                        );
+      if (mounted) {
+        Navigator.of(context).pop(); // Dialog schließen
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text(tGotDeleted)),
+        );
+        widget.onSuccess?.call();
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.of(context).pop(); // Dialog schließen
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Fehler: $e')),
+        );
+      }
+    }
+  }
 
-                        if (onSuccess != null) {
-                          onSuccess();
-                        }
-                      } catch (e) {
-                        Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Fehler: $e')),
-                        );
-                      }
-                    },
-                    child: const Text(
-                      tDelete,
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ),
-                ],
-        ),
-      );
-    },
-  );
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text(tDeleteExercise),
+      content: isDeleting
+          ? const SizedBox(
+              height: 60,
+              child: Center(child: CircularProgressIndicator()),
+            )
+          : Text(
+              'Möchtest du "${widget.exerciseName}" wirklich löschen?\n\nDiese Übung wird unwiderruflich für alle Benutzer entfernt.'),
+      actions: isDeleting
+          ? []
+          : [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text(tCancel),
+              ),
+              TextButton(
+                onPressed: _deleteExercise,
+                child: const Text(
+                  tDelete,
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ],
+    );
+  }
 }

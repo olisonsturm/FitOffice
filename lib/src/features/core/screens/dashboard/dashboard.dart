@@ -14,6 +14,8 @@ import '../../controllers/db_controller.dart';
 import '../../controllers/profile_controller.dart';
 import '../progress/progress.dart';
 
+final GlobalKey<DashboardState> dashboardKey = GlobalKey<DashboardState>();
+
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
@@ -56,7 +58,7 @@ class DashboardState extends State<Dashboard> {
 
   void handleReturnedFromExercise() {
     if (!wasSearchFocusedBeforeNavigation) {
-      removeSearchFocus(); 
+      removeSearchFocus();
     } else {
       _searchBoxKey.currentState?.requestFocus();
     }

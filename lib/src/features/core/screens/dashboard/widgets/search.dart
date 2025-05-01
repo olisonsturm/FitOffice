@@ -41,6 +41,7 @@ class DashboardSearchBoxState extends State<DashboardSearchBox> {
       widget.onFocusChanged(_focusNode.hasFocus);
     });
   }
+
 //   State<DashboardSearchBox> createState() => _DashboardSearchBoxState();
 // }
 

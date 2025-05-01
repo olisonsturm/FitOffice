@@ -6,6 +6,7 @@ import 'package:fit_office/src/features/core/screens/profile/admin/delete_exerci
 import 'package:fit_office/src/features/core/screens/profile/admin/edit_exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fit_office/src/utils/helper/dialog_helper.dart';
 
 class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -162,7 +163,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                           Get.find<ExerciseTimerController>();
                       if (timerController.isRunning.value ||
                           timerController.isPaused.value) {
-                        await showDialogWithTimerPause(
+                        await showUnifiedDialog(
                           context: context,
                           builder: (_) => ActiveTimerDialog.forAction('edit'),
                         );
@@ -187,21 +188,21 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                           Get.find<ExerciseTimerController>();
                       if (timerController.isRunning.value ||
                           timerController.isPaused.value) {
-                        await showDialogWithTimerPause(
+                        await showUnifiedDialog<void>(
                           context: context,
-                          builder: (_) => ActiveTimerDialog.forAction('delete'),
+                          builder: (_) => ActiveTimerDialog.forAction('start'),
                         );
+
                         return;
                       }
 
-                      await showDeleteExerciseDialog(
+                      await showUnifiedDialog<void>(
                         context: context,
-                        exercise: exercise!,
-                        exerciseName: exercise!['name'],
-                        onSuccess: () {
-                          Navigator.of(context)
-                              .pop(); 
-                        },
+                        builder: (ctx) => DeleteExerciseDialog(
+                          exercise: exercise!,
+                          exerciseName: exercise!['name'],
+                          onSuccess: () => Navigator.of(context).pop(),
+                        ),
                       );
                     },
                   ),

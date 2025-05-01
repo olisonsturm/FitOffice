@@ -1,11 +1,11 @@
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/cancel_exercise.dart';
+import 'package:fit_office/src/utils/helper/dialog_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/view_exercise.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/end_exercise.dart';
-
 class GlobalExerciseOverlay {
   static final GlobalExerciseOverlay _instance =
       GlobalExerciseOverlay._internal();
@@ -164,7 +164,7 @@ class GlobalExerciseOverlay {
                                         color: tWhiteColor),
                                     onPressed: () async {
                                       final confirmed =
-                                          await showDialogWithTimerPause<bool>(
+                                          await showUnifiedDialog<bool>(
                                         context: context,
                                         builder: (_) => EndExerciseDialog(
                                           exerciseName: timerController
@@ -181,7 +181,7 @@ class GlobalExerciseOverlay {
                                         color: tWhiteColor),
                                     onPressed: () async {
                                       final confirmed =
-                                          await showDialogWithTimerPause<bool>(
+                                          await showUnifiedDialog<bool>(
                                         context: context,
                                         builder: (_) => CancelExerciseDialog(
                                           exerciseName: timerController
@@ -221,38 +221,4 @@ class GlobalExerciseOverlay {
   void setDialogOpen(bool isOpen) {
     _dialogIsOpen.value = isOpen;
   }
-}
-
-Future<T?> showDialogWithTimerPause<T>({
-  required BuildContext context,
-  required WidgetBuilder builder,
-}) async {
-  final timerController = Get.find<ExerciseTimerController>();
-  final overlayManager = GlobalExerciseOverlay();
-
-  final wasRunning =
-      timerController.isRunning.value && !timerController.isPaused.value;
-
-  if (wasRunning) {
-    timerController.pause();
-    timerController.autoPaused.value = true;
-  }
-
-  overlayManager.setDialogOpen(true);
-
-  final result = await showDialog<T>(
-
-    context: context,
-    barrierDismissible: false,
-    builder: builder,
-  );
-
-  overlayManager.setDialogOpen(false);
-
-  if (timerController.autoPaused.value) {
-    timerController.resume();
-    timerController.autoPaused.value = false;
-  }
-
-  return result;
 }
