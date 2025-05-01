@@ -182,7 +182,9 @@ class AllExercisesList extends StatelessWidget {
                 context.findAncestorStateOfType<DashboardState>();
             dashboardState?.wasSearchFocusedBeforeNavigation =
                 dashboardState.searchHasFocus;
-            dashboardState?.removeSearchFocus(); // Fokus ggf. bewusst entfernen
+            //dashboardState?.removeSearchFocus(); // Fokus ggf. bewusst entfernen
+            dashboardState?.wasSearchFocusedBeforeNavigation =
+                dashboardState.searchHasFocus;
 
             final result = await Navigator.push(
               context,

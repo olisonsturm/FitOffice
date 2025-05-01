@@ -24,8 +24,15 @@ Future<T?> showUnifiedDialog<T>({
 
   dashboard?.forceRedirectFocus();
 
-  FocusManager.instance.primaryFocus?.unfocus();
-  dashboard?.removeSearchFocus();
+  // FocusManager.instance.primaryFocus?.unfocus();
+  // dashboard?.removeSearchFocus();
+
+  if (dashboard?.searchHasFocus == true) {
+    dashboard?.wasSearchFocusedBeforeNavigation = true;
+  } else {
+    dashboard?.wasSearchFocusedBeforeNavigation = false;
+    FocusManager.instance.primaryFocus?.unfocus();
+  }
 
   // Timer pausieren, falls aktiv
   final wasRunning =

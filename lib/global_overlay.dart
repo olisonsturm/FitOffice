@@ -232,6 +232,8 @@ class GlobalExerciseOverlay {
     _overlayEntry = null;
   }
 
+  bool get isDialogOpen => _dialogIsOpen.value;
+
   void setDialogOpen(bool isOpen) {
     _dialogIsOpen.value = isOpen;
   }

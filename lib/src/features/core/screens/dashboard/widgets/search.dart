@@ -1,3 +1,4 @@
+import 'package:fit_office/global_overlay.dart';
 import 'package:flutter/material.dart';
 import '../../../../../constants/text_strings.dart';
 
@@ -42,11 +43,12 @@ class DashboardSearchBoxState extends State<DashboardSearchBox> {
 
     _focusNode.addListener(() {
       final hasFocus = _focusNode.hasFocus;
-      widget.onFocusChanged(hasFocus);
 
-      // Wenn Fokus verlassen wurde, Redirect setzen
-      if (!hasFocus) {
+      if (!hasFocus && !GlobalExerciseOverlay().isDialogOpen) {
+        widget.onFocusChanged(false);
         FocusScope.of(context).requestFocus(_redirectFocusNode);
+      } else if (hasFocus) {
+        widget.onFocusChanged(true);
       }
     });
   }
