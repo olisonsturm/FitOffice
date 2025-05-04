@@ -28,6 +28,8 @@ class SignUpFormWidget extends StatelessWidget {
               controller: controller.userName,
               validator: Helper.validateUsername,
               decoration: InputDecoration(
+                errorStyle: TextStyle(overflow: TextOverflow.visible),
+                errorMaxLines: 3,
                 label: RichText(
                   text: const TextSpan(
                     text: tUserName,
@@ -49,6 +51,8 @@ class SignUpFormWidget extends StatelessWidget {
               controller: controller.fullName,
               validator: Helper.validateFullName,
               decoration: const InputDecoration(
+                errorStyle: TextStyle(overflow: TextOverflow.visible),
+                errorMaxLines: 3,
                 label: Text(tFullName),
                 prefixIcon: Icon(LineAwesomeIcons.user_tag_solid),
               ),
@@ -59,6 +63,8 @@ class SignUpFormWidget extends StatelessWidget {
               controller: controller.email,
               validator: Helper.validateEmail,
               decoration: InputDecoration(
+                errorStyle: TextStyle(overflow: TextOverflow.visible),
+                errorMaxLines: 3,
                 label: RichText(
                   text: const TextSpan(
                     text: tEmail,
@@ -82,6 +88,8 @@ class SignUpFormWidget extends StatelessWidget {
                 validator: Helper.validatePassword,
                 obscureText: controller.showPassword.value ? false : true,
                 decoration: InputDecoration(
+                  errorStyle: TextStyle(overflow: TextOverflow.visible),
+                  errorMaxLines: 3,
                   label: RichText(
                     text: const TextSpan(
                       text: tPassword,
