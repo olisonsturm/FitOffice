@@ -112,6 +112,38 @@ class SignUpFormWidget extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(height: tFormHeight - 20),
+            Obx(
+                  () => TextFormField(
+                controller: controller.confirmPassword,
+                obscureText: controller.showPassword.value ? false : true,
+                validator: (value) => Helper.repeatPassword(value, controller),
+                decoration: InputDecoration(
+                  errorStyle: TextStyle(overflow: TextOverflow.visible),
+                  errorMaxLines: 3,
+                  label: RichText(
+                    text: const TextSpan(
+                      text: 'Confirm Password',
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(
+                          text: ' *',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ],
+                    ),
+                  ),
+                  prefixIcon: const Icon(Icons.fingerprint),
+                  suffixIcon: IconButton(
+                    icon: controller.showPassword.value
+                        ? const Icon(LineAwesomeIcons.eye)
+                        : const Icon(LineAwesomeIcons.eye_slash),
+                    onPressed: () =>
+                    controller.showPassword.value = !controller.showPassword.value,
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: tFormHeight - 10),
             Obx(
                   () => TPrimaryButton(

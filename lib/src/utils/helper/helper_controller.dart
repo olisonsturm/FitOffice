@@ -8,6 +8,7 @@ import '../../constants/text_strings.dart';
 
 class Helper extends GetxController {
 
+
   /* -- ============= VALIDATIONS ================ -- */
   static String? validateUsername(value) {
     if (value!.isEmpty) return tUserNameCannotEmpty;
@@ -57,6 +58,16 @@ class Helper extends GetxController {
     RegExp regex = RegExp(pattern);
     if (!regex.hasMatch(value)) {
       return tPasswordRequirements;
+    }
+    return null;
+  }
+
+  static String? repeatPassword(value, controller) {
+    if (value == null || value.isEmpty) {
+      return 'Please repeat your password';
+    }
+    if (value != controller.password.text) {
+      return 'Passwords do not match';
     }
     return null;
   }
