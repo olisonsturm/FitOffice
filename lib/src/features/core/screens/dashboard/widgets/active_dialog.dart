@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 
-
 class ActiveTimerDialog extends StatelessWidget {
   final String title;
   final String message;
@@ -19,28 +18,25 @@ class ActiveTimerDialog extends StatelessWidget {
       case 'delete':
         return const ActiveTimerDialog(
           title: tActiveExercise,
-          message:
-              'Bitte beende die laufende Übung, bevor du eine Übung löschen kannst.',
-          buttonText: 'Verstanden',
+          message: tActiveExerciseDialogMessageDelete,
+          buttonText: tActiveExerciseAnswer,
         );
       case 'edit':
         return const ActiveTimerDialog(
           title: tActiveExercise,
-          message:
-              'Bitte beende die laufende Übung, bevor du eine Übung bearbeiten kannst.',
-          buttonText: 'Verstanden',
+          message: tActiveExerciseDialogMessageEdit,
+          buttonText: tActiveExerciseAnswer,
         );
       case 'start':
         return const ActiveTimerDialog(
           title: tActiveExercise,
-          message:
-              'Bitte beende zuerst die aktuelle Übung, bevor du eine neue starten kannst.',
-          buttonText: 'Verstanden',
+          message: tActiveExerciseDialogMessageStart,
+          buttonText: tActiveExerciseAnswer,
         );
       default:
         return const ActiveTimerDialog(
           title: tActiveExercise,
-          message: tActiveExerciseErrorMsg,
+          message: tActiveExerciseDialogMessageDefault,
           buttonText: tActiveExerciseAnswer,
         );
     }

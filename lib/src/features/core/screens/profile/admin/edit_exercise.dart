@@ -431,7 +431,7 @@ class _EditExerciseState extends State<EditExercise> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           content: Text(
-                                              "Fehler beim Löschen des Videos: $e")),
+                                              '$tDeleteVideoFailed: $e')),
                                     );
                                   }
                                 }
@@ -463,7 +463,7 @@ class _EditExerciseState extends State<EditExercise> {
                               (uploadedVideoUrl == null &&
                                       originalVideo.isEmpty)
                                   ? tUploadVideo
-                                  : "Replace Video",
+                                  : tReplaceVideo,
                               style: const TextStyle(
                                 color: tBlackColor,
                                 fontWeight: FontWeight.w800,

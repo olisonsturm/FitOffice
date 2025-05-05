@@ -24,7 +24,7 @@ class ConfirmVideoDeleteDialog extends StatelessWidget {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      "Lösche Video", //tDeleteVideo,
+                      tDeleteVideo,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -34,7 +34,7 @@ class ConfirmVideoDeleteDialog extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      "Bist du sicher das Video löschen zu wollen", //tDeleteVideoConfirmation,
+                      tDeleteVideoMessage,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 18,
@@ -58,7 +58,7 @@ class ConfirmVideoDeleteDialog extends StatelessWidget {
                             ),
                             icon: const Icon(Icons.delete, color: tWhiteColor),
                             label: const Text(
-                              "Ja, Video löschen", //tDeleteVideo,
+                              tDeleteVideoPositive,
                               style: TextStyle(
                                 fontSize: 18,
                                 color: tWhiteColor,
@@ -83,7 +83,7 @@ class ConfirmVideoDeleteDialog extends StatelessWidget {
                             ),
                             icon: const Icon(Icons.undo, color: Colors.white),
                             label: const Text(
-                              tCancel,
+                              tDeleteVideoNegative,
                               style: TextStyle(
                                 fontSize: 18,
                                 color: Colors.white,

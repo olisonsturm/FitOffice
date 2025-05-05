@@ -24,7 +24,7 @@ class ReplaceVideoDialog extends StatelessWidget {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      "Video ersetzen?",
+                      tReplaceVideo,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -34,7 +34,7 @@ class ReplaceVideoDialog extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      "Sind Sie sicher, dass Sie das aktuelle Video ersetzen möchten?",
+                      tReplaceVideoMessage,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 18,
@@ -59,7 +59,7 @@ class ReplaceVideoDialog extends StatelessWidget {
                             ),
                             icon: const Icon(Icons.refresh, color: tWhiteColor),
                             label: const Text(
-                              "Ja, ersetzen",
+                              tReplaceVideoPositive,
                               style: TextStyle(
                                 fontSize: 18,
                                 color: tWhiteColor,
@@ -84,7 +84,7 @@ class ReplaceVideoDialog extends StatelessWidget {
                             ),
                             icon: const Icon(Icons.undo, color: Colors.white),
                             label: const Text(
-                              tCancel,
+                              tReplaceVideoNegative,
                               style: TextStyle(
                                 fontSize: 18,
                                 color: Colors.white,

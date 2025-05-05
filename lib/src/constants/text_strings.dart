@@ -189,10 +189,14 @@ const String tAbbreviationMind = "🧠";
 const String tAbbreviationFavorites = "❤️";
 
 
-// -- Active Exercises - Text
+// -- Active Exercises/Dialog - Text
 const String tActiveExercise = "Active Exercise";
-const String tActiveExerciseErrorMsg = "An exercise is already running. Please finish or cancel it before you start a new one.";
+const String tActiveExerciseDialogMessageStart = "An exercise is already running. Please finish or cancel it before you start a new one.";
 const String tActiveExerciseAnswer = "OK";
+const String tActiveExerciseDialogMessageDelete = "Please finish the current exercise before you can delete an exercise.";
+const String tActiveExerciseDialogMessageDefault = "Please finish the current exercise!";
+const String tActiveExerciseDialogMessageEdit = "Please finish the current exercise before you can edit an exercise.";
+
 
 // -- Admin Text
 const String tAddExercises = "ADD EXERCISES";
@@ -230,6 +234,7 @@ const String tUploadVideo = "Upload Video";
 const String tUploadVideoSuccess = "Video uploaded successfully";
 const String tNoVideoSelected = "No video has been selected";
 const String tVideoDeleteSuccess = "Video deleted successfully";
+const String tDeleteVideoFailed = "Video could not be deleted";
 
 // -- Exercise_View Texts
 const String tExerciseAbout = "About";
@@ -250,3 +255,17 @@ const String tCancelExercise = "Cancel Exercise";
 const String tCancelExerciseMessage = "Do you really want to canel the exercise? Your progress will be lost!";
 const String tCancelExercisePositive = "Cancel, exercise"; //"Ja ich will die Übung abbrechen";
 const String tCancelExerciseNegative = "Go back"; //"Nein, zurück";
+
+// -- Delete Video - Text
+const String tDeleteVideo = "Delete Video";
+const String tDeleteVideoMessage = "Are you sure you want to delete the video? This action cannot be undone.";
+const String tDeleteVideoPositive = "Yes, delete"; //"Ja, Video löschen";
+const String tDeleteVideoNegative = "No, go back"; //"Nein, zurück";
+
+
+// -- Replace Video - Text
+const String tReplaceVideo = "Replace Video";
+const String tReplaceVideoMessage = "Are you sure you want to replace the current video?";
+const String tReplaceVideoPositive = "Yes, replace"; //"Ja, Video ersetzen";
+const String tReplaceVideoNegative = "No, go back"; //"Nein, zurück";
+
