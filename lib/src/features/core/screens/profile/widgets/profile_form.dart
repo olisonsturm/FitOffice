@@ -77,6 +77,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileController());
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Form(
       key: _formKey,
@@ -105,6 +106,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
 
           /// -- FORGET PASSWORD BTN
           CustomProfileButton(
+            isDark: isDark,
             icon: LineAwesomeIcons.key_solid,
             label: tResetPassword,
             onPress: () {
@@ -120,6 +122,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
 
           /// -- Form Submit Button
           CustomProfileButton(
+            isDark: isDark,
             icon: LineAwesomeIcons.save_solid,
             label: tSaveProfile,
             onPress: isEdited
@@ -141,14 +144,15 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                 }
               }
                 : () {}, // Disable the button if no changes were made
-            iconColor: Colors.blue,
-            textColor: Colors.black,
+            iconColor: Colors.green,
+            textColor: Colors.green,
             isActive: isEdited,
           ),
           Divider(),
 
           /// -- Delete Account Button
           CustomProfileButton(
+            isDark: isDark,
             icon: LineAwesomeIcons.trash_solid,
             label: tDelete,
             onPress: () async {
