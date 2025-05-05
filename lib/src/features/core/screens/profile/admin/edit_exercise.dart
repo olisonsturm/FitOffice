@@ -388,7 +388,7 @@ class _EditExerciseState extends State<EditExercise> {
                                         style: TextStyle(
                                           color: isDarkMode
                                               ? Colors.white70
-                                              : tGreyColor,
+                                              : tDarkGreyColor,
                                         ),
                                       ),
                                     ),

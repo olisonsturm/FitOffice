@@ -10,6 +10,7 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/start_exe
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/end_exercise.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/video_player.dart';
 
 class ExerciseInfoTab extends StatefulWidget {
   final Map<String, dynamic> exerciseData;
@@ -30,9 +31,40 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
     final description =
         widget.exerciseData['description'] ?? tExerciseNoDescription;
+
+    final videoUrl = widget.exerciseData['video'];
+    final hasVideo = videoUrl != null &&
+        videoUrl is String &&
+        videoUrl.isNotEmpty &&
+        Uri.tryParse(videoUrl)?.hasAbsolutePath == true &&
+        (videoUrl.startsWith('http://') || videoUrl.startsWith('https://'));
+
+    Widget videoContent = hasVideo
+        ? SizedBox(
+            height: 200,
+            width: double.infinity,
+            child: VideoPlayerWidget(videoUrl: videoUrl),
+          )
+        : Container(
+            height: 200,
+            decoration: BoxDecoration(
+              color: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isDarkMode ? Colors.grey.shade700 : Colors.grey.shade300,
+              ),
+            ),
+            child: Center(
+              child: Text(
+                tNoVideoAvailable,
+                style: TextStyle(
+                  color: isDarkMode ? Colors.white70 : tDarkGreyColor,
+                ),
+              ),
+            ),
+          );
 
     return Obx(() {
       final isRunning = timerController.isRunning.value;
@@ -66,28 +98,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                         color: isDarkMode ? tWhiteColor : tBlackColor,
                       )),
                   const SizedBox(height: 12),
-                  Container(
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: isDarkMode
-                          ? Colors.grey.shade800
-                          : Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: isDarkMode
-                            ? Colors.grey.shade700
-                            : Colors.grey.shade300,
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        tNoVideoAvailable,
-                        style: TextStyle(
-                          color: isDarkMode ? Colors.white70 : Colors.grey,
-                        ),
-                      ),
-                    ),
-                  ),
+                  videoContent,
                   const SizedBox(height: 20),
                   Text(tExerciseDescription,
                       style: TextStyle(
