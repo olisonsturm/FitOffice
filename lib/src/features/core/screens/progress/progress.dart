@@ -3,14 +3,14 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class ProgressScreen extends StatefulWidget {
-  const ProgressScreen({super.key});
+class ProgressScreen1 extends StatefulWidget {
+  const ProgressScreen1({super.key});
 
   @override
-  ProgressScreenState createState() => ProgressScreenState();
+  ProgressScreen1State createState() => ProgressScreen1State();
 }
 
-class ProgressScreenState extends State<ProgressScreen>
+class ProgressScreen1State extends State<ProgressScreen1>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   Path? _path;

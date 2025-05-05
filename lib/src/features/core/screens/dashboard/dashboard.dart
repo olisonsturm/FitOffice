@@ -1,4 +1,5 @@
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/statistics.dart';
+import 'package:fit_office/src/features/core/screens/progress/progress_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/colors.dart';
@@ -12,7 +13,6 @@ import 'package:fit_office/src/features/core/screens/profile/profile_screen.dart
 import '../../../authentication/models/user_model.dart';
 import '../../controllers/db_controller.dart';
 import '../../controllers/profile_controller.dart';
-import '../progress/progress.dart';
 import 'exercise_filter.dart';
 
 class Dashboard extends StatefulWidget {
@@ -59,7 +59,7 @@ class DashboardState extends State<Dashboard> {
       _searchHasFocus = false;
     });
   }
-
+  //TODO: Unused by now
   void _toggleFavorite(String exerciseName) async {
     final user = await _profileController.getUserData();
     final isFavorite = _userFavorites.contains(exerciseName);
@@ -137,7 +137,7 @@ class DashboardState extends State<Dashboard> {
             index: _selectedIndex,
             children: [
               // 0: Progress Screen
-              const ProgressScreen(),
+              ProgressScreen(),
 
               // 1: Dashboard/Home
               GestureDetector(
@@ -291,7 +291,7 @@ class DashboardState extends State<Dashboard> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.book),
-            label: 'Library',
+            label: 'Exercises',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.insert_chart),
@@ -324,7 +324,7 @@ class _StickySearchBar extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Material(
-      elevation: overlapsContent ? 4 : 0, // Shadow beim Scrollen
+      elevation: overlapsContent ? 4 : 0,
       child: child,
     );
   }
