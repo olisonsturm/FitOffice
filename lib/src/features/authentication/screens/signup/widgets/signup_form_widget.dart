@@ -126,7 +126,7 @@ class SignUpFormWidget extends StatelessWidget {
                 autofillHints: const [AutofillHints.newPassword],
                 obscureText: !controller.showPassword.value,
                 validator: (value) =>
-                    Helper.repeatPassword(value, controller),
+                    Helper.repeatPassword(value!, controller),
                 decoration: InputDecoration(
                   errorStyle:
                   const TextStyle(overflow: TextOverflow.visible),

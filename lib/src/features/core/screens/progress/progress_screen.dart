@@ -1,9 +1,10 @@
+import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/sizes.dart';
 import 'package:fit_office/src/features/core/screens/progress/widgets/progress_chapter_widget.dart';
 import 'package:flutter/material.dart';
 
 class ProgressScreen extends StatefulWidget {
-  const ProgressScreen({Key? key}) : super(key: key);
+  const ProgressScreen({super.key});
 
   @override
   State<ProgressScreen> createState() => ProgressScreenState();
@@ -36,14 +37,14 @@ class ProgressScreenState extends State<ProgressScreen> {
     final context = _chapterKeys[chapterIndex].currentContext;
     if (context != null) {
       final RenderBox renderBox = context.findRenderObject() as RenderBox;
-      return renderBox.size.height; // Returns the height of the item
+      return renderBox.size.height + tDefaultSize; // Returns the height of the item
     }
     return 0.0; // Default height if context is null
   }
   
   // TODO: Workaround weil Chapter finden und an den Anfang davon scrollen noch nicht funktioniert
   void _scrollToChapter(int chapterIndex) {
-    final double targetOffset = _scrollController.offset + _getItemHeight(chapterIndex) + 15.75;
+    final double targetOffset = _scrollController.offset + _getItemHeight(chapterIndex);
 
     _scrollController.animateTo(
       targetOffset,
@@ -84,6 +85,7 @@ class ProgressScreenState extends State<ProgressScreen> {
 
             return ProgressChapterWidget(
               key: _chapterKeys[chapterIndex], // GlobalKey für jedes Kapitel
+              chapterIndex: chapterIndex,
               title: 'Chapter ${chapterIndex + 1}',
               currentStep: currentStep,
               startStep: chapterStart,
@@ -95,8 +97,10 @@ class ProgressScreenState extends State<ProgressScreen> {
           },
         ),
       ),
+      //TODO Only temporary until setps get counted in user model
       floatingActionButton: FloatingActionButton(
         onPressed: advanceStep,
+        backgroundColor: tPrimaryColor,
         child: const Icon(Icons.arrow_forward),
       ),
     );

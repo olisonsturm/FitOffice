@@ -10,6 +10,7 @@ class ProgressChapterWidget extends StatelessWidget {
   final int stepCount;
   final double screenWidth;
   final double screenHeight;
+  final int chapterIndex;
   final bool isLocked;
 
   const ProgressChapterWidget({
@@ -20,13 +21,16 @@ class ProgressChapterWidget extends StatelessWidget {
     required this.stepCount,
     required this.screenWidth,
     required this.screenHeight,
+    required this.chapterIndex,
     this.isLocked = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final List<Offset> pawPositions = List.generate(stepCount, (index) {
-      final double x = 1 - screenWidth * (0.33 * math.cos(index * math.pi / 4));
+      final double x = (chapterIndex % 2 == 0) // Check if chapterIndex is even
+          ? screenWidth * (0.33 * math.cos(index * math.pi / 4))
+          : 1 - screenWidth * (0.33 * math.cos(index * math.pi / 4));
       final double y = screenHeight * (index * 0.125);
       return Offset(x, y);
     });
