@@ -38,7 +38,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final themeController = Get.put(_ThemeController());
 
     final Widget centerTitle = subtitle == null
@@ -66,6 +66,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   color: isDarkMode ? Colors.white70 : Colors.black45,
+
                 ),
               ),
             ],

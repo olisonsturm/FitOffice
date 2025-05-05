@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 /* -- LIST OF ALL COLORS -- */
-const tPrimaryColor = Color(0xFFFF0000);
+const tPrimaryColor = Color(0xFFFF9E20);
 const tSecondaryColor = Color(0xFF79848B);
-const tAccentColor = Color(0xFF8A1218);
+const tAccentColor = Color(0xFF329BF4);
 
 const tWhiteColor = Colors.white;
 const tDarkColor = Color(0xff262627);
@@ -18,11 +18,6 @@ const tFinishExerciseColor = Color(0xFF4CAF50);
 const tStartExerciseColor = Colors.green;
 const tGreyColor = Colors.grey;
 
-
-// -- SOCIAL Button COLORS
-const tGoogleBgColor = Color(0xFFDFEFFF);
-const tGoogleForegroundColor = Color(0xFF167EE6);
-const tFacebookBgColor = Color(0xFF1877F2);
 
 // -- ON-BOARDING COLORS
 const tOnBoardingPage1Color = Colors.white;

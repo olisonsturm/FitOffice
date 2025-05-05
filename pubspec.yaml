@@ -45,6 +45,7 @@ dependencies:
   cached_network_image: ^3.4.0
   video_player: ^2.9.5
   chewie: ^1.10.0
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:

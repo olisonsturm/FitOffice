@@ -13,6 +13,7 @@ import '../../../authentication/models/user_model.dart';
 import '../../controllers/db_controller.dart';
 import '../../controllers/profile_controller.dart';
 import '../progress/progress.dart';
+import 'exercise_filter.dart';
 
 final GlobalKey<DashboardState> dashboardKey = GlobalKey<DashboardState>();
 
@@ -133,6 +134,22 @@ class DashboardState extends State<Dashboard> {
         showBackButton: false,
         showDarkModeToggle: true,
         showStreak: true,
+        showFavoriteIcon: true,
+        subtitle: 'FitOffice@DHBW',
+        onToggleFavorite: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ExerciseFilter(
+                heading: tFavorites,
+                showOnlyFavorites: true,
+              ),
+            ),
+          ).then((_) {
+            _loadUserFavorites();
+            _categoriesKey.currentState?.refreshData();
+          });
+        },
       ),
       body: Stack(
         children: [
