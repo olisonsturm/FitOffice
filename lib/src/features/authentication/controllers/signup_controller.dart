@@ -17,6 +17,8 @@ class SignUpController extends GetxController {
   final userName = TextEditingController();
   final fullName = TextEditingController();
 
+  final confirmPassword = TextEditingController();
+
   /// Loader
   final isLoading = false.obs;
 

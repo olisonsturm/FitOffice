@@ -9,38 +9,39 @@ import '../../../../../utils/helper/helper_controller.dart';
 import '../../forget_password/forget_password_options/forget_password_model_bottom_sheet.dart';
 
 class LoginFormWidget extends StatelessWidget {
-  const LoginFormWidget({
-    super.key,
-  });
+  const LoginFormWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(LoginController());
     return Container(
       padding: const EdgeInsets.only(top: tFormHeight - 15, bottom: 10),
-      child: Form(
-        key: controller.loginFormKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// -- Email Field
-            TextFormField(
-              validator: Helper.validateEmail,
-              controller: controller.email,
-              decoration:
-                  const InputDecoration(prefixIcon: Icon(LineAwesomeIcons.user), labelText: tEmail, hintText: tEmail),
-            ),
-            const SizedBox(height: tFormHeight - 20),
+      child: AutofillGroup(
+        child: Form(
+          key: controller.loginFormKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Email Field
+              TextFormField(
+                controller: controller.email,
+                autofillHints: const [AutofillHints.username],
+                validator: Helper.validateEmail,
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(LineAwesomeIcons.user),
+                  labelText: tEmail,
+                  hintText: tEmail,
+                ),
+              ),
+              const SizedBox(height: tFormHeight - 20),
 
-            /// -- Password Field
-            Obx(
-              () => TextFormField(
+              // Password Field
+              Obx(() => TextFormField(
                 controller: controller.password,
-                validator: (value) {
-                  if (value!.isEmpty) return 'Enter your password';
-                  return null;
-                },
-                obscureText: controller.showPassword.value ? false : true,
+                autofillHints: const [AutofillHints.password],
+                validator: (value) =>
+                value!.isEmpty ? 'Enter your password' : null,
+                obscureText: !controller.showPassword.value,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.fingerprint),
                   labelText: tPassword,
@@ -49,33 +50,35 @@ class LoginFormWidget extends StatelessWidget {
                     icon: controller.showPassword.value
                         ? const Icon(LineAwesomeIcons.eye)
                         : const Icon(LineAwesomeIcons.eye_slash),
-                    onPressed: () => controller.showPassword.value = !controller.showPassword.value,
+                    onPressed: () => controller.showPassword.value =
+                    !controller.showPassword.value,
                   ),
                 ),
-              ),
-            ),
-            const SizedBox(height: tFormHeight - 20),
+              )),
+              const SizedBox(height: tFormHeight - 20),
 
-            /// -- FORGET PASSWORD BTN
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () => ForgetPasswordScreen.buildShowModalBottomSheet(context, email: controller.email.text, enableEdit: true),
-                child: const Text(tForgotPassword),
+              // Forget password
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () => ForgetPasswordScreen.buildShowModalBottomSheet(
+                      context,
+                      email: controller.email.text,
+                      enableEdit: true),
+                  child: const Text(tForgotPassword),
+                ),
               ),
-            ),
 
-            /// -- LOGIN BTN
-            Obx(
-              () => TPrimaryButton(
-                isLoading: controller.isLoading.value ? true : false,
+              // Login Button
+              Obx(() => TPrimaryButton(
+                isLoading: controller.isLoading.value,
                 text: tLogin.tr,
                 onPressed: controller.isLoading.value
                     ? () {}
                     : () => controller.login(),
-              ),
-            ),
-          ],
+              )),
+            ],
+          ),
         ),
       ),
     );

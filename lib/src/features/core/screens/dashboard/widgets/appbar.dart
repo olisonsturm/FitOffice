@@ -26,7 +26,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final themeController = Get.put(_ThemeController());
 
     final Widget centerTitle = subtitle == null
@@ -35,7 +35,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
             style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold, // IMMER fett
-                color: isDarkMode ? tWhiteColor : tBlackColor),
+                color: isDark ? tWhiteColor : tBlackColor),
             textAlign: TextAlign.center,
           )
         : Column(
@@ -46,21 +46,21 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold, // IMMER fett
-                    color: isDarkMode ? tWhiteColor : tBlackColor),
+                    color: isDark ? tWhiteColor : tBlackColor),
               ),
               Text(
                 subtitle!,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold, // SUBTITLE auch fett
-                  color: isDarkMode ? Colors.white70 : Colors.black45,
+                  color: isDark ? Colors.white70 : Colors.black45,
                 ),
               ),
             ],
           );
 
     return AppBar(
-      backgroundColor: isDarkMode ? tBlackColor : tWhiteColor,
+      backgroundColor: isDark ? tBlackColor : tWhiteColor,
       elevation: 0,
       automaticallyImplyLeading: false,
       centerTitle: true,
@@ -76,7 +76,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
               builder: (context) {
                 if (showBackButton) {
                   return IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black),
+                    icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : Colors.black),
                     onPressed: onBack ?? () => Navigator.of(context).pop(),
                   );
                 } else {
@@ -98,7 +98,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                       isFavorite ? Icons.favorite : Icons.favorite_border,
                       color: isFavorite
                           ? Colors.red
-                          : (isDarkMode ? tPaleWhiteColor : tPaleBlackColor),
+                          : (isDark ? tPaleWhiteColor : tPaleBlackColor),
                     ),
                     onPressed: onToggleFavorite,
                   ),
@@ -106,7 +106,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                   IconButton(
                     icon: Icon(
                       Icons.dark_mode,
-                      color: isDarkMode ? tWhiteColor : tDarkColor,
+                      color: isDark ? tWhiteColor : tDarkColor,
                     ),
                     onPressed: () => themeController.toggleTheme(),
                   ),

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class FactDisplayCard extends StatelessWidget {
@@ -6,6 +7,7 @@ class FactDisplayCard extends StatelessWidget {
   final String subtitle; // Normal text
   final Color iconColor;
   final Color backgroundColor;
+  final bool isDark;
 
   const FactDisplayCard({
     super.key,
@@ -14,6 +16,7 @@ class FactDisplayCard extends StatelessWidget {
     required this.subtitle,
     this.iconColor = Colors.blue,
     this.backgroundColor = Colors.white,
+    required this.isDark,
   });
 
   @override
@@ -22,7 +25,7 @@ class FactDisplayCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: isDark ? Colors.grey[800] : backgroundColor,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: Colors.grey.withOpacity(0.5),
@@ -30,21 +33,25 @@ class FactDisplayCard extends StatelessWidget {
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, color: iconColor, size: 40),
-          Text(
+          AutoSizeText(
             title,
-            style: const TextStyle(
+            maxLines: 1,
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
+              color: isDark ? Colors.white : Colors.black,
             ),
             textAlign: TextAlign.center,
           ),
-          Text(
+          AutoSizeText(
             subtitle,
-            style: const TextStyle(
+            maxLines: 1,
+            style: TextStyle(
               fontSize: 14,
-              color: Colors.black54,
+              color: isDark ? Colors.white70 : Colors.black54,
             ),
             textAlign: TextAlign.center,
           ),

@@ -36,6 +36,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final txtTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     controller.fetchUserData();
 
@@ -88,6 +89,7 @@ class ProfileScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: FactDisplayCard(
+                          isDark: isDark,
                           icon: LineAwesomeIcons.dumbbell_solid,
                           title: "100",
                           subtitle: "Completed Workouts",
@@ -97,6 +99,7 @@ class ProfileScreen extends StatelessWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         child: FactDisplayCard(
+                          isDark: isDark,
                           icon: LineAwesomeIcons.map_marked_alt_solid,
                           title: _extractCampusFromEmail(user.email),
                           subtitle: "Campus",
@@ -108,17 +111,19 @@ class ProfileScreen extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex: 5,
                         child: CustomProfileButton(
+                          isDark: isDark,
                           icon: LineAwesomeIcons.user_edit_solid,
                           label: tEditProfile,
                           onPress: () => UpdateProfileModal.show(context, user),
                         ),
                       ),
                       const SizedBox(width: 10),
-                      Expanded(
-                        flex: 1,
+                      Flexible(
+                        flex: 3,
                         child: CustomProfileButton(
+                          isDark: isDark,
                           icon: LineAwesomeIcons.sign_out_alt_solid,
                           iconColor: Colors.red,
                           label: "Logout",
@@ -137,6 +142,7 @@ class ProfileScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: FactDisplayCard(
+                          isDark: isDark,
                           icon: Icons.group,
                           title: "4",
                           subtitle: "Friends",
@@ -146,6 +152,7 @@ class ProfileScreen extends StatelessWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         child: FactDisplayCard(
+                          isDark: isDark,
                           icon: LineAwesomeIcons.award_solid,
                           title: "1",
                           subtitle: "Place",
@@ -158,6 +165,7 @@ class ProfileScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: FactDisplayCard(
+                          isDark: isDark,
                           icon: Icons.star,
                           title: "5",
                           subtitle: "Friend Streaks",
@@ -171,20 +179,29 @@ class ProfileScreen extends StatelessWidget {
                   FriendRequestsWidget(currentUserId: user.id!),
                   const SizedBox(height: 10),
                   CustomProfileButton(
+                    isDark: isDark,
                     icon: LineAwesomeIcons.user_plus_solid,
                     label: "Add Friends",
                     onPress: () => Get.to(() => AddFriendsScreen(currentUserId: user.id!)),
+                  ),
+                  CustomProfileButton(
+                    isDark: isDark,
+                    icon: LineAwesomeIcons.user_friends_solid,
+                    label: "View Friends",
+                    onPress: () => Get.to(() => const AllUsersPage()),
                   ),
                   const Divider(),
                   const SizedBox(height: 10),
                   Text("Settings", style: txtTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
                   CustomProfileButton(
+                    isDark: isDark,
                     icon: LineAwesomeIcons.bell_solid,
                     label: "Notifications",
                     onPress: () {},
                   ),
                   CustomProfileButton(
+                    isDark: isDark,
                     icon: LineAwesomeIcons.language_solid,
                     label: "Language",
                     onPress: () {},
@@ -194,6 +211,7 @@ class ProfileScreen extends StatelessWidget {
                   Text("Information", style: txtTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
                   CustomProfileButton(
+                    isDark: isDark,
                     icon: LineAwesomeIcons.info_solid,
                     label: "About",
                     onPress: () {},
@@ -202,6 +220,7 @@ class ProfileScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: FactDisplayCard(
+                          isDark: isDark,
                           icon: Icons.timer,
                           title: "24h",
                           subtitle: "Support",
@@ -211,6 +230,7 @@ class ProfileScreen extends StatelessWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         child: FactDisplayCard(
+                          isDark: isDark,
                           icon: LineAwesomeIcons.bug_solid,
                           title: "No Bugs",
                           subtitle: "Bugs Found",
@@ -220,35 +240,41 @@ class ProfileScreen extends StatelessWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         child: FactDisplayCard(
+                          isDark: isDark,
                           icon: LineAwesomeIcons.info_circle_solid,
                           title: "Version 1.0",
-                          subtitle: "App Version",
+                          subtitle: "FitOffice",
                           iconColor: Colors.blue,
                         ),
                       ),
                     ],
                   ),
                   CustomProfileButton(
+                    isDark: isDark,
                     icon: LineAwesomeIcons.question_circle_solid,
                     label: "Help & Support",
                     onPress: () {},
                   ),
                   CustomProfileButton(
+                    isDark: isDark,
                     icon: LineAwesomeIcons.bug_solid,
                     label: "Report a Bug",
                     onPress: () {},
                   ),
                   CustomProfileButton(
+                    isDark: isDark,
                     icon: LineAwesomeIcons.file_contract_solid,
                     label: "Terms & Conditions",
                     onPress: () {},
                   ),
                   CustomProfileButton(
+                    isDark: isDark,
                     icon: LineAwesomeIcons.file_signature_solid,
                     label: "Privacy Policy",
                     onPress: () {},
                   ),
                   CustomProfileButton(
+                    isDark: isDark,
                     icon: LineAwesomeIcons.file_contract_solid,
                     label: "Licenses",
                     onPress: () {},
@@ -259,21 +285,25 @@ class ProfileScreen extends StatelessWidget {
                     Text("Admin Settings", style: txtTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 10),
                     CustomProfileButton(
+                      isDark: isDark,
                       icon: Icons.add,
                       label: tAddExercises,
                       onPress: () => Get.to(() => AddExercises(currentUserId: user.id!)),
                     ),
                     CustomProfileButton(
+                      isDark: isDark,
                       icon: Icons.delete,
                       label: tDeleteEditUser,
                       onPress: () => Get.to(() => const AllUsersPage()),
                     ),
                     CustomProfileButton(
+                      isDark: isDark,
                       icon: Icons.person_add,
                       label: tAddUser,
                       onPress: () => Get.to(() => const EditUserPage()),
                     ),
                     CustomProfileButton(
+                      isDark: isDark,
                       icon: LineAwesomeIcons.user_check_solid,
                       label: "User Management",
                       onPress: () => Get.to(() => const AllUsersPage()),
@@ -291,7 +321,7 @@ class ProfileScreen extends StatelessWidget {
                             "Proudly crafted with ❤️ and ☕",
                             textAlign: TextAlign.center,
                             style: txtTheme.bodyMedium?.copyWith(
-                              color: Colors.blueGrey[700],
+                              color: isDark ? Colors.grey : Colors.blueGrey[700],
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1.1,
                             ),
@@ -301,7 +331,7 @@ class ProfileScreen extends StatelessWidget {
                             "by passionate students of\nHealth Management & Business Information Systems\nat DHBW Ravensburg",
                             textAlign: TextAlign.center,
                             style: txtTheme.bodySmall?.copyWith(
-                              color: Colors.blueGrey[400],
+                              color: isDark ? Colors.grey : Colors.blueGrey[700],
                               height: 1.6,
                             ),
                           ),
@@ -330,6 +360,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  //TODO: all PopUpModals with Yes and No should be in one style!
   void _showLogoutModal() {
     Get.defaultDialog(
       title: "LOGOUT",
