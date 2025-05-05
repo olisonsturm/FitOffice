@@ -9,6 +9,7 @@ import 'package:string_similarity/string_similarity.dart';
 class DbController {
   late UserModel user;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   Future<String?> fetchActiveStreakSteps() async {
     final userId = user.id;
     //This query must be edited when database structure is defined
@@ -199,38 +200,35 @@ class DbController {
   }
 
   Future<void> addFavorite(String email, String exerciseName) async {
-  final exerciseQuery = await firestore
-      .collection('exercises')
-      .where('name', isEqualTo: exerciseName)
-      .get();
-  if (exerciseQuery.docs.isEmpty) return;
+    final exerciseQuery = await firestore
+        .collection('exercises')
+        .where('name', isEqualTo: exerciseName)
+        .get();
+    if (exerciseQuery.docs.isEmpty) return;
 
-  final exerciseDoc = exerciseQuery.docs.first;
-  final exerciseRef = exerciseDoc.reference;
+    final exerciseDoc = exerciseQuery.docs.first;
+    final exerciseRef = exerciseDoc.reference;
 
-  final userQuery = await firestore
-      .collection('users')
-      .where('email', isEqualTo: email)
-      .get();
-  if (userQuery.docs.isEmpty) return;
+    final userQuery = await firestore
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+    if (userQuery.docs.isEmpty) return;
 
-  final userDoc = userQuery.docs.first;
+    final userDoc = userQuery.docs.first;
 
-  // ➔ Jetzt prüfen, ob die Favorit bereits existiert!
-  final favoriteQuery = await userDoc.reference
-      .collection('favorites')
-      .where('exercise', isEqualTo: exerciseRef)
-      .get();
+    // ➔ Jetzt prüfen, ob die Favorit bereits existiert!
+    final favoriteQuery = await userDoc.reference
+        .collection('favorites')
+        .where('exercise', isEqualTo: exerciseRef)
+        .get();
 
-  if (favoriteQuery.docs.isEmpty) {
-    // Nur wenn noch nicht vorhanden, hinzufügen!
-    await userDoc.reference.collection('favorites').add({
-      'exercise': exerciseRef,
-      'addedAt': FieldValue.serverTimestamp()
-    });
+    if (favoriteQuery.docs.isEmpty) {
+      // Nur wenn noch nicht vorhanden, hinzufügen!
+      await userDoc.reference.collection('favorites').add(
+          {'exercise': exerciseRef, 'addedAt': FieldValue.serverTimestamp()});
+    }
   }
-}
-
 
   Future<void> removeFavorite(String email, String exerciseName) async {
     final exerciseQuery = await firestore

@@ -250,6 +250,11 @@ const String tAllResults = "All results";
 const String tRemoved = " removed";
 const String tExceptionRemoveFriend = "Couldn't remove friend.";
 const String tFriendshipRequestWithdraw = "Friendship request for following user has been withdrawn: ";
+const String tDeleteFriend = "Delete friend";
+const String tSendRequest = "Send friendship request";
+const String tFriendshipDeleted = "Friend deleted";
+const String tRequestSent = "Request sent";
+const String tSentRequestToUser = "You sent a request to following user: ";
 
 // -- Exercise_View Texts
 const String tExerciseAbout = "About";
