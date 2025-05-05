@@ -139,7 +139,7 @@ class DashboardState extends State<Dashboard> {
               // 0: Progress Screen
               ProgressScreen(),
 
-              // 1: Dashboard/Home
+              // 1: Exercise Library TODO: Add Obx() support to update User Infos directly as Olison in ProfilScreen did.
               GestureDetector(
                 onTap: () {
                   FocusScope.of(context).unfocus();
@@ -210,11 +210,7 @@ class DashboardState extends State<Dashboard> {
                               ),
                             ),
                             const Divider(
-                              thickness: 1.8,
                               height: 0.8,
-                              color: Color.fromARGB(255, 190, 190, 190),
-                              indent: 0,
-                              endIndent: 0,
                             ),
                           ],
                         ),

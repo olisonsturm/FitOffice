@@ -31,9 +31,10 @@ class ProgressChapterWidget extends StatelessWidget {
       return Offset(x, y);
     });
 
-    final Color inactiveColor = Colors.grey.shade300;
+    final Color? inactiveColor = Colors.grey[500];
     final Color activeColor = tSecondaryColor;
     final Color completedColor = tPrimaryColor;
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
       children: [
@@ -46,7 +47,11 @@ class ProgressChapterWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: isLocked ? inactiveColor : Colors.black,
+                color: isLocked
+                    ? inactiveColor
+                    : isDark
+                    ? Colors.white
+                    : Colors.black,
               ),
             ),
             if (isLocked)
