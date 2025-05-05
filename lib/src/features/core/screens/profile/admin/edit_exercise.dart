@@ -4,6 +4,8 @@ import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/video_player.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/upload_video.dart';
+import 'package:fit_office/src/features/core/screens/profile/admin/widgets/delete_video.dart';
+import 'package:fit_office/src/features/core/screens/profile/admin/widgets/replace_video.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/save_button.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -164,10 +166,12 @@ class _EditExerciseState extends State<EditExercise> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(tEditExerciseHeading),
-        backgroundColor: tCardBgColor,
+        backgroundColor: isDarkMode ? tDarkGreyColor : tCardBgColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -176,35 +180,96 @@ class _EditExerciseState extends State<EditExercise> {
             children: [
               TextField(
                 controller: _nameController,
-                decoration: const InputDecoration(
+                style:
+                    TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+                decoration: InputDecoration(
                   labelText: tName,
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: tBottomNavBarSelectedColor),
+                  floatingLabelStyle: TextStyle(
+                      color: tBottomNavBarSelectedColor,
+                      fontWeight: FontWeight.bold),
+                  filled: true,
+                  fillColor: isDarkMode ? Colors.grey[850] : Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                        color: isDarkMode ? Colors.white24 : Colors.black12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide:
+                        BorderSide(color: tBottomNavBarSelectedColor, width: 2),
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: _descriptionController,
                 maxLines: 5,
-                decoration: const InputDecoration(
+                style:
+                    TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+                decoration: InputDecoration(
                   labelText: tDescription,
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: tBottomNavBarSelectedColor),
+                  floatingLabelStyle: TextStyle(
+                      color: tBottomNavBarSelectedColor,
+                      fontWeight: FontWeight.bold),
+                  filled: true,
+                  fillColor: isDarkMode ? Colors.grey[850] : Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                        color: isDarkMode ? Colors.white24 : Colors.black12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide:
+                        BorderSide(color: tBottomNavBarSelectedColor, width: 2),
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: tCategory,
-                  border: OutlineInputBorder(),
-                ),
                 value: _selectedCategory,
-                items: _categories.map((cat) {
-                  return DropdownMenuItem(
+                decoration: InputDecoration(
+                  labelText: tCategory,
+                  labelStyle: TextStyle(color: tBottomNavBarSelectedColor),
+                  floatingLabelStyle:
+                      TextStyle(color: tBottomNavBarSelectedColor),
+                  filled: true,
+                  fillColor: isDarkMode ? Colors.grey[850] : Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: isDarkMode ? Colors.white24 : Colors.black12,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                      color: tBottomNavBarSelectedColor,
+                      width: 2,
+                    ),
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                ),
+                dropdownColor: isDarkMode ? Colors.grey[850] : Colors.white,
+                iconEnabledColor: tBottomNavBarSelectedColor,
+                style: TextStyle(
+                  color: isDarkMode ? Colors.white : Colors.black,
+                  fontSize: 16,
+                ),
+                items: _categories.map((String cat) {
+                  return DropdownMenuItem<String>(
                     value: cat,
                     child: Text(cat),
                   );
                 }).toList(),
-                onChanged: (value) {
-                  setState(() => _selectedCategory = value);
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedCategory = newValue!;
+                  });
                   _checkIfChanged();
                 },
               ),
@@ -213,126 +278,194 @@ class _EditExerciseState extends State<EditExercise> {
                   ? const CircularProgressIndicator()
                   : Column(
                       children: [
-                        if ((uploadedVideoUrl ?? originalVideo).isNotEmpty) ...[
-                          Stack(
-                            alignment: Alignment.topRight,
-                            children: [
-                              SizedBox(
-                                height: 200,
-                                width: double.infinity,
-                                child: VideoPlayerWidget(
-                                    videoUrl:
-                                        uploadedVideoUrl ?? originalVideo),
-                              ),
-                              Positioned(
-                                top: 8,
-                                right: 8,
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.white70,
-                                  child: IconButton(
-                                    icon: const Icon(Icons.delete,
-                                        color: Colors.red),
-                                    onPressed: () async {
-                                      final videoUrlToDelete =
-                                          uploadedVideoUrl ?? originalVideo;
-                                      if (videoUrlToDelete.isNotEmpty) {
-                                        try {
-                                          final storageRef = FirebaseStorage
-                                              .instance
-                                              .refFromURL(videoUrlToDelete);
-                                          await storageRef.delete();
+                        Builder(
+                          builder: (context) {
+                            final videoUrl = uploadedVideoUrl ?? originalVideo;
 
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                                content:
-                                                    Text(tVideoDeleteSuccess)),
-                                          );
+                            final hasVideo = videoUrl.isNotEmpty &&
+                                Uri.tryParse(videoUrl)?.hasAbsolutePath ==
+                                    true &&
+                                (videoUrl.startsWith('http://') ||
+                                    videoUrl.startsWith('https://'));
 
-                                          setState(() {
-                                            uploadedVideoUrl = null;
-                                            originalVideo = '';
-                                          });
+                            return hasVideo
+                                ? Stack(
+                                    alignment: Alignment.topRight,
+                                    children: [
+                                      SizedBox(
+                                        height: 200,
+                                        width: double.infinity,
+                                        child: VideoPlayerWidget(
+                                            videoUrl: videoUrl),
+                                      ),
+                                      Positioned(
+                                        top: 30,
+                                        right: 4,
+                                        child: IconButton(
+                                          icon: const Icon(Icons.delete,
+                                              color: Colors.red),
+                                          onPressed: () async {
+                                            final confirm =
+                                                await showDialog<bool>(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (context) =>
+                                                  const ConfirmVideoDeleteDialog(),
+                                            );
 
-                                          _checkIfChanged();
-                                        } catch (e) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(content: Text("$e")),
-                                          );
-                                        }
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                        ],
+                                            if (confirm != true) return;
+
+                                            try {
+                                              final storageRef = FirebaseStorage
+                                                  .instance
+                                                  .refFromURL(videoUrl);
+                                              await storageRef.delete();
+
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                    content: Text(
+                                                        tVideoDeleteSuccess)),
+                                              );
+
+                                              setState(() {
+                                                uploadedVideoUrl = null;
+                                                originalVideo = '';
+                                              });
+
+                                              _checkIfChanged();
+                                            } catch (e) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(content: Text("$e")),
+                                              );
+                                            }
+                                          },
+                                          iconSize: 28,
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Container(
+                                    height: 200,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: isDarkMode
+                                          ? Colors.grey.shade800
+                                          : Colors.grey.shade200,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: isDarkMode
+                                            ? Colors.grey.shade700
+                                            : Colors.grey.shade300,
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        tNoVideoAvailable,
+                                        style: TextStyle(
+                                          color: isDarkMode
+                                              ? Colors.white70
+                                              : Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                          },
+                        ),
+                        const SizedBox(height: 12), 
                         Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.grey.shade300),
+                            color: isDarkMode ? tDarkGreyColor : Colors.white,
+                            border: Border.all(
+                              color: isDarkMode
+                                  ? Colors.grey.shade700
+                                  : Colors.grey.shade300,
+                            ),
                             borderRadius: BorderRadius.circular(12),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 4,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
+                            boxShadow: isDarkMode
+                                ? []
+                                : const [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 4,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
                           ),
                           child: TextButton.icon(
                             style: TextButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 16),
-                              foregroundColor: (uploadedVideoUrl == null &&
-                                      originalVideo.isEmpty)
-                                  ? Colors.blue
-                                  : Colors.grey,
                             ),
-                            onPressed: (uploadedVideoUrl == null &&
-                                    originalVideo.isEmpty)
-                                ? () async {
-                                    String videoUrl = await uploadVideo();
-                                    if (videoUrl.isNotEmpty) {
-                                      await initVideoPlayer(videoUrl);
-                                      setState(() {
-                                        uploadedVideoUrl = videoUrl;
-                                      });
-                                      _checkIfChanged();
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                            content: Text(tUploadVideoSuccess)),
-                                      );
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                            content: Text(tNoVideoSelected)),
-                                      );
-                                    }
+                            onPressed: () async {
+                              final hasExistingVideo =
+                                  (uploadedVideoUrl ?? originalVideo)
+                                      .isNotEmpty;
+                              bool proceed = true;
+
+                              if (hasExistingVideo) {
+                                proceed = await showDialog<bool>(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (context) =>
+                                          const ReplaceVideoDialog(),
+                                    ) ??
+                                    false;
+
+                                if (!proceed) return;
+                              }
+
+                              final videoUrl = await uploadVideo();
+
+                              if (videoUrl.isNotEmpty) {
+                                if (hasExistingVideo) {
+                                  try {
+                                    final storageRef = FirebaseStorage.instance
+                                        .refFromURL(
+                                            uploadedVideoUrl ?? originalVideo);
+                                    await storageRef.delete();
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              "Fehler beim Löschen des Videos: $e")),
+                                    );
                                   }
-                                : null,
-                            icon: Icon(
+                                }
+
+                                await initVideoPlayer(videoUrl);
+                                setState(() {
+                                  uploadedVideoUrl = videoUrl;
+                                  originalVideo = '';
+                                });
+
+                                _checkIfChanged();
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(tUploadVideoSuccess)),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(tNoVideoSelected)),
+                                );
+                              }
+                            },
+                            icon: const Icon(
                               Icons.video_call,
-                              color: (uploadedVideoUrl == null &&
-                                      originalVideo.isEmpty)
-                                  ? Colors.blue
-                                  : Colors.grey,
+                              color: tBlackColor,
                             ),
                             label: Text(
                               (uploadedVideoUrl == null &&
                                       originalVideo.isEmpty)
                                   ? tUploadVideo
-                                  : tUploadVideo,
-                              style: TextStyle(
-                                color: (uploadedVideoUrl == null &&
-                                        originalVideo.isEmpty)
-                                    ? Colors.blue
-                                    : Colors.grey,
+                                  : "Replace Video",
+                              style: const TextStyle(
+                                color: tBlackColor,
                                 fontWeight: FontWeight.w800,
                                 fontSize: 16,
                               ),
@@ -343,21 +476,53 @@ class _EditExerciseState extends State<EditExercise> {
                         Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.grey.shade300),
+                            color: hasChanged
+                                ? (isDarkMode ? Colors.white : Colors.white)
+                                : (isDarkMode
+                                    ? Colors.grey[800]
+                                    : Colors.grey.shade300),
+                            border: Border.all(
+                              color: hasChanged
+                                  ? (isDarkMode ? Colors.white : Colors.white)
+                                  : (isDarkMode
+                                      ? Colors.grey[700]!
+                                      : Colors.grey.shade400),
+                            ),
                             borderRadius: BorderRadius.circular(12),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 4,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
+                            boxShadow: hasChanged
+                                ? (isDarkMode
+                                    ? []
+                                    : const [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 4,
+                                          offset: Offset(0, 2),
+                                        )
+                                      ])
+                                : [],
                           ),
-                          child: SaveButton(
-                            hasChanges: hasChanged,
-                            onPressed: _showSaveConfirmationDialog,
-                            label: tSave,
+                          child: TextButton.icon(
+                            icon: Icon(
+                              Icons.save,
+                              color: hasChanged
+                                  ? tBottomNavBarSelectedColor
+                                  : Colors.grey.shade600,
+                            ),
+                            onPressed:
+                                hasChanged ? _showSaveConfirmationDialog : null,
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                            ),
+                            label: Text(
+                              tSave,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: hasChanged
+                                    ? tBottomNavBarSelectedColor
+                                    : Colors.grey.shade600,
+                              ),
+                            ),
                           ),
                         ),
                       ],
