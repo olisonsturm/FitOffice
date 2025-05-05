@@ -164,6 +164,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                       if (timerController.isRunning.value ||
                           timerController.isPaused.value) {
                         await showUnifiedDialog(
+                          barrierDismissible: false,
                           context: context,
                           builder: (_) => ActiveTimerDialog.forAction('edit'),
                         );
@@ -197,6 +198,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                       }
 
                       await showUnifiedDialog<void>(
+                        barrierDismissible: false,
                         context: context,
                         builder: (ctx) => DeleteExerciseDialog(
                           exercise: exercise!,

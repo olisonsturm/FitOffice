@@ -51,6 +51,26 @@ class _EditExerciseState extends State<EditExercise> {
   bool isLoading = false;
   bool hasChanged = false;
 
+  Future<void> initVideoPlayer(String? url) async {
+    if (url == null || url.isEmpty) return;
+
+    final uri = Uri.tryParse(url);
+    final isValidUrl = uri != null &&
+        uri.hasAbsolutePath &&
+        (url.startsWith('http://') || url.startsWith('https://'));
+
+    if (!isValidUrl) return;
+
+    try {
+      _videoPlayerController?.dispose();
+      _videoPlayerController = VideoPlayerController.networkUrl(uri);
+      await _videoPlayerController!.initialize();
+      setState(() {});
+    } catch (e) {
+      debugPrint('Fehler beim Laden des Videos: $e');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -157,12 +177,12 @@ class _EditExerciseState extends State<EditExercise> {
     }
   }
 
-  Future<void> initVideoPlayer(String url) async {
-    _videoPlayerController?.dispose();
-    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(url));
-    await _videoPlayerController!.initialize();
-    setState(() {});
-  }
+  // Future<void> initVideoPlayer(String url) async {
+  //   _videoPlayerController?.dispose();
+  //   _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(url));
+  //   await _videoPlayerController!.initialize();
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +201,7 @@ class _EditExerciseState extends State<EditExercise> {
               TextField(
                 controller: _nameController,
                 style:
-                    TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+                    TextStyle(color: isDarkMode ? tWhiteColor : tBlackColor),
                 decoration: InputDecoration(
                   labelText: tName,
                   labelStyle: TextStyle(color: tBottomNavBarSelectedColor),
@@ -189,7 +209,7 @@ class _EditExerciseState extends State<EditExercise> {
                       color: tBottomNavBarSelectedColor,
                       fontWeight: FontWeight.bold),
                   filled: true,
-                  fillColor: isDarkMode ? Colors.grey[850] : Colors.white,
+                  fillColor: isDarkMode ? Colors.grey[850] : tWhiteColor,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
@@ -207,7 +227,7 @@ class _EditExerciseState extends State<EditExercise> {
                 controller: _descriptionController,
                 maxLines: 5,
                 style:
-                    TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+                    TextStyle(color: isDarkMode ? tWhiteColor : tBlackColor),
                 decoration: InputDecoration(
                   labelText: tDescription,
                   labelStyle: TextStyle(color: tBottomNavBarSelectedColor),
@@ -215,7 +235,7 @@ class _EditExerciseState extends State<EditExercise> {
                       color: tBottomNavBarSelectedColor,
                       fontWeight: FontWeight.bold),
                   filled: true,
-                  fillColor: isDarkMode ? Colors.grey[850] : Colors.white,
+                  fillColor: isDarkMode ? Colors.grey[850] : tWhiteColor,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
@@ -273,7 +293,7 @@ class _EditExerciseState extends State<EditExercise> {
                   _checkIfChanged();
                 },
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 24),
               isLoading
                   ? const CircularProgressIndicator()
                   : Column(
@@ -368,18 +388,18 @@ class _EditExerciseState extends State<EditExercise> {
                                         style: TextStyle(
                                           color: isDarkMode
                                               ? Colors.white70
-                                              : Colors.grey,
+                                              : tGreyColor,
                                         ),
                                       ),
                                     ),
                                   );
                           },
                         ),
-                        const SizedBox(height: 12), 
+                        const SizedBox(height: 24),
                         Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: isDarkMode ? tDarkGreyColor : Colors.white,
+                            color: tWhiteColor,
                             border: Border.all(
                               color: isDarkMode
                                   ? Colors.grey.shade700
@@ -430,8 +450,8 @@ class _EditExerciseState extends State<EditExercise> {
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                          content: Text(
-                                              '$tDeleteVideoFailed: $e')),
+                                          content:
+                                              Text('$tDeleteVideoFailed: $e')),
                                     );
                                   }
                                 }
@@ -455,7 +475,7 @@ class _EditExerciseState extends State<EditExercise> {
                                 );
                               }
                             },
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.video_call,
                               color: tBlackColor,
                             ),
@@ -464,7 +484,7 @@ class _EditExerciseState extends State<EditExercise> {
                                       originalVideo.isEmpty)
                                   ? tUploadVideo
                                   : tReplaceVideo,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: tBlackColor,
                                 fontWeight: FontWeight.w800,
                                 fontSize: 16,
@@ -477,35 +497,33 @@ class _EditExerciseState extends State<EditExercise> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: hasChanged
-                                ? (isDarkMode ? Colors.white : Colors.white)
+                                ? (tWhiteColor)
                                 : (isDarkMode
                                     ? Colors.grey[800]
                                     : Colors.grey.shade300),
                             border: Border.all(
                               color: hasChanged
-                                  ? (isDarkMode ? Colors.white : Colors.white)
+                                  ? (tWhiteColor)
                                   : (isDarkMode
                                       ? Colors.grey[700]!
                                       : Colors.grey.shade400),
                             ),
                             borderRadius: BorderRadius.circular(12),
-                            boxShadow: hasChanged
-                                ? (isDarkMode
-                                    ? []
-                                    : const [
-                                        BoxShadow(
-                                          color: Colors.black12,
-                                          blurRadius: 4,
-                                          offset: Offset(0, 2),
-                                        )
-                                      ])
-                                : [],
+                            boxShadow: isDarkMode
+                                ? []
+                                : const [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 4,
+                                      offset: Offset(0, 2),
+                                    )
+                                  ],
                           ),
                           child: TextButton.icon(
                             icon: Icon(
                               Icons.save,
                               color: hasChanged
-                                  ? tBottomNavBarSelectedColor
+                                  ? ( tBlackColor)
                                   : Colors.grey.shade600,
                             ),
                             onPressed:
@@ -519,7 +537,7 @@ class _EditExerciseState extends State<EditExercise> {
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 color: hasChanged
-                                    ? tBottomNavBarSelectedColor
+                                    ? (tBlackColor)
                                     : Colors.grey.shade600,
                               ),
                             ),

@@ -231,6 +231,7 @@ class AllExercisesList extends StatelessWidget {
                         return;
                       }
                       final confirmed = await showUnifiedDialog<bool>(
+                        barrierDismissible: false,
                         context: context,
                         builder: (ctx) => StartExerciseDialog(
                           exerciseName: exerciseName ?? 'Unknown',
@@ -266,6 +267,7 @@ class AllExercisesList extends StatelessWidget {
                         if (timerController.isRunning.value ||
                             timerController.isPaused.value) {
                           await showUnifiedDialog<void>(
+                            barrierDismissible: false,
                             context: context,
                             builder: (ctx) =>
                                 ActiveTimerDialog.forAction('delete'),
@@ -276,6 +278,7 @@ class AllExercisesList extends StatelessWidget {
 
                         await showUnifiedDialog<bool>(
                           context: context,
+                          barrierDismissible: false,
                           builder: (ctx) => DeleteExerciseDialog(
                             exercise: exercise,
                             exerciseName: exerciseName ?? 'Unknown',

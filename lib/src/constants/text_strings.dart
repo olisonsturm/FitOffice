@@ -235,6 +235,7 @@ const String tUploadVideoSuccess = "Video uploaded successfully";
 const String tNoVideoSelected = "No video has been selected";
 const String tVideoDeleteSuccess = "Video deleted successfully";
 const String tDeleteVideoFailed = "Video could not be deleted";
+const String tDeleteExerciseMessage = "Do you really want to delete this exercise? It will be permanently removed for all users.";
 
 // -- Exercise_View Texts
 const String tExerciseAbout = "About";

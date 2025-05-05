@@ -164,7 +164,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                       final confirmed =
                                           await showUnifiedDialog<bool>(
                                         context: context,
-                                        //barrierDismissible: false,
+                                        barrierDismissible: false,
                                         builder: (_) => EndExerciseDialog(
                                           exerciseName:
                                               widget.exerciseData['name'] ?? '',
@@ -197,10 +197,9 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                 style: TextStyle(color: tWhiteColor),
                               ),
                               onPressed: () async {
-                                final confirmed =
-                                    await showUnifiedDialog<bool>(
+                                final confirmed = await showUnifiedDialog<bool>(
                                   context: context,
-                                  //barrierDismissible: false,
+                                  barrierDismissible: false,
                                   builder: (_) => CancelExerciseDialog(
                                     exerciseName:
                                         widget.exerciseData['name'] ?? '',

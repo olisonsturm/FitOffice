@@ -57,13 +57,8 @@ class DashboardState extends State<Dashboard> {
   }
 
   void forceRedirectFocus() {
-    if (!wasSearchFocusedBeforeNavigation) {
-      final newNode = FocusNode();
-      FocusScope.of(context).requestFocus(newNode);
-      Future.delayed(const Duration(milliseconds: 50), () {
-        newNode.unfocus();
-        newNode.dispose();
-      });
+    if (!wasSearchFocusedBeforeNavigation && mounted) {
+      FocusScope.of(context).unfocus();
     }
   }
 

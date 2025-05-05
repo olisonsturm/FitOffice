@@ -63,33 +63,6 @@ class CancelExerciseDialog extends StatelessWidget {
                               width: double.infinity,
                               child: ElevatedButton.icon(
                                 onPressed: () =>
-                                    Navigator.of(context).pop(false),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: isDarkMode ? tGreyColor : tPaleBlackColor,
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 14),
-                                  side: BorderSide.none,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                icon: const Icon(Icons.undo_sharp,
-                                    color: Colors.white),
-                                label: const Text(
-                                  tCancelExerciseNegative,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton.icon(
-                                onPressed: () =>
                                     Navigator.of(context).pop(true),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.red.shade500,
@@ -113,6 +86,34 @@ class CancelExerciseDialog extends StatelessWidget {
                                 ),
                               ),
                             ),
+                            const SizedBox(height: 12),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      isDarkMode ? tGreyColor : tPaleBlackColor,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
+                                  side: BorderSide.none,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                icon: const Icon(Icons.undo_sharp,
+                                    color: Colors.white),
+                                label: const Text(
+                                  tCancelExerciseNegative,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -123,9 +124,7 @@ class CancelExerciseDialog extends StatelessWidget {
                       child: IconButton(
                         icon: Icon(
                           Icons.cancel_outlined,
-                          color: isDarkMode
-                              ? tPaleWhiteColor
-                              : tPaleBlackColor,
+                          color: isDarkMode ? tPaleWhiteColor : tPaleBlackColor,
                         ),
                         onPressed: () => Navigator.of(context).pop(),
                         iconSize: 28,
@@ -139,4 +138,3 @@ class CancelExerciseDialog extends StatelessWidget {
             )));
   }
 }
-
