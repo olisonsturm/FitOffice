@@ -13,6 +13,7 @@ import '../../../authentication/models/user_model.dart';
 import '../../controllers/db_controller.dart';
 import '../../controllers/profile_controller.dart';
 import '../progress/progress.dart';
+import 'exercise_filter.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -113,6 +114,22 @@ class DashboardState extends State<Dashboard> {
         title: _getPageTitle(),
         showBackButton: false,
         showDarkModeToggle: true,
+        showFavoriteIcon: true,
+        subtitle: 'FitOffice@DHBW',
+        onToggleFavorite: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ExerciseFilter(
+                heading: tFavorites,
+                showOnlyFavorites: true,
+              ),
+            ),
+          ).then((_) {
+            _loadUserFavorites();
+            _categoriesKey.currentState?.refreshData();
+          });
+        },
       ),
       body: Stack(
         children: [

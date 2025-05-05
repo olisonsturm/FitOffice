@@ -156,12 +156,13 @@ class AllExercisesList extends StatelessWidget {
     final exerciseCategory = exercise['category'];
     final timerController = Get.find<ExerciseTimerController>();
     final isFavorite = favorites.contains(exerciseName);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
       child: Material(
-        color: tWhiteColor,
+        color: isDark ? Colors.grey[800] : tWhiteColor,
         elevation: 2,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
