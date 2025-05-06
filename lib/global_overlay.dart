@@ -1,9 +1,9 @@
 import 'package:fit_office/src/constants/colors.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/end_exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/view_exercise.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/end_exercise.dart';
 
 class GlobalExerciseOverlay {
   static final GlobalExerciseOverlay _instance =

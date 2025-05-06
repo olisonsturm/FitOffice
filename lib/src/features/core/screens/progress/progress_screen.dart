@@ -57,6 +57,7 @@ class ProgressScreenState extends State<ProgressScreen> {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     // Letztes vollständig abgeschlossenes Kapitel:
     final int lastFinishedChapter = (currentStep / stepsPerChapter).floor();
@@ -65,6 +66,7 @@ class ProgressScreenState extends State<ProgressScreen> {
     final int visibleChapters = lastFinishedChapter + 2;
 
     return Scaffold(
+      backgroundColor: isDark ? tBlackColor : tWhiteColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: tDefaultSize),
         child: ListView.separated(

@@ -1,5 +1,6 @@
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -61,9 +62,8 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return AppBar(
       backgroundColor: isDark ? tBlackColor : tWhiteColor,
+      scrolledUnderElevation: 0,
       elevation: 0,
-      automaticallyImplyLeading: false,
-      centerTitle: true,
       title: Stack(
         alignment: Alignment.center,
         children: [
@@ -98,7 +98,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                       isFavorite ? Icons.favorite : Icons.favorite_border,
                       color: isFavorite
                           ? Colors.red
-                          : (isDark ? tPaleWhiteColor : tPaleBlackColor),
+                          : (isDark ? tWhiteColor : tBlackColor),
                     ),
                     onPressed: onToggleFavorite,
                   ),
