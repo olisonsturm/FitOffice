@@ -4,8 +4,9 @@ import 'package:get/get.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/start_exercise.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/end_exercise.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
+
+import '../end_exercise.dart';
 
 class ExerciseInfoTab extends StatefulWidget {
   final Map<String, dynamic> exerciseData;

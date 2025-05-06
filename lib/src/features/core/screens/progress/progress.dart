@@ -3,14 +3,14 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class ProgressScreen extends StatefulWidget {
-  const ProgressScreen({super.key});
+class ProgressScreen1 extends StatefulWidget {
+  const ProgressScreen1({super.key});
 
   @override
-  ProgressScreenState createState() => ProgressScreenState();
+  ProgressScreen1State createState() => ProgressScreen1State();
 }
 
-class ProgressScreenState extends State<ProgressScreen>
+class ProgressScreen1State extends State<ProgressScreen1>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   Path? _path;
@@ -222,7 +222,7 @@ class LevelBubble extends StatelessWidget {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: Colors.redAccent.withOpacity(0.6),
+            color: Colors.redAccent.withAlpha((0.6 * 255).toInt()),
             blurRadius: 12,
             offset: const Offset(4, 4),
           ),
@@ -250,7 +250,7 @@ class AnimatedAvatar extends StatelessWidget {
         border: Border.all(color: Colors.white, width: 4),
         boxShadow: [
           BoxShadow(
-            color: Colors.deepOrangeAccent.withOpacity(0.5),
+            color: Colors.deepOrangeAccent.withAlpha((0.5 * 255).toInt()),
             blurRadius: 10,
             spreadRadius: 2,
           ),

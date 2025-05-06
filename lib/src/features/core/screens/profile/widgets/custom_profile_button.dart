@@ -30,10 +30,10 @@ class CustomProfileButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         margin: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: isActive ? Colors.blue.withOpacity(0.1) : (isDark ? Colors.grey[800] : Colors.white),
+          color: isActive ? Colors.blue.withAlpha((0.1 * 255).toInt()) : (isDark ? Colors.grey[800] : Colors.white),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isActive ? Colors.blue : Colors.grey.withOpacity(0.5),
+            color: isActive ? Colors.blue : Colors.grey.withAlpha((0.5 * 255).toInt()),
             width: 1.5,
           ),
         ),

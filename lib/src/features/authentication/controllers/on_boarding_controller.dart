@@ -33,7 +33,7 @@ import 'package:get/get.dart';
       }
     }
 
-    onPageChangedCallback(int activePageIndex) {
+    void onPageChangedCallback(int activePageIndex) {
       if (activePageIndex == 3) {
         // If the user swipes past the last page, redirect to WelcomeScreen
         userStorage.write('isFirstTime', false);

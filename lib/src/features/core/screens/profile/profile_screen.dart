@@ -6,6 +6,7 @@ import 'package:fit_office/src/constants/sizes.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/screens/profile/widgets/update_profile_modal.dart';
 import '../../../../common_widgets/buttons/primary_button.dart';
+import '../../../../constants/colors.dart';
 import '../../../../repository/authentication_repository/authentication_repository.dart';
 import '../../controllers/profile_controller.dart';
 import 'admin/add_exercises.dart';
@@ -43,6 +44,7 @@ class ProfileScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        backgroundColor: isDark ? tBlackColor : tWhiteColor,
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: tDefaultSize),
           child: Obx(() {

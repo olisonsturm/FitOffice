@@ -28,7 +28,7 @@ class FactDisplayCard extends StatelessWidget {
         color: isDark ? Colors.grey[800] : backgroundColor,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: Colors.grey.withOpacity(0.5),
+          color: Colors.grey.withAlpha((0.5 * 255).toInt()),
           width: 1.5,
         ),
       ),
