@@ -1,18 +1,16 @@
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/statistics.dart';
+import 'package:fit_office/src/features/core/screens/libary/library_screen.dart';
+import 'package:fit_office/src/features/core/screens/progress/progress_screen.dart';
+import 'package:fit_office/src/features/core/screens/statistics/statistics_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/colors.dart';
-import 'package:fit_office/src/constants/sizes.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/categories.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/search.dart';
 import 'package:fit_office/src/features/core/screens/profile/profile_screen.dart';
 
-import '../../../authentication/models/user_model.dart';
 import '../../controllers/db_controller.dart';
 import '../../controllers/profile_controller.dart';
-import '../progress/progress.dart';
 import 'exercise_filter.dart';
 
 class Dashboard extends StatefulWidget {
@@ -25,16 +23,10 @@ class Dashboard extends StatefulWidget {
 class DashboardState extends State<Dashboard> {
   final GlobalKey<DashboardCategoriesState> _categoriesKey =
       GlobalKey<DashboardCategoriesState>();
-  final GlobalKey<DashboardSearchBoxState> _searchBoxKey =
-      GlobalKey<DashboardSearchBoxState>();
   final ProfileController _profileController = Get.put(ProfileController());
   final DbController _dbController = DbController();
 
-  bool _searchHasFocus = false;
-  String _searchText = '';
-
   int _selectedIndex = 0;
-  List<String> _userFavorites = [];
   String favoriteCount = '';
 
   String _getPageTitle() {
@@ -52,27 +44,6 @@ class DashboardState extends State<Dashboard> {
     }
   }
 
-  void removeSearchFocus() {
-    FocusScope.of(context).unfocus();
-    _searchBoxKey.currentState?.removeFocus();
-    setState(() {
-      _searchHasFocus = false;
-    });
-  }
-
-  void _toggleFavorite(String exerciseName) async {
-    final user = await _profileController.getUserData();
-    final isFavorite = _userFavorites.contains(exerciseName);
-
-    if (isFavorite) {
-      await _dbController.removeFavorite(user.email, exerciseName);
-    } else {
-      await _dbController.addFavorite(user.email, exerciseName);
-    }
-
-    _loadUserFavorites();
-  }
-
   void _loadUserFavorites() async {
     final user = await _profileController.getUserData();
     final userFavorites = await _dbController.getFavouriteExercises(user.email);
@@ -80,29 +51,10 @@ class DashboardState extends State<Dashboard> {
         userFavorites.map((e) => e['name'] as String).toList();
 
     setState(() {
-      _userFavorites = favoriteNames;
       favoriteCount = "${favoriteNames.length} $tDashboardExerciseUnits";
     });
   }
 
-  final ProfileController _controller = Get.put(ProfileController());
-  UserModel? _user;
-  bool _isUserLoaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUserData();
-    _loadUserFavorites();
-  }
-
-  void _loadUserData() async {
-    final userData = await _controller.getUserData();
-    setState(() {
-      _user = userData;
-      _isUserLoaded = true;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,134 +89,13 @@ class DashboardState extends State<Dashboard> {
             index: _selectedIndex,
             children: [
               // 0: Progress Screen
-              const ProgressScreen(),
+              ProgressScreen(),
 
-              // 1: Dashboard/Home
-              GestureDetector(
-                onTap: () {
-                  FocusScope.of(context).unfocus();
-                },
-                behavior: HitTestBehavior.translucent,
-                child: CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          left: tDashboardPadding,
-                          bottom: 4,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _isUserLoaded
-                                ? Text(
-                                    '$tDashboardTitle ${_user?.fullName ?? ''}',
-                                    style: txtTheme.bodyMedium)
-                                : const CircularProgressIndicator(),
-                            Text(tDashboardHeading,
-                                style: txtTheme.displayMedium),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    // Sticky SearchBar
-                    SliverPersistentHeader(
-                      pinned: true,
-                      delegate: _StickySearchBar(
-                        minExtent: 74,
-                        maxExtent: 74,
-                        child: Column(
-                          children: [
-                            Container(
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                              padding: const EdgeInsets.only(
-                                top: 10,
-                                left: tDashboardPadding,
-                                right: tDashboardPadding,
-                                bottom: 10,
-                              ),
-                              child: DashboardSearchBox(
-                                key: _searchBoxKey,
-                                txtTheme: Theme.of(context).textTheme,
-                                onSearchSubmitted: (query) {
-                                  _categoriesKey.currentState
-                                      ?.updateSearchQuery(query);
-                                  setState(() {
-                                    _searchHasFocus = false;
-                                    _searchText = query;
-                                  });
-                                },
-                                onTextChanged: (query) {
-                                  _categoriesKey.currentState
-                                      ?.updateSearchQuery(query);
-                                  setState(() {
-                                    _searchText = query;
-                                  });
-                                },
-                                onFocusChanged: (hasFocus) {
-                                  setState(() {
-                                    _searchHasFocus = hasFocus;
-                                  });
-                                },
-                              ),
-                            ),
-                            const Divider(
-                              thickness: 1.8,
-                              height: 0.8,
-                              color: Color.fromARGB(255, 190, 190, 190),
-                              indent: 0,
-                              endIndent: 0,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    // Kategorien + All Exercises
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8.0,
-                          left: tDashboardPadding,
-                          right: tDashboardPadding,
-                          bottom: tDashboardPadding,
-                        ),
-                        child: DashboardCategories(
-                          key: _categoriesKey,
-                          txtTheme: txtTheme,
-                          onSearchChanged: (text) {},
-                          forceShowExercisesOnly:
-                              _searchHasFocus || _searchText.isNotEmpty,
-                          onReturnedFromFilter: removeSearchFocus,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Banner  --> woanders einbauen? oder wo/wofür nötig?
-              //Text(tDashboardInformation, style: txtTheme.headlineMedium?.apply(fontSizeFactor: 1.2)),
-              //DashboardBanners(txtTheme: txtTheme, isDark: isDark),
-              //const SizedBox(height: tDashboardPadding),
+              // 1: Exercise Library TODO: Add Obx() support to update User Infos directly as Olison in ProfilScreen did.
+              LibraryScreen(),
 
               // 2: Statistics Screen
-              Scaffold(
-                body: Padding(
-                  padding: const EdgeInsets.all(tDashboardPadding),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(tDashboardStatistics,
-                          style: txtTheme.headlineMedium
-                              ?.apply(fontSizeFactor: 1.2)),
-                      const SizedBox(height: 20),
-                      StatisticsWidget(txtTheme: txtTheme, isDark: isDark),
-                    ],
-                  ),
-                ),
-              ),
+              StatisticScreen(),
 
               // 3: Friends
               ProfileScreen(),
@@ -284,14 +115,14 @@ class DashboardState extends State<Dashboard> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: tBottomNavBarSelectedColor,
         unselectedItemColor: tBottomNavBarUnselectedColor,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.route),
+            icon: const Icon(Icons.route),
             label: 'Progress',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Library',
+            icon: const Icon(Icons.book),
+            label: 'Exercises',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.insert_chart),
@@ -307,32 +138,4 @@ class DashboardState extends State<Dashboard> {
   }
 }
 
-class _StickySearchBar extends SliverPersistentHeaderDelegate {
-  @override
-  final double minExtent;
-  @override
-  final double maxExtent;
-  final Widget child;
 
-  _StickySearchBar({
-    required this.minExtent,
-    required this.maxExtent,
-    required this.child,
-  });
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Material(
-      elevation: overlapsContent ? 4 : 0, // Shadow beim Scrollen
-      child: child,
-    );
-  }
-
-  @override
-  bool shouldRebuild(_StickySearchBar oldDelegate) {
-    return oldDelegate.maxExtent != maxExtent ||
-        oldDelegate.minExtent != minExtent ||
-        oldDelegate.child != child;
-  }
-}

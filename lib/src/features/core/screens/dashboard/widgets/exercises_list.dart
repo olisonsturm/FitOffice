@@ -78,7 +78,7 @@ class AllExercisesList extends StatelessWidget {
         if (isFiltered || !showGroupedAlphabetically) {
           for (int i = 0; i < sortedList.length; i++) {
             listWidgets.add(_buildExerciseCard(context, sortedList[i], isAdmin));
-            if (i < sortedList.length - 1) listWidgets.add(_buildSoftDivider());
+            if (i < sortedList.length - 1) listWidgets.add(const Divider());
           }
         } else {
           String lastLetter = '';
@@ -87,13 +87,10 @@ class AllExercisesList extends StatelessWidget {
           void flush(String tag) {
             listWidgets.add(const SizedBox(height: 16));
             listWidgets.add(_buildHeader(tag));
-            listWidgets.add(_buildFullDivider());
+            listWidgets.add(const Divider());
 
             for (int i = 0; i < buffer.length; i++) {
               listWidgets.add(_buildExerciseCard(context, buffer[i], isAdmin));
-              listWidgets.add(i == buffer.length - 1
-                  ? _buildFullDivider()
-                  : _buildSoftDivider());
             }
             buffer.clear();
           }
@@ -139,15 +136,6 @@ class AllExercisesList extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Text(letter,
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-      );
-
-  Widget _buildFullDivider() => const FullWidthDivider();
-
-  Widget _buildSoftDivider() => const Divider(
-        thickness: 0.6,
-        color: Color.fromARGB(255, 200, 200, 200),
-        indent: 12,
-        endIndent: 12,
       );
 
   Widget _buildExerciseCard(

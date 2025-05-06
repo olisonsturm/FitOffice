@@ -10,7 +10,7 @@ class Helper extends GetxController {
 
 
   /* -- ============= VALIDATIONS ================ -- */
-  static String? validateUsername(value) {
+  static String? validateUsername(String? value) {
     if (value!.isEmpty) return tUserNameCannotEmpty;
     if (!RegExp(r'^[a-z0-9._]+$').hasMatch(value)) return tInvalidUserName;
     if (value.length < 4) return tUserNameLength;
@@ -26,8 +26,8 @@ class Helper extends GetxController {
     return querySnapshot.docs.isNotEmpty;
   }
 
-  static String? validateFullName(value) {
-    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) return tInvalidFullName;
+  static String? validateFullName(String? value) {
+    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value!)) return tInvalidFullName;
     return null;
   }
 
@@ -43,7 +43,7 @@ class Helper extends GetxController {
       sample_user@stud.dhbw-villingen-schwenningen.de
       another.example@dhbw-mosbach.de
    *////
-  static String? validateEmail(value) {
+  static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) return tEmailCannotEmpty;
     if (!GetUtils.isEmail(value)) return tInvalidEmailFormat;
     // TODO: Uncomment this line to restrict email domains after development phase
@@ -51,7 +51,7 @@ class Helper extends GetxController {
     return null;
   }
 
-  static String? validatePassword(value) {
+  static String? validatePassword(String? value) {
     if (value == null || value.isEmpty) return 'Password cannot be empty';
 
     String pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
@@ -62,8 +62,8 @@ class Helper extends GetxController {
     return null;
   }
 
-  static String? repeatPassword(value, controller) {
-    if (value == null || value.isEmpty) {
+  static String? repeatPassword(String value, controller) {
+    if (value.isEmpty) {
       return 'Please repeat your password';
     }
     if (value != controller.password.text) {
@@ -75,7 +75,7 @@ class Helper extends GetxController {
 
   /* -- ============= SNACK-BARS ================ -- */
 
-  static successSnackBar({required title, message}) {
+  static void successSnackBar({required String title, message}) {
     Get.snackbar(
       title,
       message,

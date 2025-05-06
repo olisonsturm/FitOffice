@@ -61,7 +61,9 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
             appBar: AppBar(
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context, null),
+                onPressed: () {
+                  if (mounted) Navigator.pop(context, null);
+                },
               ),
               title: const Text('Crop Image'),
               actions: [
@@ -76,6 +78,7 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
               controller: cropController,
               aspectRatio: 1,
               onCropped: (result) async {
+                if (!mounted) return;
                 switch (result) {
                   case CropSuccess(:final croppedImage):
                     final tempDir = Directory.systemTemp;
@@ -94,7 +97,7 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
                     break;
                   case CropFailure(:final cause):
                     debugPrint('Crop failed: $cause');
-                    Navigator.pop(context, null);
+                    if (mounted) Navigator.pop(context, null);
                     break;
                 }
               },

@@ -5,7 +5,6 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.da
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/exercises_list.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 
 import '../../../authentication/models/user_model.dart';
 
