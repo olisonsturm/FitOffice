@@ -217,6 +217,7 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                           builder: (context) => FriendProfile(
                             userName: userName,
                             isFriend: isFriend,
+                            isPending: isPending
                           ),
                         ),
                       );

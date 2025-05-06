@@ -40,10 +40,13 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
   }
 
   Future<void> _respondToRequest(DocumentSnapshot doc, String newStatus) async {
-    await doc.reference.update({
-      'status': newStatus,
-      if (newStatus == 'denied') 'deniedAt': FieldValue.serverTimestamp(),
-    });
+    if (newStatus == 'denied') {
+      await doc.reference.delete();
+    } else {
+      await doc.reference.update({
+        'status': newStatus,
+      });
+    }
 
     setState(() {
       _requests.removeWhere((d) => d.id == doc.id);

@@ -337,24 +337,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => FriendProfile(userName: username, isFriend: false),
-                                    ),
-                                  );
-                                },
-                              );
-                            } else if (status == "denied") {
-                              return ListTile(
-                                leading: const Icon(Icons.person),
-                                title: Text(username),
-                                trailing:
-                                    Icon(Icons.person_add, color: Colors.grey),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          FriendProfile(userName: username,
-                                              isFriend: false),
+                                      builder: (context) => FriendProfile(userName: username, isFriend: false, isPending: true,),
                                     ),
                                   );
                                 },

@@ -13,8 +13,9 @@ import 'package:fit_office/src/features/core/screens/profile/admin/widgets/confi
 class FriendProfile extends StatelessWidget {
   final String userName;
   final bool isFriend;
+  final bool? isPending;
 
-  FriendProfile({super.key, required this.userName, required this.isFriend});
+  FriendProfile({super.key, required this.userName, required this.isFriend, this.isPending});
 
   final controller = Get.put(ProfileController());
 
@@ -95,9 +96,37 @@ class FriendProfile extends StatelessWidget {
     }
   }
 
+  Future<String?> getFriendshipStatus(String currentEmail, String otherUserName) async {
+    final usersRef = FirebaseFirestore.instance.collection('users');
+
+    final userQuery = await usersRef.where('email', isEqualTo: currentEmail).get();
+    final otherUserQuery = await usersRef.where('username', isEqualTo: otherUserName).get();
+
+    if (userQuery.docs.isEmpty || otherUserQuery.docs.isEmpty) return null;
+
+    final userRef = userQuery.docs.first.reference;
+    final otherUserRef = otherUserQuery.docs.first.reference;
+
+    final friendshipQuery = await FirebaseFirestore.instance
+        .collection('friendships')
+        .where(Filter.or(
+      Filter.and(Filter('sender', isEqualTo: userRef), Filter('receiver', isEqualTo: otherUserRef)),
+      Filter.and(Filter('sender', isEqualTo: otherUserRef), Filter('receiver', isEqualTo: userRef)),
+    ))
+        .get();
+
+    if (friendshipQuery.docs.isNotEmpty) {
+      return friendshipQuery.docs.first.get('status');
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final txtTheme = Theme.of(context).textTheme;
+    final currentEmail =
+        ProfileController.instance.user.value?.email;
 
     return Scaffold(
       appBar: AppBar(
@@ -169,15 +198,11 @@ class FriendProfile extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: CustomProfileButton(
                         isDark: Theme.of(context).brightness == Brightness.dark,
-                        icon: isFriend ? Icons.person_remove : Icons.person_add,
-                        iconColor: isFriend ? Colors.red : Colors.green,
-                        label: isFriend ? tDeleteFriend : tSendRequest,
-                        textColor: isFriend ? Colors.red : Colors.green,
+                        icon: isFriend ? Icons.person_remove : (isPending == true ? Icons.hourglass_bottom : Icons.person_add),
+                        iconColor: isFriend ? Colors.red : (isPending == true ? Colors.grey : Colors.green),
+                        label: isFriend ? tDeleteFriend : (isPending == true ? tRequestPending : tSendRequest),
+                        textColor: isFriend ? Colors.red : (isPending == true ? Colors.grey : Colors.green),
                         onPress: () async {
-                          final db = DbController();
-                          final currentEmail =
-                              ProfileController.instance.user.value?.email;
-
                           if (isFriend) {
                             showConfirmationDialog(
                               context: context,
@@ -192,8 +217,11 @@ class FriendProfile extends StatelessWidget {
                                 Get.back();
                               },
                             );
-                          } else {
-                            await sendFriendRequest(currentEmail!, userName);
+                          }else if(await getFriendshipStatus(currentEmail!, friend.email) == "pending"){
+                            null;
+                          }
+                          else {
+                            await sendFriendRequest(currentEmail, userName);
                             Get.snackbar(
                                 tRequestSent, "$tSentRequestToUser$userName");
                             Get.back();

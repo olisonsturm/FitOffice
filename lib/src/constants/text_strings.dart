@@ -255,6 +255,7 @@ const String tSendRequest = "Send friendship request";
 const String tFriendshipDeleted = "Friend deleted";
 const String tRequestSent = "Request sent";
 const String tSentRequestToUser = "You sent a request to following user: ";
+const String tRequestPending = "Request pending";
 
 // -- Exercise_View Texts
 const String tExerciseAbout = "About";
