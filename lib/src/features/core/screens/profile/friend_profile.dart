@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
-import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:fit_office/src/features/core/screens/profile/widgets/custom_profile_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,14 +9,31 @@ import 'package:fit_office/src/features/core/screens/profile/widgets/avatar.dart
 import 'package:intl/intl.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/confirmation_dialog.dart';
 
-class FriendProfile extends StatelessWidget {
+class FriendProfile extends StatefulWidget {
   final String userName;
   final bool isFriend;
   final bool? isPending;
 
-  FriendProfile({super.key, required this.userName, required this.isFriend, this.isPending});
+  const FriendProfile({
+    super.key,
+    required this.userName,
+    required this.isFriend,
+    this.isPending,
+  });
 
+  @override
+  State<FriendProfile> createState() => _FriendProfileState();
+}
+
+class _FriendProfileState extends State<FriendProfile> {
   final controller = Get.put(ProfileController());
+  bool isPendingLocal = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isPendingLocal = widget.isPending ?? false;
+  }
 
   Future<UserModel> getFriend(String userName) async {
     final querySnapshot = await FirebaseFirestore.instance
@@ -96,11 +112,14 @@ class FriendProfile extends StatelessWidget {
     }
   }
 
-  Future<String?> getFriendshipStatus(String currentEmail, String otherUserName) async {
+  Future<String?> getFriendshipStatus(
+      String currentEmail, String otherUserName) async {
     final usersRef = FirebaseFirestore.instance.collection('users');
 
-    final userQuery = await usersRef.where('email', isEqualTo: currentEmail).get();
-    final otherUserQuery = await usersRef.where('username', isEqualTo: otherUserName).get();
+    final userQuery =
+        await usersRef.where('email', isEqualTo: currentEmail).get();
+    final otherUserQuery =
+        await usersRef.where('username', isEqualTo: otherUserName).get();
 
     if (userQuery.docs.isEmpty || otherUserQuery.docs.isEmpty) return null;
 
@@ -110,9 +129,11 @@ class FriendProfile extends StatelessWidget {
     final friendshipQuery = await FirebaseFirestore.instance
         .collection('friendships')
         .where(Filter.or(
-      Filter.and(Filter('sender', isEqualTo: userRef), Filter('receiver', isEqualTo: otherUserRef)),
-      Filter.and(Filter('sender', isEqualTo: otherUserRef), Filter('receiver', isEqualTo: userRef)),
-    ))
+          Filter.and(Filter('sender', isEqualTo: userRef),
+              Filter('receiver', isEqualTo: otherUserRef)),
+          Filter.and(Filter('sender', isEqualTo: otherUserRef),
+              Filter('receiver', isEqualTo: userRef)),
+        ))
         .get();
 
     if (friendshipQuery.docs.isNotEmpty) {
@@ -125,8 +146,7 @@ class FriendProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final txtTheme = Theme.of(context).textTheme;
-    final currentEmail =
-        ProfileController.instance.user.value?.email;
+    final currentEmail = ProfileController.instance.user.value?.email;
 
     return Scaffold(
       appBar: AppBar(
@@ -136,7 +156,7 @@ class FriendProfile extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: FutureBuilder<UserModel>(
-          future: getFriend(userName),
+          future: getFriend(widget.userName),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
@@ -177,60 +197,77 @@ class FriendProfile extends StatelessWidget {
                   const SizedBox(height: 5),
                   Center(
                     child: FutureBuilder<int>(
-                      future: ProfileController.instance
-                          .getNumberOfFriends(userName),
+                      future: controller.getNumberOfFriends(widget.userName),
                       builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return const SizedBox.shrink();
-                        }
+                        if (!snapshot.hasData) return const SizedBox.shrink();
                         return Text('${snapshot.data} $tFriends');
                       },
                     ),
                   ),
                   const SizedBox(height: 5),
                   Center(
-                      child: Text(
-                          "$tJoined: ${formatTimestamp(friend.createdAt!)}",
-                          style: txtTheme.bodyLarge
-                              ?.copyWith(color: Colors.grey[500]))),
+                    child: Text(
+                      "$tJoined: ${formatTimestamp(friend.createdAt!)}",
+                      style:
+                          txtTheme.bodyLarge?.copyWith(color: Colors.grey[500]),
+                    ),
+                  ),
                   const SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: CustomProfileButton(
-                        isDark: Theme.of(context).brightness == Brightness.dark,
-                        icon: isFriend ? Icons.person_remove : (isPending == true ? Icons.hourglass_bottom : Icons.person_add),
-                        iconColor: isFriend ? Colors.red : (isPending == true ? Colors.grey : Colors.green),
-                        label: isFriend ? tDeleteFriend : (isPending == true ? tRequestPending : tSendRequest),
-                        textColor: isFriend ? Colors.red : (isPending == true ? Colors.grey : Colors.green),
-                        onPress: () async {
-                          if (isFriend) {
-                            showConfirmationDialog(
-                              context: context,
-                              title: tDeleteFriend,
-                              content:
-                                  "Are you sure to end your friendship with $userName?",
-                              onConfirm: () async {
-                                await removeFriendship(currentEmail!, userName);
-                                Get.snackbar(tFriendshipDeleted,
-                                    "$userName$tFriendDeleted");
-                                Get.back();
-                                Get.back();
-                              },
-                            );
-                          }else if(await getFriendshipStatus(currentEmail!, friend.email) == "pending"){
-                            null;
-                          }
-                          else {
-                            await sendFriendRequest(currentEmail, userName);
-                            Get.snackbar(
-                                tRequestSent, "$tSentRequestToUser$userName");
-                            Get.back();
-                          }
-                        }),
+                      isDark: Theme.of(context).brightness == Brightness.dark,
+                      icon: widget.isFriend
+                          ? Icons.person_remove
+                          : (isPendingLocal
+                              ? Icons.hourglass_bottom
+                              : Icons.person_add),
+                      iconColor: widget.isFriend
+                          ? Colors.red
+                          : (isPendingLocal ? Colors.grey : Colors.green),
+                      label: widget.isFriend
+                          ? tDeleteFriend
+                          : (isPendingLocal ? tRequestPending : tSendRequest),
+                      textColor: widget.isFriend
+                          ? Colors.red
+                          : (isPendingLocal ? Colors.grey : Colors.green),
+                      onPress: () async {
+                        if (widget.isFriend) {
+                          showConfirmationDialog(
+                            context: context,
+                            title: tDeleteFriend,
+                            content:
+                                "Are you sure to end your friendship with ${widget.userName}?",
+                            onConfirm: () async {
+                              setState(() {
+                                isPendingLocal = false;
+                                Navigator.of(context).pop();
+                              });
+
+                              await removeFriendship(
+                                  currentEmail!, widget.userName);
+
+                              Get.snackbar(tFriendshipDeleted,
+                                  "${widget.userName}$tFriendDeleted");
+                            },
+                            cancel: tNo,
+                            confirm: tYes,
+                          );
+                        } else if (isPendingLocal) {
+                        } else {
+                          setState(() {
+                            isPendingLocal = true;
+                          });
+                          await sendFriendRequest(
+                              currentEmail!, widget.userName);
+                          Get.snackbar(tRequestSent,
+                              "$tSentRequestToUser${widget.userName}");
+                        }
+                      },
+                    ),
                   ),
-                  if (isFriend)
-                    // TODO: Statistics, Streak and favourite exercises need to be added here
-                    Center(child: Text("STATISTICS AND STREAK ETC. HERE"))
+                  if (widget.isFriend)
+                    Center(child: Text("STATISTICS AND STREAK ETC. HERE")),
                 ],
               );
             }

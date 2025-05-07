@@ -18,6 +18,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
   final FocusNode _searchFocus = FocusNode();
   List<String> results = [];
   bool isSearching = false;
+  Map<String, String?> friendshipStatus = {}; // username -> status
 
   @override
   void initState() {
@@ -58,7 +59,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
         }
       }
       return null;
-    } catch (e) {
+    } catch (_) {
       return null;
     }
   }
@@ -68,6 +69,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
       setState(() {
         results = [];
         isSearching = false;
+        friendshipStatus.clear();
       });
       return;
     }
@@ -88,23 +90,35 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
           .map((doc) => doc['username'].toString())
           .toList();
 
+      Map<String, String?> statusMap = {};
+      for (final username in filtered) {
+        final status = await _getFriendshipStatus(username);
+        statusMap[username] = status;
+      }
+
       setState(() {
         results = filtered;
+        friendshipStatus = statusMap;
         isSearching = false;
       });
     } catch (e) {
       setState(() {
         results = [];
+        friendshipStatus.clear();
         isSearching = false;
       });
     }
   }
 
-  void _addFriend(String friendUsername) async {
+  void _addFriend(String username) async {
+    setState(() {
+      friendshipStatus[username] = 'pending';
+    });
+
     try {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('users')
-          .where('username', isEqualTo: friendUsername)
+          .where('username', isEqualTo: username)
           .limit(1)
           .get();
 
@@ -130,8 +144,11 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
         });
 
         if (alreadyExists && mounted) {
+          setState(() {
+            friendshipStatus[username] = 'accepted';
+          });
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('$friendUsername$tIsAlreadyYourFriend')),
+            SnackBar(content: Text('$username$tIsAlreadyYourFriend')),
           );
           return;
         }
@@ -145,11 +162,15 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('$friendUsername$tFriendNow')),
+            SnackBar(content: Text('$username$tFriendNow')),
           );
         }
       }
     } catch (e) {
+      setState(() {
+        friendshipStatus[username] = null;
+      });
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(tExceptionAddingFriend)),
@@ -158,11 +179,15 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
     }
   }
 
-  void _removeFriend(String friendUsername) async {
+  void _removeFriend(String username) async {
+    setState(() {
+      friendshipStatus[username] = null;
+    });
+
     try {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('users')
-          .where('username', isEqualTo: friendUsername)
+          .where('username', isEqualTo: username)
           .limit(1)
           .get();
 
@@ -191,11 +216,15 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('$friendUsername$tRemoved')),
+            SnackBar(content: Text('$username$tRemoved')),
           );
         }
       }
     } catch (e) {
+      setState(() {
+        friendshipStatus[username] = 'accepted';
+      });
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(tExceptionRemoveFriend)),
@@ -204,26 +233,26 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    _searchController.dispose();
-    _searchFocus.dispose();
-    super.dispose();
-  }
+  Future<void> _withdrawFriendRequest(String username) async {
+    setState(() {
+      friendshipStatus[username] = null;
+    });
 
-  Future<void> _withdrawFriendRequest(String friendUsername) async {
     try {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('users')
-          .where('username', isEqualTo: friendUsername)
+          .where('username', isEqualTo: username)
           .limit(1)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
         final friendDoc = querySnapshot.docs.first;
-        final currentUserRef = FirebaseFirestore.instance.collection('users').doc(widget.currentUserId);
+        final currentUserRef = FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.currentUserId);
 
-        final friendshipRef = FirebaseFirestore.instance.collection('friendships');
+        final friendshipRef =
+            FirebaseFirestore.instance.collection('friendships');
 
         final pendingQuery = await friendshipRef
             .where('sender', isEqualTo: currentUserRef)
@@ -236,18 +265,29 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
 
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('$tFriendshipRequestWithdraw$friendUsername')),
+              SnackBar(content: Text('$tFriendshipRequestWithdraw$username')),
             );
           }
         }
       }
     } catch (e) {
+      setState(() {
+        friendshipStatus[username] = 'pending';
+      });
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text(tFriendDeleteException)),
         );
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchFocus.dispose();
+    super.dispose();
   }
 
   @override
@@ -278,93 +318,84 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
               if (isSearching)
                 const CircularProgressIndicator()
               else if (results.isEmpty && _searchController.text.length >= 2)
-                const Text(tNoResults),
-              if (results.isNotEmpty)
+                const Text(tNoResults)
+              else
                 Expanded(
                   child: ListView.builder(
                     itemCount: results.length,
                     itemBuilder: (context, index) {
                       final username = results[index];
-                      return FutureBuilder<String?>(
-                        future: _getFriendshipStatus(username),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const ListTile(
-                              title: Text("Loading..."),
+                      final status = friendshipStatus[username];
+
+                      if (status == 'accepted') {
+                        return ListTile(
+                          leading: const Icon(Icons.person),
+                          title: Text(username),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.person_remove,
+                                color: Colors.red),
+                            onPressed: () => _removeFriend(username),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => FriendProfile(
+                                    userName: username, isFriend: true),
+                              ),
                             );
-                          }
-                          if (snapshot.hasData) {
-                            final status = snapshot.data;
-                            if (status == 'accepted') {
-                              return ListTile(
-                                leading: const Icon(Icons.person),
-                                title: Text(username),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.person_remove,
-                                      color: Colors.red),
-                                  onPressed: () => _removeFriend(username),
+                          },
+                        );
+                      } else if (status == 'pending') {
+                        return ListTile(
+                          leading: const Icon(Icons.person),
+                          title: Text(username),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.access_time, color: Colors.grey),
+                              const SizedBox(width: 8),
+                              IconButton(
+                                icon: const Icon(Icons.cancel,
+                                    color: Colors.orange),
+                                onPressed: () =>
+                                    _withdrawFriendRequest(username),
+                              ),
+                            ],
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => FriendProfile(
+                                  userName: username,
+                                  isFriend: false,
+                                  isPending: true,
                                 ),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          FriendProfile(userName: username,
-                                              isFriend: true),
-                                    ),
-                                  );
-                                },
-                              );
-                            } else if (status == 'pending') {
-                              return ListTile(
-                                leading: const Icon(Icons.person),
-                                title: Text(username),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(Icons.access_time, color: Colors.grey),
-                                    const SizedBox(width: 8),
-                                    IconButton(
-                                      icon: const Icon(Icons.cancel, color: Colors.orange),
-                                      onPressed: () async {
-                                        await _withdrawFriendRequest(username);
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => FriendProfile(userName: username, isFriend: false, isPending: true,),
-                                    ),
-                                  );
-                                },
-                              );
-                            }
-                          }
-                          return ListTile(
-                            leading: const Icon(Icons.person),
-                            title: Text(username),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.person_add,
-                                  color: Colors.blue),
-                              onPressed: () => _addFriend(username),
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      FriendProfile(userName: username,
-                                          isFriend: false),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      );
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        return ListTile(
+                          leading: const Icon(Icons.person),
+                          title: Text(username),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.person_add,
+                                color: Colors.blue),
+                            onPressed: () => _addFriend(username),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => FriendProfile(
+                                    userName: username, isFriend: false),
+                              ),
+                            );
+                          },
+                        );
+                      }
                     },
                   ),
                 ),
