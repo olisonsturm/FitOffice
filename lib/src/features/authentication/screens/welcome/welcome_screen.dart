@@ -22,10 +22,10 @@ class WelcomeScreen extends StatelessWidget {
     var width = mediaQuery.size.width;
     var height = mediaQuery.size.height;
     var brightness = mediaQuery.platformBrightness;
-    final isDarkMode = brightness == Brightness.dark;
+    final isDark = brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDarkMode ? tSecondaryColor : tWhiteColor,
+      backgroundColor: isDark ? tBlackColor : tWhiteColor,
       body: Stack(
         children: [
           TFadeInAnimation(

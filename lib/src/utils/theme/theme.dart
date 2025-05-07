@@ -14,7 +14,12 @@ class TAppTheme {
     textTheme: TTextTheme.lightTextTheme,
     appBarTheme: TAppBarTheme.lightAppBarTheme,
     scaffoldBackgroundColor: tWhiteColor,
-    primaryColor: tPrimaryColor,
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+        TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
+      },
+    ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: tWhiteColor,
       selectedItemColor: tPrimaryColor,
@@ -31,7 +36,12 @@ class TAppTheme {
     textTheme: TTextTheme.darkTextTheme,
     appBarTheme: TAppBarTheme.darkAppBarTheme,
     scaffoldBackgroundColor: tBlackColor,
-    primaryColor: tPrimaryColor,
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+        TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
+      },
+    ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: tBlackColor,
       selectedItemColor: tPrimaryColor,

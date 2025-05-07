@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:fit_office/src/common_widgets/buttons/primary_button.dart';
 import 'package:fit_office/src/features/authentication/controllers/login_controller.dart';
+import '../../../../../constants/colors.dart';
 import '../../../../../constants/sizes.dart';
 import '../../../../../constants/text_strings.dart';
 import '../../../../../utils/helper/helper_controller.dart';
@@ -13,6 +14,7 @@ class LoginFormWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
     final controller = Get.put(LoginController());
     return Container(
       padding: const EdgeInsets.only(top: tFormHeight - 15, bottom: 10),
@@ -27,10 +29,18 @@ class LoginFormWidget extends StatelessWidget {
                 controller: controller.email,
                 autofillHints: const [AutofillHints.username],
                 validator: Helper.validateEmail,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   prefixIcon: Icon(LineAwesomeIcons.user),
-                  labelText: tEmail,
                   hintText: tEmail,
+                  errorStyle:
+                  const TextStyle(overflow: TextOverflow.visible),
+                  errorMaxLines: 3,
+                  label: RichText(
+                    text: TextSpan(
+                      text: tEmail,
+                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: tFormHeight - 20),
@@ -44,7 +54,12 @@ class LoginFormWidget extends StatelessWidget {
                 obscureText: !controller.showPassword.value,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.fingerprint),
-                  labelText: tPassword,
+                  label: RichText(
+                    text: TextSpan(
+                      text: tPassword,
+                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
+                    ),
+                  ),
                   hintText: tPassword,
                   suffixIcon: IconButton(
                     icon: controller.showPassword.value
@@ -65,7 +80,15 @@ class LoginFormWidget extends StatelessWidget {
                       context,
                       email: controller.email.text,
                       enableEdit: true),
-                  child: const Text(tForgotPassword),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.only(right: 0),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: const Text(tForgotPassword,
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 14,
+                      )),
                 ),
               ),
 

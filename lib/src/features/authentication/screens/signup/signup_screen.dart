@@ -15,12 +15,10 @@ class SignupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    var mediaQuery = MediaQuery.of(context);
-    var brightness = mediaQuery.platformBrightness;
-    final isDarkMode = brightness == Brightness.dark;
+    final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDarkMode ? tSecondaryColor : tWhiteColor,
+      backgroundColor: isDark ? tBlackColor : tWhiteColor,
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(tDefaultSpace),
