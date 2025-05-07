@@ -228,8 +228,10 @@ class _StickySearchBar extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
+    bool isDark =
+        MediaQuery.of(context).platformBrightness == Brightness.dark;
     return Material(
-      color: Colors.transparent,
+      color: isDark ? tBlackColor : tWhiteColor,
       elevation: overlapsContent ? 4 : 0,
       child: child,
     );

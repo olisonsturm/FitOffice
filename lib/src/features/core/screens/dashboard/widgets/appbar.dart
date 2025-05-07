@@ -77,6 +77,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: isDark ? tBlackColor : tWhiteColor,
       elevation: 0,
       scrolledUnderElevation: 0,
+      automaticallyImplyLeading: false,
       title: Stack(
         alignment: Alignment.center,
         children: [
@@ -88,7 +89,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (showBackButton)
+                if (showBackButton && (!isAdmin || !showFavoriteIcon))
                   IconButton(
                     icon: Icon(
                       Icons.arrow_back,
