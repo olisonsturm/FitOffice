@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
-import '../../../../constants/colors.dart';
 import '../../../../constants/sizes.dart';
 import '../../../../constants/text_strings.dart';
 import '../../../authentication/models/user_model.dart';
@@ -10,6 +8,8 @@ import '../../controllers/db_controller.dart';
 import '../../controllers/profile_controller.dart';
 import '../dashboard/widgets/categories.dart';
 import '../dashboard/widgets/search.dart';
+
+final GlobalKey<LibraryScreenState> libraryKey = GlobalKey<LibraryScreenState>();
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});

@@ -1,8 +1,9 @@
 import 'package:fit_office/src/features/core/screens/libary/library_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/global_overlay.dart';
 import 'package:get/get.dart';
+
+import '../../features/core/controllers/exercise_timer.dart';
 
 Future<T?> showUnifiedDialog<T>({
   required BuildContext context,

@@ -76,8 +76,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: isDark ? tBlackColor : tWhiteColor,
       elevation: 0,
-      automaticallyImplyLeading: false,
-      centerTitle: true,
+      scrolledUnderElevation: 0,
       title: Stack(
         alignment: Alignment.center,
         children: [

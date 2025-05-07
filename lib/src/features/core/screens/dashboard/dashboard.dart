@@ -22,7 +22,7 @@ class Dashboard extends StatefulWidget {
 
 class DashboardState extends State<Dashboard> {
   final GlobalKey<DashboardCategoriesState> _categoriesKey =
-  GlobalKey<DashboardCategoriesState>();
+      GlobalKey<DashboardCategoriesState>();
   final ProfileController _profileController = Get.put(ProfileController());
   final DbController _dbController = DbController();
 
@@ -48,7 +48,7 @@ class DashboardState extends State<Dashboard> {
     final user = await _profileController.getUserData();
     final userFavorites = await _dbController.getFavouriteExercises(user.email);
     final favoriteNames =
-    userFavorites.map((e) => e['name'] as String).toList();
+        userFavorites.map((e) => e['name'] as String).toList();
 
     setState(() {
       favoriteCount = "${favoriteNames.length} $tDashboardExerciseUnits";
@@ -66,6 +66,7 @@ class DashboardState extends State<Dashboard> {
         title: _getPageTitle(),
         showBackButton: false,
         showDarkModeToggle: true,
+        showStreak: true,
         showFavoriteIcon: true,
         subtitle: 'FitOffice@DHBW',
         onToggleFavorite: () {
@@ -115,14 +116,14 @@ class DashboardState extends State<Dashboard> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: tBottomNavBarSelectedColor,
         unselectedItemColor: tBottomNavBarUnselectedColor,
-        items: [
+        items: const [
           BottomNavigationBarItem(
-            icon: const Icon(Icons.route),
+            icon: Icon(Icons.route),
             label: 'Progress',
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.book),
-            label: 'Exercises',
+            icon: Icon(Icons.book),
+            label: 'Library',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.insert_chart),
