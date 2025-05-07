@@ -1,3 +1,4 @@
+import 'package:fit_office/src/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -146,7 +147,6 @@ class LibraryScreenState extends State<LibraryScreen> {
                 child: Column(
                   children: [
                     Container(
-                      color: Colors.transparent,
                       padding: const EdgeInsets.only(
                         top: 10,
                         left: tDashboardPadding,
@@ -229,6 +229,7 @@ class _StickySearchBar extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Material(
+      color: Colors.transparent,
       elevation: overlapsContent ? 4 : 0,
       child: child,
     );

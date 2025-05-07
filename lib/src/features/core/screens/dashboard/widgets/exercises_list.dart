@@ -1,7 +1,4 @@
-import 'package:fit_office/global_overlay.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/dashboard.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/view_exercise.dart';
-import 'package:fit_office/src/features/core/screens/libary/library_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
@@ -10,10 +7,11 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/start_exe
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 import 'package:string_similarity/string_similarity.dart';
 import 'package:fit_office/src/constants/colors.dart';
+import '../../../../../utils/helper/dialog_helper.dart';
 import '../../../controllers/profile_controller.dart';
 import '../../profile/admin/delete_exercise.dart';
+import '../../profile/admin/edit_exercise.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
-import 'package:fit_office/src/utils/helper/dialog_helper.dart';
 
 class FullWidthDivider extends StatelessWidget {
   const FullWidthDivider({super.key});
@@ -36,6 +34,7 @@ class AllExercisesList extends StatelessWidget {
   final String query;
   final bool showGroupedAlphabetically;
 
+
   const AllExercisesList({
     super.key,
     required this.exercises,
@@ -47,8 +46,6 @@ class AllExercisesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     final lowerQuery = query.toLowerCase().trim();
     final isFiltered = lowerQuery.isNotEmpty;
 
@@ -90,14 +87,11 @@ class AllExercisesList extends StatelessWidget {
 
           void flush(String tag) {
             listWidgets.add(const SizedBox(height: 16));
-            listWidgets.add(_buildHeader(tag, isDark));
+            listWidgets.add(_buildHeader(tag));
             listWidgets.add(const Divider());
 
             for (int i = 0; i < buffer.length; i++) {
               listWidgets.add(_buildExerciseCard(context, buffer[i], isAdmin));
-              listWidgets.add(i == buffer.length - 1
-                  ? const Divider()
-                  : const Divider());
             }
             buffer.clear();
           }
@@ -139,14 +133,10 @@ class AllExercisesList extends StatelessWidget {
     }).toList();
   }
 
-  Widget _buildHeader(String letter, bool isDarkMode) => Padding(
+  Widget _buildHeader(String letter) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Text(letter,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: isDarkMode ? tWhiteColor : tBlackColor,
-            )),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
       );
 
   Widget _buildExerciseCard(
@@ -156,27 +146,19 @@ class AllExercisesList extends StatelessWidget {
     final timerController = Get.find<ExerciseTimerController>();
     final isFavorite = favorites.contains(exerciseName);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
       child: Material(
-        color: isDark ? tDarkGreyColor : tWhiteColor,
+        color: isDark ? Colors.grey[800] : tWhiteColor,
         elevation: 2,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
-          highlightColor: isDark ? tDarkGreyColor : Colors.grey.shade300,
-          splashColor: isDark ? tDarkGreyColor : Colors.grey.shade300,
+          highlightColor: Colors.grey.shade300,
+          splashColor: Colors.grey.shade300,
           onTap: () async {
-            LibraryScreenState? libraryState;
-            final library =
-                context.findAncestorStateOfType<LibraryScreenState>();
-            library?.wasSearchFocusedBeforeNavigation =
-                libraryState!.searchHasFocus;
-            library?.wasSearchFocusedBeforeNavigation =
-                libraryState!.searchHasFocus;
-
             final result = await Navigator.push(
               context,
               MaterialPageRoute(
@@ -187,29 +169,22 @@ class AllExercisesList extends StatelessWidget {
             if (result == true) {
               onToggleFavorite(exerciseName);
             }
-            libraryState?.handleReturnedFromExercise(); // Zustand wiederherstellen
           },
           child: ListTile(
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             title: Text(exerciseName ?? 'Unknown',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: isDark ? Colors.white : Colors.black,
-                )),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
             subtitle: Text(exerciseCategory ?? 'No category',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: isDark ? tPaleWhiteColor : const Color(0xFF777777),
-                )),
+                style: const TextStyle(fontSize: 13, color: Color(0xFF777777))),
             trailing: IntrinsicWidth(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   IconButton(
                     icon: const Icon(Icons.play_arrow),
-                    color: isDark ? tWhiteColor : tDarkGreyColor,
+                    color: Colors.grey[800],
                     onPressed: () async {
                       if (timerController.isRunning.value ||
                           timerController.isPaused.value) {
@@ -218,61 +193,53 @@ class AllExercisesList extends StatelessWidget {
                           builder: (ctx) =>
                               ActiveTimerDialog.forAction('start'),
                         );
-
                         return;
                       }
-                      final confirmed = await showUnifiedDialog<bool>(
+                      final confirmed = await showDialog<bool>(
+                        context: Get.context!,
                         barrierDismissible: false,
-                        context: context,
-                        builder: (ctx) => StartExerciseDialog(
-                          exerciseName: exerciseName ?? 'Unknown',
-                        ),
+                        builder: (_) => StartExerciseDialog(
+                            exerciseName: exerciseName ?? 'Unknown'),
                       );
-
                       if (confirmed == true) {
                         timerController.start(exerciseName, exerciseCategory);
-                        if (context.mounted) {
-                          Navigator.of(context)
-                              .popUntil((route) => route.isFirst);
-                        }
+                        Navigator.of(Get.context!)
+                            .popUntil((route) => route.isFirst);
                       }
                     },
                   ),
                   IconButton(
                     icon: Icon(
                       isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: isFavorite
-                          ? Colors.red
-                          : (isDark
-                              ? tPaleWhiteColor
-                              : tBottomNavBarUnselectedColor),
+                      color: isFavorite ? Colors.red : Colors.grey,
                     ),
                     onPressed: () => onToggleFavorite(exerciseName),
                   ),
                   if (isAdmin) ...[
                     IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => EditExercise(
+                              exercise: exercise,
+                              exerciseName: exercise['name'],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    IconButton(
                       icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () async {
-                        final timerController =
-                            Get.find<ExerciseTimerController>();
-                        if (timerController.isRunning.value ||
-                            timerController.isPaused.value) {
-                          await showUnifiedDialog<void>(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (ctx) =>
-                                ActiveTimerDialog.forAction('delete'),
-                          );
-
-                          return;
-                        }
-
-                        await showUnifiedDialog<bool>(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (ctx) => DeleteExerciseDialog(
-                            exercise: exercise,
-                            exerciseName: exerciseName ?? 'Unknown',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => DeleteExerciseDialog(
+                              exercise: exercise,
+                              exerciseName: exercise['name'],
+                            ),
                           ),
                         );
                       },
