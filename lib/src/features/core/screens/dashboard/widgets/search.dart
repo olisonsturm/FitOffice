@@ -1,3 +1,4 @@
+import 'package:fit_office/global_overlay.dart';
 import 'package:flutter/material.dart';
 import '../../../../../constants/text_strings.dart';
 
@@ -22,9 +23,15 @@ class DashboardSearchBox extends StatefulWidget {
 class DashboardSearchBoxState extends State<DashboardSearchBox> {
   late FocusNode _focusNode;
   late TextEditingController _controller;
+  late FocusNode _redirectFocusNode;
+
+  void requestFocus() {
+    _focusNode.requestFocus();
+  }
 
   void removeFocus() {
     _focusNode.unfocus();
+    FocusManager.instance.primaryFocus?.unfocus(); // <-- Ergänzen!
   }
 
   @override
@@ -32,11 +39,20 @@ class DashboardSearchBoxState extends State<DashboardSearchBox> {
     super.initState();
     _focusNode = FocusNode();
     _controller = TextEditingController();
+    _redirectFocusNode = FocusNode(); // ⬅️ NEU
 
     _focusNode.addListener(() {
-      widget.onFocusChanged(_focusNode.hasFocus);
+      final hasFocus = _focusNode.hasFocus;
+
+      if (!hasFocus && !GlobalExerciseOverlay().isDialogOpen) {
+        widget.onFocusChanged(false);
+        FocusScope.of(context).requestFocus(_redirectFocusNode);
+      } else if (hasFocus) {
+        widget.onFocusChanged(true);
+      }
     });
   }
+
 //   State<DashboardSearchBox> createState() => _DashboardSearchBoxState();
 // }
 

@@ -1,8 +1,7 @@
+import 'package:fit_office/src/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
-import '../../../../constants/colors.dart';
 import '../../../../constants/sizes.dart';
 import '../../../../constants/text_strings.dart';
 import '../../../authentication/models/user_model.dart';
@@ -10,6 +9,8 @@ import '../../controllers/db_controller.dart';
 import '../../controllers/profile_controller.dart';
 import '../dashboard/widgets/categories.dart';
 import '../dashboard/widgets/search.dart';
+
+final GlobalKey<LibraryScreenState> libraryKey = GlobalKey<LibraryScreenState>();
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
@@ -27,11 +28,28 @@ class LibraryScreenState extends State<LibraryScreen> {
   final ProfileController _profileController = Get.put(ProfileController());
   final DbController _dbController = DbController();
 
+  bool wasSearchFocusedBeforeNavigation = false;
+  bool get searchHasFocus => _searchHasFocus;
+
   bool _searchHasFocus = false;
   String _searchText = '';
 
   List<String> _userFavorites = [];
   String favoriteCount = '';
+
+  void forceRedirectFocus() {
+    if (!wasSearchFocusedBeforeNavigation && mounted) {
+      FocusScope.of(context).unfocus();
+    }
+  }
+
+  void handleReturnedFromExercise() {
+    if (!wasSearchFocusedBeforeNavigation) {
+      removeSearchFocus();
+    } else {
+      _searchBoxKey.currentState?.requestFocus();
+    }
+  }
 
   void removeSearchFocus() {
     FocusScope.of(context).unfocus();
@@ -40,6 +58,7 @@ class LibraryScreenState extends State<LibraryScreen> {
       _searchHasFocus = false;
     });
   }
+
   //TODO: Unused by now
   void _toggleFavorite(String exerciseName) async {
     final user = await _profileController.getUserData();
@@ -90,106 +109,105 @@ class LibraryScreenState extends State<LibraryScreen> {
     final txtTheme = Theme.of(context).textTheme;
 
     return Container(
-        color: Colors.transparent,
-        child: GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      behavior: HitTestBehavior.translucent,
-      child: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: tDashboardPadding,
-                bottom: 4,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _isUserLoaded
-                      ? Text(
-                      '$tDashboardTitle ${_user?.fullName ?? ''}',
-                      style: txtTheme.bodyMedium)
-                      : const CircularProgressIndicator(),
-                  Text(tDashboardHeading,
-                      style: txtTheme.displayMedium),
-                ],
+      color: Colors.transparent,
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        behavior: HitTestBehavior.translucent,
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: tDashboardPadding,
+                  bottom: 4,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _isUserLoaded
+                        ? Text(
+                        '$tDashboardTitle ${_user?.fullName ?? ''}',
+                        style: txtTheme.bodyMedium)
+                        : const CircularProgressIndicator(),
+                    Text(tDashboardHeading,
+                        style: txtTheme.displayMedium),
+                  ],
+                ),
               ),
             ),
-          ),
 
-          // Sticky SearchBar
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: _StickySearchBar(
-              minExtent: 74,
-              maxExtent: 74,
-              child: Column(
-                children: [
-                  Container(
-                    color: Colors.transparent,
-                    padding: const EdgeInsets.only(
-                      top: 10,
-                      left: tDashboardPadding,
-                      right: tDashboardPadding,
-                      bottom: 10,
+            // Sticky SearchBar
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: _StickySearchBar(
+                minExtent: 74,
+                maxExtent: 74,
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(
+                        top: 10,
+                        left: tDashboardPadding,
+                        right: tDashboardPadding,
+                        bottom: 10,
+                      ),
+                      child: DashboardSearchBox(
+                        key: _searchBoxKey,
+                        txtTheme: Theme.of(context).textTheme,
+                        onSearchSubmitted: (query) {
+                          _categoriesKey.currentState
+                              ?.updateSearchQuery(query);
+                          setState(() {
+                            _searchHasFocus = false;
+                            _searchText = query;
+                          });
+                        },
+                        onTextChanged: (query) {
+                          _categoriesKey.currentState
+                              ?.updateSearchQuery(query);
+                          setState(() {
+                            _searchText = query;
+                          });
+                        },
+                        onFocusChanged: (hasFocus) {
+                          setState(() {
+                            _searchHasFocus = hasFocus;
+                          });
+                        },
+                      ),
                     ),
-                    child: DashboardSearchBox(
-                      key: _searchBoxKey,
-                      txtTheme: Theme.of(context).textTheme,
-                      onSearchSubmitted: (query) {
-                        _categoriesKey.currentState
-                            ?.updateSearchQuery(query);
-                        setState(() {
-                          _searchHasFocus = false;
-                          _searchText = query;
-                        });
-                      },
-                      onTextChanged: (query) {
-                        _categoriesKey.currentState
-                            ?.updateSearchQuery(query);
-                        setState(() {
-                          _searchText = query;
-                        });
-                      },
-                      onFocusChanged: (hasFocus) {
-                        setState(() {
-                          _searchHasFocus = hasFocus;
-                        });
-                      },
+                    const Divider(
+                      height: 0.8,
                     ),
-                  ),
-                  const Divider(
-                    height: 0.8,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
 
-          // Kategorien + All Exercises
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 8.0,
-                left: tDashboardPadding,
-                right: tDashboardPadding,
-                bottom: tDashboardPadding,
-              ),
-              child: DashboardCategories(
-                key: _categoriesKey,
-                txtTheme: txtTheme,
-                onSearchChanged: (text) {},
-                forceShowExercisesOnly:
-                _searchHasFocus || _searchText.isNotEmpty,
-                onReturnedFromFilter: removeSearchFocus,
+            // Kategorien + All Exercises
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 8.0,
+                  left: tDashboardPadding,
+                  right: tDashboardPadding,
+                  bottom: tDashboardPadding,
+                ),
+                child: DashboardCategories(
+                  key: _categoriesKey,
+                  txtTheme: txtTheme,
+                  onSearchChanged: (text) {},
+                  forceShowExercisesOnly:
+                  _searchHasFocus || _searchText.isNotEmpty,
+                  onReturnedFromFilter: removeSearchFocus,
+                ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
         ),
+      ),
     );
   }
 }
@@ -210,7 +228,10 @@ class _StickySearchBar extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
+    bool isDark =
+        MediaQuery.of(context).platformBrightness == Brightness.dark;
     return Material(
+      color: isDark ? tBlackColor : tWhiteColor,
       elevation: overlapsContent ? 4 : 0,
       child: child,
     );

@@ -168,12 +168,12 @@ const String tAddFriendsHeader = "Add Friends";
 // -- Exercise Timer - Text
 const String tEndExercisePopUp = "End exercise";
 const String tEndExerciseConfirmation = "Are you sure you want to finish the exercise?";
-const String tEndExercisePositive = "Yes";
-const String tEndExerciseNegative = "No";
+const String tEndExercisePositive = "Finish exercise";
+const String tEndExerciseNegative = "Cancel";
 const String tStartExercisePopUp = "Start exercise";
 const String tStartExerciseConfirmation = "Are you sure you want to start this exercise:";
-const String tStartExercisePositive = "Yes";
-const String tStartExerciseNegative = "No";
+const String tStartExercisePositive = "Start exercise";
+const String tStartExerciseNegative = "Cancel";
 
 
 // -- Categories - Text
@@ -189,10 +189,14 @@ const String tAbbreviationMind = "🧠";
 const String tAbbreviationFavorites = "❤️";
 
 
-// -- Active Exercises - Text
+// -- Active Exercises/Dialog - Text
 const String tActiveExercise = "Active Exercise";
-const String tActiveExerciseErrorMsg = "An exercise is already running. Please finish or abort it before you start a new one.";
+const String tActiveExerciseDialogMessageStart = "An exercise is already running. Please finish or cancel it before you start a new one.";
 const String tActiveExerciseAnswer = "OK";
+const String tActiveExerciseDialogMessageDelete = "Please finish the current exercise before you can delete an exercise.";
+const String tActiveExerciseDialogMessageDefault = "Please finish the current exercise!";
+const String tActiveExerciseDialogMessageEdit = "Please finish the current exercise before you can edit an exercise.";
+
 
 // -- Admin Text
 const String tAddExercises = "ADD EXERCISES";
@@ -256,6 +260,8 @@ const String tFriendshipDeleted = "Friend deleted";
 const String tRequestSent = "Request sent";
 const String tSentRequestToUser = "You sent a request to following user: ";
 const String tRequestPending = "Request pending";
+const String tDeleteVideoFailed = "Video could not be deleted";
+const String tDeleteExerciseMessage = "Do you really want to delete this exercise? It will be permanently removed for all users.";
 
 // -- Exercise_View Texts
 const String tExerciseAbout = "About";
@@ -263,8 +269,30 @@ const String tExerciseHistory = "History";
 const String tExerciseVideo = "Video";
 const String tExerciseDescription = "Description";
 const String tExerciseNoDescription = "No description available";
-const String tExerciseResume = "Resume";
-const String tExerciseStart = "Start";
-const String tExercisePause = "Pause";
-const String tExerciseStop = "Stop";
+const String tExerciseResume = "Resume exercise";
+const String tExerciseStart = "Start exercise";
+const String tExercisePause = "Pause exercise";
+const String tExerciseFinish = "Finish exercise";
 const String tExerciseAbort = "Abort exercise";
+const String tNoVideoAvailable = "No video available";
+
+
+// -- Cancel Exercise - Text
+const String tCancelExercise = "Cancel Exercise";
+const String tCancelExerciseMessage = "Do you really want to canel the exercise? Your progress will be lost!";
+const String tCancelExercisePositive = "Cancel, exercise"; //"Ja ich will die Übung abbrechen";
+const String tCancelExerciseNegative = "Go back"; //"Nein, zurück";
+
+// -- Delete Video - Text
+const String tDeleteVideo = "Delete Video";
+const String tDeleteVideoMessage = "Are you sure you want to delete the video? This action cannot be undone.";
+const String tDeleteVideoPositive = "Yes, delete"; //"Ja, Video löschen";
+const String tDeleteVideoNegative = "No, go back"; //"Nein, zurück";
+
+
+// -- Replace Video - Text
+const String tReplaceVideo = "Replace Video";
+const String tReplaceVideoMessage = "Are you sure you want to replace the current video?";
+const String tReplaceVideoPositive = "Yes, replace"; //"Ja, Video ersetzen";
+const String tReplaceVideoNegative = "No, go back"; //"Nein, zurück";
+

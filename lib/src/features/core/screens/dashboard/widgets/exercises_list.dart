@@ -7,6 +7,7 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/start_exe
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 import 'package:string_similarity/string_similarity.dart';
 import 'package:fit_office/src/constants/colors.dart';
+import '../../../../../utils/helper/dialog_helper.dart';
 import '../../../controllers/profile_controller.dart';
 import '../../profile/admin/delete_exercise.dart';
 import '../../profile/admin/edit_exercise.dart';
@@ -32,7 +33,7 @@ class AllExercisesList extends StatelessWidget {
   final void Function(String exerciseName) onToggleFavorite;
   final String query;
   final bool showGroupedAlphabetically;
-  
+
 
   const AllExercisesList({
     super.key,
@@ -145,7 +146,7 @@ class AllExercisesList extends StatelessWidget {
     final timerController = Get.find<ExerciseTimerController>();
     final isFavorite = favorites.contains(exerciseName);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
@@ -187,10 +188,10 @@ class AllExercisesList extends StatelessWidget {
                     onPressed: () async {
                       if (timerController.isRunning.value ||
                           timerController.isPaused.value) {
-                        await showDialog(
-                          context: Get.context!,
-                          barrierDismissible: false,
-                          builder: (_) => const ActiveTimerDialog(),
+                        await showUnifiedDialog<void>(
+                          context: context,
+                          builder: (ctx) =>
+                              ActiveTimerDialog.forAction('start'),
                         );
                         return;
                       }
@@ -235,7 +236,7 @@ class AllExercisesList extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => DeleteExercise(
+                            builder: (_) => DeleteExerciseDialog(
                               exercise: exercise,
                               exerciseName: exercise['name'],
                             ),

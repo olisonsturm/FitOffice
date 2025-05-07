@@ -25,6 +25,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   int selectedTab = 0;
   bool isFavorite = false;
   bool favoriteChanged = false;
+  bool isAdmin = false;
 
   final DbController _dbController = DbController();
   final ProfileController _profileController = Get.put(ProfileController());
@@ -38,6 +39,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
       ExerciseDetailScreen.currentTabIndex.value = 0;
     });
     _loadFavoriteStatus();
+    _loadUserRole();
   }
 
   @override
@@ -47,6 +49,13 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
       ExerciseDetailScreen.currentTabIndex.value = -1;
     });
     super.dispose();
+  }
+
+  void _loadUserRole() async {
+    final user = await _profileController.getUserData();
+    setState(() {
+      isAdmin = user.role == 'admin';
+    });
   }
 
   void _loadFavoriteStatus() async {
@@ -92,6 +101,8 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
         showBackButton: true,
         showFavoriteIcon: true,
         isFavorite: isFavorite,
+        isAdmin: isAdmin,
+        exercise: widget.exerciseData,
         onToggleFavorite: toggleFavorite,
         onBack: _handleBack,
       ),

@@ -66,6 +66,7 @@ class DashboardState extends State<Dashboard> {
         title: _getPageTitle(),
         showBackButton: false,
         showDarkModeToggle: true,
+        showStreak: true,
         showFavoriteIcon: true,
         subtitle: 'FitOffice@DHBW',
         onToggleFavorite: () {
@@ -115,14 +116,14 @@ class DashboardState extends State<Dashboard> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: tBottomNavBarSelectedColor,
         unselectedItemColor: tBottomNavBarUnselectedColor,
-        items: [
+        items: const [
           BottomNavigationBarItem(
-            icon: const Icon(Icons.route),
+            icon: Icon(Icons.route),
             label: 'Progress',
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.book),
-            label: 'Exercises',
+            icon: Icon(Icons.book),
+            label: 'Library',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.insert_chart),
@@ -137,5 +138,3 @@ class DashboardState extends State<Dashboard> {
     );
   }
 }
-
-

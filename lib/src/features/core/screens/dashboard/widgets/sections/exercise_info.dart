@@ -1,10 +1,15 @@
+import 'package:fit_office/global_overlay.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/cancel_exercise.dart';
+import 'package:fit_office/src/utils/helper/dialog_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/start_exercise.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/video_player.dart';
 
 import '../end_exercise.dart';
 
@@ -27,9 +32,40 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
     final description =
         widget.exerciseData['description'] ?? tExerciseNoDescription;
+
+    final videoUrl = widget.exerciseData['video'];
+    final hasVideo = videoUrl != null &&
+        videoUrl is String &&
+        videoUrl.isNotEmpty &&
+        Uri.tryParse(videoUrl)?.hasAbsolutePath == true &&
+        (videoUrl.startsWith('http://') || videoUrl.startsWith('https://'));
+
+    Widget videoContent = hasVideo
+        ? SizedBox(
+            height: 200,
+            width: double.infinity,
+            child: VideoPlayerWidget(videoUrl: videoUrl),
+          )
+        : Container(
+            height: 200,
+            decoration: BoxDecoration(
+              color: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isDarkMode ? Colors.grey.shade700 : Colors.grey.shade300,
+              ),
+            ),
+            child: Center(
+              child: Text(
+                tNoVideoAvailable,
+                style: TextStyle(
+                  color: isDarkMode ? Colors.white70 : tDarkGreyColor,
+                ),
+              ),
+            ),
+          );
 
     return Obx(() {
       final isRunning = timerController.isRunning.value;
@@ -63,28 +99,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                         color: isDarkMode ? tWhiteColor : tBlackColor,
                       )),
                   const SizedBox(height: 12),
-                  Container(
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: isDarkMode
-                          ? Colors.grey.shade800
-                          : Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: isDarkMode
-                            ? Colors.grey.shade700
-                            : Colors.grey.shade300,
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Video aktuell deaktiviert',
-                        style: TextStyle(
-                          color: isDarkMode ? Colors.white70 : Colors.grey,
-                        ),
-                      ),
-                    ),
-                  ),
+                  videoContent,
                   const SizedBox(height: 20),
                   Text(tExerciseDescription,
                       style: TextStyle(
@@ -102,65 +117,110 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                   ),
                   const SizedBox(height: 24),
                   isThisExerciseRunning
-                      ? Row(
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: tBottomNavBarUnselectedColor,
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 14),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          tBottomNavBarUnselectedColor,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 14),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      elevation: 0,
+                                      side: BorderSide.none,
+                                    ),
+                                    icon: Icon(
+                                      isPaused ? Icons.play_arrow : Icons.pause,
+                                      color: tWhiteColor,
+                                    ),
+                                    label: Text(
+                                      isPaused
+                                          ? tExerciseResume
+                                          : tExercisePause,
+                                      style:
+                                          const TextStyle(color: tWhiteColor),
+                                    ),
+                                    onPressed: () {
+                                      isPaused
+                                          ? timerController.resume()
+                                          : timerController.pause();
+                                    },
                                   ),
-                                  elevation: 0,
-                                  side: BorderSide.none,
                                 ),
-                                icon: Icon(
-                                  isPaused ? Icons.play_arrow : Icons.pause,
-                                  color: tWhiteColor,
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: tFinishExerciseColor,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 14),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      elevation: 0,
+                                      side: BorderSide.none,
+                                    ),
+                                    icon: const Icon(Icons.check_circle,
+                                        color: tWhiteColor),
+                                    label: const Text(
+                                      tExerciseFinish,
+                                      style: TextStyle(color: tWhiteColor),
+                                    ),
+                                    onPressed: () async {
+                                      final confirmed =
+                                          await showUnifiedDialog<bool>(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (_) => EndExerciseDialog(
+                                          exerciseName:
+                                              widget.exerciseData['name'] ?? '',
+                                        ),
+                                      );
+                                      if (confirmed == true) {
+                                        timerController.stop();
+                                      }
+                                    },
+                                  ),
                                 ),
-                                label: Text(
-                                  isPaused ? tExerciseResume : tExercisePause,
-                                  style: const TextStyle(color: tWhiteColor),
-                                ),
-                                onPressed: () {
-                                  isPaused
-                                      ? timerController.resume()
-                                      : timerController.pause();
-                                },
-                              ),
+                              ],
                             ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: tPrimaryColor,
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 14),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  elevation: 0,
-                                  side: BorderSide.none,
+                            const SizedBox(height: 12),
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: tPrimaryColor,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 14),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
-                                icon:
-                                    const Icon(Icons.stop, color: tWhiteColor),
-                                label: const Text(
-                                  tExerciseStop,
-                                  style: TextStyle(color: tWhiteColor),
-                                ),
-                                onPressed: () async {
-                                  final confirmed = await showDialog<bool>(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (_) => const EndExerciseDialog(),
-                                  );
-                                  if (confirmed == true) {
-                                    timerController.stop();
-                                  }
-                                },
+                                elevation: 0,
+                                side: BorderSide.none,
                               ),
+                              icon:
+                                  const Icon(Icons.cancel, color: tWhiteColor),
+                              label: const Text(
+                                tCancelExercise,
+                                style: TextStyle(color: tWhiteColor),
+                              ),
+                              onPressed: () async {
+                                final confirmed = await showUnifiedDialog<bool>(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (_) => CancelExerciseDialog(
+                                    exerciseName:
+                                        widget.exerciseData['name'] ?? '',
+                                  ),
+                                );
+                                if (confirmed == true) {
+                                  timerController.stop();
+                                }
+                              },
                             ),
                           ],
                         )
@@ -185,10 +245,10 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                             onPressed: () async {
                               if (timerController.isRunning.value &&
                                   !isThisExerciseRunning) {
-                                await showDialog(
+                                await showUnifiedDialog(
                                   context: context,
-                                  barrierDismissible: false,
-                                  builder: (_) => const ActiveTimerDialog(),
+                                  builder: (_) =>
+                                      ActiveTimerDialog.forAction('start'),
                                 );
                                 return;
                               }
