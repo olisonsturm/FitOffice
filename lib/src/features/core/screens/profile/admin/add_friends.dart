@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/screens/profile/friend_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../controllers/friends_controller.dart';
 
 class AddFriendsScreen extends StatefulWidget {
   final String currentUserId;
@@ -18,7 +21,9 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
   final FocusNode _searchFocus = FocusNode();
   List<String> results = [];
   bool isSearching = false;
-  Map<String, String?> friendshipStatus = {}; // username -> status
+  Map<String, String?> friendshipStatus = {};
+  final _controller = FriendsController();
+  final currentUserEmail = FirebaseAuth.instance.currentUser?.email;
 
   @override
   void initState() {
@@ -27,41 +32,6 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
       final query = _searchController.text.trim();
       _searchUsers(query);
     });
-  }
-
-  Future<String?> _getFriendshipStatus(String friendUsername) async {
-    try {
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('username', isEqualTo: friendUsername)
-          .limit(1)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final friendDoc = querySnapshot.docs.first;
-        final currentUserRef = FirebaseFirestore.instance
-            .collection('users')
-            .doc(widget.currentUserId);
-
-        final friendshipRef =
-            FirebaseFirestore.instance.collection('friendships');
-
-        final existingQuery = await friendshipRef.where('sender', whereIn: [
-          currentUserRef,
-          friendDoc.reference
-        ]).where('receiver',
-            whereIn: [currentUserRef, friendDoc.reference]).get();
-
-        if (existingQuery.docs.isNotEmpty) {
-          final friendshipDoc = existingQuery.docs.first;
-          final status = friendshipDoc['status'];
-          return status;
-        }
-      }
-      return null;
-    } catch (_) {
-      return null;
-    }
   }
 
   void _searchUsers(String query) async {
@@ -92,7 +62,8 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
 
       Map<String, String?> statusMap = {};
       for (final username in filtered) {
-        final status = await _getFriendshipStatus(username);
+        final status =
+            await _controller.getFriendshipStatus(currentUserEmail!, username);
         statusMap[username] = status;
       }
 
@@ -107,129 +78,6 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
         friendshipStatus.clear();
         isSearching = false;
       });
-    }
-  }
-
-  void _addFriend(String username) async {
-    setState(() {
-      friendshipStatus[username] = 'pending';
-    });
-
-    try {
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('username', isEqualTo: username)
-          .limit(1)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final friendDoc = querySnapshot.docs.first;
-        final currentUserRef = FirebaseFirestore.instance
-            .collection('users')
-            .doc(widget.currentUserId);
-
-        final friendshipRef =
-            FirebaseFirestore.instance.collection('friendships');
-
-        final existingQuery = await friendshipRef
-            .where('status', isEqualTo: 'accepted')
-            .where('sender',
-                whereIn: [currentUserRef, friendDoc.reference]).get();
-
-        final alreadyExists = existingQuery.docs.any((doc) {
-          final u1 = doc['sender'] as DocumentReference;
-          final u2 = doc['receiver'] as DocumentReference;
-          return (u1.id == currentUserRef.id && u2.id == friendDoc.id) ||
-              (u1.id == friendDoc.id && u2.id == currentUserRef.id);
-        });
-
-        if (alreadyExists && mounted) {
-          setState(() {
-            friendshipStatus[username] = 'accepted';
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('$username$tIsAlreadyYourFriend')),
-          );
-          return;
-        }
-
-        await friendshipRef.add({
-          'sender': currentUserRef,
-          'receiver': friendDoc.reference,
-          'since': FieldValue.serverTimestamp(),
-          'status': 'pending',
-        });
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('$username$tFriendNow')),
-          );
-        }
-      }
-    } catch (e) {
-      setState(() {
-        friendshipStatus[username] = null;
-      });
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(tExceptionAddingFriend)),
-        );
-      }
-    }
-  }
-
-  void _removeFriend(String username) async {
-    setState(() {
-      friendshipStatus[username] = null;
-    });
-
-    try {
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('username', isEqualTo: username)
-          .limit(1)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final friendDoc = querySnapshot.docs.first;
-        final currentUserRef = FirebaseFirestore.instance
-            .collection('users')
-            .doc(widget.currentUserId);
-
-        final friendshipRef =
-            FirebaseFirestore.instance.collection('friendships');
-
-        final existingQuery = await friendshipRef
-            .where('status', isEqualTo: 'accepted')
-            .where('sender',
-                whereIn: [currentUserRef, friendDoc.reference]).get();
-
-        final existingFriendship = existingQuery.docs.firstWhere((doc) {
-          final u1 = doc['sender'] as DocumentReference;
-          final u2 = doc['receiver'] as DocumentReference;
-          return (u1.id == currentUserRef.id && u2.id == friendDoc.id) ||
-              (u1.id == friendDoc.id && u2.id == currentUserRef.id);
-        });
-
-        await existingFriendship.reference.delete();
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('$username$tRemoved')),
-          );
-        }
-      }
-    } catch (e) {
-      setState(() {
-        friendshipStatus[username] = 'accepted';
-      });
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(tExceptionRemoveFriend)),
-        );
-      }
     }
   }
 
@@ -334,7 +182,25 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                           trailing: IconButton(
                             icon: const Icon(Icons.person_remove,
                                 color: Colors.red),
-                            onPressed: () => _removeFriend(username),
+                            onPressed: () async {
+                              setState(() {
+                                friendshipStatus[username] = null;
+                              });
+
+                              try {
+                                await _controller.removeFriendship(
+                                    currentUserEmail!, username);
+                              } catch (e) {
+                                setState(() {
+                                  friendshipStatus[username] = 'accepted';
+                                });
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(tFriendDeleteException)),
+                                  );
+                              }
+                            },
                           ),
                           onTap: () {
                             Navigator.push(
@@ -383,7 +249,25 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                           trailing: IconButton(
                             icon: const Icon(Icons.person_add,
                                 color: Colors.blue),
-                            onPressed: () => _addFriend(username),
+                            onPressed: () async {
+                              setState(() {
+                                friendshipStatus[username] = 'pending';
+                              });
+
+                              try {
+                                await _controller.sendFriendRequest(
+                                    currentUserEmail!, username);
+                              } catch (e) {
+                                setState(() {
+                                  friendshipStatus[username] = null;
+                                });
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(tExceptionAddingFriend)),
+                                );
+                              }
+                            },
                           ),
                           onTap: () {
                             Navigator.push(

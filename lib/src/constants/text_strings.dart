@@ -235,6 +235,8 @@ const String tUploadVideoSuccess = "Video uploaded successfully";
 const String tNoVideoSelected = "No video has been selected";
 const String tVideoDeleteSuccess = "Video deleted successfully";
 const String tUnknown = "Unknown";
+const String tAskDeleteUser = "Do you like to delete the user ";
+const String tDeleteUserConsequence = "? The user can't be restored and will be deleted globally.";
 
 // -- Friends Text
 const String tShowAll = "Show all";

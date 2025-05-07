@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
+import 'package:fit_office/src/features/core/controllers/friends_controller.dart';
 import 'package:fit_office/src/features/core/screens/profile/widgets/custom_profile_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -52,95 +53,6 @@ class _FriendProfileState extends State<FriendProfile> {
   String formatTimestamp(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();
     return DateFormat('dd.MM.yyyy').format(dateTime);
-  }
-
-  Future<void> sendFriendRequest(
-      String senderEmail, String receiverUserName) async {
-    final usersRef = FirebaseFirestore.instance.collection('users');
-
-    final senderQuery =
-        await usersRef.where('email', isEqualTo: senderEmail).get();
-    final receiverQuery =
-        await usersRef.where('username', isEqualTo: receiverUserName).get();
-
-    if (senderQuery.docs.isEmpty || receiverQuery.docs.isEmpty) return;
-
-    final senderRef = senderQuery.docs.first.reference;
-    final receiverRef = receiverQuery.docs.first.reference;
-
-    final existing = await FirebaseFirestore.instance
-        .collection('friendships')
-        .where('sender', isEqualTo: senderRef)
-        .where('receiver', isEqualTo: receiverRef)
-        .get();
-
-    if (existing.docs.isEmpty) {
-      await FirebaseFirestore.instance.collection('friendships').add({
-        'sender': senderRef,
-        'receiver': receiverRef,
-        'status': 'pending',
-        'since': FieldValue.serverTimestamp(),
-      });
-    }
-  }
-
-  Future<void> removeFriendship(String userEmail, String otherUserName) async {
-    final usersRef = FirebaseFirestore.instance.collection('users');
-
-    final userQuery = await usersRef.where('email', isEqualTo: userEmail).get();
-    final otherUserQuery =
-        await usersRef.where('username', isEqualTo: otherUserName).get();
-
-    if (userQuery.docs.isEmpty || otherUserQuery.docs.isEmpty) return;
-
-    final userRef = userQuery.docs.first.reference;
-    final otherUserRef = otherUserQuery.docs.first.reference;
-
-    final friendships = await FirebaseFirestore.instance
-        .collection('friendships')
-        .where('status', isEqualTo: 'accepted')
-        .where(Filter.or(
-          Filter.and(Filter('sender', isEqualTo: userRef),
-              Filter('receiver', isEqualTo: otherUserRef)),
-          Filter.and(Filter('sender', isEqualTo: otherUserRef),
-              Filter('receiver', isEqualTo: userRef)),
-        ))
-        .get();
-
-    for (var doc in friendships.docs) {
-      await doc.reference.delete();
-    }
-  }
-
-  Future<String?> getFriendshipStatus(
-      String currentEmail, String otherUserName) async {
-    final usersRef = FirebaseFirestore.instance.collection('users');
-
-    final userQuery =
-        await usersRef.where('email', isEqualTo: currentEmail).get();
-    final otherUserQuery =
-        await usersRef.where('username', isEqualTo: otherUserName).get();
-
-    if (userQuery.docs.isEmpty || otherUserQuery.docs.isEmpty) return null;
-
-    final userRef = userQuery.docs.first.reference;
-    final otherUserRef = otherUserQuery.docs.first.reference;
-
-    final friendshipQuery = await FirebaseFirestore.instance
-        .collection('friendships')
-        .where(Filter.or(
-          Filter.and(Filter('sender', isEqualTo: userRef),
-              Filter('receiver', isEqualTo: otherUserRef)),
-          Filter.and(Filter('sender', isEqualTo: otherUserRef),
-              Filter('receiver', isEqualTo: userRef)),
-        ))
-        .get();
-
-    if (friendshipQuery.docs.isNotEmpty) {
-      return friendshipQuery.docs.first.get('status');
-    }
-
-    return null;
   }
 
   @override
@@ -243,8 +155,8 @@ class _FriendProfileState extends State<FriendProfile> {
                                 isPendingLocal = false;
                                 Navigator.of(context).pop();
                               });
-
-                              await removeFriendship(
+                              FriendsController controller = FriendsController();
+                              await controller.removeFriendship(
                                   currentEmail!, widget.userName);
 
                               Get.snackbar(tFriendshipDeleted,
@@ -258,7 +170,8 @@ class _FriendProfileState extends State<FriendProfile> {
                           setState(() {
                             isPendingLocal = true;
                           });
-                          await sendFriendRequest(
+                          FriendsController controller = FriendsController();
+                          await controller.sendFriendRequest(
                               currentEmail!, widget.userName);
                           Get.snackbar(tRequestSent,
                               "$tSentRequestToUser${widget.userName}");

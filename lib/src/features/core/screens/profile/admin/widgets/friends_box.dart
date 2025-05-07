@@ -25,7 +25,7 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
           .collection('users')
           .doc(widget.currentUserId);
       final friendshipsRef =
-      FirebaseFirestore.instance.collection('friendships');
+          FirebaseFirestore.instance.collection('friendships');
 
       final acceptedSnapshot1 = await friendshipsRef
           .where('sender', isEqualTo: userRef)
@@ -78,9 +78,13 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
     }
   }
 
-  Future<void> deleteFriendship(String docId, String userName, bool isPending) async {
+  Future<void> deleteFriendship(
+      String docId, String userName, bool isPending) async {
     try {
-      await FirebaseFirestore.instance.collection('friendships').doc(docId).delete();
+      await FirebaseFirestore.instance
+          .collection('friendships')
+          .doc(docId)
+          .delete();
       setState(() {
         _cachedFriends.removeWhere((f) => f['friendshipDocId'] == docId);
       });
@@ -215,10 +219,9 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => FriendProfile(
-                            userName: userName,
-                            isFriend: isFriend,
-                            isPending: isPending
-                          ),
+                              userName: userName,
+                              isFriend: isFriend,
+                              isPending: isPending),
                         ),
                       );
                     },

@@ -13,7 +13,8 @@ class AllUsersPage extends StatefulWidget {
   final bool showOnlyFriends;
   final String? currentUserId;
 
-  const AllUsersPage({super.key, this.showOnlyFriends = false, this.currentUserId});
+  const AllUsersPage(
+      {super.key, this.showOnlyFriends = false, this.currentUserId});
 
   @override
   State<AllUsersPage> createState() => _AllUsersPageState();
@@ -21,7 +22,8 @@ class AllUsersPage extends StatefulWidget {
 
 class _AllUsersPageState extends State<AllUsersPage> {
   final ProfileController _profileController = Get.put(ProfileController());
-  final GlobalKey<DashboardCategoriesState> _categoriesKey = GlobalKey<DashboardCategoriesState>();
+  final GlobalKey<DashboardCategoriesState> _categoriesKey =
+      GlobalKey<DashboardCategoriesState>();
 
   late UserModel _currentUser;
   bool isUserLoaded = false;
@@ -43,7 +45,6 @@ class _AllUsersPageState extends State<AllUsersPage> {
     List<UserModel> users = [];
 
     if (widget.showOnlyFriends && widget.currentUserId != null) {
-      // Freunde laden
       final friendshipsSnapshot = await FirebaseFirestore.instance
           .collection('friendships')
           .where('sender', isEqualTo: widget.currentUserId)
@@ -65,15 +66,16 @@ class _AllUsersPageState extends State<AllUsersPage> {
             .where(FieldPath.documentId, whereIn: friendIds)
             .get();
 
-        users = usersSnapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).toList();
+        users = usersSnapshot.docs
+            .map((doc) => UserModel.fromSnapshot(doc))
+            .toList();
       }
     } else {
-      // Alle Nutzer laden
-      final usersSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .get();
+      final usersSnapshot =
+          await FirebaseFirestore.instance.collection('users').get();
 
-      users = usersSnapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).toList();
+      users =
+          usersSnapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).toList();
     }
 
     setState(() {
@@ -99,108 +101,122 @@ class _AllUsersPageState extends State<AllUsersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(tAllUsers), backgroundColor: Colors.grey),
+      appBar:
+          AppBar(title: const Text(tAllUsers), backgroundColor: Colors.grey),
       body: isUserLoaded
           ? Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            DashboardSearchBox(
-              txtTheme: Theme.of(context).textTheme,
-              onSearchSubmitted: _searchUsers,
-              onTextChanged: (query) {
-                _categoriesKey.currentState?.updateSearchQuery(query);
-                setState(() {
-                  _searchText = query;
-                });
-              },
-              onFocusChanged: (hasFocus) {
-                setState(() {
-                  _searchHasFocus = hasFocus;
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-            _filteredUsers.isEmpty
-                ? const Text(tNoUsersFound)
-                : Expanded(
-              child: ListView.builder(
-                itemCount: _filteredUsers.length,
-                itemBuilder: (context, index) {
-                  final user = _filteredUsers[index];
-                  return Card(
-                    child: ListTile(
-                      leading: const Icon(Icons.person),
-                      title: Text(
-                        user.fullName,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Text(
-                          'Email: ${user.email}\nRole: ${user.role ?? 'No role'}'),
-                      trailing: _currentUser.role == 'admin'
-                          ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => EditUserPage(user: user),
-                                ),
-                              ).then((_) => _loadData());
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text(tDeleteEditUserHeading),
-                                  content: Text(
-                                      'Do you like to delete "${user.fullName}"? The user cannot be restored and will be deleted globally!'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text(tCancel),
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  DashboardSearchBox(
+                    txtTheme: Theme.of(context).textTheme,
+                    onSearchSubmitted: _searchUsers,
+                    onTextChanged: (query) {
+                      _categoriesKey.currentState?.updateSearchQuery(query);
+                      setState(() {
+                        _searchText = query;
+                      });
+                    },
+                    onFocusChanged: (hasFocus) {
+                      setState(() {
+                        _searchHasFocus = hasFocus;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  _filteredUsers.isEmpty
+                      ? const Text(tNoUsersFound)
+                      : Expanded(
+                          child: ListView.builder(
+                            itemCount: _filteredUsers.length,
+                            itemBuilder: (context, index) {
+                              final user = _filteredUsers[index];
+                              return Card(
+                                child: ListTile(
+                                  leading: const Icon(Icons.person),
+                                  title: Text(
+                                    user.fullName,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        Navigator.of(context).pop();
-                                        await FirebaseFirestore.instance
-                                            .collection('users')
-                                            .doc(user.id)
-                                            .delete();
-                                        _loadData();
-                                      },
-                                      child: const Text(
-                                        tDelete,
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
+                                  subtitle: Text(
+                                      'Email: ${user.email}\nRole: ${user.role ?? 'No role'}'),
+                                  trailing: _currentUser.role == 'admin'
+                                      ? Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IconButton(
+                                              icon: const Icon(Icons.edit,
+                                                  color: Colors.blue),
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (_) =>
+                                                        EditUserPage(
+                                                            user: user),
+                                                  ),
+                                                ).then((_) => _loadData());
+                                              },
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(Icons.delete,
+                                                  color: Colors.red),
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      AlertDialog(
+                                                    title: const Text(
+                                                        tDeleteEditUserHeading),
+                                                    content: Text(
+                                                        '$tAskDeleteUser${user.fullName}$tDeleteUserConsequence'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child:
+                                                            const Text(tCancel),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () async {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                          await FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'users')
+                                                              .doc(user.id)
+                                                              .delete();
+                                                          _loadData();
+                                                        },
+                                                        child: const Text(
+                                                          tDelete,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.red),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            )
+                                          ],
+                                        )
+                                      : null,
                                 ),
                               );
                             },
-                          )
-                        ],
-                      )
-                          : null,
-                    ),
-                  );
-                },
+                          ),
+                        ),
+                ],
               ),
-            ),
-          ],
-        ),
-      )
+            )
           : const Center(child: CircularProgressIndicator()),
     );
   }
