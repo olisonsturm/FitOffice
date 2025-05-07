@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../../constants/sizes.dart';
 import '../../models/model_on_boarding.dart';
@@ -20,9 +21,11 @@ class OnBoardingPageWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Image(
-            image: AssetImage(model.image),
-            height: size.height * 0.45,
+          RepaintBoundary(
+            child: Lottie.asset(
+              model.image,
+              height: size.height * 0.45,
+            ),
           ),
           Column(
             children: [

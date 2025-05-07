@@ -1,4 +1,3 @@
-import 'package:fit_office/global_overlay.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/cancel_exercise.dart';
 import 'package:fit_office/src/utils/helper/dialog_helper.dart';
@@ -8,7 +7,6 @@ import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/start_exercise.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/video_player.dart';
 
 import '../end_exercise.dart';

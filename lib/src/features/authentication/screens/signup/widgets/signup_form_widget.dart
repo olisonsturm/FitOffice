@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:fit_office/src/utils/helper/helper_controller.dart';
 import '../../../../../common_widgets/buttons/primary_button.dart';
+import '../../../../../constants/colors.dart';
 import '../../../../../constants/sizes.dart';
 import '../../../../../constants/text_strings.dart';
 import '../../../controllers/signup_controller.dart';
@@ -13,6 +14,7 @@ class SignUpFormWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
     final controller = Get.put(SignUpController());
     return Container(
       padding: const EdgeInsets.only(top: tFormHeight - 15, bottom: 10),
@@ -31,10 +33,10 @@ class SignUpFormWidget extends StatelessWidget {
                   errorStyle: const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
                   label: RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       text: tUserName,
-                      style: TextStyle(color: Colors.black),
-                      children: [
+                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
+                      children: const [
                         TextSpan(
                           text: ' *',
                           style: TextStyle(color: Colors.red),
@@ -52,11 +54,16 @@ class SignUpFormWidget extends StatelessWidget {
                 controller: controller.fullName,
                 autofillHints: const [AutofillHints.name],
                 validator: Helper.validateFullName,
-                decoration: const InputDecoration(
-                  errorStyle: TextStyle(overflow: TextOverflow.visible),
+                decoration: InputDecoration(
+                  errorStyle: const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
-                  label: Text(tFullName),
-                  prefixIcon: Icon(LineAwesomeIcons.user_tag_solid),
+                  label: RichText(
+                    text: TextSpan(
+                      text: tFullName,
+                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor)
+                    ),
+                  ),
+                  prefixIcon: const Icon(LineAwesomeIcons.user_tag_solid),
                 ),
               ),
               const SizedBox(height: tFormHeight - 20),
@@ -70,10 +77,10 @@ class SignUpFormWidget extends StatelessWidget {
                   errorStyle: const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
                   label: RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       text: tEmail,
-                      style: TextStyle(color: Colors.black),
-                      children: [
+                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
+                      children: const [
                         TextSpan(
                           text: ' *',
                           style: TextStyle(color: Colors.red),
@@ -97,10 +104,10 @@ class SignUpFormWidget extends StatelessWidget {
                   const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
                   label: RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       text: tPassword,
-                      style: TextStyle(color: Colors.black),
-                      children: [
+                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
+                      children: const [
                         TextSpan(
                           text: ' *',
                           style: TextStyle(color: Colors.red),
@@ -132,10 +139,10 @@ class SignUpFormWidget extends StatelessWidget {
                   const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
                   label: RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       text: 'Confirm Password',
-                      style: TextStyle(color: Colors.black),
-                      children: [
+                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
+                      children: const [
                         TextSpan(
                           text: ' *',
                           style: TextStyle(color: Colors.red),

@@ -1,15 +1,39 @@
 flutter_native_splash:
-  color: "#ffffff"
-  color_dark: "#2e2e2e"
-  image: assets/logo/fit_office.png
-  image_dark: assets/logo/fit_office.png
-  android: true
-  ios: true
-  web: false
+  # Background colors for light and dark modes
+  color: "#ffffff" # Light mode background color
+  color_dark: "#000000" # Dark mode background color
 
+
+  # Splash screen images for light and dark modes
+  image: assets/logo/fit_office_transparent.png # Light mode image
+  image_dark: assets/logo/fit_office_transparent.png # Dark mode image
+
+  branding: assets/logo/dhbw.png # Branding image (optional)
+  branding_mode: bottom
+  branding_bottom_padding: 24
+
+  # Platform-specific settings
+  android: true # Enable for Android
+  ios: true # Enable for iOS
+  web: false # Disable for Web
+
+  # Android 12-specific settings
   android_12:
-    image: assets/logo/fit_office.png
-    image_dark: assets/logo/fit_office.png
+    image: assets/logo/fit_office_transparent.png # Light mode image for Android 12
+    image_dark: assets/logo/fit_office_transparent.png # Dark mode image for Android 12
+    icon_background_color: "#ffffff" # Background color for the icon
+    icon_background_color_dark: "#000000" # Background color for the icon in dark mode
+    branding: assets/logo/dhbw.png # Branding image (optional)
+    branding_mode: bottom
+    branding_bottom_padding: 24
+
+  # Optional settings for resizing and alignment
+  android_gravity: fill|clip_vertical # Align the image in the center for Android
+  android_screen_orientation: portrait # Set the screen orientation to landscape for Android
+
+  ios_content_mode: scaleAspectFit # Scale the image to fit for iOS
+
+  fullscreen: true
 
 # CREATE - flutter pub run flutter_native_splash:create --path=splash.yaml
 # REMOVE - flutter pub run flutter_native_splash:remove --path=splash.yaml
