@@ -1,13 +1,8 @@
 import 'dart:io';
 
-import 'package:crop_your_image/crop_your_image.dart';
 import 'package:fit_office/src/repository/firebase_storage/storage_service.dart';
-import 'package:fit_office/src/utils/helper/helper_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
-import '../../../../../constants/colors.dart';
 import '../../../../../constants/image_strings.dart';
 import 'avatar_zoom.dart';
 

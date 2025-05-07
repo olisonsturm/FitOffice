@@ -46,7 +46,7 @@ class AllExercisesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final lowerQuery = query.toLowerCase().trim();
     final isFiltered = lowerQuery.isNotEmpty;
@@ -80,10 +80,8 @@ class AllExercisesList extends StatelessWidget {
 
         if (isFiltered || !showGroupedAlphabetically) {
           for (int i = 0; i < sortedList.length; i++) {
-            listWidgets.add(_buildExerciseCard(
-                context, sortedList[i], isAdmin, isDarkMode));
-            if (i < sortedList.length - 1)
-              listWidgets.add(_buildSoftDivider(isDarkMode));
+            listWidgets.add(_buildExerciseCard(context, sortedList[i], isAdmin));
+            if (i < sortedList.length - 1) listWidgets.add(const Divider());
           }
         } else {
           String lastLetter = '';
@@ -91,10 +89,11 @@ class AllExercisesList extends StatelessWidget {
 
           void flush(String tag) {
             listWidgets.add(const SizedBox(height: 16));
-            listWidgets.add(_buildHeader(tag, isDarkMode));
-            listWidgets.add(_buildFullDivider());
+            listWidgets.add(_buildHeader(tag, isDark));
+            listWidgets.add(const Divider());
 
             for (int i = 0; i < buffer.length; i++) {
+              listWidgets.add(_buildExerciseCard(context, buffer[i], isAdmin));
               listWidgets.add(
                   _buildExerciseCard(context, buffer[i], isAdmin, isDarkMode));
               listWidgets.add(i == buffer.length - 1
@@ -151,32 +150,25 @@ class AllExercisesList extends StatelessWidget {
             )),
       );
 
-  Widget _buildFullDivider() => const FullWidthDivider();
-
-  Widget _buildSoftDivider(bool isDarkMode) => Divider(
-        thickness: 0.6,
-        color: isDarkMode ? tDarkGreyColor : tExerciseDivider,
-        indent: 12,
-        endIndent: 12,
-      );
-
-  Widget _buildExerciseCard(BuildContext context, Map<String, dynamic> exercise,
-      bool isAdmin, bool isDarkMode) {
+  Widget _buildExerciseCard(
+      BuildContext context, Map<String, dynamic> exercise, bool isAdmin) {
     final exerciseName = exercise['name'];
     final exerciseCategory = exercise['category'];
     final timerController = Get.find<ExerciseTimerController>();
     final isFavorite = favorites.contains(exerciseName);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
       child: Material(
-        color: isDarkMode ? tDarkGreyColor : tWhiteColor,
+        color: isDark ? tDarkGreyColor : tWhiteColor,
         elevation: 2,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
-          highlightColor: isDarkMode ? tDarkGreyColor : Colors.grey.shade300,
-          splashColor: isDarkMode ? tDarkGreyColor : Colors.grey.shade300,
+          highlightColor: isDark ? tDarkGreyColor : Colors.grey.shade300,
+          splashColor: isDark ? tDarkGreyColor : Colors.grey.shade300,
           onTap: () async {
             final dashboardState =
                 context.findAncestorStateOfType<DashboardState>();
@@ -192,6 +184,7 @@ class AllExercisesList extends StatelessWidget {
                 builder: (_) => ExerciseDetailScreen(exerciseData: exercise),
               ),
             );
+
             if (result == true) {
               onToggleFavorite(exerciseName);
             }
@@ -205,12 +198,12 @@ class AllExercisesList extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: isDarkMode ? Colors.white : Colors.black,
+                  color: isDark ? Colors.white : Colors.black,
                 )),
             subtitle: Text(exerciseCategory ?? 'No category',
                 style: TextStyle(
                   fontSize: 13,
-                  color: isDarkMode ? tPaleWhiteColor : const Color(0xFF777777),
+                  color: isDark ? tPaleWhiteColor : const Color(0xFF777777),
                 )),
             trailing: IntrinsicWidth(
               child: Row(
@@ -218,7 +211,7 @@ class AllExercisesList extends StatelessWidget {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.play_arrow),
-                    color: isDarkMode ? tWhiteColor : tDarkGreyColor,
+                    color: isDark ? tWhiteColor : tDarkGreyColor,
                     onPressed: () async {
                       if (timerController.isRunning.value ||
                           timerController.isPaused.value) {
@@ -252,7 +245,7 @@ class AllExercisesList extends StatelessWidget {
                       isFavorite ? Icons.favorite : Icons.favorite_border,
                       color: isFavorite
                           ? Colors.red
-                          : (isDarkMode
+                          : (isDark
                               ? tPaleWhiteColor
                               : tBottomNavBarUnselectedColor),
                     ),

@@ -1,8 +1,8 @@
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/exercise_history.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/exercise_info.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/exercise_info.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/exercise_history.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.dart';
 import 'package:get/get.dart';
 

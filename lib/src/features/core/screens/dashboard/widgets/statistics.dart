@@ -21,16 +21,16 @@ class StatisticsWidget extends StatelessWidget{
     final controller = Get.put(ProfileController());
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildStreakCard(controller),
-        const SizedBox(height: 10,),
-        _buildLastExerciseCard(controller),
-        const SizedBox(height: 10,),
-        _buildDurationCard(controller),
-      ],
-    );
-  }
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildStreakCard(controller),
+          const SizedBox(height: 10),
+          _buildLastExerciseCard(controller),
+          const SizedBox(height: 10),
+          _buildDurationCard(controller),
+        ],
+      );
+    }
 
   /// Streak-Card
   Widget _buildStreakCard(ProfileController controller) {

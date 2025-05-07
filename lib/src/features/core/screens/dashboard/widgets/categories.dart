@@ -1,4 +1,7 @@
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/favorites_filter.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/mental_filter.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/physicals_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:get/get.dart';
@@ -8,9 +11,6 @@ import '../../../controllers/profile_controller.dart';
 import '../../../models/dashboard/categories_model.dart';
 import '../exercise_filter.dart';
 import 'exercises_list.dart';
-import 'sections/physicals_filter.dart';
-import 'sections/mental_filter.dart';
-import 'sections/favorites_filter.dart';
 
 class DashboardCategories extends StatefulWidget {
   const DashboardCategories({

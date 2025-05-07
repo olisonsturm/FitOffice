@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit_office/src/features/core/screens/profile/widgets/custom_profile_button.dart';
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';

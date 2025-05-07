@@ -26,9 +26,9 @@ class Dashboard extends StatefulWidget {
 
 class DashboardState extends State<Dashboard> {
   final GlobalKey<DashboardCategoriesState> _categoriesKey =
-      GlobalKey<DashboardCategoriesState>();
+  GlobalKey<DashboardCategoriesState>();
   final GlobalKey<DashboardSearchBoxState> _searchBoxKey =
-      GlobalKey<DashboardSearchBoxState>();
+  GlobalKey<DashboardSearchBoxState>();
   final ProfileController _profileController = Get.put(ProfileController());
   final DbController _dbController = DbController();
 
@@ -96,7 +96,7 @@ class DashboardState extends State<Dashboard> {
     final user = await _profileController.getUserData();
     final userFavorites = await _dbController.getFavouriteExercises(user.email);
     final favoriteNames =
-        userFavorites.map((e) => e['name'] as String).toList();
+    userFavorites.map((e) => e['name'] as String).toList();
 
     setState(() {
       _userFavorites = favoriteNames;
@@ -178,8 +178,8 @@ class DashboardState extends State<Dashboard> {
                           children: [
                             _isUserLoaded
                                 ? Text(
-                                    '$tDashboardTitle ${_user?.fullName ?? ''}',
-                                    style: txtTheme.bodyMedium)
+                                '$tDashboardTitle ${_user?.fullName ?? ''}',
+                                style: txtTheme.bodyMedium)
                                 : const CircularProgressIndicator(),
                             Text(tDashboardHeading,
                                 style: txtTheme.displayMedium),
@@ -255,7 +255,7 @@ class DashboardState extends State<Dashboard> {
                           txtTheme: txtTheme,
                           onSearchChanged: (text) {},
                           forceShowExercisesOnly:
-                              _searchHasFocus || _searchText.isNotEmpty,
+                          _searchHasFocus || _searchText.isNotEmpty,
                           onReturnedFromFilter: removeSearchFocus,
                         ),
                       ),

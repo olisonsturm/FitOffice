@@ -44,7 +44,7 @@ class AllUsers extends StatelessWidget {
                                 Container(
                                   padding: const EdgeInsets.all(10.0),
                                   decoration: BoxDecoration(
-                                    color: tPrimaryColor.withOpacity(0.1),
+                                    color: tPrimaryColor.withAlpha((0.1 * 255).toInt()),
                                     borderRadius: BorderRadius.circular(10.0),
                                     border: const Border(bottom: BorderSide(), top: BorderSide(), left: BorderSide(), right: BorderSide(), )
                                   ),

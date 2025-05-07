@@ -1,10 +1,10 @@
-import 'package:fit_office/global_overlay.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/delete_exercise.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/edit_exercise.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/utils/helper/dialog_helper.dart';
 
@@ -46,8 +46,8 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
             title,
             style: TextStyle(
                 fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: isDarkMode ? tWhiteColor : tBlackColor),
+                fontWeight: FontWeight.bold, // IMMER fett
+                color: isDark ? tWhiteColor : tBlackColor),
             textAlign: TextAlign.center,
           )
         : Column(
@@ -57,26 +57,24 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                 title,
                 style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: isDarkMode ? tWhiteColor : tBlackColor),
+                    fontWeight: FontWeight.bold, // IMMER fett
+                    color: isDark ? tWhiteColor : tBlackColor),
               ),
               Text(
                 subtitle!,
                 style: TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: isDarkMode ? Colors.white70 : Colors.black45,
-
+                  fontWeight: FontWeight.bold, // SUBTITLE auch fett
+                  color: isDark ? Colors.white70 : Colors.black45,
                 ),
               ),
             ],
           );
 
     return AppBar(
-      backgroundColor: isDarkMode ? tBlackColor : tWhiteColor,
+      backgroundColor: isDark ? tBlackColor : tWhiteColor,
+      scrolledUnderElevation: 0,
       elevation: 0,
-      automaticallyImplyLeading: false,
-      centerTitle: true,
       title: Stack(
         alignment: Alignment.center,
         children: [
@@ -92,7 +90,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                   IconButton(
                     icon: Icon(
                       Icons.arrow_back,
-                      color: isDarkMode ? tWhiteColor : tDarkColor,
+                      color: isDark ? tWhiteColor : tDarkColor,
                     ),
                     onPressed: onBack ?? () => Navigator.of(context).pop(),
                   ),
@@ -102,7 +100,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                       isFavorite ? Icons.favorite : Icons.favorite_border,
                       color: isFavorite
                           ? Colors.red
-                          : (isDarkMode ? tPaleWhiteColor : tPaleBlackColor),
+                          : (isDark ? tPaleWhiteColor : tPaleBlackColor),
                     ),
                     onPressed: onToggleFavorite,
                   ),
@@ -118,7 +116,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                             Icons.local_fire_department,
                             color: hasStreak
                                 ? Colors.orange
-                                : (isDarkMode ? tWhiteColor : tPaleBlackColor),
+                                : (isDark ? tWhiteColor : tPaleBlackColor),
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -126,7 +124,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: isDarkMode ? tWhiteColor : tDarkColor,
+                              color: isDark ? tWhiteColor : tDarkColor,
                             ),
                           ),
                         ],
@@ -149,7 +147,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                       isFavorite ? Icons.favorite : Icons.favorite_border,
                       color: isFavorite
                           ? Colors.red
-                          : (isDarkMode ? tPaleWhiteColor : tPaleBlackColor),
+                          : (isDark ? tWhiteColor : tBlackColor),
                     ),
                     onPressed: onToggleFavorite,
                   ),
@@ -157,7 +155,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                   IconButton(
                     icon: Icon(
                       Icons.edit,
-                      color: isDarkMode ? tWhiteColor : tPaleBlackColor,
+                      color: isDark ? tWhiteColor : tPaleBlackColor,
                     ),
                     onPressed: () async {
                       final timerController =
@@ -214,7 +212,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                   IconButton(
                     icon: Icon(
                       Icons.dark_mode,
-                      color: isDarkMode ? tWhiteColor : tDarkColor,
+                      color: isDark ? tWhiteColor : tDarkColor,
                     ),
                     onPressed: () => themeController.toggleTheme(),
                   ),

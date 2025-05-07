@@ -28,7 +28,7 @@ class OTPScreen extends StatelessWidget {
             OtpTextField(
                 mainAxisAlignment: MainAxisAlignment.center,
                 numberOfFields: 6,
-                fillColor: Colors.black.withOpacity(0.1),
+                fillColor: Colors.black.withAlpha((0.1 * 255).toInt()),
                 filled: true,
                 onSubmit: (code) {
                   otp = code;
