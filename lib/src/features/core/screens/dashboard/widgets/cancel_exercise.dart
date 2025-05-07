@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 
-class StartExerciseDialog extends StatelessWidget {
+class CancelExerciseDialog extends StatelessWidget {
   final String exerciseName;
 
-  const StartExerciseDialog({super.key, required this.exerciseName});
+  const CancelExerciseDialog({super.key, required this.exerciseName});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class StartExerciseDialog extends StatelessWidget {
                       children: [
                         const SizedBox(height: 10),
                         Text(
-                          tStartExercisePopUp,
+                          tCancelExercise,
                           style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -38,7 +38,7 @@ class StartExerciseDialog extends StatelessWidget {
                         ),
                         const SizedBox(height: 24),
                         Text(
-                          tStartExerciseConfirmation,
+                          tCancelExerciseMessage,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 18,
@@ -65,7 +65,7 @@ class StartExerciseDialog extends StatelessWidget {
                                 onPressed: () =>
                                     Navigator.of(context).pop(true),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: tStartExerciseColor,
+                                  backgroundColor: Colors.red.shade500,
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 14),
                                   side: BorderSide.none,
@@ -73,15 +73,16 @@ class StartExerciseDialog extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
-                                icon: const Icon(Icons.play_arrow,
-                                    color: Colors.white),
-                                label: const Text(
-                                  tStartExercisePositive,
+                                icon: const Icon(Icons.cancel,
+                                    color: tWhiteColor),
+                                label: Text(
+                                  tCancelExercisePositive,
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.white,
+                                    color: tWhiteColor,
                                     fontWeight: FontWeight.bold,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),
@@ -92,7 +93,8 @@ class StartExerciseDialog extends StatelessWidget {
                                 onPressed: () =>
                                     Navigator.of(context).pop(false),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red.shade500,
+                                  backgroundColor:
+                                      isDarkMode ? tGreyColor : tPaleBlackColor,
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 14),
                                   side: BorderSide.none,
@@ -101,15 +103,14 @@ class StartExerciseDialog extends StatelessWidget {
                                   ),
                                 ),
                                 icon: const Icon(Icons.undo_sharp,
-                                    color: tWhiteColor),
-                                label: Text(
-                                  tStartExerciseNegative,
+                                    color: Colors.white),
+                                label: const Text(
+                                  tCancelExerciseNegative,
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: tWhiteColor,
+                                    color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),
@@ -123,9 +124,7 @@ class StartExerciseDialog extends StatelessWidget {
                       child: IconButton(
                         icon: Icon(
                           Icons.cancel_outlined,
-                          color: isDarkMode
-                              ? tPaleWhiteColor
-                              : tPaleBlackColor,
+                          color: isDarkMode ? tPaleWhiteColor : tPaleBlackColor,
                         ),
                         onPressed: () => Navigator.of(context).pop(),
                         iconSize: 28,

@@ -6,6 +6,7 @@ class ExerciseTimerController extends GetxController {
   var exerciseName = ''.obs;
   var exerciseCategory = ''.obs;
   var elapsed = Duration.zero.obs;
+  var autoPaused = false.obs;
 
   late final Stopwatch _stopwatch;
   late final RxString formattedTime = "0:00".obs;

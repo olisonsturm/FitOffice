@@ -11,6 +11,13 @@ const tCardBgColor = Color(0xFF79848B);
 const tBlackColor = Colors.black;
 const tPaleWhiteColor = Colors.white70;
 const tPaleBlackColor = Colors.black54;
+const tDarkGreyColor = Color(0xFF616161); // Equivalent to Colors.grey.shade700
+const tLightGreyColor = Color(0xFFBDBDBD); // Equivalent to Colors.grey.shade400
+const tExerciseDivider = Color.fromARGB(255, 200, 200, 200);
+const tFinishExerciseColor = Color(0xFF4CAF50);
+const tStartExerciseColor = Colors.green;
+const tGreyColor = Colors.grey;
+
 
 // -- ON-BOARDING COLORS
 const tOnBoardingPage1Color = Colors.white;
