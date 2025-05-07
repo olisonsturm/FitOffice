@@ -89,7 +89,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (showBackButton && (!isAdmin || !showFavoriteIcon))
+                if (showBackButton)
                   IconButton(
                     icon: Icon(
                       Icons.arrow_back,
