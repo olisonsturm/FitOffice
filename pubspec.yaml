@@ -46,6 +46,7 @@ dependencies:
   video_player: ^2.9.5
   chewie: ^1.10.0
   auto_size_text: ^3.0.0
+  lottie: ^3.3.1
 
 dev_dependencies:
   flutter_test:
@@ -75,5 +76,6 @@ flutter:
     - assets/images/welcome_images/
     - assets/images/forget_password/
     - assets/images/on_boarding_images/
+    - assets/lottie/
 
 # Splash screen has been added in the 'splash.yaml' file in main project directory

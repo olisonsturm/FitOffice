@@ -8,9 +8,9 @@ const String tSplashImage = "assets/images/splash_images/splash-screen-image.png
 
 
 // -- OnBoarding Screen Images
-const String tOnBoardingImage1 = "assets/images/on_boarding_images/on-boarding-image-1.png";
-const String tOnBoardingImage2 = "assets/images/on_boarding_images/on-boarding-image-2.png";
-const String tOnBoardingImage3 = "assets/images/on_boarding_images/on-boarding-image-3.png";
+const String tOnBoardingImage1 = "assets/lottie/FittyFuchsWaving.json";
+const String tOnBoardingImage2 = "assets/lottie/FittyFuchsOffice.json";
+const String tOnBoardingImage3 = "assets/lottie/FittyFuchsMusic.json";
 
 
 // -- Welcome Screen Image [Used in Login & SignUp]
