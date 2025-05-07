@@ -1,3 +1,4 @@
+import 'package:fit_office/global_overlay.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
@@ -46,7 +47,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
             title,
             style: TextStyle(
                 fontSize: 20,
-                fontWeight: FontWeight.bold, // IMMER fett
+                fontWeight: FontWeight.bold,
                 color: isDark ? tWhiteColor : tBlackColor),
             textAlign: TextAlign.center,
           )
@@ -57,15 +58,16 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                 title,
                 style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.bold, // IMMER fett
+                    fontWeight: FontWeight.bold,
                     color: isDark ? tWhiteColor : tBlackColor),
               ),
               Text(
                 subtitle!,
                 style: TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.bold, // SUBTITLE auch fett
+                  fontWeight: FontWeight.bold,
                   color: isDark ? Colors.white70 : Colors.black45,
+
                 ),
               ),
             ],
@@ -73,8 +75,9 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return AppBar(
       backgroundColor: isDark ? tBlackColor : tWhiteColor,
-      scrolledUnderElevation: 0,
       elevation: 0,
+      automaticallyImplyLeading: false,
+      centerTitle: true,
       title: Stack(
         alignment: Alignment.center,
         children: [

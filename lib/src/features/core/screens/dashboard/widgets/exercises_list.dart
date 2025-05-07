@@ -1,6 +1,7 @@
 import 'package:fit_office/global_overlay.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/dashboard.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/view_exercise.dart';
+import 'package:fit_office/src/features/core/screens/libary/library_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
@@ -94,11 +95,9 @@ class AllExercisesList extends StatelessWidget {
 
             for (int i = 0; i < buffer.length; i++) {
               listWidgets.add(_buildExerciseCard(context, buffer[i], isAdmin));
-              listWidgets.add(
-                  _buildExerciseCard(context, buffer[i], isAdmin, isDarkMode));
               listWidgets.add(i == buffer.length - 1
-                  ? _buildFullDivider()
-                  : _buildSoftDivider(isDarkMode));
+                  ? const Divider()
+                  : const Divider());
             }
             buffer.clear();
           }
@@ -170,13 +169,13 @@ class AllExercisesList extends StatelessWidget {
           highlightColor: isDark ? tDarkGreyColor : Colors.grey.shade300,
           splashColor: isDark ? tDarkGreyColor : Colors.grey.shade300,
           onTap: () async {
-            final dashboardState =
-                context.findAncestorStateOfType<DashboardState>();
-            dashboardState?.wasSearchFocusedBeforeNavigation =
-                dashboardState.searchHasFocus;
-            //dashboardState?.removeSearchFocus(); // Fokus ggf. bewusst entfernen
-            dashboardState?.wasSearchFocusedBeforeNavigation =
-                dashboardState.searchHasFocus;
+            LibraryScreenState? libraryState;
+            final library =
+                context.findAncestorStateOfType<LibraryScreenState>();
+            library?.wasSearchFocusedBeforeNavigation =
+                libraryState!.searchHasFocus;
+            library?.wasSearchFocusedBeforeNavigation =
+                libraryState!.searchHasFocus;
 
             final result = await Navigator.push(
               context,
@@ -188,8 +187,7 @@ class AllExercisesList extends StatelessWidget {
             if (result == true) {
               onToggleFavorite(exerciseName);
             }
-            dashboardState
-                ?.handleReturnedFromExercise(); // Zustand wiederherstellen
+            libraryState?.handleReturnedFromExercise(); // Zustand wiederherstellen
           },
           child: ListTile(
             contentPadding:

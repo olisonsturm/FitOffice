@@ -1,6 +1,6 @@
+import 'package:fit_office/src/features/core/screens/libary/library_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/dashboard.dart';
 import 'package:fit_office/global_overlay.dart';
 import 'package:get/get.dart';
 
@@ -8,12 +8,12 @@ Future<T?> showUnifiedDialog<T>({
   required BuildContext context,
   required WidgetBuilder builder,
   bool barrierDismissible = true,
-  DashboardState? dashboardState,
+  LibraryScreenState? libraryState,
 }) async {
   final timerController = Get.find<ExerciseTimerController>();
   final overlayManager = GlobalExerciseOverlay();
   final dashboard =
-      dashboardState ?? context.findAncestorStateOfType<DashboardState>();
+      libraryState ?? context.findAncestorStateOfType<LibraryScreenState>();
 
   // 🧠 Nur merken, wenn der Fokus aktuell NOCH aktiv ist
   if (dashboard?.searchHasFocus == true) {

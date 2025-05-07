@@ -27,11 +27,28 @@ class LibraryScreenState extends State<LibraryScreen> {
   final ProfileController _profileController = Get.put(ProfileController());
   final DbController _dbController = DbController();
 
+  bool wasSearchFocusedBeforeNavigation = false;
+  bool get searchHasFocus => _searchHasFocus;
+
   bool _searchHasFocus = false;
   String _searchText = '';
 
   List<String> _userFavorites = [];
   String favoriteCount = '';
+
+  void forceRedirectFocus() {
+    if (!wasSearchFocusedBeforeNavigation && mounted) {
+      FocusScope.of(context).unfocus();
+    }
+  }
+
+  void handleReturnedFromExercise() {
+    if (!wasSearchFocusedBeforeNavigation) {
+      removeSearchFocus();
+    } else {
+      _searchBoxKey.currentState?.requestFocus();
+    }
+  }
 
   void removeSearchFocus() {
     FocusScope.of(context).unfocus();
@@ -40,6 +57,7 @@ class LibraryScreenState extends State<LibraryScreen> {
       _searchHasFocus = false;
     });
   }
+
   //TODO: Unused by now
   void _toggleFavorite(String exerciseName) async {
     final user = await _profileController.getUserData();
