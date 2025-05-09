@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
@@ -45,7 +46,8 @@ class ProfileController extends GetxController {
     try {
       await _userRepo.updateUserRecord(updatedUser.id!, updatedUser.toJson());
       user.value = updatedUser; // Update global state
-      Helper.successSnackBar(title: tCongratulations, message: 'Profile Record has been updated!');
+      Helper.successSnackBar(
+          title: tCongratulations, message: 'Profile Record has been updated!');
     } catch (e) {
       Helper.errorSnackBar(title: 'Error', message: e.toString());
     }
@@ -58,9 +60,11 @@ class ProfileController extends GetxController {
       if (userId.isNotEmpty) {
         await _userRepo.deleteUser(userId);
         user.value = null; // Clear global state
-        Helper.successSnackBar(title: tCongratulations, message: 'Account has been deleted!');
+        Helper.successSnackBar(
+            title: tCongratulations, message: 'Account has been deleted!');
       } else {
-        Helper.warningSnackBar(title: 'Error', message: 'User cannot be deleted!');
+        Helper.warningSnackBar(
+            title: 'Error', message: 'User cannot be deleted!');
       }
     } catch (e) {
       Helper.errorSnackBar(title: 'Error', message: e.toString());
@@ -69,4 +73,34 @@ class ProfileController extends GetxController {
 
   /// Fetch all users (for admin purposes)
   Future<List<UserModel>> getAllUsers() async => await _userRepo.allUsers();
+
+  Future<int> getNumberOfFriends(String username) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('username', isEqualTo: username)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isEmpty) {
+      return 0;
+    }
+
+    final documentRef = querySnapshot.docs.first.reference;
+    final friendshipsRef = FirebaseFirestore.instance.collection('friendships');
+
+    final acceptedSnapshot1 = await friendshipsRef
+        .where('sender', isEqualTo: documentRef)
+        .where('status', isEqualTo: 'accepted')
+        .get();
+
+    final acceptedSnapshot2 = await friendshipsRef
+        .where('receiver', isEqualTo: documentRef)
+        .where('status', isEqualTo: 'accepted')
+        .get();
+
+    final allDocs = [...acceptedSnapshot1.docs, ...acceptedSnapshot2.docs];
+
+    return allDocs.length;
+  }
+
 }

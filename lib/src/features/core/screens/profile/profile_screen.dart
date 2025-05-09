@@ -16,6 +16,8 @@ import 'admin/add_exercises.dart';
 import 'admin/add_friends.dart';
 import 'admin/edit_user_page.dart';
 import 'admin/widgets/all_users.dart';
+import 'admin/widgets/friends_box.dart';
+import 'admin/widgets/friends_request.dart';
 import 'widgets/custom_profile_button.dart';
 import 'widgets/avatar.dart';
 
@@ -73,6 +75,15 @@ class ProfileScreen extends StatelessWidget {
                             const SizedBox(height: 10),
                             Text(user.fullName, style: txtTheme.headlineSmall),
                             Text(user.email, style: txtTheme.bodyLarge),
+                            FutureBuilder<int>(
+                              future: ProfileController.instance.getNumberOfFriends(user.userName),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const SizedBox.shrink();
+                                }
+                                return Text('${snapshot.data} $tFriends');
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -165,6 +176,7 @@ class ProfileScreen extends StatelessWidget {
                   Text("Friends",
                       style: txtTheme.headlineSmall
                           ?.copyWith(fontWeight: FontWeight.bold)),
+
                   const SizedBox(height: 10),
                   Row(
                     children: [
@@ -201,7 +213,11 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ),
+                  ),*/
+                  FriendsBoxWidget(currentUserId: user.id!),
+                  const SizedBox(height: 10),
+                  FriendRequestsWidget(currentUserId: user.id!),
+                  const SizedBox(height: 10),
                   CustomProfileButton(
                     isDark: isDark,
                     icon: LineAwesomeIcons.user_plus_solid,

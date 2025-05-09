@@ -1,7 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:fit_office/src/features/core/screens/profile/friend_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../controllers/friends_controller.dart';
 
 class AddFriendsScreen extends StatefulWidget {
   final String currentUserId;
@@ -17,6 +21,9 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
   final FocusNode _searchFocus = FocusNode();
   List<String> results = [];
   bool isSearching = false;
+  Map<String, String?> friendshipStatus = {};
+  final _controller = FriendsController();
+  final currentUserEmail = FirebaseAuth.instance.currentUser?.email;
 
   @override
   void initState() {
@@ -32,6 +39,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
       setState(() {
         results = [];
         isSearching = false;
+        friendshipStatus.clear();
       });
       return;
     }
@@ -39,7 +47,8 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
     setState(() => isSearching = true);
 
     try {
-      final snapshot = await FirebaseFirestore.instance.collection('users').get();
+      final snapshot =
+          await FirebaseFirestore.instance.collection('users').get();
 
       final filtered = snapshot.docs
           .where((doc) =>
@@ -51,15 +60,74 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
           .map((doc) => doc['username'].toString())
           .toList();
 
+      Map<String, String?> statusMap = {};
+      for (final username in filtered) {
+        final status =
+            await _controller.getFriendshipStatus(currentUserEmail!, username);
+        statusMap[username] = status;
+      }
+
       setState(() {
         results = filtered;
+        friendshipStatus = statusMap;
         isSearching = false;
       });
     } catch (e) {
       setState(() {
         results = [];
+        friendshipStatus.clear();
         isSearching = false;
       });
+    }
+  }
+
+  Future<void> _withdrawFriendRequest(String username) async {
+    setState(() {
+      friendshipStatus[username] = null;
+    });
+
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('username', isEqualTo: username)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final friendDoc = querySnapshot.docs.first;
+        final currentUserRef = FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.currentUserId);
+
+        final friendshipRef =
+            FirebaseFirestore.instance.collection('friendships');
+
+        final pendingQuery = await friendshipRef
+            .where('sender', isEqualTo: currentUserRef)
+            .where('receiver', isEqualTo: friendDoc.reference)
+            .where('status', isEqualTo: 'pending')
+            .get();
+
+        if (pendingQuery.docs.isNotEmpty) {
+          await pendingQuery.docs.first.reference.delete();
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('$tFriendshipRequestWithdraw$username')),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      setState(() {
+        friendshipStatus[username] = 'pending';
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text(tFriendDeleteException)),
+        );
+      }
     }
   }
 
@@ -73,7 +141,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(), 
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
           title: const Text(tAddFriendsHeader),
@@ -89,7 +157,8 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                 decoration: InputDecoration(
                   hintText: tFriendsSearchHint,
                   prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
                 onSubmitted: (_) => FocusScope.of(context).unfocus(),
               ),
@@ -97,17 +166,120 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
               if (isSearching)
                 const CircularProgressIndicator()
               else if (results.isEmpty && _searchController.text.length >= 2)
-                const Text(tNoResults),
-              if (results.isNotEmpty)
+                const Text(tNoResults)
+              else
                 Expanded(
                   child: ListView.builder(
                     itemCount: results.length,
                     itemBuilder: (context, index) {
                       final username = results[index];
-                      return ListTile(
-                        leading: const Icon(Icons.person),
-                        title: Text(username),
-                      );
+                      final status = friendshipStatus[username];
+
+                      if (status == 'accepted') {
+                        return ListTile(
+                          leading: const Icon(Icons.person),
+                          title: Text(username),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.person_remove,
+                                color: Colors.red),
+                            onPressed: () async {
+                              setState(() {
+                                friendshipStatus[username] = null;
+                              });
+
+                              try {
+                                await _controller.removeFriendship(
+                                    currentUserEmail!, username);
+                              } catch (e) {
+                                setState(() {
+                                  friendshipStatus[username] = 'accepted';
+                                });
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(tFriendDeleteException)),
+                                  );
+                              }
+                            },
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => FriendProfile(
+                                    userName: username, isFriend: true),
+                              ),
+                            );
+                          },
+                        );
+                      } else if (status == 'pending') {
+                        return ListTile(
+                          leading: const Icon(Icons.person),
+                          title: Text(username),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.access_time, color: Colors.grey),
+                              const SizedBox(width: 8),
+                              IconButton(
+                                icon: const Icon(Icons.cancel,
+                                    color: Colors.orange),
+                                onPressed: () =>
+                                    _withdrawFriendRequest(username),
+                              ),
+                            ],
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => FriendProfile(
+                                  userName: username,
+                                  isFriend: false,
+                                  isPending: true,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        return ListTile(
+                          leading: const Icon(Icons.person),
+                          title: Text(username),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.person_add,
+                                color: Colors.blue),
+                            onPressed: () async {
+                              setState(() {
+                                friendshipStatus[username] = 'pending';
+                              });
+
+                              try {
+                                await _controller.sendFriendRequest(
+                                    currentUserEmail!, username);
+                              } catch (e) {
+                                setState(() {
+                                  friendshipStatus[username] = null;
+                                });
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(tExceptionAddingFriend)),
+                                );
+                              }
+                            },
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => FriendProfile(
+                                    userName: username, isFriend: false),
+                              ),
+                            );
+                          },
+                        );
+                      }
                     },
                   ),
                 ),
