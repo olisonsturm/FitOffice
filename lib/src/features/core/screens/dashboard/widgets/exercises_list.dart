@@ -34,7 +34,6 @@ class AllExercisesList extends StatelessWidget {
   final String query;
   final bool showGroupedAlphabetically;
 
-
   const AllExercisesList({
     super.key,
     required this.exercises,
@@ -78,7 +77,8 @@ class AllExercisesList extends StatelessWidget {
 
         if (isFiltered || !showGroupedAlphabetically) {
           for (int i = 0; i < sortedList.length; i++) {
-            listWidgets.add(_buildExerciseCard(context, sortedList[i], isAdmin));
+            listWidgets
+                .add(_buildExerciseCard(context, sortedList[i], isAdmin));
             if (i < sortedList.length - 1) listWidgets.add(const Divider());
           }
         } else {
@@ -147,7 +147,6 @@ class AllExercisesList extends StatelessWidget {
     final isFavorite = favorites.contains(exerciseName);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
       child: Material(
@@ -184,7 +183,7 @@ class AllExercisesList extends StatelessWidget {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.play_arrow),
-                    color: Colors.grey[800],
+                    color: isDark ? tWhiteColor : tPaleBlackColor,
                     onPressed: () async {
                       if (timerController.isRunning.value ||
                           timerController.isPaused.value) {
@@ -217,14 +216,29 @@ class AllExercisesList extends StatelessWidget {
                   ),
                   if (isAdmin) ...[
                     IconButton(
-                      icon: const Icon(Icons.edit, color: Colors.blue),
-                      onPressed: () {
+                      icon: Icon(
+                        Icons.edit,
+                        color: isDark ? tWhiteColor : tPaleBlackColor,
+                      ),
+                      onPressed: () async {
+                        final timerController =
+                            Get.find<ExerciseTimerController>();
+                        if (timerController.isRunning.value ||
+                            timerController.isPaused.value) {
+                          await showUnifiedDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (_) => ActiveTimerDialog.forAction('edit'),
+                          );
+                          return;
+                        }
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (_) => EditExercise(
                               exercise: exercise,
-                              exerciseName: exercise['name'],
+                              exerciseName: exercise!['name'],
                             ),
                           ),
                         );
@@ -232,14 +246,25 @@ class AllExercisesList extends StatelessWidget {
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => DeleteExerciseDialog(
-                              exercise: exercise,
-                              exerciseName: exercise['name'],
-                            ),
+                      onPressed: () async {
+                        final timerController =
+                            Get.find<ExerciseTimerController>();
+                        if (timerController.isRunning.value ||
+                            timerController.isPaused.value) {
+                          await showUnifiedDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (_) =>
+                                ActiveTimerDialog.forAction('delete'),
+                          );
+                          return;
+                        }
+                        await showUnifiedDialog<void>(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (ctx) => DeleteExerciseDialog(
+                            exercise: exercise,
+                            exerciseName: exercise['name'],
                           ),
                         );
                       },

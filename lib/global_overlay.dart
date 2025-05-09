@@ -171,8 +171,9 @@ class GlobalExerciseOverlay {
 
                                       final confirmed =
                                           await showUnifiedDialog<bool>(
+                                        barrierDismissible: false,
                                         context: context,
-                                            libraryState: libraryState,
+                                        libraryState: libraryState,
                                         builder: (_) => EndExerciseDialog(
                                           exerciseName: timerController
                                               .exerciseName.value,
@@ -194,8 +195,9 @@ class GlobalExerciseOverlay {
 
                                       final confirmed =
                                           await showUnifiedDialog<bool>(
+                                        barrierDismissible: false,
                                         context: context,
-                                            libraryState: libraryState,
+                                        libraryState: libraryState,
                                         builder: (_) => CancelExerciseDialog(
                                           exerciseName: timerController
                                               .exerciseName.value,

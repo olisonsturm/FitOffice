@@ -191,7 +191,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                             const SizedBox(height: 12),
                             ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: tPrimaryColor,
+                                backgroundColor: tRedColor,
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 14),
                                 shape: RoundedRectangleBorder(

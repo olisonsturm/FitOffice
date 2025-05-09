@@ -144,7 +144,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (!isAdmin && showFavoriteIcon)
+                if (!isAdmin && showFavoriteIcon && exercise != null)
                   IconButton(
                     icon: Icon(
                       isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -172,7 +172,6 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                         );
                         return;
                       }
-
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -192,6 +191,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                       if (timerController.isRunning.value ||
                           timerController.isPaused.value) {
                         await showUnifiedDialog<void>(
+                          barrierDismissible: false,
                           context: context,
                           builder: (_) => ActiveTimerDialog.forAction('start'),
                         );
