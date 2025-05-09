@@ -1,17 +1,18 @@
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/view_exercise.dart';
+// ... deine bestehenden Imports ...
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
-import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/start_exercise.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 import 'package:string_similarity/string_similarity.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import '../../../../../utils/helper/dialog_helper.dart';
 import '../../../controllers/profile_controller.dart';
 import '../../profile/admin/delete_exercise.dart';
 import '../../profile/admin/edit_exercise.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/view_exercise.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/start_exercise.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
+import '../../../controllers/exercise_timer.dart';
+import 'package:fit_office/src/constants/text_strings.dart';
 
 class FullWidthDivider extends StatelessWidget {
   const FullWidthDivider({super.key});
@@ -27,13 +28,36 @@ class FullWidthDivider extends StatelessWidget {
   }
 }
 
-class AllExercisesList extends StatelessWidget {
+class FavoriteIcon extends StatelessWidget {
+  final bool isInitiallyFavorite;
+  final bool isProcessing;
+  final VoidCallback onToggle;
+
+  const FavoriteIcon({
+    super.key,
+    required this.isInitiallyFavorite,
+    required this.isProcessing,
+    required this.onToggle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(
+        isInitiallyFavorite ? Icons.favorite : Icons.favorite_border,
+        color: isInitiallyFavorite ? Colors.red : Colors.grey,
+      ),
+      onPressed: isProcessing ? null : onToggle,
+    );
+  }
+}
+
+class AllExercisesList extends StatefulWidget {
   final List<Map<String, dynamic>> exercises;
   final List<String> favorites;
-  final void Function(String exerciseName) onToggleFavorite;
+  final Future<void> Function(String exerciseName) onToggleFavorite;
   final String query;
   final bool showGroupedAlphabetically;
-
 
   const AllExercisesList({
     super.key,
@@ -45,14 +69,45 @@ class AllExercisesList extends StatelessWidget {
   });
 
   @override
+  State<AllExercisesList> createState() => _AllExercisesListState();
+}
+
+class _AllExercisesListState extends State<AllExercisesList> {
+  final Map<String, bool> _isProcessingFavorite = {};
+
+  Future<void> _toggleFavorite(String exerciseName) async {
+    if (_isProcessingFavorite[exerciseName] == true) return;
+
+    setState(() {
+      _isProcessingFavorite[exerciseName] = true;
+    });
+
+    try {
+      await widget.onToggleFavorite(exerciseName);
+    } catch (e) {
+      if(mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text(tUpdateFavoriteException)),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isProcessingFavorite[exerciseName] = false;
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final lowerQuery = query.toLowerCase().trim();
+    final lowerQuery = widget.query.toLowerCase().trim();
     final isFiltered = lowerQuery.isNotEmpty;
 
     final List<Map<String, dynamic>> sortedList =
-        List<Map<String, dynamic>>.from(isFiltered || !showGroupedAlphabetically
-            ? _filtered(exercises, lowerQuery)
-            : exercises);
+    List<Map<String, dynamic>>.from(isFiltered || !widget.showGroupedAlphabetically
+        ? _filtered(widget.exercises, lowerQuery)
+        : widget.exercises);
 
     sortedList.sort((a, b) =>
         (a['name'] ?? '').toString().compareTo((b['name'] ?? '').toString()));
@@ -76,7 +131,7 @@ class AllExercisesList extends StatelessWidget {
           );
         }
 
-        if (isFiltered || !showGroupedAlphabetically) {
+        if (isFiltered || !widget.showGroupedAlphabetically) {
           for (int i = 0; i < sortedList.length; i++) {
             listWidgets.add(_buildExerciseCard(context, sortedList[i], isAdmin));
             if (i < sortedList.length - 1) listWidgets.add(const Divider());
@@ -134,19 +189,19 @@ class AllExercisesList extends StatelessWidget {
   }
 
   Widget _buildHeader(String letter) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Text(letter,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Text(letter,
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+  );
 
   Widget _buildExerciseCard(
       BuildContext context, Map<String, dynamic> exercise, bool isAdmin) {
     final exerciseName = exercise['name'];
     final exerciseCategory = exercise['category'];
     final timerController = Get.find<ExerciseTimerController>();
-    final isFavorite = favorites.contains(exerciseName);
+    final isFavorite = widget.favorites.contains(exerciseName);
+    final isProcessing = _isProcessingFavorite[exerciseName] ?? false;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
@@ -167,15 +222,15 @@ class AllExercisesList extends StatelessWidget {
             );
 
             if (result == true) {
-              onToggleFavorite(exerciseName);
+              _toggleFavorite(exerciseName);
             }
           },
           child: ListTile(
             contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             title: Text(exerciseName ?? 'Unknown',
                 style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
             subtitle: Text(exerciseCategory ?? 'No category',
                 style: const TextStyle(fontSize: 13, color: Color(0xFF777777))),
             trailing: IntrinsicWidth(
@@ -208,12 +263,10 @@ class AllExercisesList extends StatelessWidget {
                       }
                     },
                   ),
-                  IconButton(
-                    icon: Icon(
-                      isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: isFavorite ? Colors.red : Colors.grey,
-                    ),
-                    onPressed: () => onToggleFavorite(exerciseName),
+                  FavoriteIcon(
+                    isInitiallyFavorite: isFavorite,
+                    isProcessing: isProcessing,
+                    onToggle: () => _toggleFavorite(exerciseName),
                   ),
                   if (isAdmin) ...[
                     IconButton(

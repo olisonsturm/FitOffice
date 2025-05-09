@@ -92,17 +92,41 @@ class DashboardCategoriesState extends State<DashboardCategories> {
     });
   }
 
-  void _toggleFavorite(String exerciseName) async {
-    final user = await _profileController.getUserData();
+  Future<void> _toggleFavorite(String exerciseName) async {
     final isFavorite = _userFavorites.contains(exerciseName);
+    final user = await _profileController.getUserData();
 
-    if (isFavorite) {
-      await _dbController.removeFavorite(user.email, exerciseName);
-    } else {
-      await _dbController.addFavorite(user.email, exerciseName);
+    setState(() {
+      if (isFavorite) {
+        _userFavorites.remove(exerciseName);
+      } else {
+        _userFavorites.add(exerciseName);
+      }
+      favoriteCount = "${_userFavorites.length} $tDashboardExerciseUnits";
+    });
+
+    try {
+      if (isFavorite) {
+        await _dbController.removeFavorite(user.email, exerciseName);
+      } else {
+        await _dbController.addFavorite(user.email, exerciseName);
+      }
+    } catch (e) {
+      setState(() {
+        if (isFavorite) {
+          _userFavorites.add(exerciseName);
+        } else {
+          _userFavorites.remove(exerciseName);
+        }
+        favoriteCount = "${_userFavorites.length} $tDashboardExerciseUnits";
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text(tUpdateFavoriteException)),
+        );
+      }
     }
-
-    _loadUserFavorites();
   }
 
   List<Map<String, dynamic>> _filterExercises(
