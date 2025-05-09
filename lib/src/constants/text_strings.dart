@@ -234,6 +234,34 @@ const String tUploadVideo = "Upload Video";
 const String tUploadVideoSuccess = "Video uploaded successfully";
 const String tNoVideoSelected = "No video has been selected";
 const String tVideoDeleteSuccess = "Video deleted successfully";
+const String tUnknown = "Unknown";
+const String tAskDeleteUser = "Do you like to delete the user ";
+const String tDeleteUserConsequence = "? The user can't be restored and will be deleted globally.";
+
+// -- Friends Text
+const String tShowAll = "Show all";
+const String tShowLess = "Show less";
+const String tFriends = "Friends";
+const String tFriendNow = " is your friend now.";
+const String tExceptionAddingFriend = "Couldn't add friend";
+const String tFriendDeleted = " isn't your friend anymore.";
+const String tFriendDeleteException = "Couldn't delete friend.";
+const String tIsAlreadyYourFriend = " is already your friend.";
+const String tFriendshipRequests = "Friendships Requests";
+const String tNoRequests = "No requests";
+const String tNoFriendsFound = "No friends found.";
+const String tClose = "Close";
+const String tNoUserFound = "No user found.";
+const String tAllResults = "All results";
+const String tRemoved = " removed";
+const String tExceptionRemoveFriend = "Couldn't remove friend.";
+const String tFriendshipRequestWithdraw = "Friendship request for following user has been withdrawn: ";
+const String tDeleteFriend = "Delete friend";
+const String tSendRequest = "Send friendship request";
+const String tFriendshipDeleted = "Friend deleted";
+const String tRequestSent = "Request sent";
+const String tSentRequestToUser = "You sent a request to following user: ";
+const String tRequestPending = "Request pending";
 const String tDeleteVideoFailed = "Video could not be deleted";
 const String tDeleteExerciseMessage = "Do you really want to delete this exercise? It will be permanently removed for all users.";
 

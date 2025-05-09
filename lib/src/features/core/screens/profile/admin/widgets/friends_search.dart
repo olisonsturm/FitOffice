@@ -70,11 +70,11 @@ class _FriendSearchWidgetState extends State<FriendSearchWidget> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text("Alle Ergebnisse"),
+        title: const Text(tAllResults),
         content: SizedBox(
           width: double.maxFinite,
           child: fullResults.isEmpty
-              ? const Text("Keine Nutzer gefunden.")
+              ? const Text(tNoUserFound)
               : ListView.builder(
                   shrinkWrap: true,
                   itemCount: fullResults.length,
@@ -90,7 +90,7 @@ class _FriendSearchWidgetState extends State<FriendSearchWidget> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text("Schließen"),
+            child: const Text(tClose),
           )
         ],
       ),

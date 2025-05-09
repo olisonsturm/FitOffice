@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/text_strings.dart'; // Nur falls du tSave etc. brauchst
 
-void showConfirmationDialog({
-  required BuildContext context,
-  required String title,
-  required String content,
-  required VoidCallback onConfirm,
-}) {
+void showConfirmationDialog(
+    {required BuildContext context,
+    required String title,
+    required String content,
+    required VoidCallback onConfirm,
+    String confirm = tSave,
+    String cancel = tCancel}) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
@@ -15,15 +16,15 @@ void showConfirmationDialog({
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text(tCancel),
+          child: Text(cancel),
         ),
         TextButton(
           onPressed: () {
             Navigator.pop(context);
             onConfirm();
           },
-          child: const Text(
-            tSave,
+          child: Text(
+            confirm,
             style: TextStyle(color: Colors.blue),
           ),
         ),

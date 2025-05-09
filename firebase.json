@@ -1,1 +1,72 @@
-{"firestore":{"rules":"firestore.rules","indexes":"firestore.indexes.json"},"hosting":{"public":"public","ignore":["firebase.json","**/.*","**/node_modules/**"],"rewrites":[{"source":"**","destination":"/index.html"}]},"storage":{"rules":"storage.rules"},"remoteconfig":{"template":"remoteconfig.template.json"},"extensions":{},"database":{"rules":"database.rules.json"},"flutter":{"platforms":{"android":{"default":{"projectId":"fitoffice-dhbw","appId":"1:271322425039:android:ae3152268dae7dd5eaf9ba","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"fitoffice-dhbw","appId":"1:271322425039:ios:84ff4f16ab75fda2eaf9ba","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"fitoffice-dhbw","configurations":{"android":"1:271322425039:android:ae3152268dae7dd5eaf9ba","ios":"1:271322425039:ios:84ff4f16ab75fda2eaf9ba","web":"1:271322425039:web:0bb36b35282c351eeaf9ba"}}}}}}
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "remoteconfig": {
+    "template": "remoteconfig.template.json"
+  },
+  "extensions": {},
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "fitoffice-dhbw",
+          "appId": "1:271322425039:android:ae3152268dae7dd5eaf9ba",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "fitoffice-dhbw",
+          "appId": "1:271322425039:ios:84ff4f16ab75fda2eaf9ba",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "fitoffice-dhbw",
+          "configurations": {
+            "android": "1:271322425039:android:ae3152268dae7dd5eaf9ba",
+            "ios": "1:271322425039:ios:84ff4f16ab75fda2eaf9ba",
+            "web": "1:271322425039:web:0bb36b35282c351eeaf9ba"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ]
+}
