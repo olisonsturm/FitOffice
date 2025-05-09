@@ -1,11 +1,9 @@
-import 'package:fit_office/global_overlay.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/delete_exercise.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/edit_exercise.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/utils/helper/dialog_helper.dart';
 
@@ -17,6 +15,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showDarkModeToggle;
   final bool showStreak;
   final bool isFavorite;
+  final bool isProcessing;
   final VoidCallback? onToggleFavorite;
   final VoidCallback? onBack;
   final Map<String, dynamic>? exercise;
@@ -31,6 +30,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showDarkModeToggle = false,
     this.showStreak = false,
     this.isFavorite = false,
+    this.isProcessing = false,
     this.onToggleFavorite,
     this.onBack,
     this.exercise,
@@ -44,34 +44,33 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     final Widget centerTitle = subtitle == null
         ? Text(
-            title,
-            style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: isDark ? tWhiteColor : tBlackColor),
-            textAlign: TextAlign.center,
-          )
+      title,
+      style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: isDark ? tWhiteColor : tBlackColor),
+      textAlign: TextAlign.center,
+    )
         : Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? tWhiteColor : tBlackColor),
-              ),
-              Text(
-                subtitle!,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white70 : Colors.black45,
-
-                ),
-              ),
-            ],
-          );
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: isDark ? tWhiteColor : tBlackColor),
+        ),
+        Text(
+          subtitle!,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: isDark ? Colors.white70 : Colors.black45,
+          ),
+        ),
+      ],
+    );
 
     return AppBar(
       backgroundColor: isDark ? tBlackColor : tWhiteColor,
@@ -82,8 +81,6 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
         alignment: Alignment.center,
         children: [
           centerTitle,
-
-          // ← LINKS: Back-Button wenn showBackButton == true
           Align(
             alignment: Alignment.centerLeft,
             child: Row(
@@ -105,7 +102,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                           ? Colors.red
                           : (isDark ? tPaleWhiteColor : tPaleBlackColor),
                     ),
-                    onPressed: onToggleFavorite,
+                    onPressed: isProcessing ? null : onToggleFavorite,
                   ),
                 if (showStreak)
                   Builder(
@@ -137,8 +134,6 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
               ],
             ),
           ),
-
-          // → RECHTS: Favoriten-Icon + DarkMode-Toggle
           Align(
             alignment: Alignment.centerRight,
             child: Row(
@@ -152,7 +147,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                           ? Colors.red
                           : (isDark ? tWhiteColor : tBlackColor),
                     ),
-                    onPressed: onToggleFavorite,
+                    onPressed: isProcessing ? null : onToggleFavorite,
                   ),
                 if (isAdmin && exercise != null) ...[
                   IconButton(
@@ -162,7 +157,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     onPressed: () async {
                       final timerController =
-                          Get.find<ExerciseTimerController>();
+                      Get.find<ExerciseTimerController>();
                       if (timerController.isRunning.value ||
                           timerController.isPaused.value) {
                         await showUnifiedDialog(
@@ -188,14 +183,13 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                     icon: const Icon(Icons.delete, color: Colors.red),
                     onPressed: () async {
                       final timerController =
-                          Get.find<ExerciseTimerController>();
+                      Get.find<ExerciseTimerController>();
                       if (timerController.isRunning.value ||
                           timerController.isPaused.value) {
                         await showUnifiedDialog<void>(
                           context: context,
                           builder: (_) => ActiveTimerDialog.forAction('start'),
                         );
-
                         return;
                       }
 

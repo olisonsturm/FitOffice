@@ -217,7 +217,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
             final result = await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => ExerciseDetailScreen(exerciseData: exercise),
+                builder: (_) => ExerciseDetailScreen(exerciseData: exercise, isFavorite: isFavorite),
               ),
             );
 
