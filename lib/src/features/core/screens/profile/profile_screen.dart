@@ -1,4 +1,7 @@
+import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
+import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 import 'package:fit_office/src/features/core/screens/profile/widgets/facet_display_card.dart';
+import 'package:fit_office/src/utils/helper/dialog_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -24,7 +27,8 @@ class ProfileScreen extends StatelessWidget {
   final controller = Get.put(ProfileController());
 
   String _extractCampusFromEmail(String email) {
-    final campusRegex = RegExp(r'@stud\.dhbw-([a-z\-]+)\.de$|@dhbw-([a-z\-]+)\.de$');
+    final campusRegex =
+        RegExp(r'@stud\.dhbw-([a-z\-]+)\.de$|@dhbw-([a-z\-]+)\.de$');
     final match = campusRegex.firstMatch(email);
     if (match != null) {
       return match.group(1)?.replaceAll('-', ' ').capitalizeFirst ??
@@ -66,7 +70,8 @@ class ProfileScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('@${user.userName}', style: txtTheme.headlineMedium),
+                            Text('@${user.userName}',
+                                style: txtTheme.headlineMedium),
                             const SizedBox(height: 10),
                             Text(user.fullName, style: txtTheme.headlineSmall),
                             Text(user.email, style: txtTheme.bodyLarge),
@@ -118,7 +123,22 @@ class ProfileScreen extends StatelessWidget {
                           isDark: isDark,
                           icon: LineAwesomeIcons.user_edit_solid,
                           label: tEditProfile,
-                          onPress: () => UpdateProfileModal.show(context, user),
+                          onPress: () async {
+                            final timerController =
+                                Get.find<ExerciseTimerController>();
+                            if (timerController.isRunning.value ||
+                                timerController.isPaused.value) {
+                              await showUnifiedDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (_) =>
+                                    ActiveTimerDialog.forAction('editprofile'),
+                              );
+                              return;
+                            }
+
+                            UpdateProfileModal.show(context, user);
+                          },
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -130,7 +150,22 @@ class ProfileScreen extends StatelessWidget {
                           iconColor: Colors.red,
                           label: "Logout",
                           textColor: Colors.red,
-                          onPress: () => _showLogoutModal(),
+                          onPress: () async {
+                            final timerController =
+                                Get.find<ExerciseTimerController>();
+                            if (timerController.isRunning.value ||
+                                timerController.isPaused.value) {
+                              await showUnifiedDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (_) =>
+                                    ActiveTimerDialog.forAction('logout'),
+                              );
+                              return;
+                            }
+
+                            _showLogoutModal();
+                          },
                         ),
                       ),
                     ],
@@ -138,7 +173,10 @@ class ProfileScreen extends StatelessWidget {
                   const SizedBox(height: 10),
                   const Divider(),
                   const SizedBox(height: 10),
-                  /*Text("Friends", style: txtTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+                  Text("Friends",
+                      style: txtTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.bold)),
+
                   const SizedBox(height: 10),
                   Row(
                     children: [
@@ -184,17 +222,50 @@ class ProfileScreen extends StatelessWidget {
                     isDark: isDark,
                     icon: LineAwesomeIcons.user_plus_solid,
                     label: "Add Friends",
-                    onPress: () => Get.to(() => AddFriendsScreen(currentUserId: user.id!)),
+                    onPress: () async {
+                      final timerController =
+                          Get.find<ExerciseTimerController>();
+                      if (timerController.isRunning.value ||
+                          timerController.isPaused.value) {
+                        await showUnifiedDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) =>
+                              ActiveTimerDialog.forAction('addfriends'),
+                        );
+                        return;
+                      }
+
+                      Get.to(() => AddFriendsScreen(currentUserId: user.id!));
+                    },
                   ),
                   CustomProfileButton(
+                    //auch mit dem Dialog anpassen!
                     isDark: isDark,
                     icon: LineAwesomeIcons.user_friends_solid,
                     label: "View Friends",
-                    onPress: () => Get.to(() => const AllUsersPage()),
+                    onPress: () async {
+                      final timerController =
+                          Get.find<ExerciseTimerController>();
+                      if (timerController.isRunning.value ||
+                          timerController.isPaused.value) {
+                        await showUnifiedDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) =>
+                              ActiveTimerDialog.forAction('viewfriends'),
+                        );
+                        return;
+                      }
+
+                      Get.to(() => const AllUsersPage());
+                    },
                   ),
                   const Divider(),
                   const SizedBox(height: 10),
-                  Text("Settings", style: txtTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+                  Text("Settings",
+                      style: txtTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
                   CustomProfileButton(
                     isDark: isDark,
@@ -210,7 +281,9 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const Divider(),
                   const SizedBox(height: 10),
-                  Text("Information", style: txtTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+                  Text("Information",
+                      style: txtTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
                   CustomProfileButton(
                     isDark: isDark,
@@ -284,38 +357,101 @@ class ProfileScreen extends StatelessWidget {
                   if (user.role == "admin") ...[
                     const Divider(),
                     const SizedBox(height: 10),
-                    Text("Admin Settings", style: txtTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+                    Text("Admin Settings",
+                        style: txtTheme.headlineSmall
+                            ?.copyWith(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 10),
                     CustomProfileButton(
+                      //alle vier darunter anpassen!
                       isDark: isDark,
                       icon: Icons.add,
                       label: tAddExercises,
-                      onPress: () => Get.to(() => AddExercises(currentUserId: user.id!)),
+                      onPress: () async {
+                        final timerController =
+                            Get.find<ExerciseTimerController>();
+                        if (timerController.isRunning.value ||
+                            timerController.isPaused.value) {
+                          await showUnifiedDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) =>
+                                ActiveTimerDialog.forAction('admin'),
+                          );
+                          return;
+                        }
+
+                        Get.to(() => AddExercises(currentUserId: user.id!));
+                      },
                     ),
                     CustomProfileButton(
                       isDark: isDark,
                       icon: Icons.delete,
                       label: tDeleteEditUser,
-                      onPress: () => Get.to(() => const AllUsersPage()),
+                      onPress: () async {
+                        final timerController =
+                            Get.find<ExerciseTimerController>();
+                        if (timerController.isRunning.value ||
+                            timerController.isPaused.value) {
+                          await showUnifiedDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) =>
+                                ActiveTimerDialog.forAction('admin'),
+                          );
+                          return;
+                        }
+
+                        Get.to(() => const AllUsersPage());
+                      },
                     ),
                     CustomProfileButton(
                       isDark: isDark,
                       icon: Icons.person_add,
                       label: tAddUser,
-                      onPress: () => Get.to(() => const EditUserPage()),
+                      onPress: () async {
+                        final timerController =
+                            Get.find<ExerciseTimerController>();
+                        if (timerController.isRunning.value ||
+                            timerController.isPaused.value) {
+                          await showUnifiedDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) =>
+                                ActiveTimerDialog.forAction('admin'),
+                          );
+                          return;
+                        }
+
+                        Get.to(() => const EditUserPage());
+                      },
                     ),
                     CustomProfileButton(
                       isDark: isDark,
                       icon: LineAwesomeIcons.user_check_solid,
                       label: "User Management",
-                      onPress: () => Get.to(() => const AllUsersPage()),
+                      onPress: () async {
+                        final timerController =
+                            Get.find<ExerciseTimerController>();
+                        if (timerController.isRunning.value ||
+                            timerController.isPaused.value) {
+                          await showUnifiedDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) =>
+                                ActiveTimerDialog.forAction('admin'),
+                          );
+                          return;
+                        }
+
+                        Get.to(() => const AllUsersPage());
+                      },
                     ),
                   ],
                   const Divider(),
-
                   Center(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 24.0, horizontal: 16.0),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -323,7 +459,8 @@ class ProfileScreen extends StatelessWidget {
                             "Proudly crafted with ❤️ and ☕",
                             textAlign: TextAlign.center,
                             style: txtTheme.bodyMedium?.copyWith(
-                              color: isDark ? Colors.grey : Colors.blueGrey[700],
+                              color:
+                                  isDark ? Colors.grey : Colors.blueGrey[700],
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1.1,
                             ),
@@ -333,7 +470,8 @@ class ProfileScreen extends StatelessWidget {
                             "by passionate students of\nHealth Management & Business Information Systems\nat DHBW Ravensburg",
                             textAlign: TextAlign.center,
                             style: txtTheme.bodySmall?.copyWith(
-                              color: isDark ? Colors.grey : Colors.blueGrey[700],
+                              color:
+                                  isDark ? Colors.grey : Colors.blueGrey[700],
                               height: 1.6,
                             ),
                           ),
@@ -362,28 +500,126 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  //TODO: all PopUpModals with Yes and No should be in one style!
+  //TODO: all PopUpModals with Yes and No should be in one style; maybe the same style as all other PopUps! Texts should be added to text_strings.dart
   void _showLogoutModal() {
-    Get.defaultDialog(
-      title: "LOGOUT",
-      titleStyle: const TextStyle(fontSize: 20),
-      content: const Padding(
-        padding: EdgeInsets.symmetric(vertical: 15.0),
-        child: Text("Are you sure, you want to Logout?"),
-      ),
-      confirm: TPrimaryButton(
-        isFullWidth: false,
-        onPressed: () => AuthenticationRepository.instance.logout(),
-        text: "Yes",
-      ),
-      cancel: SizedBox(
-        width: 100,
-        child: OutlinedButton(
-          onPressed: () => Get.back(),
-          child: const Text("No"),
+    final isDarkMode = Get.isDarkMode;
+
+    Get.dialog(
+      Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 365, minWidth: 300),
+          child: Material(
+            borderRadius: BorderRadius.circular(20),
+            color: isDarkMode ? tDarkGreyColor : tWhiteColor,
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Stack(
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 10),
+                      Text(
+                        tLogout,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: isDarkMode ? Colors.white : tBlackColor,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 24),
+                      const Text(
+                        tLogoutMessage,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      Column(
+                        children: [
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                AuthenticationRepository.instance.logout();
+                                Get.back();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: tStartExerciseColor,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 14),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                side: BorderSide.none,
+                              ),
+                              icon:
+                                  const Icon(Icons.logout, color: Colors.white),
+                              label: const Text(
+                                tLogoutPositive,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: () => Get.back(),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red.shade500,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 14),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  side: BorderSide.none,
+                                ),
+                                side: BorderSide.none,
+                              ),
+                              icon:
+                                  const Icon(Icons.cancel, color: Colors.white),
+                              label: const Text(
+                                tLogoutNegative,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Positioned(
+                    right: -12,
+                    top: -12,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.cancel_outlined,
+                        color: isDarkMode ? tPaleWhiteColor : tPaleBlackColor,
+                      ),
+                      onPressed: () => Get.back(),
+                      iconSize: 28,
+                      padding: const EdgeInsets.all(4),
+                      constraints: const BoxConstraints(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
+      barrierDismissible: false,
     );
   }
 }
-

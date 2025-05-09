@@ -196,7 +196,11 @@ const String tActiveExerciseAnswer = "OK";
 const String tActiveExerciseDialogMessageDelete = "Please finish the current exercise before you can delete an exercise.";
 const String tActiveExerciseDialogMessageDefault = "Please finish the current exercise!";
 const String tActiveExerciseDialogMessageEdit = "Please finish the current exercise before you can edit an exercise.";
-
+const String tActiveExerciseDialogMessageAddFriends = "Please finish your active exercise first to add new friends.";
+const String tActiveExerciseDialogMessageEditProfile = "Please complete your active exercise first before editing your profile.";
+const String tActiveExerciseDialogMessageLogout = "Please complete your active exercise before you can log out.";
+const String tActiveExerciseDialogMessageViewFriends = "Please complete your active exercise before you can view your friends list.";
+const String tActiveExerciseDialogMessageAdmin = "Please complete your active exercise first before continuing with administrative tasks.";
 
 // -- Admin Text
 const String tAddExercises = "ADD EXERCISES";
@@ -298,3 +302,8 @@ const String tReplaceVideoMessage = "Are you sure you want to replace the curren
 const String tReplaceVideoPositive = "Yes, replace"; //"Ja, Video ersetzen";
 const String tReplaceVideoNegative = "No, go back"; //"Nein, zurück";
 
+
+// -- Logout - Text
+const String tLogoutMessage = "Are you sure you want to log out?";
+const String tLogoutPositive = "Yes, Logout";
+const String tLogoutNegative = "Cancel";

@@ -34,6 +34,36 @@ class ActiveTimerDialog extends StatelessWidget {
           message: tActiveExerciseDialogMessageStart,
           buttonText: tActiveExerciseAnswer,
         );
+        case 'editprofile':
+        return const ActiveTimerDialog(
+          title: tActiveExercise,
+          message: tActiveExerciseDialogMessageEditProfile,
+          buttonText: tActiveExerciseAnswer,
+        );
+        case 'logout':
+        return const ActiveTimerDialog(
+          title: tActiveExercise,
+          message: tActiveExerciseDialogMessageLogout,
+          buttonText: tActiveExerciseAnswer,
+        );
+        case 'addfriends':
+        return const ActiveTimerDialog(
+          title: tActiveExercise,
+          message: tActiveExerciseDialogMessageAddFriends,
+          buttonText: tActiveExerciseAnswer,
+        );
+        case 'viewfriends':
+        return const ActiveTimerDialog(
+          title: tActiveExercise,
+          message: tActiveExerciseDialogMessageViewFriends,
+          buttonText: tActiveExerciseAnswer,
+        );
+        case 'admin':
+        return const ActiveTimerDialog(
+          title: tActiveExercise,
+          message: tActiveExerciseDialogMessageAdmin,
+          buttonText: tActiveExerciseAnswer,
+        );
       default:
         return const ActiveTimerDialog(
           title: tActiveExercise,

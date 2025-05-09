@@ -17,6 +17,7 @@ const tExerciseDivider = Color.fromARGB(255, 200, 200, 200);
 const tFinishExerciseColor = Color(0xFF4CAF50);
 const tStartExerciseColor = Colors.green;
 const tGreyColor = Colors.grey;
+const tRedColor = Colors.red;
 
 
 // -- ON-BOARDING COLORS
