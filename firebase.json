@@ -58,7 +58,7 @@
   },
   "functions": [
     {
-      "source": "functions",
+      "source": "fitoffice-functions",
       "codebase": "default",
       "ignore": [
         "node_modules",

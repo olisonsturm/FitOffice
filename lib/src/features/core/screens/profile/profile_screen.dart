@@ -172,48 +172,6 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   const Divider(),
-                  const SizedBox(height: 10),
-                  Text("Friends",
-                      style: txtTheme.headlineSmall
-                          ?.copyWith(fontWeight: FontWeight.bold)),
-
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: FactDisplayCard(
-                          isDark: isDark,
-                          icon: Icons.group,
-                          title: "4",
-                          subtitle: "Friends",
-                          iconColor: Colors.green,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: FactDisplayCard(
-                          isDark: isDark,
-                          icon: LineAwesomeIcons.award_solid,
-                          title: "1",
-                          subtitle: "Place",
-                          iconColor: Colors.blue,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: FactDisplayCard(
-                          isDark: isDark,
-                          icon: Icons.star,
-                          title: "5",
-                          subtitle: "Friend Streaks",
-                          iconColor: Colors.yellow,
-                        ),
-                      ),
-                    ],
-                  ),*/
                   FriendsBoxWidget(currentUserId: user.id!),
                   const SizedBox(height: 10),
                   FriendRequestsWidget(currentUserId: user.id!),
