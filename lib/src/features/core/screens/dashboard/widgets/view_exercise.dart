@@ -14,8 +14,10 @@ class ExerciseDetailScreen extends StatefulWidget {
   static RxInt currentTabIndex = 0.obs;
 
   final Map<String, dynamic> exerciseData;
+  final bool isFavorite;
 
-  const ExerciseDetailScreen({super.key, required this.exerciseData});
+  const ExerciseDetailScreen(
+      {super.key, required this.exerciseData, this.isFavorite = false});
 
   @override
   State<ExerciseDetailScreen> createState() => _ExerciseDetailScreenState();
@@ -26,6 +28,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   bool isFavorite = false;
   bool favoriteChanged = false;
   bool isAdmin = false;
+  bool isProcessing = false;
 
   final DbController _dbController = DbController();
   final ProfileController _profileController = Get.put(ProfileController());
@@ -38,6 +41,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
           widget.exerciseData['name'];
       ExerciseDetailScreen.currentTabIndex.value = 0;
     });
+    isFavorite = widget.isFavorite;
     _loadFavoriteStatus();
     _loadUserRole();
   }
@@ -70,19 +74,38 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   }
 
   void toggleFavorite() async {
-    final user = await _profileController.getUserData();
-    final exerciseName = widget.exerciseData['name'];
-
-    await _dbController.toggleFavorite(
-      email: user.email,
-      exerciseName: exerciseName,
-      isCurrentlyFavorite: isFavorite,
-    );
-
+    if (isProcessing) return;
     setState(() {
+      isProcessing = true;
       isFavorite = !isFavorite;
       favoriteChanged = true;
     });
+
+    final user = await _profileController.getUserData();
+    final exerciseName = widget.exerciseData['name'];
+
+    try {
+      await _dbController.toggleFavorite(
+        email: user.email,
+        exerciseName: exerciseName,
+        isCurrentlyFavorite: !isFavorite,
+      );
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          isFavorite = !isFavorite;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text(tUpdateFavoriteException)),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          isProcessing = false;
+        });
+      }
+    }
   }
 
   void _handleBack() {
