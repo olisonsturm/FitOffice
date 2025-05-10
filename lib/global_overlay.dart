@@ -181,7 +181,7 @@ class GlobalExerciseOverlay {
                                       );
 
                                       if (confirmed == true) {
-                                        timerController.stop();
+                                        timerController.stopAndSave(shouldSave: true);
                                       }
                                     },
                                   ),
@@ -205,7 +205,7 @@ class GlobalExerciseOverlay {
                                       );
 
                                       if (confirmed == true) {
-                                        timerController.stop();
+                                        timerController.stopAndSave(shouldSave: false);
                                       }
                                     },
                                   ),
