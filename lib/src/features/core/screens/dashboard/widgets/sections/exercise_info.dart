@@ -181,7 +181,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                         ),
                                       );
                                       if (confirmed == true) {
-                                        timerController.stop();
+                                        timerController.stopAndSave(shouldSave: true);
                                       }
                                     },
                                   ),
@@ -216,7 +216,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                   ),
                                 );
                                 if (confirmed == true) {
-                                  timerController.stop();
+                                  timerController.stopAndSave(shouldSave: false);
                                 }
                               },
                             ),
