@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:fit_office/src/features/core/screens/profile/admin/upload_video.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
+import 'package:chewie/chewie.dart';
 
 import '../../../../../constants/colors.dart';
 import '../../dashboard/widgets/video_player.dart';
@@ -25,8 +28,7 @@ class _AddExercisesScreenState extends State<AddExercises> {
   final List<String> _categories = [tUpperBody, tLowerBody, tMental];
   String? _selectedCategory;
   String? uploadedVideoUrl;
-  VideoPlayerController? _videoPlayerController;
-
+  File? _selectedVideoFile;
   bool isLoading = false;
 
   final Map<String, String> categoryMap = {
@@ -35,10 +37,26 @@ class _AddExercisesScreenState extends State<AddExercises> {
     tMental: 'Mind',
   };
 
-  Future<void> initVideoPlayer(String url) async {
+  VideoPlayerController? _videoPlayerController;
+  ChewieController? _chewieController;
+
+  Future<void> initVideoPlayer(String path, {bool isLocal = false}) async {
     _videoPlayerController?.dispose();
-    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(url));
+    _chewieController?.dispose();
+
+    _videoPlayerController = isLocal
+        ? VideoPlayerController.file(File(path))
+        : VideoPlayerController.networkUrl(Uri.parse(path));
+
     await _videoPlayerController!.initialize();
+
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController!,
+      autoPlay: false,
+      looping: false,
+      aspectRatio: _videoPlayerController!.value.aspectRatio,
+    );
+
     setState(() {});
   }
 
@@ -49,6 +67,7 @@ class _AddExercisesScreenState extends State<AddExercises> {
 
     _videoPlayerController?.dispose();
     _videoPlayerController = null;
+    _selectedVideoFile = null;
 
     setState(() {
       _selectedCategory = null;
@@ -69,12 +88,33 @@ class _AddExercisesScreenState extends State<AddExercises> {
     final name = _nameController.text.trim();
     final description = _descriptionController.text.trim();
     final category = _selectedCategory;
-    final video = _videoController.text.trim();
+    String? videoUrl = uploadedVideoUrl;
 
-    if (name.isEmpty ||
-        description.isEmpty ||
-        category == null ||
-        video.isEmpty) {
+    if (_selectedVideoFile != null && videoUrl == null) {
+      try {
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('videos/${DateTime.now()}.mp4');
+
+        await storageRef.putFile(_selectedVideoFile!);
+
+        videoUrl = await storageRef.getDownloadURL();
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('$e')),
+          );
+        }
+        setState(() => isLoading = false);
+        return;
+      }
+    }
+
+    if ((name.isEmpty ||
+            description.isEmpty ||
+            category == null ||
+            videoUrl == null) &&
+        mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text(tFillOutAllFields)),
       );
@@ -88,19 +128,20 @@ class _AddExercisesScreenState extends State<AddExercises> {
         'name': name,
         'description': description,
         'category': categoryMap[_selectedCategory],
-        'video': video,
+        'video': videoUrl,
       });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(tExerciseAdded)),
-      );
-
-
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text(tExerciseAdded)),
+        );
+      }
       _resetForm();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('$e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('$e')),
+        );
+      }
     }
 
     setState(() => isLoading = false);
@@ -112,6 +153,7 @@ class _AddExercisesScreenState extends State<AddExercises> {
     _descriptionController.dispose();
     _videoController.dispose();
     _videoPlayerController?.dispose();
+    _chewieController?.dispose();
     super.dispose();
   }
 
@@ -159,14 +201,19 @@ class _AddExercisesScreenState extends State<AddExercises> {
                 onChanged: (value) => setState(() => _selectedCategory = value),
               ),
               const SizedBox(height: 12),
-              if (uploadedVideoUrl != null) ...[
+              if (_selectedVideoFile != null || uploadedVideoUrl != null) ...[
                 Stack(
                   alignment: Alignment.topRight,
                   children: [
                     SizedBox(
                       height: 200,
                       width: double.infinity,
-                      child: VideoPlayerWidget(videoUrl: uploadedVideoUrl!),
+                      child: uploadedVideoUrl != null
+                          ? VideoPlayerWidget(videoUrl: uploadedVideoUrl!)
+                          : _videoPlayerController != null
+                              ? Chewie(controller: _chewieController!)
+                              : const Center(
+                                  child: CircularProgressIndicator()),
                     ),
                     Positioned(
                       top: 8,
@@ -174,29 +221,30 @@ class _AddExercisesScreenState extends State<AddExercises> {
                       child: CircleAvatar(
                         backgroundColor: Colors.white70,
                         child: IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () async {
-                              if (uploadedVideoUrl != null) {
-                                try {
-                                  final ref = FirebaseStorage.instance
-                                      .refFromURL(uploadedVideoUrl!);
-                                  await ref.delete();
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () async {
+                            if (uploadedVideoUrl != null) {
+                              try {
+                                final ref = FirebaseStorage.instance
+                                    .refFromURL(uploadedVideoUrl!);
+                                await ref.delete();
 
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(tVideoDeleteSuccess)),
-                                  );
-                                } catch (e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text("$e")),
-                                  );
-                                }
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(tVideoDeleteSuccess)),
+                                );
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("$e")),
+                                );
                               }
-                              setState(() {
-                                uploadedVideoUrl = null;
-                                _videoController.clear();
-                              });
-                            }),
+                              uploadedVideoUrl = null;
+                            }
+                            setState(() {
+                              _selectedVideoFile = null;
+                            });
+                          },
+                        ),
                       ),
                     ),
                   ],
@@ -207,16 +255,17 @@ class _AddExercisesScreenState extends State<AddExercises> {
               if (uploadedVideoUrl == null)
                 TextButton.icon(
                   onPressed: () async {
-                    String videoUrl = await uploadVideo();
-                    if (videoUrl.isNotEmpty) {
-                      await initVideoPlayer(videoUrl);
+                    final picker = ImagePicker();
+                    final pickedFile =
+                        await picker.pickVideo(source: ImageSource.gallery);
+
+                    if (pickedFile != null) {
+                      _selectedVideoFile = File(pickedFile.path);
+                      await initVideoPlayer(_selectedVideoFile!.path,
+                          isLocal: true);
                       setState(() {
-                        uploadedVideoUrl = videoUrl;
-                        _videoController.text = videoUrl;
+                        uploadedVideoUrl = null;
                       });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text(tUploadVideoSuccess)),
-                      );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text(tNoVideoSelected)),
@@ -265,7 +314,7 @@ class _AddExercisesScreenState extends State<AddExercises> {
                           ),
                         ),
                       ),
-                    ),
+                    )
             ],
           ),
         ),
