@@ -308,3 +308,9 @@ const String tReplaceVideoNegative = "No, go back"; //"Nein, zurück";
 const String tLogoutMessage = "Are you sure you want to log out?";
 const String tLogoutPositive = "Yes, Logout";
 const String tLogoutNegative = "Cancel";
+
+// -- Statistics
+const String tTop3Exercises = "Top 3 Exercises";
+const String tNoExercisesDone = "No exercises have been done yet.";
+const String tError = "Error occurred";
+const String tLoadingError = "Couldn't load user data.";
