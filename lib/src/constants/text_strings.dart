@@ -242,6 +242,9 @@ const String tVideoDeleteSuccess = "Video deleted successfully";
 const String tUnknown = "Unknown";
 const String tAskDeleteUser = "Do you like to delete the user ";
 const String tDeleteUserConsequence = "? The user can't be restored and will be deleted globally.";
+const String tDiscardChangesQuestion = "Discard changes?";
+const String tDiscardChangesText = "Do you really want to leave the page and discard the changes? Changes won't be saved.";
+const String tDiscardChanges = "Discard changes";
 
 // -- Friends Text
 const String tShowAll = "Show all";

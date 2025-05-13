@@ -4,9 +4,9 @@ import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/video_player.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/upload_video.dart';
+import 'package:fit_office/src/features/core/screens/profile/admin/widgets/confirmation_dialog.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/delete_video.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/replace_video.dart';
-import 'package:fit_office/src/features/core/screens/profile/admin/widgets/save_button.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -133,15 +133,19 @@ class _EditExerciseState extends State<EditExercise> {
 
       await editExercise(widget.exerciseName, updatedData);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(tChangesSaved)),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text(tChangesSaved)),
+        );
 
-      Navigator.pop(context);
+        Navigator.pop(context);
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('$e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('$e')),
+        );
+      }
     }
 
     setState(() => isLoading = false);
@@ -192,6 +196,25 @@ class _EditExerciseState extends State<EditExercise> {
       appBar: AppBar(
         title: const Text(tEditExerciseHeading),
         backgroundColor: isDarkMode ? tDarkGreyColor : tCardBgColor,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () async {
+            if (hasChanged) {
+              showConfirmationDialogModel(
+                context: context,
+                title: tDiscardChangesQuestion,
+                content: tDiscardChangesText,
+                confirm: tDiscardChanges,
+                cancel: tCancel,
+                onConfirm: () {
+                  Navigator.pop(context);
+                },
+              );
+            } else {
+              Navigator.pop(context);
+            }
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
