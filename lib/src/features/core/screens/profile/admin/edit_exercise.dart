@@ -1,13 +1,14 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/video_player.dart';
-import 'package:fit_office/src/features/core/screens/profile/admin/upload_video.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/confirmation_dialog.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/delete_video.dart';
-import 'package:fit_office/src/features/core/screens/profile/admin/widgets/replace_video.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 
 import 'add_exercises.dart';
@@ -37,6 +38,7 @@ class _EditExerciseState extends State<EditExercise> {
   String? uploadedVideoUrl;
   VideoPlayerController? _videoPlayerController;
   String? _videoToDelete;
+  File? _pickedVideoFile;
 
   final Map<String, String> categoryMap = {
     tUpperBody: 'Upper-Body',
@@ -69,7 +71,7 @@ class _EditExerciseState extends State<EditExercise> {
       await _videoPlayerController!.initialize();
       setState(() {});
     } catch (e) {
-      debugPrint('Fehler beim Laden des Videos: $e');
+      debugPrint('$e');
     }
   }
 
@@ -129,7 +131,7 @@ class _EditExerciseState extends State<EditExercise> {
           final oldRef = FirebaseStorage.instance.refFromURL(_videoToDelete!);
           await oldRef.delete();
         } catch (e) {
-          if(mounted) {
+          if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('$tDeleteVideoFailed: $e')),
             );
@@ -137,7 +139,17 @@ class _EditExerciseState extends State<EditExercise> {
         }
       }
 
-      final videoUrl = uploadedVideoUrl ?? originalVideo;
+      String? finalVideoUrl = uploadedVideoUrl;
+
+      if (_pickedVideoFile != null) {
+        final fileName = '${DateTime.now().millisecondsSinceEpoch}.mp4';
+        final storageRef = FirebaseStorage.instance.ref().child('videos/${DateTime.now()}.mp4');
+
+        final uploadTask = await storageRef.putFile(_pickedVideoFile!);
+        finalVideoUrl = await uploadTask.ref.getDownloadURL();
+      }
+
+      final videoUrl = finalVideoUrl ?? originalVideo;
 
       final updatedData = {
         'name': name,
@@ -148,12 +160,13 @@ class _EditExerciseState extends State<EditExercise> {
 
       await editExercise(widget.exerciseName, updatedData);
       _videoToDelete = null;
+      _pickedVideoFile = null;
+      uploadedVideoUrl = finalVideoUrl;
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text(tChangesSaved)),
         );
-
         Navigator.pop(context);
       }
     } catch (e) {
@@ -188,6 +201,7 @@ class _EditExerciseState extends State<EditExercise> {
     final hasAnyChanged = _nameController.text.trim() != originalName.trim() ||
         _descriptionController.text.trim() != originalDescription.trim() ||
         _selectedCategory != originalCategory ||
+        (_pickedVideoFile != null) ||
         (uploadedVideoUrl != null && uploadedVideoUrl != originalVideo);
 
     if (hasAnyChanged != hasChanged) {
@@ -346,7 +360,9 @@ class _EditExerciseState extends State<EditExercise> {
                                         height: 200,
                                         width: double.infinity,
                                         child: VideoPlayerWidget(
-                                            videoUrl: videoUrl),
+                              file: _pickedVideoFile,
+                              videoUrl: _pickedVideoFile == null ? videoUrl : null,
+                            ),
                                       ),
                                       Positioned(
                                         top: 30,
@@ -377,7 +393,7 @@ class _EditExerciseState extends State<EditExercise> {
                                                   .of(context)
                                                   .showSnackBar(
                                                 const SnackBar(content: Text(
-                                                    "Video gelöscht")),
+                                                    tVideoDeleteSuccess)),
                                               );
                                           },
                                           iconSize: 28,
@@ -440,55 +456,31 @@ class _EditExerciseState extends State<EditExercise> {
                               padding: const EdgeInsets.symmetric(vertical: 16),
                             ),
                             onPressed: () async {
-                              final hasExistingVideo = !isVideoMarkedForDeletion &&
-                                  (uploadedVideoUrl ?? originalVideo).isNotEmpty;
+                              final picker = ImagePicker();
+                              final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
 
-                              bool proceed = true;
+                              if (pickedFile != null) {
+                                final file = File(pickedFile.path);
+                                _videoPlayerController?.dispose();
+                                _videoPlayerController = VideoPlayerController.file(file);
+                                await _videoPlayerController!.initialize();
 
-                              if (hasExistingVideo) {
-                                proceed = await showDialog<bool>(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (context) => const ReplaceVideoDialog(),
-                                ) ??
-                                    false;
-
-                                if (!proceed) return;
-                              }
-
-                              final videoUrl = await uploadVideo();
-
-                              if (videoUrl.isNotEmpty) {
-                                if (uploadedVideoUrl != null && uploadedVideoUrl!.isNotEmpty) {
-                                  try {
-                                    final storageRef =
-                                    FirebaseStorage.instance.refFromURL(uploadedVideoUrl!);
-                                    await storageRef.delete();
-                                  } catch (e) {
-                                      ScaffoldMessenger
-                                          .of(context)
-                                          .showSnackBar(
-                                        SnackBar(content: Text(
-                                            '$tDeleteVideoFailed: $e')),
-                                      );
-                                  }
-                                }
-
-                                await initVideoPlayer(videoUrl);
                                 setState(() {
-                                  uploadedVideoUrl = videoUrl;
+                                  _pickedVideoFile = file;
+                                  uploadedVideoUrl = null;
                                   isVideoMarkedForDeletion = false;
                                 });
 
                                 _checkIfChanged();
+
+
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(tUploadVideoSuccess)),
+                                    const SnackBar(content: Text(tVideoSelected)),
                                   );
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text(tNoVideoSelected)),
-                                );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text(tNoVideoSelected)),
+                                  );
                               }
                             },
                             icon: Icon(

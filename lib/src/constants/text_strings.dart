@@ -245,6 +245,8 @@ const String tDeleteUserConsequence = "? The user can't be restored and will be 
 const String tDiscardChangesQuestion = "Discard changes?";
 const String tDiscardChangesText = "Do you really want to leave the page and discard the changes? Changes won't be saved.";
 const String tDiscardChanges = "Discard changes";
+const String tVideoSelected = "Video selected";
+const String tNoVideoSelected = "No video selected";
 
 // -- Friends Text
 const String tShowAll = "Show all";
