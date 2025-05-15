@@ -30,11 +30,13 @@ class _EditExerciseState extends State<EditExercise> {
   late String originalDescription;
   late String originalVideo;
   late String originalCategory;
+  bool isVideoMarkedForDeletion = false;
 
   final List<String> _categories = [tUpperBody, tLowerBody, tMental];
   String? _selectedCategory;
   String? uploadedVideoUrl;
   VideoPlayerController? _videoPlayerController;
+  String? _videoToDelete;
 
   final Map<String, String> categoryMap = {
     tUpperBody: 'Upper-Body',
@@ -112,8 +114,6 @@ class _EditExerciseState extends State<EditExercise> {
     final description = _descriptionController.text.trim();
     final category = categoryMap[_selectedCategory];
 
-    String videoUrl = uploadedVideoUrl ?? originalVideo;
-
     if (name.isEmpty || description.isEmpty || category == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text(tFillOutAllFields)),
@@ -124,6 +124,21 @@ class _EditExerciseState extends State<EditExercise> {
     setState(() => isLoading = true);
 
     try {
+      if (_videoToDelete != null && _videoToDelete!.isNotEmpty) {
+        try {
+          final oldRef = FirebaseStorage.instance.refFromURL(_videoToDelete!);
+          await oldRef.delete();
+        } catch (e) {
+          if(mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('$tDeleteVideoFailed: $e')),
+            );
+          }
+        }
+      }
+
+      final videoUrl = uploadedVideoUrl ?? originalVideo;
+
       final updatedData = {
         'name': name,
         'description': description,
@@ -132,6 +147,7 @@ class _EditExerciseState extends State<EditExercise> {
       };
 
       await editExercise(widget.exerciseName, updatedData);
+      _videoToDelete = null;
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -180,13 +196,6 @@ class _EditExerciseState extends State<EditExercise> {
       });
     }
   }
-
-  // Future<void> initVideoPlayer(String url) async {
-  //   _videoPlayerController?.dispose();
-  //   _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(url));
-  //   await _videoPlayerController!.initialize();
-  //   setState(() {});
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -323,13 +332,11 @@ class _EditExerciseState extends State<EditExercise> {
                       children: [
                         Builder(
                           builder: (context) {
-                            final videoUrl = uploadedVideoUrl ?? originalVideo;
+                            final videoUrl = isVideoMarkedForDeletion ? '' : (uploadedVideoUrl ?? originalVideo);
 
                             final hasVideo = videoUrl.isNotEmpty &&
-                                Uri.tryParse(videoUrl)?.hasAbsolutePath ==
-                                    true &&
-                                (videoUrl.startsWith('http://') ||
-                                    videoUrl.startsWith('https://'));
+                                Uri.tryParse(videoUrl)?.hasAbsolutePath == true &&
+                                (videoUrl.startsWith('http://') || videoUrl.startsWith('https://'));
 
                             return hasVideo
                                 ? Stack(
@@ -348,41 +355,30 @@ class _EditExerciseState extends State<EditExercise> {
                                           icon: const Icon(Icons.delete,
                                               color: Colors.red),
                                           onPressed: () async {
-                                            final confirm =
-                                                await showDialog<bool>(
+                                            final confirm = await showDialog<bool>(
                                               context: context,
                                               barrierDismissible: false,
-                                              builder: (context) =>
-                                                  const ConfirmVideoDeleteDialog(),
+                                              builder: (context) => const ConfirmVideoDeleteDialog(),
                                             );
 
                                             if (confirm != true) return;
 
-                                            try {
-                                              final storageRef = FirebaseStorage
-                                                  .instance
-                                                  .refFromURL(videoUrl);
-                                              await storageRef.delete();
+                                            setState(() {
+                                              _videoToDelete = uploadedVideoUrl ?? originalVideo;
+                                              uploadedVideoUrl = null;
+                                              isVideoMarkedForDeletion = true;
 
-                                              ScaffoldMessenger.of(context)
+                                              _videoPlayerController?.dispose();
+                                              _videoPlayerController = null;
+                                            });
+
+                                            _checkIfChanged();
+                                              ScaffoldMessenger
+                                                  .of(context)
                                                   .showSnackBar(
-                                                const SnackBar(
-                                                    content: Text(
-                                                        tVideoDeleteSuccess)),
+                                                const SnackBar(content: Text(
+                                                    "Video gelöscht")),
                                               );
-
-                                              setState(() {
-                                                uploadedVideoUrl = null;
-                                                originalVideo = '';
-                                              });
-
-                                              _checkIfChanged();
-                                            } catch (e) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(content: Text("$e")),
-                                              );
-                                            }
                                           },
                                           iconSize: 28,
                                           padding: EdgeInsets.zero,
@@ -444,18 +440,17 @@ class _EditExerciseState extends State<EditExercise> {
                               padding: const EdgeInsets.symmetric(vertical: 16),
                             ),
                             onPressed: () async {
-                              final hasExistingVideo =
-                                  (uploadedVideoUrl ?? originalVideo)
-                                      .isNotEmpty;
+                              final hasExistingVideo = !isVideoMarkedForDeletion &&
+                                  (uploadedVideoUrl ?? originalVideo).isNotEmpty;
+
                               bool proceed = true;
 
                               if (hasExistingVideo) {
                                 proceed = await showDialog<bool>(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (context) =>
-                                          const ReplaceVideoDialog(),
-                                    ) ??
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) => const ReplaceVideoDialog(),
+                                ) ??
                                     false;
 
                                 if (!proceed) return;
@@ -464,37 +459,35 @@ class _EditExerciseState extends State<EditExercise> {
                               final videoUrl = await uploadVideo();
 
                               if (videoUrl.isNotEmpty) {
-                                if (hasExistingVideo) {
+                                if (uploadedVideoUrl != null && uploadedVideoUrl!.isNotEmpty) {
                                   try {
-                                    final storageRef = FirebaseStorage.instance
-                                        .refFromURL(
-                                            uploadedVideoUrl ?? originalVideo);
+                                    final storageRef =
+                                    FirebaseStorage.instance.refFromURL(uploadedVideoUrl!);
                                     await storageRef.delete();
                                   } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content:
-                                              Text('$tDeleteVideoFailed: $e')),
-                                    );
+                                      ScaffoldMessenger
+                                          .of(context)
+                                          .showSnackBar(
+                                        SnackBar(content: Text(
+                                            '$tDeleteVideoFailed: $e')),
+                                      );
                                   }
                                 }
 
                                 await initVideoPlayer(videoUrl);
                                 setState(() {
                                   uploadedVideoUrl = videoUrl;
-                                  originalVideo = '';
+                                  isVideoMarkedForDeletion = false;
                                 });
 
                                 _checkIfChanged();
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(tUploadVideoSuccess)),
-                                );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(tUploadVideoSuccess)),
+                                  );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(tNoVideoSelected)),
+                                  const SnackBar(content: Text(tNoVideoSelected)),
                                 );
                               }
                             },
@@ -503,8 +496,7 @@ class _EditExerciseState extends State<EditExercise> {
                               color: tBlackColor,
                             ),
                             label: Text(
-                              (uploadedVideoUrl == null &&
-                                      originalVideo.isEmpty)
+                              (isVideoMarkedForDeletion || (uploadedVideoUrl == null && originalVideo.isEmpty))
                                   ? tUploadVideo
                                   : tReplaceVideo,
                               style: TextStyle(
