@@ -147,6 +147,40 @@ class _AddExercisesScreenState extends State<AddExercises> {
     setState(() => isLoading = false);
   }
 
+  bool get _hasChanges {
+    return _nameController.text.trim().isNotEmpty ||
+        _descriptionController.text.trim().isNotEmpty ||
+        _selectedCategory != null ||
+        _selectedVideoFile != null ||
+        uploadedVideoUrl != null;
+  }
+
+  void showDiscardChangesDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(tDiscardChangesQuestion),
+        content: const Text(tDiscardChangesText),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(tCancel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            child: const Text(
+              tDiscardChanges,
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -163,6 +197,16 @@ class _AddExercisesScreenState extends State<AddExercises> {
       appBar: AppBar(
         title: const Text(tAddExercisesHeader),
         backgroundColor: tCardBgColor,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if (_hasChanges) {
+              showDiscardChangesDialog();
+            } else {
+              Navigator.pop(context);
+            }
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

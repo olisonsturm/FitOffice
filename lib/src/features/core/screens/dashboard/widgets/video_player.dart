@@ -41,11 +41,18 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     } else if (widget.videoUrl != null && widget.videoUrl!.isNotEmpty) {
       _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl!));
     } else {
-      // Kein Video vorhanden, evtl. Fehlerbehandlung oder Default-Widget
       return;
     }
 
     await _videoPlayerController!.initialize();
+
+    _videoPlayerController!.addListener(() {
+      final isFinished = _videoPlayerController!.value.position >= _videoPlayerController!.value.duration;
+      if (isFinished && !_videoPlayerController!.value.isPlaying) {
+        _videoPlayerController!.seekTo(Duration.zero);
+        _chewieController?.pause();
+      }
+    });
 
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController!,
