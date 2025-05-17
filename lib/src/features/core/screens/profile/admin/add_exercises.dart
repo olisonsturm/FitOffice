@@ -155,6 +155,13 @@ class _AddExercisesScreenState extends State<AddExercises> {
         uploadedVideoUrl != null;
   }
 
+  bool get _isFormValid {
+    return _nameController.text.trim().isNotEmpty &&
+        _descriptionController.text.trim().isNotEmpty &&
+        _selectedCategory != null &&
+        (_selectedVideoFile != null || uploadedVideoUrl != null);
+  }
+
   void showDiscardChangesDialog() {
     showDialog(
       context: context,
@@ -179,6 +186,17 @@ class _AddExercisesScreenState extends State<AddExercises> {
         ],
       ),
     );
+  }
+
+  void _onFormChanged() {
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController.addListener(_onFormChanged);
+    _descriptionController.addListener(_onFormChanged);
   }
 
   @override
@@ -345,14 +363,16 @@ class _AddExercisesScreenState extends State<AddExercises> {
                       ),
                       child: TextButton.icon(
                         style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                        ),
-                        onPressed: _showConfirmationDialog,
-                        icon: const Icon(Icons.add, color: Colors.blue),
-                        label: const Text(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            backgroundColor: Colors.white),
+                        onPressed:
+                            _isFormValid ? _showConfirmationDialog : null,
+                        icon: Icon(Icons.add,
+                            color: _isFormValid ? Colors.blue : Colors.grey),
+                        label: Text(
                           tAdd,
                           style: TextStyle(
-                            color: Colors.blue,
+                            color: _isFormValid ? Colors.blue : Colors.grey,
                             fontWeight: FontWeight.w800,
                             fontSize: 16,
                           ),
