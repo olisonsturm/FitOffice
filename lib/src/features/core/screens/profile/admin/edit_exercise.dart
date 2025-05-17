@@ -200,17 +200,23 @@ class _EditExerciseState extends State<EditExercise> {
   }
 
   void _checkIfChanged() {
+    final name = _nameController.text.trim();
+    final description = _descriptionController.text.trim();
+    final category = _selectedCategory;
     final hasVideo = !isVideoMarkedForDeletion &&
         (_pickedVideoFile != null || originalVideo.isNotEmpty || uploadedVideoUrl != null);
 
-    final hasAnyChanged = _nameController.text.trim() != originalName.trim() ||
-        _descriptionController.text.trim() != originalDescription.trim() ||
-        _selectedCategory != originalCategory ||
-        _pickedVideoFile != null ||
-        (uploadedVideoUrl != null && uploadedVideoUrl != originalVideo) ||
-        isVideoMarkedForDeletion;
+    final isValid = name.isNotEmpty && description.isNotEmpty && category != null && hasVideo;
 
-    final shouldEnableSave = hasAnyChanged && hasVideo;
+    final hasAnyChanged =
+        name != originalName.trim() ||
+            description != originalDescription.trim() ||
+            category != originalCategory ||
+            _pickedVideoFile != null ||
+            (uploadedVideoUrl != null && uploadedVideoUrl != originalVideo) ||
+            isVideoMarkedForDeletion;
+
+    final shouldEnableSave = hasAnyChanged && isValid;
 
     if (shouldEnableSave != hasChanged) {
       setState(() {
