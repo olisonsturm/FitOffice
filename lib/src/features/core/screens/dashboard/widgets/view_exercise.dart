@@ -5,9 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.dart';
 import 'package:get/get.dart';
+import 'package:fit_office/src/features/core/screens/profile/admin/edit_exercise.dart';
 
+import '../../../../../utils/helper/dialog_helper.dart';
 import '../../../controllers/db_controller.dart';
+import '../../../controllers/exercise_timer.dart';
 import '../../../controllers/profile_controller.dart';
+import 'active_dialog.dart';
 
 class ExerciseDetailScreen extends StatefulWidget {
   static RxnString currentExerciseName = RxnString();
@@ -112,6 +116,35 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     Navigator.pop(context, favoriteChanged);
   }
 
+  void _editExercise() async {
+    final timerController = Get.find<ExerciseTimerController>();
+    if (timerController.isRunning.value || timerController.isPaused.value) {
+      await showUnifiedDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => ActiveTimerDialog.forAction('edit'),
+      );
+      return;
+    }
+
+    final updated = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => EditExercise(
+          exercise: widget.exerciseData,
+          exerciseName: widget.exerciseData['name'],
+        ),
+      ),
+    );
+
+    if (updated != null && updated is Map<String, dynamic>) {
+      setState(() {
+        widget.exerciseData.clear();
+        widget.exerciseData.addAll(updated);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -128,6 +161,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
         exercise: widget.exerciseData,
         onToggleFavorite: toggleFavorite,
         onBack: _handleBack,
+        onEdit: _editExercise,
       ),
       body: Column(
         children: [
