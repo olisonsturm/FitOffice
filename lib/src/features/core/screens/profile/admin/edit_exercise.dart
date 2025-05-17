@@ -116,7 +116,10 @@ class _EditExerciseState extends State<EditExercise> {
     final description = _descriptionController.text.trim();
     final category = categoryMap[_selectedCategory];
 
-    if (name.isEmpty || description.isEmpty || category == null) {
+    final hasVideo = !isVideoMarkedForDeletion &&
+        (_pickedVideoFile != null || uploadedVideoUrl != null || originalVideo.isNotEmpty);
+
+    if (name.isEmpty || description.isEmpty || category == null || !hasVideo) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text(tFillOutAllFields)),
       );
@@ -142,7 +145,6 @@ class _EditExerciseState extends State<EditExercise> {
       String? finalVideoUrl = uploadedVideoUrl;
 
       if (_pickedVideoFile != null) {
-        final fileName = '${DateTime.now().millisecondsSinceEpoch}.mp4';
         final storageRef = FirebaseStorage.instance.ref().child('videos/${DateTime.now()}.mp4');
 
         final uploadTask = await storageRef.putFile(_pickedVideoFile!);
@@ -198,15 +200,21 @@ class _EditExerciseState extends State<EditExercise> {
   }
 
   void _checkIfChanged() {
+    final hasVideo = !isVideoMarkedForDeletion &&
+        (_pickedVideoFile != null || originalVideo.isNotEmpty || uploadedVideoUrl != null);
+
     final hasAnyChanged = _nameController.text.trim() != originalName.trim() ||
         _descriptionController.text.trim() != originalDescription.trim() ||
         _selectedCategory != originalCategory ||
-        (_pickedVideoFile != null) ||
-        (uploadedVideoUrl != null && uploadedVideoUrl != originalVideo);
+        _pickedVideoFile != null ||
+        (uploadedVideoUrl != null && uploadedVideoUrl != originalVideo) ||
+        isVideoMarkedForDeletion;
 
-    if (hasAnyChanged != hasChanged) {
+    final shouldEnableSave = hasAnyChanged && hasVideo;
+
+    if (shouldEnableSave != hasChanged) {
       setState(() {
-        hasChanged = hasAnyChanged;
+        hasChanged = shouldEnableSave;
       });
     }
   }
@@ -382,6 +390,7 @@ class _EditExerciseState extends State<EditExercise> {
                                             setState(() {
                                               _videoToDelete = uploadedVideoUrl ?? originalVideo;
                                               uploadedVideoUrl = null;
+                                              _pickedVideoFile = null;
                                               isVideoMarkedForDeletion = true;
 
                                               _videoPlayerController?.dispose();
