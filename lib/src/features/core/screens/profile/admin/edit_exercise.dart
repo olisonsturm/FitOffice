@@ -103,7 +103,7 @@ class _EditExerciseState extends State<EditExercise> {
   }
 
   void _showSaveConfirmationDialog() {
-    showConfirmationDialog(
+    showConfirmationDialogModel(
       context: context,
       title: tSaveChanges,
       content: tSaveChangesQuestion,

@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fit_office/src/features/core/controllers/exercise_controller.dart';
+import 'package:fit_office/src/features/core/screens/profile/admin/widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
@@ -31,39 +32,27 @@ class _AddExercisesScreenState extends State<AddExercises> {
   File? _selectedVideoFile;
   bool isLoading = false;
 
-  final Map<String, String> categoryMap = {
-    tUpperBody: 'Upper-Body',
-    tLowerBody: 'Lower-Body',
-    tMental: 'Mind',
-  };
-
   VideoPlayerController? _videoPlayerController;
   ChewieController? _chewieController;
+  ExerciseController exerciseController = ExerciseController();
 
   Future<void> initVideoPlayer(String path, {bool isLocal = false}) async {
+    final (videoCtrl, chewieCtrl) =
+        await exerciseController.initializeControllers(path, isLocal: true);
     _videoPlayerController?.dispose();
     _chewieController?.dispose();
 
-    _videoPlayerController = isLocal
-        ? VideoPlayerController.file(File(path))
-        : VideoPlayerController.networkUrl(Uri.parse(path));
-
-    await _videoPlayerController!.initialize();
-
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController!,
-      autoPlay: false,
-      looping: false,
-      aspectRatio: _videoPlayerController!.value.aspectRatio,
-    );
-
-    setState(() {});
+    setState(() {
+      _videoPlayerController = videoCtrl;
+      _chewieController = chewieCtrl;
+    });
   }
 
   void _resetForm() {
-    _nameController.clear();
-    _descriptionController.clear();
-    _videoController.clear();
+    exerciseController.resetForm(
+        nameController: _nameController,
+        descriptionController: _descriptionController,
+        videoController: _videoController);
 
     _videoPlayerController?.dispose();
     _videoPlayerController = null;
@@ -76,7 +65,7 @@ class _AddExercisesScreenState extends State<AddExercises> {
   }
 
   void _showConfirmationDialog() {
-    showConfirmationDialog(
+    showConfirmationDialogModel(
       context: context,
       title: tSaveChanges,
       content: tSaveExerciseConfirmation,
@@ -90,31 +79,7 @@ class _AddExercisesScreenState extends State<AddExercises> {
     final category = _selectedCategory;
     String? videoUrl = uploadedVideoUrl;
 
-    if (_selectedVideoFile != null && videoUrl == null) {
-      try {
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('videos/${DateTime.now()}.mp4');
-
-        await storageRef.putFile(_selectedVideoFile!);
-
-        videoUrl = await storageRef.getDownloadURL();
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('$e')),
-          );
-        }
-        setState(() => isLoading = false);
-        return;
-      }
-    }
-
-    if ((name.isEmpty ||
-            description.isEmpty ||
-            category == null ||
-            videoUrl == null) &&
-        mounted) {
+    if ((name.isEmpty || description.isEmpty || category == null) && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text(tFillOutAllFields)),
       );
@@ -124,68 +89,37 @@ class _AddExercisesScreenState extends State<AddExercises> {
     setState(() => isLoading = true);
 
     try {
-      await FirebaseFirestore.instance.collection('exercises').add({
-        'name': name,
-        'description': description,
-        'category': categoryMap[_selectedCategory],
-        'video': videoUrl,
-      });
+      if (_selectedVideoFile != null && videoUrl == null) {
+        videoUrl = await exerciseController.uploadVideo(_selectedVideoFile!);
+      }
+
+      if (videoUrl == null) {
+        throw Exception(tNoVideoSelected);
+      }
+
+      await exerciseController.saveExercise(
+        name: name,
+        description: description,
+        category: category!,
+        videoUrl: videoUrl,
+      );
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text(tExerciseAdded)),
         );
       }
+
       _resetForm();
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$e')),
+          SnackBar(content: Text(e.toString())),
         );
       }
     }
 
-    setState(() => isLoading = false);
-  }
-
-  bool get _hasChanges {
-    return _nameController.text.trim().isNotEmpty ||
-        _descriptionController.text.trim().isNotEmpty ||
-        _selectedCategory != null ||
-        _selectedVideoFile != null ||
-        uploadedVideoUrl != null;
-  }
-
-  bool get _isFormValid {
-    return _nameController.text.trim().isNotEmpty &&
-        _descriptionController.text.trim().isNotEmpty &&
-        _selectedCategory != null &&
-        (_selectedVideoFile != null || uploadedVideoUrl != null);
-  }
-
-  void showDiscardChangesDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text(tDiscardChangesQuestion),
-        content: const Text(tDiscardChangesText),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(tCancel),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            child: const Text(
-              tDiscardChanges,
-              style: TextStyle(color: Colors.red),
-            ),
-          ),
-        ],
-      ),
-    );
+    if (mounted) setState(() => isLoading = false);
   }
 
   void _onFormChanged() {
@@ -211,6 +145,12 @@ class _AddExercisesScreenState extends State<AddExercises> {
 
   @override
   Widget build(BuildContext context) {
+    final isValid = exerciseController.isFormValid(
+        name: _nameController.text.trim(),
+        description: _descriptionController.text.trim(),
+        category: _selectedCategory,
+        videoFile: _selectedVideoFile,
+        uploadedUrl: uploadedVideoUrl);
     return Scaffold(
       appBar: AppBar(
         title: const Text(tAddExercisesHeader),
@@ -218,8 +158,22 @@ class _AddExercisesScreenState extends State<AddExercises> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            if (_hasChanges) {
-              showDiscardChangesDialog();
+            if (exerciseController.hasChanges(
+                nameController: _nameController,
+                descriptionController: _descriptionController,
+                selectedCategory: _selectedCategory,
+                selectedVideoFile: _selectedVideoFile,
+                uploadedVideoUrl: uploadedVideoUrl)) {
+              showConfirmationDialogModel(
+                context: context,
+                title: tDiscardChangesQuestion,
+                content: tDiscardChangesText,
+                confirm: tDiscardChanges,
+                cancel: tCancel,
+                onConfirm: () {
+                  Navigator.pop(context);
+                },
+              );
             } else {
               Navigator.pop(context);
             }
@@ -365,14 +319,13 @@ class _AddExercisesScreenState extends State<AddExercises> {
                         style: TextButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             backgroundColor: Colors.white),
-                        onPressed:
-                            _isFormValid ? _showConfirmationDialog : null,
+                        onPressed: isValid ? _showConfirmationDialog : null,
                         icon: Icon(Icons.add,
-                            color: _isFormValid ? Colors.blue : Colors.grey),
+                            color: isValid ? Colors.blue : Colors.grey),
                         label: Text(
                           tAdd,
                           style: TextStyle(
-                            color: _isFormValid ? Colors.blue : Colors.grey,
+                            color: isValid ? Colors.blue : Colors.grey,
                             fontWeight: FontWeight.w800,
                             fontSize: 16,
                           ),
@@ -385,35 +338,4 @@ class _AddExercisesScreenState extends State<AddExercises> {
       ),
     );
   }
-}
-
-void showConfirmationDialog({
-  required BuildContext context,
-  required String title,
-  required String content,
-  required VoidCallback onConfirm,
-}) {
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(title),
-      content: Text(content),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text(tCancel),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-            onConfirm();
-          },
-          child: const Text(
-            tSave,
-            style: TextStyle(color: Colors.blue),
-          ),
-        ),
-      ],
-    ),
-  );
 }
