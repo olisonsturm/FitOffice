@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:fit_office/src/features/core/controllers/exercise_controller.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/video_player.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/confirmation_dialog.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/delete_video.dart';
@@ -27,6 +27,7 @@ class EditExercise extends StatefulWidget {
 class _EditExerciseState extends State<EditExercise> {
   late final TextEditingController _nameController;
   late final TextEditingController _descriptionController;
+  ExerciseController exerciseController = ExerciseController();
   late String originalName;
   late String originalDescription;
   late String originalVideo;
@@ -133,8 +134,7 @@ class _EditExerciseState extends State<EditExercise> {
     try {
       if (_videoToDelete != null && _videoToDelete!.isNotEmpty) {
         try {
-          final oldRef = FirebaseStorage.instance.refFromURL(_videoToDelete!);
-          await oldRef.delete();
+          exerciseController.deleteVideoByUrl(_videoToDelete!);
         } catch (e) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -147,12 +147,7 @@ class _EditExerciseState extends State<EditExercise> {
       String? finalVideoUrl = uploadedVideoUrl;
 
       if (_pickedVideoFile != null) {
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('videos/${DateTime.now()}.mp4');
-
-        final uploadTask = await storageRef.putFile(_pickedVideoFile!);
-        finalVideoUrl = await uploadTask.ref.getDownloadURL();
+        finalVideoUrl = await exerciseController.uploadVideo(_pickedVideoFile!);
       }
 
       final videoUrl = finalVideoUrl ?? originalVideo;
@@ -164,7 +159,7 @@ class _EditExerciseState extends State<EditExercise> {
         'video': videoUrl,
       };
 
-      await editExercise(widget.exerciseName, updatedData);
+      await exerciseController.editExercise(widget.exerciseName, updatedData);
       _videoToDelete = null;
       _pickedVideoFile = null;
       uploadedVideoUrl = finalVideoUrl;
@@ -186,50 +181,25 @@ class _EditExerciseState extends State<EditExercise> {
     setState(() => isLoading = false);
   }
 
-  Future<void> editExercise(
-      String exerciseName, Map<String, dynamic> updatedData) async {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('exercises')
-        .where('name', isEqualTo: exerciseName)
-        .get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      final docId = querySnapshot.docs.first.id;
-
-      await FirebaseFirestore.instance
-          .collection('exercises')
-          .doc(docId)
-          .update(updatedData);
-    }
-  }
-
   void _checkIfChanged() {
     final name = _nameController.text.trim();
     final description = _descriptionController.text.trim();
-    final category = _selectedCategory;
-    final hasVideo = !isVideoMarkedForDeletion &&
-        (_pickedVideoFile != null ||
-            originalVideo.isNotEmpty ||
-            uploadedVideoUrl != null);
+    final category = _selectedCategory ?? '';
+    final result = exerciseController.checkIfExerciseChanged(
+      newName: name,
+      newDescription: description,
+      newCategory: category,
+      originalName: originalName,
+      originalDescription: originalDescription,
+      originalCategory: originalCategory,
+      isVideoMarkedForDeletion: isVideoMarkedForDeletion,
+      pickedVideoFile: _pickedVideoFile,
+      uploadedVideoUrl: uploadedVideoUrl,
+      originalVideo: originalVideo,
+    );
 
-    final isValid = name.isNotEmpty &&
-        description.isNotEmpty &&
-        category != null &&
-        hasVideo;
-
-    final hasAnyChanged = name != originalName.trim() ||
-        description != originalDescription.trim() ||
-        category != originalCategory ||
-        _pickedVideoFile != null ||
-        (uploadedVideoUrl != null && uploadedVideoUrl != originalVideo) ||
-        isVideoMarkedForDeletion;
-
-    final shouldEnableSave = hasAnyChanged && isValid;
-
-    if (shouldEnableSave != hasChanged) {
-      setState(() {
-        hasChanged = shouldEnableSave;
-      });
+    if (result != hasChanged) {
+      setState(() => hasChanged = result);
     }
   }
 

@@ -95,4 +95,62 @@ class ExerciseController {
         selectedVideoFile != null ||
         uploadedVideoUrl != null;
   }
+
+  Future<void> editExercise(
+      String exerciseName, Map<String, dynamic> updatedData) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('exercises')
+        .where('name', isEqualTo: exerciseName)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final docId = querySnapshot.docs.first.id;
+
+      await FirebaseFirestore.instance
+          .collection('exercises')
+          .doc(docId)
+          .update(updatedData);
+    }
+  }
+
+  bool checkIfExerciseChanged({
+    required String newName,
+    required String newDescription,
+    required String newCategory,
+    required String originalName,
+    required String originalDescription,
+    required String originalCategory,
+    required bool isVideoMarkedForDeletion,
+    required File? pickedVideoFile,
+    required String? uploadedVideoUrl,
+    required String originalVideo,
+  }) {
+    final hasVideo = !isVideoMarkedForDeletion &&
+        (pickedVideoFile != null ||
+            uploadedVideoUrl != null ||
+            originalVideo.isNotEmpty);
+
+    final isValid = newName.isNotEmpty &&
+        newDescription.isNotEmpty &&
+        newCategory.isNotEmpty &&
+        hasVideo;
+
+    final hasAnyChanged = newName.trim() != originalName.trim() ||
+        newDescription.trim() != originalDescription.trim() ||
+        newCategory != originalCategory ||
+        pickedVideoFile != null ||
+        (uploadedVideoUrl != null && uploadedVideoUrl != originalVideo) ||
+        isVideoMarkedForDeletion;
+
+    return hasAnyChanged && isValid;
+  }
+
+  Future<void> deleteVideoByUrl(String url) async {
+    try {
+      final ref = FirebaseStorage.instance.refFromURL(url);
+      await ref.delete();
+    } catch (e) {
+      throw Exception('$e');
+    }
+  }
 }
