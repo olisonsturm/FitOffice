@@ -2,12 +2,9 @@ import 'dart:io';
 
 import 'package:chewie/chewie.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/confirmation_dialog.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/delete_video.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 
@@ -62,18 +59,6 @@ class _ExerciseFormState extends State<ExerciseForm> {
     'Lower-Body': tLowerBody,
     'Mind': tMental,
   };
-
-  Future<void> initVideoPlayer(String path, {bool isLocal = false}) async {
-    final (videoCtrl, chewieCtrl) =
-        await exerciseController.initializeControllers(path, isLocal: true);
-    _videoPlayerController?.dispose();
-    _chewieController?.dispose();
-
-    setState(() {
-      _videoPlayerController = videoCtrl;
-      _chewieController = chewieCtrl;
-    });
-  }
 
   Future<void> initVideoPlayerEditVideo(String? url) async {
     if (url == null || url.isEmpty) return;
@@ -132,9 +117,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
     String? videoUrl = uploadedVideoUrl;
 
     if ((name.isEmpty || description.isEmpty || category == null) && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(tFillOutAllFields)),
-      );
+      _showSnackbar(tFillOutAllFields);
       return;
     }
 
@@ -157,17 +140,13 @@ class _ExerciseFormState extends State<ExerciseForm> {
       );
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text(tExerciseAdded)),
-        );
+        _showSnackbar(tExerciseAdded);
       }
 
       _resetForm();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
+        _showSnackbar(e.toString());
       }
     }
 
@@ -185,9 +164,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
             originalVideo.isNotEmpty);
 
     if (name.isEmpty || description.isEmpty || category == null || !hasVideo) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(tFillOutAllFields)),
-      );
+      _showSnackbar(tFillOutAllFields);
       return;
     }
 
@@ -199,9 +176,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
           exerciseController.deleteVideoByUrl(_videoToDelete!);
         } catch (e) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('$tDeleteVideoFailed: $e')),
-            );
+            _showSnackbar('$tDeleteVideoFailed: $e');
           }
         }
       }
@@ -228,16 +203,12 @@ class _ExerciseFormState extends State<ExerciseForm> {
       uploadedVideoUrl = finalVideoUrl;
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text(tChangesSaved)),
-        );
+        _showSnackbar(tChangesSaved);
         Navigator.pop(context, updatedData);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$e')),
-        );
+        _showSnackbar('$e');
       }
     }
 
@@ -268,6 +239,12 @@ class _ExerciseFormState extends State<ExerciseForm> {
     if (result != hasChanged) {
       setState(() => hasChanged = result);
     }
+  }
+
+  void _showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   @override
@@ -486,14 +463,9 @@ class _ExerciseFormState extends State<ExerciseForm> {
                                   .refFromURL(uploadedVideoUrl!);
                               await ref.delete();
 
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(tVideoDeleteSuccess)),
-                              );
+                              _showSnackbar(tVideoDeleteSuccess);
                             } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("$e")),
-                              );
+                              _showSnackbar(e.toString());
                             }
                             uploadedVideoUrl = null;
                           }
@@ -564,10 +536,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
                                     });
 
                                     _checkIfChanged();
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text(tVideoDeleteSuccess)),
-                                    );
+                                    _showSnackbar(tVideoDeleteSuccess);
                                   },
                                   iconSize: 28,
                                   padding: EdgeInsets.zero,
@@ -652,13 +621,9 @@ class _ExerciseFormState extends State<ExerciseForm> {
 
                   _checkIfChanged();
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text(tVideoSelected)),
-                  );
+                  _showSnackbar(tVideoSelected);
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text(tNoVideoSelected)),
-                  );
+                  _showSnackbar(tNoVideoSelected);
                 }
               },
               icon: Icon(
@@ -666,9 +631,16 @@ class _ExerciseFormState extends State<ExerciseForm> {
                 color: tBlackColor,
               ),
               label: Text(
-                (isVideoMarkedForDeletion || (uploadedVideoUrl == null))
+                widget.isEdit &&
+                        (isVideoMarkedForDeletion ||
+                            (uploadedVideoUrl == null && originalVideo.isEmpty))
                     ? tUploadVideo
-                    : tReplaceVideo,
+                    : (isVideoMarkedForDeletion ||
+                            (uploadedVideoUrl == null &&
+                                widget.isEdit == false &&
+                                _selectedVideoFile == null))
+                        ? tUploadVideo
+                        : tReplaceVideo,
                 style: TextStyle(
                   color: tBlackColor,
                   fontWeight: FontWeight.w800,
@@ -681,9 +653,13 @@ class _ExerciseFormState extends State<ExerciseForm> {
           Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: widget.isEdit ? (hasChanged
-                    ? (tWhiteColor)
-                    : (isDarkMode ? Colors.grey[800] : Colors.grey.shade300)) : Colors.white,
+                color: widget.isEdit
+                    ? (hasChanged
+                        ? (tWhiteColor)
+                        : (isDarkMode
+                            ? Colors.grey[800]
+                            : Colors.grey.shade300))
+                    : Colors.white,
                 border: Border.all(
                   color: hasChanged
                       ? (tWhiteColor)
