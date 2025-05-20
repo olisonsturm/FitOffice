@@ -1,11 +1,11 @@
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/exercise_history.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/exercise_info.dart';
+import 'package:fit_office/src/features/core/screens/profile/admin/exercise_form.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.dart';
 import 'package:get/get.dart';
-import 'package:fit_office/src/features/core/screens/profile/admin/edit_exercise.dart';
 
 import '../../../../../utils/helper/dialog_helper.dart';
 import '../../../controllers/db_controller.dart';
@@ -130,10 +130,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     final updated = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => EditExercise(
-          exercise: widget.exerciseData,
-          exerciseName: widget.exerciseData['name'],
-        ),
+        builder: (_) => ExerciseForm(isEdit: true, exercise: widget.exerciseData, exerciseName: widget.exerciseData['name'],)
       ),
     );
 

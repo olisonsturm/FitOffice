@@ -2,7 +2,6 @@ import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/delete_exercise.dart';
-import 'package:fit_office/src/features/core/screens/profile/admin/edit_exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/utils/helper/dialog_helper.dart';
