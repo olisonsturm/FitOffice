@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fit_office/src/constants/text_strings.dart'; // Nur falls du tSave etc. brauchst
+import 'package:fit_office/src/constants/text_strings.dart';
 
-void showConfirmationDialog(
+void showConfirmationDialogModel(
     {required BuildContext context,
     required String title,
     required String content,

@@ -1,4 +1,5 @@
 import 'package:fit_office/src/features/authentication/controllers/signup_controller.dart';
+import 'package:fit_office/src/features/core/screens/profile/admin/widgets/confirmation_dialog.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/save_button.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
@@ -6,7 +7,6 @@ import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 
-import 'add_exercises.dart';
 
 class EditUserPage extends StatefulWidget {
   final UserModel? user;
@@ -121,7 +121,7 @@ class _EditUserPageState extends State<EditUserPage> {
   }
 
   void _showSaveConfirmationDialog() {
-    showConfirmationDialog(
+    showConfirmationDialogModel(
       context: context,
       title: tSaveChanges,
       content: tSaveChangesQuestion,

@@ -145,7 +145,7 @@ class _FriendProfileState extends State<FriendProfile> {
                           : (isPendingLocal ? Colors.grey : Colors.green),
                       onPress: () async {
                         if (widget.isFriend) {
-                          showConfirmationDialog(
+                          showConfirmationDialogModel(
                             context: context,
                             title: tDeleteFriend,
                             content:

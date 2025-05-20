@@ -1,11 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
-  final String videoUrl;
+  final String? videoUrl;
+  final File? file;
 
-  const VideoPlayerWidget({super.key, required this.videoUrl});
+  const VideoPlayerWidget({super.key, this.videoUrl, this.file});
 
   @override
   State<VideoPlayerWidget> createState() => _VideoPlayerWidgetState();
@@ -24,7 +27,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   @override
   void didUpdateWidget(covariant VideoPlayerWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.videoUrl != widget.videoUrl) {
+    if (oldWidget.videoUrl != widget.videoUrl || oldWidget.file?.path != widget.file?.path) {
       _initializePlayer();
     }
   }
@@ -33,9 +36,23 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     _videoPlayerController?.dispose();
     _chewieController?.dispose();
 
-    _videoPlayerController =
-        VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
+    if (widget.file != null) {
+      _videoPlayerController = VideoPlayerController.file(widget.file!);
+    } else if (widget.videoUrl != null && widget.videoUrl!.isNotEmpty) {
+      _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl!));
+    } else {
+      return;
+    }
+
     await _videoPlayerController!.initialize();
+
+    _videoPlayerController!.addListener(() {
+      final isFinished = _videoPlayerController!.value.position >= _videoPlayerController!.value.duration;
+      if (isFinished && !_videoPlayerController!.value.isPlaying) {
+        _videoPlayerController!.seekTo(Duration.zero);
+        _chewieController?.pause();
+      }
+    });
 
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController!,
