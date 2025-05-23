@@ -45,7 +45,6 @@ class StatisticsWidget extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         } else if (userSnapshot.hasData) {
           final user = userSnapshot.data as UserModel;
-          final dbController = DbController()..user = user;
           StatisticsController statisticsController = StatisticsController();
 
           return FutureBuilder<int>(
@@ -74,8 +73,8 @@ class StatisticsWidget extends StatelessWidget {
           return _styledCard(
             icon: Icons.error,
             iconColor: Colors.red,
-            title: 'Fehler',
-            content: 'Fehler beim Laden der Nutzerdaten.',
+            title: tError,
+            content: tLoadingError,
           );
         }
       },
