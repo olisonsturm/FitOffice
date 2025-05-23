@@ -136,6 +136,9 @@ const String tDashboardExerciseUnits = "Units";
 const String tDashboardExerciseNotFound = "The exercise you are looking for was not found.";
 const String tDashboardExerciseSearchNoInput = "Please enter a search term.";
 const String tUpdateFavoriteException = "Couldn't get favorites.";
+const String tLoading = "Loading...";
+const String tActiveStreak = "Active Streak";
+const String tNoActiveStreak = "No active streak";
 
 
 

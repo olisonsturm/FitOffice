@@ -3,6 +3,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class StatisticsController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  Future<DocumentReference> _getUserDocRef(String email) async {
+    final snapshot = await firestore
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isEmpty) {
+      throw Exception('User not found');
+    }
+
+    return snapshot.docs.first.reference;
+  }
+
   Future<List<String>> getTop3Exercises(String userEmail) async {
     final userSnapshot = await firestore
         .collection('users')
@@ -57,4 +71,62 @@ class StatisticsController {
       return '${seconds}s';
     }
   }
+
+  Future<bool> isStreakActive(String userEmail) async {
+    final userRef = await _getUserDocRef(userEmail);
+    final streaks = await userRef
+        .collection('streaks')
+        .where('isActive', isEqualTo: true)
+        .limit(1)
+        .get();
+
+    return streaks.docs.isNotEmpty;
+  }
+
+  Future<int> getDoneExercisesInSeconds(String userEmail) async {
+    final userRef = await _getUserDocRef(userEmail);
+    final now = DateTime.now();
+    final todayStart = DateTime(now.year, now.month, now.day);
+    final tomorrowStart = todayStart.add(Duration(days: 1));
+
+    final logs = await userRef
+        .collection('exerciseLogs')
+        .where('startTime', isGreaterThanOrEqualTo: Timestamp.fromDate(todayStart))
+        .where('startTime', isLessThan: Timestamp.fromDate(tomorrowStart))
+        .get();
+
+    int total = 0;
+
+    for (final doc in logs.docs) {
+      final data = doc.data();
+      final start = (data['startTime'] as Timestamp?)?.toDate();
+      final end = (data['endTime'] as Timestamp?)?.toDate();
+
+      if (start != null && end != null) {
+        total += end.difference(start).inSeconds;
+      }
+    }
+
+    return total;
+  }
+
+  Future<int> getStreakSteps(String userEmail) async {
+    final userRef = await _getUserDocRef(userEmail);
+    final streaks = await userRef
+        .collection('streaks')
+        .where('isActive', isEqualTo: true)
+        .limit(1)
+        .get();
+
+    if (streaks.docs.isEmpty) return 0;
+
+    final startedAt = (streaks.docs.first['startedAt'] as Timestamp).toDate();
+    final now = DateTime.now();
+
+    final today = DateTime(now.year, now.month, now.day);
+    final start = DateTime(startedAt.year, startedAt.month, startedAt.day);
+
+    return today.difference(start).inDays + 1;
+  }
+
 }

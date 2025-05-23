@@ -1,10 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit_office/src/constants/colors.dart';
-import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
-import 'package:fit_office/src/features/core/screens/profile/admin/delete_exercise.dart';
+import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:fit_office/src/utils/helper/dialog_helper.dart';
+
+import '../../../controllers/statistics_controller.dart';
 
 class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -107,30 +107,61 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                 if (showStreak)
                   Builder(
                     builder: (context) {
-                      int todaysExerciseMinutes = 4;
-                      bool hasStreak = todaysExerciseMinutes >= 5;
+                      final currentUser = FirebaseAuth.instance.currentUser;
+                      final userEmail = currentUser?.email;
+                      final StatisticsController statisticsController = StatisticsController();
 
-                      return Row(
-                        children: [
-                          Icon(
-                            Icons.local_fire_department,
-                            color: hasStreak
-                                ? Colors.orange
-                                : (isDark ? tWhiteColor : tPaleBlackColor),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '$todaysExerciseMinutes',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: isDark ? tWhiteColor : tDarkColor,
-                            ),
-                          ),
-                        ],
+                      return FutureBuilder<bool>(
+                        future: statisticsController.isStreakActive(userEmail!),
+                        builder: (context, snapshot) {
+                          final bool hasStreak = snapshot.data ?? false;
+                          final Color flameColor = hasStreak
+                              ? Colors.orange
+                              : (isDark ? tWhiteColor : tPaleBlackColor);
+
+                          return Row(
+                            children: [
+                              Icon(
+                                Icons.local_fire_department,
+                                color: flameColor,
+                              ),
+                              const SizedBox(width: 4),
+                              hasStreak
+                                  ? FutureBuilder<int>(
+                                future: statisticsController.getStreakSteps(userEmail),
+                                builder: (context, stepsSnapshot) {
+                                  if (stepsSnapshot.connectionState == ConnectionState.waiting) {
+                                    return const Text(tLoading);
+                                  } else if (stepsSnapshot.hasError) {
+                                    return const Text(tError);
+                                  } else {
+                                    final int steps = stepsSnapshot.data ?? 0;
+                                    return Text(
+                                      steps.toString(),
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: isDark ? tWhiteColor : tDarkColor,
+                                      ),
+                                    );
+                                  }
+                                },
+                              )
+                                  : Text(
+                                '0',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: isDark ? tWhiteColor : tDarkColor,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       );
                     },
                   ),
+
               ],
             ),
           ),

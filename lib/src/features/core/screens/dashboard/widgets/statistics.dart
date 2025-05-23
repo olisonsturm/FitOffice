@@ -46,25 +46,26 @@ class StatisticsWidget extends StatelessWidget {
         } else if (userSnapshot.hasData) {
           final user = userSnapshot.data as UserModel;
           final dbController = DbController()..user = user;
+          StatisticsController statisticsController = StatisticsController();
 
-          return FutureBuilder<String?>(
-            future: dbController.fetchActiveStreakSteps(),
+          return FutureBuilder<int>(
+            future: statisticsController.getStreakSteps(user.email),
             builder: (context, stepsSnapshot) {
               if (stepsSnapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
-              } else if (stepsSnapshot.hasData && stepsSnapshot.data != null) {
+              } else if (stepsSnapshot.hasData && stepsSnapshot.data! > 0) {
                 return _styledCard(
                   icon: Icons.local_fire_department,
                   iconColor: Colors.orange,
-                  title: 'Aktiver Streak',
-                  content: stepsSnapshot.data!,
+                  title: tActiveStreak,
+                  content: '${stepsSnapshot.data}',
                 );
               } else {
                 return _styledCard(
                   icon: Icons.local_fire_department,
                   iconColor: Colors.grey,
-                  title: 'Aktiver Streak',
-                  content: 'Kein aktiver Streak gefunden.',
+                  title: tActiveStreak,
+                  content: tNoActiveStreak,
                 );
               }
             },
