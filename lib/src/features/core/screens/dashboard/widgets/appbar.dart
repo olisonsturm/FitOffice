@@ -109,59 +109,63 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                     builder: (context) {
                       final currentUser = FirebaseAuth.instance.currentUser;
                       final userEmail = currentUser?.email;
-                      final StatisticsController statisticsController = StatisticsController();
+                      final StatisticsController statisticsController =
+                          StatisticsController();
 
                       return FutureBuilder<bool>(
                         future: statisticsController.isStreakActive(userEmail!),
-                        builder: (context, snapshot) {
-                          final bool hasStreak = snapshot.data ?? false;
-                          final Color flameColor = hasStreak
-                              ? Colors.orange
-                              : (isDark ? tWhiteColor : tPaleBlackColor);
+                        builder: (context, isStreakSnapshot) {
+                          if (isStreakSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Text(tLoading);
+                          } else if (isStreakSnapshot.hasError) {
+                            return const Text(tError);
+                          }
 
-                          return Row(
-                            children: [
-                              Icon(
-                                Icons.local_fire_department,
-                                color: flameColor,
-                              ),
-                              const SizedBox(width: 4),
-                              hasStreak
-                                  ? FutureBuilder<int>(
-                                future: statisticsController.getStreakSteps(userEmail),
-                                builder: (context, stepsSnapshot) {
-                                  if (stepsSnapshot.connectionState == ConnectionState.waiting) {
-                                    return const Text(tLoading);
-                                  } else if (stepsSnapshot.hasError) {
-                                    return const Text(tError);
-                                  } else {
-                                    final int steps = stepsSnapshot.data ?? 0;
-                                    return Text(
-                                      steps.toString(),
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: isDark ? tWhiteColor : tDarkColor,
-                                      ),
-                                    );
-                                  }
-                                },
-                              )
-                                  : Text(
-                                '0',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: isDark ? tWhiteColor : tDarkColor,
-                                ),
-                              ),
-                            ],
+                          return FutureBuilder<List<dynamic>>(
+                            future: Future.wait([
+                              statisticsController
+                                  .getDoneExercisesInSeconds(userEmail),
+                              statisticsController.getStreakSteps(userEmail),
+                            ]),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Text(tLoading);
+                              } else if (snapshot.hasError) {
+                                return const Text(tError);
+                              }
+
+                              final int doneSeconds = snapshot.data![0] as int;
+                              final int streakSteps = snapshot.data![1] as int;
+
+                              final Color flameColor = doneSeconds > 300
+                                  ? Colors.orange
+                                  : (isDark ? tWhiteColor : tPaleBlackColor);
+
+                              return Row(
+                                children: [
+                                  Icon(
+                                    Icons.local_fire_department,
+                                    color: flameColor,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    streakSteps.toString(),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: isDark ? tWhiteColor : tDarkColor,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
                           );
                         },
                       );
                     },
                   ),
-
               ],
             ),
           ),
