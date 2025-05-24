@@ -132,6 +132,13 @@ class StatisticsController {
 
   Future<void> setStreakInvalid(String userEmail) async {
     final yesterday = DateTime.now().subtract(const Duration(days: 1));
+    final todayStart = DateTime.now().subtract(Duration(
+      hours: DateTime.now().hour,
+      minutes: DateTime.now().minute,
+      seconds: DateTime.now().second,
+      milliseconds: DateTime.now().millisecond,
+      microseconds: DateTime.now().microsecond,
+    ));
     if (await getDoneExercisesInSeconds(userEmail, day: yesterday) < 300) {
       final userRef = await _getUserDocRef(userEmail);
       final streaks = await userRef
@@ -140,11 +147,15 @@ class StatisticsController {
           .limit(1)
           .get();
       if (streaks.docs.isNotEmpty) {
-        final docRef = streaks.docs.first.reference;
+        final docRef = streaks.docs.first;
+        final startedAt = (docRef['startedAt'] as Timestamp).toDate();
 
-        await docRef.update({
-          'isActive': false,
-        });
+        if (startedAt.isBefore(todayStart)) {
+          await docRef.reference.update({
+            'isActive': false,
+            'endTime': Timestamp.now(),
+          });
+        }
       }
     }
   }
