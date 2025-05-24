@@ -83,16 +83,17 @@ class StatisticsController {
     return streaks.docs.isNotEmpty;
   }
 
-  Future<int> getDoneExercisesInSeconds(String userEmail) async {
+  Future<int> getDoneExercisesInSeconds(String userEmail, {DateTime? day}) async {
     final userRef = await _getUserDocRef(userEmail);
-    final now = DateTime.now();
-    final todayStart = DateTime(now.year, now.month, now.day);
-    final tomorrowStart = todayStart.add(Duration(days: 1));
+
+    final DateTime targetDay = day ?? DateTime.now();
+    final dayStart = DateTime(targetDay.year, targetDay.month, targetDay.day);
+    final nextDayStart = dayStart.add(const Duration(days: 1));
 
     final logs = await userRef
         .collection('exerciseLogs')
-        .where('startTime', isGreaterThanOrEqualTo: Timestamp.fromDate(todayStart))
-        .where('startTime', isLessThan: Timestamp.fromDate(tomorrowStart))
+        .where('startTime', isGreaterThanOrEqualTo: Timestamp.fromDate(dayStart))
+        .where('startTime', isLessThan: Timestamp.fromDate(nextDayStart))
         .get();
 
     int total = 0;
@@ -129,4 +130,22 @@ class StatisticsController {
     return today.difference(start).inDays + 1;
   }
 
+  Future<void> setStreakInvalid(String userEmail) async {
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
+    if (await getDoneExercisesInSeconds(userEmail, day: yesterday) < 300) {
+      final userRef = await _getUserDocRef(userEmail);
+      final streaks = await userRef
+          .collection('streaks')
+          .where('isActive', isEqualTo: true)
+          .limit(1)
+          .get();
+      if (streaks.docs.isNotEmpty) {
+        final docRef = streaks.docs.first.reference;
+
+        await docRef.update({
+          'isActive': false,
+        });
+      }
+    }
+  }
 }

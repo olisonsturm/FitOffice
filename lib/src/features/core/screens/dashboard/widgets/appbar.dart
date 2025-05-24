@@ -113,24 +113,26 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                           StatisticsController();
 
                       return FutureBuilder<bool>(
-                        future: statisticsController.isStreakActive(userEmail!),
+                        future: () async {
+                          await statisticsController.setStreakInvalid(userEmail!);
+                          return statisticsController.isStreakActive(userEmail);
+                        }(),
                         builder: (context, isStreakSnapshot) {
-                          if (isStreakSnapshot.connectionState ==
-                              ConnectionState.waiting) {
+                          if (isStreakSnapshot.connectionState == ConnectionState.waiting) {
                             return const Text(tLoading);
                           } else if (isStreakSnapshot.hasError) {
                             return const Text(tError);
                           }
 
+                          final bool hasStreak = isStreakSnapshot.data ?? false;
+
                           return FutureBuilder<List<dynamic>>(
                             future: Future.wait([
-                              statisticsController
-                                  .getDoneExercisesInSeconds(userEmail),
+                              statisticsController.getDoneExercisesInSeconds(userEmail!),
                               statisticsController.getStreakSteps(userEmail),
                             ]),
                             builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
                                 return const Text(tLoading);
                               } else if (snapshot.hasError) {
                                 return const Text(tError);
@@ -139,7 +141,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                               final int doneSeconds = snapshot.data![0] as int;
                               final int streakSteps = snapshot.data![1] as int;
 
-                              final Color flameColor = doneSeconds > 300
+                              final Color flameColor = doneSeconds >= 300
                                   ? Colors.orange
                                   : (isDark ? tWhiteColor : tPaleBlackColor);
 
@@ -151,7 +153,7 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    streakSteps.toString(),
+                                    hasStreak ? streakSteps.toString() : '0',
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
