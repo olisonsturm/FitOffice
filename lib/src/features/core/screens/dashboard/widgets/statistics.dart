@@ -13,10 +13,12 @@ class StatisticsWidget extends StatelessWidget {
     super.key,
     required this.txtTheme,
     required this.isDark,
+    this.userEmail
   });
 
   final TextTheme txtTheme;
   final bool isDark;
+  final String? userEmail;
 
   @override
   Widget build(BuildContext context) {
@@ -25,19 +27,19 @@ class StatisticsWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildStreakCard(controller),
+        buildStreakCard(controller),
         const SizedBox(height: 10),
         _buildLastExerciseCard(controller),
         const SizedBox(height: 10),
         _buildDurationCard(controller),
         const SizedBox(height: 10),
-        _buildTopExercisesCard(controller)
+        buildTopExercisesCard(controller)
       ],
     );
   }
 
   /// Streak-Card
-  Widget _buildStreakCard(ProfileController controller) {
+  Widget buildStreakCard(ProfileController controller) {
     return FutureBuilder(
       future: controller.getUserData(),
       builder: (context, userSnapshot) {
@@ -48,7 +50,7 @@ class StatisticsWidget extends StatelessWidget {
           StatisticsController statisticsController = StatisticsController();
 
           return FutureBuilder<int>(
-            future: statisticsController.getStreakSteps(user.email),
+            future: statisticsController.getStreakSteps(userEmail != null ? userEmail! : user.email),
             builder: (context, stepsSnapshot) {
               if (stepsSnapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -172,7 +174,7 @@ class StatisticsWidget extends StatelessWidget {
   }
 
   /// Top-3-Exercises-Card
-  Widget _buildTopExercisesCard(ProfileController controller) {
+  Widget buildTopExercisesCard(ProfileController controller) {
     return FutureBuilder(
       future: controller.getUserData(),
       builder: (context, userSnapshot) {
@@ -183,7 +185,7 @@ class StatisticsWidget extends StatelessWidget {
           final statisticsController = StatisticsController();
 
           return FutureBuilder<List<String>>(
-            future: statisticsController.getTop3Exercises(user.email),
+            future: statisticsController.getTop3Exercises(userEmail != null ? userEmail! : user.email),
             builder: (context, topExercisesSnapshot) {
               if (topExercisesSnapshot.connectionState ==
                   ConnectionState.waiting) {

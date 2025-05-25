@@ -83,7 +83,8 @@ class StatisticsController {
     return streaks.docs.isNotEmpty;
   }
 
-  Future<int> getDoneExercisesInSeconds(String userEmail, {DateTime? day}) async {
+  Future<int> getDoneExercisesInSeconds(String userEmail,
+      {DateTime? day}) async {
     final userRef = await _getUserDocRef(userEmail);
 
     final DateTime targetDay = day ?? DateTime.now();
@@ -92,7 +93,8 @@ class StatisticsController {
 
     final logs = await userRef
         .collection('exerciseLogs')
-        .where('startTime', isGreaterThanOrEqualTo: Timestamp.fromDate(dayStart))
+        .where('startTime',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(dayStart))
         .where('startTime', isLessThan: Timestamp.fromDate(nextDayStart))
         .get();
 
@@ -127,6 +129,9 @@ class StatisticsController {
     final today = DateTime(now.year, now.month, now.day);
     final start = DateTime(startedAt.year, startedAt.month, startedAt.day);
 
+    if (await getDoneExercisesInSeconds(userEmail) < 300) {
+      return today.difference(start).inDays;
+    }
     return today.difference(start).inDays + 1;
   }
 
