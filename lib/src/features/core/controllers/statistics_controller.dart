@@ -1,4 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 class StatisticsController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -175,10 +179,13 @@ class StatisticsController {
     int maxDays = 0;
     DateTime? longestStart;
     DateTime? longestEnd;
+    bool isActiveStreak = false;
 
     for (var doc in allStreaksSnapshot.docs) {
       final startedAt = (doc['startedAt'] as Timestamp).toDate();
       DateTime endDate;
+
+      final bool isActive = doc['isActive'] == true;
 
       if (doc['isActive'] == true) {
         endDate = DateTime.now();
@@ -192,13 +199,14 @@ class StatisticsController {
         maxDays = duration;
         longestStart = startedAt;
         longestEnd = endDate;
+        isActiveStreak = isActive;
       }
     }
 
     return {
       'lengthInDays': maxDays,
       'startDate': _formatDate(longestStart!),
-      'endDate': _formatDate(longestEnd!),
+      'endDate': isActiveStreak ? tStreakStillActive : _formatDate(longestEnd!),
     };
   }
 
@@ -210,3 +218,42 @@ class StatisticsController {
   }
 
 }
+
+class StreakController extends GetxController {
+  final StatisticsController _statisticsController = StatisticsController();
+
+  var streakSteps = 0.obs;
+  var doneSeconds = 0.obs;
+  var hasStreak = false.obs;
+  var isLoading = true.obs;
+  var isError = false.obs;
+
+  Future<void> loadStreakData() async {
+    isLoading.value = true;
+    isError.value = false;
+    final userEmail = FirebaseAuth.instance.currentUser?.email;
+    if (userEmail == null) {
+      isError.value = true;
+      isLoading.value = false;
+      return;
+    }
+
+    try {
+      await _statisticsController.setStreakInvalid(userEmail);
+      hasStreak.value = await _statisticsController.isStreakActive(userEmail);
+
+      final results = await Future.wait([
+        _statisticsController.getDoneExercisesInSeconds(userEmail),
+        _statisticsController.getStreakSteps(userEmail),
+      ]);
+
+      doneSeconds.value = results[0];
+      streakSteps.value = results[1];
+    } catch (_) {
+      isError.value = true;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+}
+

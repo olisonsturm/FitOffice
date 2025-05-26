@@ -327,3 +327,4 @@ const String tStartDate = "Start Date: ";
 const String tEndDate = "End Date: ";
 const String tDuration = "Duration: ";
 const String tDays = " days";
+const String tStreakStillActive = "Streak is still active.";

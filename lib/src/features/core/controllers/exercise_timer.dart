@@ -46,6 +46,11 @@ class ExerciseTimerController extends GetxController {
           .collection('streaks')
           .add({'isActive': true, 'startedAt': Timestamp.now()});
     }
+    final email = FirebaseAuth.instance.currentUser?.email;
+    if (email != null) {
+      final streakCtrl = Get.find<StreakController>();
+      await streakCtrl.loadStreakData();
+    }
 
     _stopwatch.stop();
     _stopwatch.reset();

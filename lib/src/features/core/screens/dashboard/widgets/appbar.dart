@@ -105,69 +105,36 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                     onPressed: isProcessing ? null : onToggleFavorite,
                   ),
                 if (showStreak)
-                  Builder(
-                    builder: (context) {
-                      final currentUser = FirebaseAuth.instance.currentUser;
-                      final userEmail = currentUser?.email;
-                      final StatisticsController statisticsController =
-                          StatisticsController();
+                  Obx(() {
+                    final streakCtrl = Get.find<StreakController>();
+                    if (streakCtrl.isLoading.value) {
+                      return const Text(tLoading);
+                    } else if (streakCtrl.isError.value) {
+                      return const Text(tError);
+                    }
 
-                      return FutureBuilder<bool>(
-                        future: () async {
-                          await statisticsController.setStreakInvalid(userEmail!);
-                          return statisticsController.isStreakActive(userEmail);
-                        }(),
-                        builder: (context, isStreakSnapshot) {
-                          if (isStreakSnapshot.connectionState == ConnectionState.waiting) {
-                            return const Text(tLoading);
-                          } else if (isStreakSnapshot.hasError) {
-                            return const Text(tError);
-                          }
+                    final bool hasStreak = streakCtrl.hasStreak.value;
+                    final int doneSecs = streakCtrl.doneSeconds.value;
+                    final int streakCount = streakCtrl.streakSteps.value;
+                    final Color flameColor = doneSecs >= 300
+                        ? Colors.orange
+                        : (isDark ? tWhiteColor : tPaleBlackColor);
 
-                          final bool hasStreak = isStreakSnapshot.data ?? false;
-
-                          return FutureBuilder<List<dynamic>>(
-                            future: Future.wait([
-                              statisticsController.getDoneExercisesInSeconds(userEmail!),
-                              statisticsController.getStreakSteps(userEmail),
-                            ]),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const Text(tLoading);
-                              } else if (snapshot.hasError) {
-                                return const Text(tError);
-                              }
-
-                              final int doneSeconds = snapshot.data![0] as int;
-                              final int streakSteps = snapshot.data![1] as int;
-
-                              final Color flameColor = doneSeconds >= 300
-                                  ? Colors.orange
-                                  : (isDark ? tWhiteColor : tPaleBlackColor);
-
-                              return Row(
-                                children: [
-                                  Icon(
-                                    Icons.local_fire_department,
-                                    color: flameColor,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    hasStreak ? streakSteps.toString() : '0',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: isDark ? tWhiteColor : tDarkColor,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      );
-                    },
-                  ),
+                    return Row(
+                      children: [
+                        Icon(Icons.local_fire_department, color: flameColor),
+                        const SizedBox(width: 4),
+                        Text(
+                          hasStreak ? streakCount.toString() : '0',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: isDark ? tWhiteColor : tDarkColor,
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
               ],
             ),
           ),
