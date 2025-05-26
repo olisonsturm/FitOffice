@@ -194,7 +194,14 @@ class _FriendProfileState extends State<FriendProfile> {
                             isDark:
                                 Theme.of(context).brightness == Brightness.dark,
                             userEmail: friend.email)
-                        .buildTopExercisesCard(controller)
+                        .buildTopExercisesCard(controller),
+                    const SizedBox(height: 12),
+                    StatisticsWidget(
+                            txtTheme: txtTheme,
+                            isDark:
+                                Theme.of(context).brightness == Brightness.dark,
+                            userEmail: friend.email)
+                        .buildLongestStreakCard(controller)
                   ]
                 ],
               );

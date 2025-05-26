@@ -158,10 +158,55 @@ class StatisticsController {
         if (startedAt.isBefore(todayStart)) {
           await docRef.reference.update({
             'isActive': false,
-            'endTime': Timestamp.now(),
+            'failedAt': Timestamp.fromDate(todayStart),
           });
         }
       }
     }
   }
+
+  Future<Map<String, dynamic>?> getLongestStreak(String userEmail) async {
+    final userRef = await _getUserDocRef(userEmail);
+
+    final allStreaksSnapshot = await userRef.collection('streaks').get();
+
+    if (allStreaksSnapshot.docs.isEmpty) return null;
+
+    int maxDays = 0;
+    DateTime? longestStart;
+    DateTime? longestEnd;
+
+    for (var doc in allStreaksSnapshot.docs) {
+      final startedAt = (doc['startedAt'] as Timestamp).toDate();
+      DateTime endDate;
+
+      if (doc['isActive'] == true) {
+        endDate = DateTime.now();
+      } else {
+        endDate = (doc['failedAt'] as Timestamp).toDate();
+      }
+
+      final duration = endDate.difference(startedAt).inDays + 1;
+
+      if (duration > maxDays) {
+        maxDays = duration;
+        longestStart = startedAt;
+        longestEnd = endDate;
+      }
+    }
+
+    return {
+      'lengthInDays': maxDays,
+      'startDate': _formatDate(longestStart!),
+      'endDate': _formatDate(longestEnd!),
+    };
+  }
+
+  String _formatDate(DateTime date) {
+    final day = date.day.toString().padLeft(2, '0');
+    final month = date.month.toString().padLeft(2, '0');
+    final year = date.year.toString();
+    return '$day.$month.$year';
+  }
+
 }
