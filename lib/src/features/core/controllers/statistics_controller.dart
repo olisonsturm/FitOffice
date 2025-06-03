@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 class StatisticsController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -159,10 +158,29 @@ class StatisticsController {
         final docRef = streaks.docs.first;
         final startedAt = (docRef['startedAt'] as Timestamp).toDate();
 
+        final exercises = await userRef
+            .collection('exerciseLogs')
+            .orderBy('startTime', descending: true)
+            .get();
+
+        DateTime failedAtTime = todayStart;
+
+        if (exercises.docs.isNotEmpty) {
+          final exerciseDoc = exercises.docs.first;
+          final exerciseTime = (exerciseDoc['startTime'] as Timestamp).toDate();
+
+          failedAtTime = DateTime(
+            exerciseTime.year,
+            exerciseTime.month,
+            exerciseTime.day,
+            23, 59, 59
+          );
+        }
+
         if (startedAt.isBefore(todayStart)) {
           await docRef.reference.update({
             'isActive': false,
-            'failedAt': Timestamp.fromDate(todayStart),
+            'failedAt': Timestamp.fromDate(failedAtTime),
           });
         }
       }
@@ -216,7 +234,6 @@ class StatisticsController {
     final year = date.year.toString();
     return '$day.$month.$year';
   }
-
 }
 
 class StreakController extends GetxController {
@@ -256,4 +273,3 @@ class StreakController extends GetxController {
     }
   }
 }
-
