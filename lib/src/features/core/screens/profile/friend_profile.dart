@@ -10,6 +10,8 @@ import 'package:fit_office/src/features/core/screens/profile/widgets/avatar.dart
 import 'package:intl/intl.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/confirmation_dialog.dart';
 
+import '../dashboard/widgets/statistics.dart';
+
 class FriendProfile extends StatefulWidget {
   final String userName;
   final bool isFriend;
@@ -155,7 +157,8 @@ class _FriendProfileState extends State<FriendProfile> {
                                 isPendingLocal = false;
                                 Navigator.of(context).pop();
                               });
-                              FriendsController controller = FriendsController();
+                              FriendsController controller =
+                                  FriendsController();
                               await controller.removeFriendship(
                                   currentEmail!, widget.userName);
 
@@ -179,8 +182,27 @@ class _FriendProfileState extends State<FriendProfile> {
                       },
                     ),
                   ),
-                  if (widget.isFriend)
-                    Center(child: Text("STATISTICS AND STREAK ETC. HERE")),
+                  if (widget.isFriend == true) ...[
+                    StatisticsWidget(
+                      txtTheme: txtTheme,
+                      isDark: Theme.of(context).brightness == Brightness.dark,
+                      userEmail: friend.email,
+                    ).buildStreakCard(controller),
+                    const SizedBox(height: 12),
+                    StatisticsWidget(
+                            txtTheme: txtTheme,
+                            isDark:
+                                Theme.of(context).brightness == Brightness.dark,
+                            userEmail: friend.email)
+                        .buildTopExercisesCard(controller),
+                    const SizedBox(height: 12),
+                    StatisticsWidget(
+                            txtTheme: txtTheme,
+                            isDark:
+                                Theme.of(context).brightness == Brightness.dark,
+                            userEmail: friend.email)
+                        .buildLongestStreakCard(controller)
+                  ]
                 ],
               );
             }

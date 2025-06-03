@@ -1,10 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit_office/src/constants/colors.dart';
-import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
-import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
-import 'package:fit_office/src/features/core/screens/profile/admin/delete_exercise.dart';
+import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:fit_office/src/utils/helper/dialog_helper.dart';
+
+import '../../../controllers/statistics_controller.dart';
 
 class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -105,32 +105,36 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                     onPressed: isProcessing ? null : onToggleFavorite,
                   ),
                 if (showStreak)
-                  Builder(
-                    builder: (context) {
-                      int todaysExerciseMinutes = 4;
-                      bool hasStreak = todaysExerciseMinutes >= 5;
+                  Obx(() {
+                    final streakCtrl = Get.find<StreakController>();
+                    if (streakCtrl.isLoading.value) {
+                      return const Text(tLoading);
+                    } else if (streakCtrl.isError.value) {
+                      return const Text(tError);
+                    }
 
-                      return Row(
-                        children: [
-                          Icon(
-                            Icons.local_fire_department,
-                            color: hasStreak
-                                ? Colors.orange
-                                : (isDark ? tWhiteColor : tPaleBlackColor),
+                    final bool hasStreak = streakCtrl.hasStreak.value;
+                    final int doneSecs = streakCtrl.doneSeconds.value;
+                    final int streakCount = streakCtrl.streakSteps.value;
+                    final Color flameColor = doneSecs >= 300
+                        ? Colors.orange
+                        : (isDark ? tWhiteColor : tPaleBlackColor);
+
+                    return Row(
+                      children: [
+                        Icon(Icons.local_fire_department, color: flameColor),
+                        const SizedBox(width: 4),
+                        Text(
+                          hasStreak ? streakCount.toString() : '0',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: isDark ? tWhiteColor : tDarkColor,
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '$todaysExerciseMinutes',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: isDark ? tWhiteColor : tDarkColor,
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+                        ),
+                      ],
+                    );
+                  }),
               ],
             ),
           ),

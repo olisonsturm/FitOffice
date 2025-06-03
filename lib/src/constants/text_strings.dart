@@ -136,6 +136,9 @@ const String tDashboardExerciseUnits = "Units";
 const String tDashboardExerciseNotFound = "The exercise you are looking for was not found.";
 const String tDashboardExerciseSearchNoInput = "Please enter a search term.";
 const String tUpdateFavoriteException = "Couldn't get favorites.";
+const String tLoading = "Loading...";
+const String tActiveStreak = "Active Streak";
+const String tNoActiveStreak = "No active streak";
 
 
 
@@ -318,3 +321,10 @@ const String tTop3Exercises = "Top 3 Exercises";
 const String tNoExercisesDone = "No exercises have been done yet.";
 const String tError = "Error occurred";
 const String tLoadingError = "Couldn't load user data.";
+const String tLongestStreak = "Longest streak";
+const String tNoStreak = "No streak found.";
+const String tStartDate = "Start Date: ";
+const String tEndDate = "End Date: ";
+const String tDuration = "Duration: ";
+const String tDays = " days";
+const String tStreakStillActive = "Streak is still active.";

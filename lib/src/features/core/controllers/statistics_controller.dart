@@ -1,7 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 class StatisticsController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  Future<DocumentReference> _getUserDocRef(String email) async {
+    final snapshot = await firestore
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isEmpty) {
+      throw Exception('User not found');
+    }
+
+    return snapshot.docs.first.reference;
+  }
 
   Future<List<String>> getTop3Exercises(String userEmail) async {
     final userSnapshot = await firestore
@@ -57,4 +75,185 @@ class StatisticsController {
       return '${seconds}s';
     }
   }
+
+  Future<bool> isStreakActive(String userEmail) async {
+    final userRef = await _getUserDocRef(userEmail);
+    final streaks = await userRef
+        .collection('streaks')
+        .where('isActive', isEqualTo: true)
+        .limit(1)
+        .get();
+
+    return streaks.docs.isNotEmpty;
+  }
+
+  Future<int> getDoneExercisesInSeconds(String userEmail,
+      {DateTime? day}) async {
+    final userRef = await _getUserDocRef(userEmail);
+
+    final DateTime targetDay = day ?? DateTime.now();
+    final dayStart = DateTime(targetDay.year, targetDay.month, targetDay.day);
+    final nextDayStart = dayStart.add(const Duration(days: 1));
+
+    final logs = await userRef
+        .collection('exerciseLogs')
+        .where('startTime',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(dayStart))
+        .where('startTime', isLessThan: Timestamp.fromDate(nextDayStart))
+        .get();
+
+    int total = 0;
+
+    for (final doc in logs.docs) {
+      final data = doc.data();
+      final start = (data['startTime'] as Timestamp?)?.toDate();
+      final end = (data['endTime'] as Timestamp?)?.toDate();
+
+      if (start != null && end != null) {
+        total += end.difference(start).inSeconds;
+      }
+    }
+
+    return total;
+  }
+
+  Future<int> getStreakSteps(String userEmail) async {
+    final userRef = await _getUserDocRef(userEmail);
+    final streaks = await userRef
+        .collection('streaks')
+        .where('isActive', isEqualTo: true)
+        .limit(1)
+        .get();
+
+    if (streaks.docs.isEmpty) return 0;
+
+    final startedAt = (streaks.docs.first['startedAt'] as Timestamp).toDate();
+    final now = DateTime.now();
+
+    final today = DateTime(now.year, now.month, now.day);
+    final start = DateTime(startedAt.year, startedAt.month, startedAt.day);
+
+    if (await getDoneExercisesInSeconds(userEmail) < 300) {
+      return today.difference(start).inDays;
+    }
+    return today.difference(start).inDays + 1;
+  }
+
+  Future<void> setStreakInvalid(String userEmail) async {
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
+    final todayStart = DateTime.now().subtract(Duration(
+      hours: DateTime.now().hour,
+      minutes: DateTime.now().minute,
+      seconds: DateTime.now().second,
+      milliseconds: DateTime.now().millisecond,
+      microseconds: DateTime.now().microsecond,
+    ));
+    if (await getDoneExercisesInSeconds(userEmail, day: yesterday) < 300) {
+      final userRef = await _getUserDocRef(userEmail);
+      final streaks = await userRef
+          .collection('streaks')
+          .where('isActive', isEqualTo: true)
+          .limit(1)
+          .get();
+      if (streaks.docs.isNotEmpty) {
+        final docRef = streaks.docs.first;
+        final startedAt = (docRef['startedAt'] as Timestamp).toDate();
+
+        if (startedAt.isBefore(todayStart)) {
+          await docRef.reference.update({
+            'isActive': false,
+            'failedAt': Timestamp.fromDate(todayStart),
+          });
+        }
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>?> getLongestStreak(String userEmail) async {
+    final userRef = await _getUserDocRef(userEmail);
+
+    final allStreaksSnapshot = await userRef.collection('streaks').get();
+
+    if (allStreaksSnapshot.docs.isEmpty) return null;
+
+    int maxDays = 0;
+    DateTime? longestStart;
+    DateTime? longestEnd;
+    bool isActiveStreak = false;
+
+    for (var doc in allStreaksSnapshot.docs) {
+      final startedAt = (doc['startedAt'] as Timestamp).toDate();
+      DateTime endDate;
+
+      final bool isActive = doc['isActive'] == true;
+
+      if (doc['isActive'] == true) {
+        endDate = DateTime.now();
+      } else {
+        endDate = (doc['failedAt'] as Timestamp).toDate();
+      }
+
+      final duration = endDate.difference(startedAt).inDays + 1;
+
+      if (duration > maxDays) {
+        maxDays = duration;
+        longestStart = startedAt;
+        longestEnd = endDate;
+        isActiveStreak = isActive;
+      }
+    }
+
+    return {
+      'lengthInDays': maxDays,
+      'startDate': _formatDate(longestStart!),
+      'endDate': isActiveStreak ? tStreakStillActive : _formatDate(longestEnd!),
+    };
+  }
+
+  String _formatDate(DateTime date) {
+    final day = date.day.toString().padLeft(2, '0');
+    final month = date.month.toString().padLeft(2, '0');
+    final year = date.year.toString();
+    return '$day.$month.$year';
+  }
+
 }
+
+class StreakController extends GetxController {
+  final StatisticsController _statisticsController = StatisticsController();
+
+  var streakSteps = 0.obs;
+  var doneSeconds = 0.obs;
+  var hasStreak = false.obs;
+  var isLoading = true.obs;
+  var isError = false.obs;
+
+  Future<void> loadStreakData() async {
+    isLoading.value = true;
+    isError.value = false;
+    final userEmail = FirebaseAuth.instance.currentUser?.email;
+    if (userEmail == null) {
+      isError.value = true;
+      isLoading.value = false;
+      return;
+    }
+
+    try {
+      await _statisticsController.setStreakInvalid(userEmail);
+      hasStreak.value = await _statisticsController.isStreakActive(userEmail);
+
+      final results = await Future.wait([
+        _statisticsController.getDoneExercisesInSeconds(userEmail),
+        _statisticsController.getStreakSteps(userEmail),
+      ]);
+
+      doneSeconds.value = results[0];
+      streakSteps.value = results[1];
+    } catch (_) {
+      isError.value = true;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+}
+

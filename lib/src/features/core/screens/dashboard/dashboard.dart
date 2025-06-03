@@ -11,6 +11,7 @@ import 'package:fit_office/src/features/core/screens/profile/profile_screen.dart
 
 import '../../controllers/db_controller.dart';
 import '../../controllers/profile_controller.dart';
+import '../../controllers/statistics_controller.dart';
 import 'exercise_filter.dart';
 
 class Dashboard extends StatefulWidget {
@@ -53,6 +54,15 @@ class DashboardState extends State<Dashboard> {
     setState(() {
       favoriteCount = "${favoriteNames.length} $tDashboardExerciseUnits";
     });
+  }
+
+  final StreakController _streakController = Get.put(StreakController());
+
+  @override
+  void initState() {
+    super.initState();
+    _streakController.loadStreakData();
+    _loadUserFavorites();
   }
 
 
