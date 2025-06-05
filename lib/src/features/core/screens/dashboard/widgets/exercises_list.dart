@@ -85,7 +85,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
     try {
       await widget.onToggleFavorite(exerciseName);
     } catch (e) {
-      if(mounted) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text(tUpdateFavoriteException)),
         );
@@ -105,9 +105,10 @@ class _AllExercisesListState extends State<AllExercisesList> {
     final isFiltered = lowerQuery.isNotEmpty;
 
     final List<Map<String, dynamic>> sortedList =
-    List<Map<String, dynamic>>.from(isFiltered || !widget.showGroupedAlphabetically
-        ? _filtered(widget.exercises, lowerQuery)
-        : widget.exercises);
+        List<Map<String, dynamic>>.from(
+            isFiltered || !widget.showGroupedAlphabetically
+                ? _filtered(widget.exercises, lowerQuery)
+                : widget.exercises);
 
     sortedList.sort((a, b) =>
         (a['name'] ?? '').toString().compareTo((b['name'] ?? '').toString()));
@@ -190,10 +191,10 @@ class _AllExercisesListState extends State<AllExercisesList> {
   }
 
   Widget _buildHeader(String letter) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: Text(letter,
-        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Text(letter,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+      );
 
   Widget _buildExerciseCard(
       BuildContext context, Map<String, dynamic> exercise, bool isAdmin) {
@@ -218,7 +219,8 @@ class _AllExercisesListState extends State<AllExercisesList> {
             final result = await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => ExerciseDetailScreen(exerciseData: exercise, isFavorite: isFavorite),
+                builder: (_) => ExerciseDetailScreen(
+                    exerciseData: exercise, isFavorite: isFavorite),
               ),
             );
 
@@ -228,12 +230,27 @@ class _AllExercisesListState extends State<AllExercisesList> {
           },
           child: ListTile(
             contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            title: Text(exerciseName ?? 'Unknown',
-                style:
-                const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-            subtitle: Text(exerciseCategory ?? 'No category',
-                style: const TextStyle(fontSize: 13, color: Color(0xFF777777))),
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            title: Row(
+              children: [
+                /// Titeltext (mit automatischer Breitenbegrenzung)
+                Expanded(
+                  child: Text(
+                    exerciseName ?? 'Unknown',
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            subtitle: Text(
+              exerciseCategory ?? 'No category',
+              style: const TextStyle(fontSize: 13, color: Color(0xFF777777)),
+            ),
             trailing: IntrinsicWidth(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -276,8 +293,6 @@ class _AllExercisesListState extends State<AllExercisesList> {
                         color: isDark ? tWhiteColor : tPaleBlackColor,
                       ),
                       onPressed: () async {
-                        final timerController =
-                            Get.find<ExerciseTimerController>();
                         if (timerController.isRunning.value ||
                             timerController.isPaused.value) {
                           await showUnifiedDialog(
@@ -293,7 +308,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
                           MaterialPageRoute(
                             builder: (_) => EditExercise(
                               exercise: exercise,
-                              exerciseName: exercise!['name'],
+                              exerciseName: exercise['name'],
                             ),
                           ),
                         );
@@ -302,8 +317,6 @@ class _AllExercisesListState extends State<AllExercisesList> {
                     IconButton(
                       icon: const Icon(Icons.delete, color: Colors.red),
                       onPressed: () async {
-                        final timerController =
-                            Get.find<ExerciseTimerController>();
                         if (timerController.isRunning.value ||
                             timerController.isPaused.value) {
                           await showUnifiedDialog(

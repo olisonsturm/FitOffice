@@ -65,157 +65,197 @@ class GlobalExerciseOverlay {
                   child: Material(
                     color: Colors.transparent,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: tBottomNavBarSelectedColor,
-                        borderRadius: isDashboard
-                            ? const BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20),
-                              )
-                            : BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 10,
-                            offset: const Offset(0, -2),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              final exerciseData = {
-                                'name': timerController.exerciseName.value,
-                                'category':
-                                    timerController.exerciseCategory.value,
-                              };
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => ExerciseDetailScreen(
-                                    exerciseData: exerciseData,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Row(
-                              children: [
-                                const Icon(Icons.fitness_center,
-                                    color: tWhiteColor),
-                                const SizedBox(width: 12),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      timerController.exerciseName.value,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        color: tWhiteColor,
-                                        fontWeight: FontWeight.bold,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: tBottomNavBarSelectedColor,
+                          borderRadius: isDashboard
+                              ? const BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                )
+                              : BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: const Offset(0, -2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  final exerciseData = {
+                                    'name': timerController.exerciseName.value,
+                                    'category':
+                                        timerController.exerciseCategory.value,
+                                  };
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ExerciseDetailScreen(
+                                        exerciseData: exerciseData,
                                       ),
                                     ),
+                                  );
+                                },
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          final exerciseData = {
+                                            'name': timerController
+                                                .exerciseName.value,
+                                            'category': timerController
+                                                .exerciseCategory.value,
+                                          };
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) =>
+                                                  ExerciseDetailScreen(
+                                                exerciseData: exerciseData,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Row(
+                                          children: [
+                                            const Icon(Icons.fitness_center,
+                                                color: tWhiteColor),
+                                            const SizedBox(width: 12),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    timerController
+                                                        .exerciseName.value,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    style: const TextStyle(
+                                                      color: tWhiteColor,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    timerController
+                                                        .exerciseCategory.value,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    style: const TextStyle(
+                                                      color: tPaleWhiteColor,
+                                                      fontSize: 13,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
                                     Text(
-                                      timerController.exerciseCategory.value,
-                                      overflow: TextOverflow.ellipsis,
+                                      timerController.formattedTime.value,
                                       style: const TextStyle(
-                                        color: tPaleWhiteColor,
-                                        fontSize: 13,
+                                        color: tWhiteColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    SizedBox(
+                                      height: 48,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          if (!hideControlButtons) ...[
+                                            IconButton(
+                                              icon: Obx(() => Icon(
+                                                    timerController
+                                                            .isPaused.value
+                                                        ? Icons.play_arrow
+                                                        : Icons.pause,
+                                                    color: tWhiteColor,
+                                                  )),
+                                              onPressed: () {
+                                                if (timerController
+                                                    .isPaused.value) {
+                                                  timerController.resume();
+                                                } else {
+                                                  timerController.pause();
+                                                }
+                                              },
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                  Icons.check_circle,
+                                                  color: tWhiteColor),
+                                              onPressed: () async {
+                                                final libraryState = context
+                                                    .findAncestorStateOfType<
+                                                        LibraryScreenState>();
+                                                final confirmed =
+                                                    await showUnifiedDialog<
+                                                        bool>(
+                                                  barrierDismissible: false,
+                                                  context: context,
+                                                  libraryState: libraryState,
+                                                  builder: (_) =>
+                                                      EndExerciseDialog(
+                                                    exerciseName:
+                                                        timerController
+                                                            .exerciseName.value,
+                                                  ),
+                                                );
+                                                if (confirmed == true)
+                                                  timerController.stop();
+                                              },
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(Icons.cancel,
+                                                  color: tWhiteColor),
+                                              onPressed: () async {
+                                                final libraryState = context
+                                                    .findAncestorStateOfType<
+                                                        LibraryScreenState>();
+                                                final confirmed =
+                                                    await showUnifiedDialog<
+                                                        bool>(
+                                                  barrierDismissible: false,
+                                                  context: context,
+                                                  libraryState: libraryState,
+                                                  builder: (_) =>
+                                                      CancelExerciseDialog(
+                                                    exerciseName:
+                                                        timerController
+                                                            .exerciseName.value,
+                                                  ),
+                                                );
+                                                if (confirmed == true)
+                                                  timerController.stop();
+                                              },
+                                            ),
+                                          ],
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                          const Spacer(),
-                          Text(
-                            timerController.formattedTime.value,
-                            style: const TextStyle(
-                              color: tWhiteColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          SizedBox(
-                            height: 48,
-                            child: Row(
-                              children: [
-                                if (!hideControlButtons) ...[
-                                  IconButton(
-                                    icon: Obx(() => Icon(
-                                          timerController.isPaused.value
-                                              ? Icons.play_arrow
-                                              : Icons.pause,
-                                          color: tWhiteColor,
-                                        )),
-                                    onPressed: () {
-                                      if (timerController.isPaused.value) {
-                                        timerController.resume();
-                                      } else {
-                                        timerController.pause();
-                                      }
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.check_circle,
-                                        color: tWhiteColor),
-                                    onPressed: () async {
-                                      final libraryState =
-                                          context.findAncestorStateOfType<
-                                              LibraryScreenState>();
-
-                                      final confirmed =
-                                          await showUnifiedDialog<bool>(
-                                        barrierDismissible: false,
-                                        context: context,
-                                        libraryState: libraryState,
-                                        builder: (_) => EndExerciseDialog(
-                                          exerciseName: timerController
-                                              .exerciseName.value,
-                                        ),
-                                      );
-
-                                      if (confirmed == true) {
-                                        timerController.stop();
-                                      }
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.cancel,
-                                        color: tWhiteColor),
-                                    onPressed: () async {
-                                      final libraryState =
-                                          context.findAncestorStateOfType<
-                                              LibraryScreenState>();
-
-                                      final confirmed =
-                                          await showUnifiedDialog<bool>(
-                                        barrierDismissible: false,
-                                        context: context,
-                                        libraryState: libraryState,
-                                        builder: (_) => CancelExerciseDialog(
-                                          exerciseName: timerController
-                                              .exerciseName.value,
-                                        ),
-                                      );
-
-                                      if (confirmed == true) {
-                                        timerController.stop();
-                                      }
-                                    },
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                          ],
+                        )),
                   ),
                 ),
               ],
