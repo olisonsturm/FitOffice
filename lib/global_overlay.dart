@@ -253,6 +253,90 @@ class GlobalExerciseOverlay {
                                   ],
                                 ),
                               ),
+
+                              ],
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            timerController.formattedTime.value,
+                            style: const TextStyle(
+                              color: tWhiteColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          SizedBox(
+                            height: 48,
+                            child: Row(
+                              children: [
+                                if (!hideControlButtons) ...[
+                                  IconButton(
+                                    icon: Obx(() => Icon(
+                                          timerController.isPaused.value
+                                              ? Icons.play_arrow
+                                              : Icons.pause,
+                                          color: tWhiteColor,
+                                        )),
+                                    onPressed: () {
+                                      if (timerController.isPaused.value) {
+                                        timerController.resume();
+                                      } else {
+                                        timerController.pause();
+                                      }
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.check_circle,
+                                        color: tWhiteColor),
+                                    onPressed: () async {
+                                      final libraryState =
+                                          context.findAncestorStateOfType<
+                                              LibraryScreenState>();
+
+                                      final confirmed =
+                                          await showUnifiedDialog<bool>(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        libraryState: libraryState,
+                                        builder: (_) => EndExerciseDialog(
+                                          exerciseName: timerController
+                                              .exerciseName.value,
+                                        ),
+                                      );
+
+                                      if (confirmed == true) {
+                                        timerController.stopAndSave(shouldSave: true);
+                                      }
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.cancel,
+                                        color: tWhiteColor),
+                                    onPressed: () async {
+                                      final libraryState =
+                                          context.findAncestorStateOfType<
+                                              LibraryScreenState>();
+
+                                      final confirmed =
+                                          await showUnifiedDialog<bool>(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        libraryState: libraryState,
+                                        builder: (_) => CancelExerciseDialog(
+                                          exerciseName: timerController
+                                              .exerciseName.value,
+                                        ),
+                                      );
+
+                                      if (confirmed == true) {
+                                        timerController.stopAndSave(shouldSave: false);
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ],
                             ),
                           ],
                         )),

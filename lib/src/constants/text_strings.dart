@@ -136,6 +136,9 @@ const String tDashboardExerciseUnits = "Units";
 const String tDashboardExerciseNotFound = "The exercise you are looking for was not found.";
 const String tDashboardExerciseSearchNoInput = "Please enter a search term.";
 const String tUpdateFavoriteException = "Couldn't get favorites.";
+const String tLoading = "Loading...";
+const String tActiveStreak = "Active Streak";
+const String tNoActiveStreak = "No active streak";
 
 
 
@@ -242,6 +245,10 @@ const String tVideoDeleteSuccess = "Video deleted successfully";
 const String tUnknown = "Unknown";
 const String tAskDeleteUser = "Do you like to delete the user ";
 const String tDeleteUserConsequence = "? The user can't be restored and will be deleted globally.";
+const String tDiscardChangesQuestion = "Discard changes?";
+const String tDiscardChangesText = "Do you really want to leave the page and discard the changes? Changes won't be saved.";
+const String tDiscardChanges = "Discard changes";
+const String tVideoSelected = "Video selected";
 
 // -- Friends Text
 const String tShowAll = "Show all";
@@ -308,3 +315,16 @@ const String tReplaceVideoNegative = "No, go back"; //"Nein, zurück";
 const String tLogoutMessage = "Are you sure you want to log out?";
 const String tLogoutPositive = "Yes, Logout";
 const String tLogoutNegative = "Cancel";
+
+// -- Statistics
+const String tTop3Exercises = "Top 3 Exercises";
+const String tNoExercisesDone = "No exercises have been done yet.";
+const String tError = "Error occurred";
+const String tLoadingError = "Couldn't load user data.";
+const String tLongestStreak = "Longest streak";
+const String tNoStreak = "No streak found.";
+const String tStartDate = "Start Date: ";
+const String tEndDate = "End Date: ";
+const String tDuration = "Duration: ";
+const String tDays = " days";
+const String tStreakStillActive = "Streak is still active.";

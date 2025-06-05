@@ -1,4 +1,4 @@
-// ... deine bestehenden Imports ...
+import 'package:fit_office/src/features/core/screens/profile/admin/exercise_form.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:string_similarity/string_similarity.dart';
@@ -6,7 +6,6 @@ import 'package:fit_office/src/constants/colors.dart';
 import '../../../../../utils/helper/dialog_helper.dart';
 import '../../../controllers/profile_controller.dart';
 import '../../profile/admin/delete_exercise.dart';
-import '../../profile/admin/edit_exercise.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/view_exercise.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/start_exercise.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
@@ -310,6 +309,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
                               exercise: exercise,
                               exerciseName: exercise['name'],
                             ),
+                            builder: (_) => ExerciseForm(isEdit: true, exerciseName: exercise['name'], exercise: exercise)
                           ),
                         );
                       },
