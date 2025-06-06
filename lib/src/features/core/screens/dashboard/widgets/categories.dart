@@ -7,6 +7,7 @@ import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:get/get.dart';
 import 'package:string_similarity/string_similarity.dart';
 
+import '../../../../../constants/text_strings.dart';
 import '../../../controllers/profile_controller.dart';
 import '../../../models/dashboard/categories_model.dart';
 import '../exercise_filter.dart';
@@ -56,13 +57,13 @@ class DashboardCategoriesState extends State<DashboardCategories> {
 
   void _loadExerciseCount() async {
     String countUpperBody =
-        await _dbController.getNumberOfExercisesByCategory(AppLocalizations.of(context)!.tUpperBody);
+        await _dbController.getNumberOfExercisesByCategory(tUpperBody);
     String countLowerBody =
-        await _dbController.getNumberOfExercisesByCategory(AppLocalizations.of(context)!.tLowerBody);
+        await _dbController.getNumberOfExercisesByCategory(tLowerBody);
     String countFullBody =
-        await _dbController.getNumberOfExercisesByCategory(AppLocalizations.of(context)!.tFullBody);
+        await _dbController.getNumberOfExercisesByCategory(tFullBody);
     String countPsychological =
-        await _dbController.getNumberOfExercisesByCategory(AppLocalizations.of(context)!.tMind);
+        await _dbController.getNumberOfExercisesByCategory(tMind);
 
     setState(() {
       upperBodyCount = "$countUpperBody ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
@@ -192,7 +193,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
           context,
           MaterialPageRoute(
             builder: (context) => ExerciseFilter(
-              category: AppLocalizations.of(context)!.tUpperBody,
+              category: tUpperBody,
               heading: AppLocalizations.of(context)!.tUpperBody,
             ),
           ),
@@ -210,7 +211,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
           context,
           MaterialPageRoute(
             builder: (context) => ExerciseFilter(
-              category: AppLocalizations.of(context)!.tLowerBody,
+              category: tLowerBody,
               heading: AppLocalizations.of(context)!.tLowerBody,
             ),
           ),
@@ -228,7 +229,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
           context,
           MaterialPageRoute(
             builder: (context) => ExerciseFilter(
-              category: AppLocalizations.of(context)!.tFullBody,
+              category: tFullBody,
               heading: AppLocalizations.of(context)!.tFullBody,
             ),
           ),
@@ -249,7 +250,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
           context,
           MaterialPageRoute(
             builder: (context) => ExerciseFilter(
-              category: AppLocalizations.of(context)!.tMind,
+              category: tMind,
               heading: AppLocalizations.of(context)!.tMind,
             ),
           ),
@@ -271,7 +272,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
             context,
             MaterialPageRoute(
               builder: (context) => ExerciseFilter(
-                heading: AppLocalizations.of(context)!.tFavorites,
+                heading: tFavorites,
                 showOnlyFavorites: true,
               ),
             ),

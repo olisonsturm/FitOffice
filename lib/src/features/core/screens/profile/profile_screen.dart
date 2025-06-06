@@ -9,6 +9,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:fit_office/src/constants/sizes.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/screens/profile/widgets/update_profile_modal.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../constants/colors.dart';
 import '../../../../repository/authentication_repository/authentication_repository.dart';
 import '../../controllers/profile_controller.dart';
@@ -238,7 +239,9 @@ class ProfileScreen extends StatelessWidget {
                       DropdownMenuItem(value: 'en', child: Text('English 🇬🇧')),
                       DropdownMenuItem(value: 'de', child: Text('Deutsch 🇩🇪')),
                     ],
-                    onChanged: (val) {
+                    onChanged: (val) async {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setString('locale', val);
                       if (val == 'en') {
                         Get.updateLocale(Locale('en'));
                       } else if (val == 'de') {

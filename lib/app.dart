@@ -7,7 +7,8 @@ import 'package:fit_office/src/utils/theme/theme.dart';
 import 'package:fit_office/global_overlay.dart';
 
 class App extends StatefulWidget {
-  const App({super.key});
+  final Locale initialLocale;
+  const App({super.key, required this.initialLocale});
 
   @override
   State<App> createState() => _AppState();
@@ -18,12 +19,14 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
 
+    _appLocale = widget.initialLocale;
+
     /// -- Hier nach dem Build das Overlay initialisieren TODO: Das Overlay wird ein zweites Mal initalisiert???
     WidgetsBinding.instance.addPostFrameCallback((_) {
       GlobalExerciseOverlay().init(Get.context!);
     });
   }
-  final Locale _appLocale = Locale('en');
+  late Locale _appLocale;
 
   @override
   Widget build(BuildContext context) {
