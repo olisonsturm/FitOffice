@@ -230,11 +230,21 @@ class ProfileScreen extends StatelessWidget {
                     label: "Notifications",
                     onPress: () {},
                   ),
-                  CustomProfileButton(
-                    isDark: isDark,
+                  CustomProfileDropdownButton(
                     icon: LineAwesomeIcons.language_solid,
-                    label: "Language",
-                    onPress: () {},
+                    isDark: isDark,
+                    selectedValue: 'en',
+                    items: const [
+                      DropdownMenuItem(value: 'en', child: Text('English 🇬🇧')),
+                      DropdownMenuItem(value: 'de', child: Text('Deutsch 🇩🇪')),
+                    ],
+                    onChanged: (val) {
+                      if (val == 'en') {
+                        Get.updateLocale(Locale('en'));
+                      } else if (val == 'de') {
+                        Get.updateLocale(Locale('de'));
+                      }
+                    },
                   ),
                   const Divider(),
                   const SizedBox(height: 10),

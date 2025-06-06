@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/utils/app_bindings.dart';
 import 'package:fit_office/src/utils/theme/theme.dart';
@@ -21,6 +23,7 @@ class _AppState extends State<App> {
       GlobalExerciseOverlay().init(Get.context!);
     });
   }
+  final Locale _appLocale = Locale('en');
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +34,18 @@ class _AppState extends State<App> {
       theme: TAppTheme.lightTheme,
       darkTheme: TAppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
+      locale: _appLocale,
+      fallbackLocale: Locale('en'),
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en'), // English
+        Locale('de'), // Spanish
+      ],
 
       /// -- README(Docs[4]) -- To use Screen Transitions here
       /// -- README(Docs[5]) -- Home Screen or Progress Indicator

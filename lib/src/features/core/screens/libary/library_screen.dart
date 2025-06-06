@@ -9,6 +9,7 @@ import '../../controllers/db_controller.dart';
 import '../../controllers/profile_controller.dart';
 import '../dashboard/widgets/categories.dart';
 import '../dashboard/widgets/search.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final GlobalKey<LibraryScreenState> libraryKey = GlobalKey<LibraryScreenState>();
 
@@ -131,7 +132,7 @@ class LibraryScreenState extends State<LibraryScreen> {
                         '$tDashboardTitle ${_user?.fullName ?? ''}',
                         style: txtTheme.bodyMedium)
                         : const CircularProgressIndicator(),
-                    Text(tDashboardHeading,
+                    Text(AppLocalizations.of(context)!.tDashboardHeading,
                         style: txtTheme.displayMedium),
                   ],
                 ),

@@ -64,3 +64,81 @@ class CustomProfileButton extends StatelessWidget {
     );
   }
 }
+
+class CustomProfileDropdownButton extends StatefulWidget {
+  final IconData icon;
+  final bool isDark;
+  final List<DropdownMenuItem<String>> items;
+  final String selectedValue;
+  final ValueChanged<String> onChanged;
+
+  const CustomProfileDropdownButton({
+    super.key,
+    required this.icon,
+    required this.isDark,
+    required this.items,
+    required this.selectedValue,
+    required this.onChanged,
+  });
+
+  @override
+  CustomProfileDropdownButtonState createState() => CustomProfileDropdownButtonState();
+}
+
+class CustomProfileDropdownButtonState extends State<CustomProfileDropdownButton> {
+  late String currentValue;
+
+  @override
+  void initState() {
+    super.initState();
+    currentValue = widget.selectedValue;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = widget.isDark;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey[800] : Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+          width: 1.5,
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(widget.icon, color: Colors.orangeAccent),
+          const SizedBox(width: 12),
+          Expanded(
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: currentValue,
+                isExpanded: true,
+                icon: Icon(Icons.arrow_downward, color: isDark ? Colors.white : Colors.black),
+                dropdownColor: isDark ? Colors.grey[850] : Colors.white,
+                style: TextStyle(
+                  color: isDark ? Colors.white : Colors.black,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                ),
+                items: widget.items,
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      currentValue = value;
+                    });
+                    widget.onChanged(value);
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
