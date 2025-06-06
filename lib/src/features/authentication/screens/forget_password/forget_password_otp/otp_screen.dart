@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fit_office/src/constants/sizes.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
 import '../../../controllers/otp_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -19,12 +18,12 @@ class OTPScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              tOtpTitle,
+              AppLocalizations.of(context)!.tOtpTitle,
               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 80.0),
             ),
-            Text(tOtpSubTitle.toUpperCase(), style: Theme.of(context).textTheme.titleLarge),
+            Text(AppLocalizations.of(context)!.tOtpSubTitle.toUpperCase(), style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 40.0),
-            const Text("$tOtpMessage support@codingwitht.com", textAlign: TextAlign.center),
+            Text("${AppLocalizations.of(context)!.tOtpMessage} support@codingwitht.com", textAlign: TextAlign.center),
             const SizedBox(height: 20.0),
             OtpTextField(
                 mainAxisAlignment: MainAxisAlignment.center,

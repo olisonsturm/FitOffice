@@ -4,7 +4,6 @@ import 'package:fit_office/src/constants/sizes.dart';
 import 'package:fit_office/src/features/authentication/screens/signup/signup_screen.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/image_strings.dart';
-import '../../../../constants/text_strings.dart';
 import '../../../../utils/animations/fade_in_animation/animation_design.dart';
 import '../../../../utils/animations/fade_in_animation/fade_in_animation_controller.dart';
 import '../../../../utils/animations/fade_in_animation/fade_in_animation_model.dart';
@@ -53,8 +52,8 @@ class WelcomeScreen extends StatelessWidget {
                           image: const AssetImage(tWelcomeScreenImage), width: width * 0.7, height: height * 0.6)),
                   Column(
                     children: [
-                      Text(tWelcomeTitle, style: Theme.of(context).textTheme.displayMedium),
-                      Text(tWelcomeSubTitle,
+                      Text(AppLocalizations.of(context)!.tWelcomeTitle, style: Theme.of(context).textTheme.displayMedium),
+                      Text(AppLocalizations.of(context)!.tWelcomeSubTitle,
                           style: Theme.of(context).textTheme.bodyLarge, textAlign: TextAlign.center),
                     ],
                   ),
@@ -70,7 +69,7 @@ class WelcomeScreen extends StatelessWidget {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () => Get.to(() => const SignupScreen()),
-                          child: Text(tSignup.toUpperCase()),
+                          child: Text(AppLocalizations.of(context)!.tSignup.toUpperCase()),
                         ),
                       ),
                     ],

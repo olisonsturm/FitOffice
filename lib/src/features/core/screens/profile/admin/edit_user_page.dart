@@ -3,11 +3,9 @@ import 'package:fit_office/src/features/core/screens/profile/admin/widgets/confi
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/save_button.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class EditUserPage extends StatefulWidget {
   final UserModel? user;
@@ -42,8 +40,10 @@ class _EditUserPageState extends State<EditUserPage> {
     super.initState();
     _nameController = TextEditingController(text: widget.user?.fullName ?? '');
     _emailController = TextEditingController(text: widget.user?.email ?? '');
-    _userNameController = TextEditingController(text: widget.user?.userName ?? '');
-    _fitnessLevelController = TextEditingController(text: widget.user?.fitnessLevel ?? '');
+    _userNameController =
+        TextEditingController(text: widget.user?.userName ?? '');
+    _fitnessLevelController =
+        TextEditingController(text: widget.user?.fitnessLevel ?? '');
     _passwordController = TextEditingController();
     _selectedRole = widget.user?.role ?? 'user';
 
@@ -79,7 +79,6 @@ class _EditUserPageState extends State<EditUserPage> {
     });
   }
 
-
   Future<void> _saveChanges() async {
     if (_formKey.currentState!.validate()) {
       setState(() => isLoading = true);
@@ -97,7 +96,7 @@ class _EditUserPageState extends State<EditUserPage> {
         if (isEditMode) {
           await _dbController.updateUser(userData);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text(tUserUpdated)),
+            SnackBar(content: Text(AppLocalizations.of(context)!.tUserUpdated)),
           );
         } else {
           _signUpController.userName.text = _userNameController.text.trim();
@@ -106,15 +105,22 @@ class _EditUserPageState extends State<EditUserPage> {
           _signUpController.fullName.text = _nameController.text.trim();
 
           await _signUpController.createUser();
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text(AppLocalizations.of(context)!.tUserCreated)),
+            );
+          }
+        }
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      } catch (e) {
+        if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text(tUserCreated)),
+            SnackBar(content: Text('$e')),
           );
         }
-        Navigator.pop(context);
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$e')),
-        );
       }
 
       setState(() => isLoading = false);
@@ -124,17 +130,19 @@ class _EditUserPageState extends State<EditUserPage> {
   void _showSaveConfirmationDialog() {
     showConfirmationDialogModel(
       context: context,
-      title: tSaveChanges,
-      content: tSaveChangesQuestion,
+      title: AppLocalizations.of(context)!.tSaveChanges,
+      content: AppLocalizations.of(context)!.tSaveChangesQuestion,
       onConfirm: _saveChanges,
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final localisations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEditMode ? tEditUser : tCreateUser),
+        title: Text(
+            isEditMode ? localisations.tEditUser : localisations.tCreateUser),
         backgroundColor: tCardBgColor,
       ),
       body: Padding(
@@ -146,20 +154,24 @@ class _EditUserPageState extends State<EditUserPage> {
               children: [
                 TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: tFullName,
+                  decoration: InputDecoration(
+                    labelText: localisations.tFullName,
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) => value == null || value.isEmpty ? tRequired : null,
+                  validator: (value) => value == null || value.isEmpty
+                      ? localisations.tRequired
+                      : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _userNameController,
-                  decoration: const InputDecoration(
-                    labelText: tUserName,
+                  decoration: InputDecoration(
+                    labelText: localisations.tUserName,
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) => value == null || value.isEmpty ? tRequired : null,
+                  validator: (value) => value == null || value.isEmpty
+                      ? localisations.tRequired
+                      : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
@@ -169,23 +181,25 @@ class _EditUserPageState extends State<EditUserPage> {
                     labelText: AppLocalizations.of(context)!.tEmail,
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) => value == null || value.isEmpty ? tRequired : null,
+                  validator: (value) => value == null || value.isEmpty
+                      ? localisations.tRequired
+                      : null,
                 ),
                 const SizedBox(height: 12),
                 if (!isEditMode)
                   TextFormField(
                     controller: _passwordController,
                     obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: tPassword,
+                    decoration: InputDecoration(
+                      labelText: localisations.tPassword,
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return tPasswordRequired;
+                        return localisations.tPasswordRequired;
                       }
                       if (value.length < 6) {
-                        return tPasswordLength;
+                        return localisations.tPasswordLength;
                       }
                       return null;
                     },
@@ -199,9 +213,9 @@ class _EditUserPageState extends State<EditUserPage> {
                   ),
                   items: _roles
                       .map((role) => DropdownMenuItem(
-                    value: role,
-                    child: Text(role),
-                  ))
+                            value: role,
+                            child: Text(role),
+                          ))
                       .toList(),
                   onChanged: (value) {
                     setState(() {
@@ -209,7 +223,9 @@ class _EditUserPageState extends State<EditUserPage> {
                     });
                     _checkChanges();
                   },
-                  validator: (value) => value == null || value.isEmpty ? tRequired : null,
+                  validator: (value) => value == null || value.isEmpty
+                      ? localisations.tRequired
+                      : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
@@ -218,32 +234,32 @@ class _EditUserPageState extends State<EditUserPage> {
                     labelText: 'Fitness Level',
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) => value == null || value.isEmpty ? tRequired : null,
+                  validator: (value) => value == null || value.isEmpty
+                      ? localisations.tRequired
+                      : null,
                 ),
                 const SizedBox(height: 20),
                 isLoading
                     ? const CircularProgressIndicator()
                     : Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: SaveButton(
-                    hasChanges: hasChanged,
-                    onPressed: _showSaveConfirmationDialog,
-                    label: tSave,
-                  )
-
-                ),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: SaveButton(
+                          hasChanges: hasChanged,
+                          onPressed: _showSaveConfirmationDialog,
+                          label: localisations.tSave,
+                        )),
               ],
             ),
           ),

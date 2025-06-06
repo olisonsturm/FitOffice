@@ -3,7 +3,6 @@ import 'package:fit_office/src/utils/helper/helper_controller.dart';
 import 'package:flutter/material.dart';
 import '../../../../../common_widgets/form/form_header_widget.dart';
 import '../../../../../constants/sizes.dart';
-import '../../../../../constants/text_strings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ForgetPasswordScreen {
@@ -23,9 +22,9 @@ return showModalBottomSheet(
     child: Column(
       children: [
         const SizedBox(height: tDefaultSpace),
-        const FormHeaderWidget(
-          title: tForgotPassword,
-          subTitle: tForgotPasswordSubTitle,
+        FormHeaderWidget(
+          title: AppLocalizations.of(context)!.tForgotPassword,
+          subTitle: AppLocalizations.of(context)!.tForgotPasswordSubTitle,
           crossAxisAlignment: CrossAxisAlignment.center,
           textAlign: TextAlign.center,
         ),
@@ -54,7 +53,7 @@ return showModalBottomSheet(
                         Helper.successSnackBar(title: 'Success', message: 'Password reset email sent');
                       } catch (e) {
                         // TODO Is it working like this?
-                        Helper.errorSnackBar(title: tOhSnap, message: e.toString());
+                        Helper.errorSnackBar(title: AppLocalizations.of(context)!.tOhSnap, message: e.toString());
                       }
                     } else {
                       // TODO Is it working like this?

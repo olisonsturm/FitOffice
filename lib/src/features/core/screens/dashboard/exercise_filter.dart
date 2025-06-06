@@ -1,4 +1,4 @@
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:fit_office/src/features/core/controllers/profile_controller.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.dart';
@@ -107,8 +107,8 @@ class _ExerciseFilterState extends State<ExerciseFilter> {
             // 2. Hinweis, wenn nichts gefunden wurde
             Visibility(
               visible: !_isLoading && _exercises.isEmpty,
-              child: const Center(
-                child: Text(tDashboardNoResultsFound),
+              child: Center(
+                child: Text(AppLocalizations.of(context)!.tDashboardNoResultsFound),
               ),
             ),
 

@@ -7,10 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:fit_office/src/constants/sizes.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/screens/profile/widgets/update_profile_modal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../constants/colors.dart';
+import '../../../../constants/text_strings.dart';
 import '../../../../repository/authentication_repository/authentication_repository.dart';
 import '../../controllers/profile_controller.dart';
 import 'admin/add_friends.dart';
@@ -42,6 +43,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final txtTheme = Theme.of(context).textTheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final localisation = AppLocalizations.of(context)!;
 
     controller.fetchUserData();
 
@@ -81,7 +83,7 @@ class ProfileScreen extends StatelessWidget {
                                 if (!snapshot.hasData) {
                                   return const SizedBox.shrink();
                                 }
-                                return Text('${snapshot.data} $tFriends');
+                                return Text('${snapshot.data} ${localisation.tFriends}');
                               },
                             ),
                           ],
@@ -122,7 +124,7 @@ class ProfileScreen extends StatelessWidget {
                         child: CustomProfileButton(
                           isDark: isDark,
                           icon: LineAwesomeIcons.user_edit_solid,
-                          label: tEditProfile,
+                          label: localisation.tEditProfile,
                           onPress: () async {
                             final timerController =
                                 Get.find<ExerciseTimerController>();
@@ -335,7 +337,7 @@ class ProfileScreen extends StatelessWidget {
                       //alle vier darunter anpassen!
                       isDark: isDark,
                       icon: Icons.add,
-                      label: tAddExercises,
+                      label: localisation.tAddExercises,
                       onPress: () async {
                         final timerController =
                             Get.find<ExerciseTimerController>();
@@ -356,7 +358,7 @@ class ProfileScreen extends StatelessWidget {
                     CustomProfileButton(
                       isDark: isDark,
                       icon: Icons.delete,
-                      label: tDeleteEditUser,
+                      label: localisation.tDeleteEditUser,
                       onPress: () async {
                         final timerController =
                             Get.find<ExerciseTimerController>();
@@ -377,7 +379,7 @@ class ProfileScreen extends StatelessWidget {
                     CustomProfileButton(
                       isDark: isDark,
                       icon: Icons.person_add,
-                      label: tAddUser,
+                      label: localisation.tAddUser,
                       onPress: () async {
                         final timerController =
                             Get.find<ExerciseTimerController>();

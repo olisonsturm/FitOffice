@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StartExerciseDialog extends StatelessWidget {
   final String exerciseName;
@@ -29,7 +29,7 @@ class StartExerciseDialog extends StatelessWidget {
                       children: [
                         const SizedBox(height: 10),
                         Text(
-                          tStartExercisePopUp,
+                          AppLocalizations.of(context)!.tStartExercisePopUp,
                           style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -38,7 +38,7 @@ class StartExerciseDialog extends StatelessWidget {
                         ),
                         const SizedBox(height: 24),
                         Text(
-                          tStartExerciseConfirmation,
+                          AppLocalizations.of(context)!.tStartExerciseConfirmation,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 18,
@@ -75,8 +75,8 @@ class StartExerciseDialog extends StatelessWidget {
                                 ),
                                 icon: const Icon(Icons.play_arrow,
                                     color: Colors.white),
-                                label: const Text(
-                                  tStartExercisePositive,
+                                label: Text(
+                                  AppLocalizations.of(context)!.tStartExercisePositive,
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.white,
@@ -103,7 +103,7 @@ class StartExerciseDialog extends StatelessWidget {
                                 icon: const Icon(Icons.undo_sharp,
                                     color: tWhiteColor),
                                 label: Text(
-                                  tStartExerciseNegative,
+                                  AppLocalizations.of(context)!.tStartExerciseNegative,
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: tWhiteColor,

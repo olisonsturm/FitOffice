@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FriendSearchWidget extends StatefulWidget {
   final String? currentUserId;
@@ -70,11 +70,11 @@ class _FriendSearchWidgetState extends State<FriendSearchWidget> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text(tAllResults),
+        title: Text(AppLocalizations.of(context)!.tAllResults),
         content: SizedBox(
           width: double.maxFinite,
           child: fullResults.isEmpty
-              ? const Text(tNoUserFound)
+              ? Text(AppLocalizations.of(context)!.tNoUserFound)
               : ListView.builder(
                   shrinkWrap: true,
                   itemCount: fullResults.length,
@@ -90,7 +90,7 @@ class _FriendSearchWidgetState extends State<FriendSearchWidget> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text(tClose),
+            child: Text(AppLocalizations.of(context)!.tClose),
           )
         ],
       ),
@@ -113,7 +113,7 @@ class _FriendSearchWidgetState extends State<FriendSearchWidget> {
           controller: _searchController,
           focusNode: _searchFocus,
           decoration: InputDecoration(
-            hintText: tFriendsSearchHint,
+            hintText: AppLocalizations.of(context)!.tFriendsSearchHint,
             prefixIcon: const Icon(Icons.search),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           ),

@@ -1,4 +1,4 @@
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/controllers/statistics_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -44,6 +44,7 @@ class StatisticsWidget extends StatelessWidget {
     return FutureBuilder(
       future: controller.getUserData(),
       builder: (context, userSnapshot) {
+        final localizations = AppLocalizations.of(context)!;
         if (userSnapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (userSnapshot.hasData) {
@@ -95,13 +96,13 @@ class StatisticsWidget extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(tActiveStreak,
+                            Text(localizations.tActiveStreak,
                                 style: txtTheme.headlineSmall?.copyWith(
                                     fontWeight: FontWeight.bold)),
                             Text(
                               streakSteps > 0
-                                  ? '$streakSteps $tDays'
-                                  : tNoActiveStreak,
+                                  ? '$streakSteps ${localizations.tDays}'
+                                  : localizations.tNoActiveStreak,
                               style: txtTheme.bodyLarge,
                             ),
                             LinearProgressIndicator(
@@ -132,8 +133,8 @@ class StatisticsWidget extends StatelessWidget {
                 return _styledCard(
                   icon: Icons.error,
                   iconColor: Colors.red,
-                  title: tError,
-                  content: tLoadingError,
+                  title: localizations.tError,
+                  content: localizations.tLoadingError,
                 );
               }
             },
@@ -142,8 +143,8 @@ class StatisticsWidget extends StatelessWidget {
           return _styledCard(
             icon: Icons.error,
             iconColor: Colors.red,
-            title: tError,
-            content: tLoadingError,
+            title: localizations.tError,
+            content: localizations.tLoadingError,
           );
         }
       },
@@ -245,6 +246,7 @@ class StatisticsWidget extends StatelessWidget {
     return FutureBuilder(
       future: controller.getUserData(),
       builder: (context, userSnapshot) {
+        final localizations = AppLocalizations.of(context)!;
         if (userSnapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (userSnapshot.hasData) {
@@ -263,15 +265,15 @@ class StatisticsWidget extends StatelessWidget {
                 return _styledListCard(
                   icon: Icons.star,
                   iconColor: Colors.amber,
-                  title: tTop3Exercises,
+                  title: localizations.tTop3Exercises,
                   items: topExercisesSnapshot.data!,
                 );
               } else {
                 return _styledTextBlockCard(
                     icon: Icons.star,
                     iconColor: Colors.grey,
-                    title: tTop3Exercises,
-                    lines: [tNoExercisesDone]);
+                    title: localizations.tTop3Exercises,
+                    lines: [localizations.tNoExercisesDone]);
               }
             },
           );
@@ -279,8 +281,8 @@ class StatisticsWidget extends StatelessWidget {
           return _styledCard(
             icon: Icons.error,
             iconColor: Colors.red,
-            title: tError,
-            content: tLoadingError,
+            title: localizations.tError,
+            content: localizations.tLoadingError,
           );
         }
       },
@@ -291,6 +293,7 @@ class StatisticsWidget extends StatelessWidget {
     return FutureBuilder(
       future: controller.getUserData(),
       builder: (context, userSnapshot) {
+        final localizations = AppLocalizations.of(context)!;
         if (userSnapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (userSnapshot.hasData) {
@@ -310,19 +313,19 @@ class StatisticsWidget extends StatelessWidget {
                 return _styledTextBlockCard(
                   icon: Icons.auto_graph,
                   iconColor: Colors.amber,
-                  title: tLongestStreak,
+                  title: localizations.tLongestStreak,
                   lines: [
-                    '$tStartDate${data['startDate']}',
-                    '$tEndDate${data['endDate']}',
-                    '$tDuration${data['lengthInDays']}$tDays',
+                    '${localizations.tStartDate}${data['startDate']}',
+                    '${localizations.tEndDate}${data['endDate']}',
+                    '${localizations.tDuration}${data['lengthInDays']}${localizations.tDays}',
                   ],
                 );
               } else {
                 return _styledTextBlockCard(
                   icon: Icons.auto_graph,
                   iconColor: Colors.grey,
-                  title: tLongestStreak,
-                  lines: [tNoStreak],
+                  title: localizations.tLongestStreak,
+                  lines: [localizations.tNoStreak],
                 );
               }
             },
@@ -331,8 +334,8 @@ class StatisticsWidget extends StatelessWidget {
           return _styledCard(
             icon: Icons.error,
             iconColor: Colors.red,
-            title: tError,
-            content: tLoadingError,
+            title: localizations.tError,
+            content: localizations.tLoadingError,
           );
         }
       },

@@ -6,7 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../../common_widgets/buttons/primary_button.dart';
 import '../../../../../constants/colors.dart';
 import '../../../../../constants/sizes.dart';
-import '../../../../../constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../controllers/signup_controller.dart';
 
 //TODO: If the document of the user already exists, the user account will be still created.
@@ -35,7 +35,7 @@ class SignUpFormWidget extends StatelessWidget {
                   errorMaxLines: 3,
                   label: RichText(
                     text: TextSpan(
-                      text: tUserName,
+                      text: AppLocalizations.of(context)!.tUserName,
                       style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
                       children: const [
                         TextSpan(
@@ -60,7 +60,7 @@ class SignUpFormWidget extends StatelessWidget {
                   errorMaxLines: 3,
                   label: RichText(
                     text: TextSpan(
-                      text: tFullName,
+                      text: AppLocalizations.of(context)!.tFullName,
                       style: TextStyle(color: isDark ? tWhiteColor : tBlackColor)
                     ),
                   ),
@@ -106,7 +106,7 @@ class SignUpFormWidget extends StatelessWidget {
                   errorMaxLines: 3,
                   label: RichText(
                     text: TextSpan(
-                      text: tPassword,
+                      text: AppLocalizations.of(context)!.tPassword,
                       style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
                       children: const [
                         TextSpan(
@@ -166,7 +166,7 @@ class SignUpFormWidget extends StatelessWidget {
               // Submit Button
               Obx(() => TPrimaryButton(
                 isLoading: controller.isLoading.value,
-                text: tSignup.tr,
+                text: AppLocalizations.of(context)!.tSignup.tr,
                 onPressed: () async {
                   if (controller.signupFormKey.currentState!.validate()) {
                     bool usernameExists = await Helper.isUsernameTaken(
@@ -174,7 +174,7 @@ class SignUpFormWidget extends StatelessWidget {
                     if (usernameExists) {
                       Helper.errorSnackBar(
                           title: 'Error',
-                          message: tUserNameAlreadyExists);
+                          message: AppLocalizations.of(context)!.tUserNameAlreadyExists);
                     } else {
                       controller.createUser();
                     }

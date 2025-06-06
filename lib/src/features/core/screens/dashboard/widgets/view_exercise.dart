@@ -1,4 +1,4 @@
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/exercise_history.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/exercise_info.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/exercise_form.dart';
@@ -100,7 +100,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
           isFavorite = !isFavorite;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text(tUpdateFavoriteException)),
+          SnackBar(content: Text(AppLocalizations.of(context)!.tUpdateFavoriteException)),
         );
       }
     } finally {
@@ -185,7 +185,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
               children: [
                 Expanded(
                   child: _TabButton(
-                    text: tExerciseAbout,
+                    text: AppLocalizations.of(context)!.tExerciseAbout,
                     isSelected: selectedTab == 0,
                     onTap: () {
                       setState(() => selectedTab = 0);
@@ -195,7 +195,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                 ),
                 Expanded(
                   child: _TabButton(
-                    text: tExerciseHistory,
+                    text: AppLocalizations.of(context)!.tExerciseHistory,
                     isSelected: selectedTab == 1,
                     onTap: () {
                       setState(() => selectedTab = 1);

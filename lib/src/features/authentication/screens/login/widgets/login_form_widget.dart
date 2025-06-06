@@ -57,11 +57,11 @@ class LoginFormWidget extends StatelessWidget {
                   prefixIcon: const Icon(Icons.fingerprint),
                   label: RichText(
                     text: TextSpan(
-                      text: tPassword,
+                      text: AppLocalizations.of(context)!.tPassword,
                       style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
                     ),
                   ),
-                  hintText: tPassword,
+                  hintText: AppLocalizations.of(context)!.tPassword,
                   suffixIcon: IconButton(
                     icon: controller.showPassword.value
                         ? const Icon(LineAwesomeIcons.eye)
@@ -85,7 +85,7 @@ class LoginFormWidget extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 0),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  child: const Text(tForgotPassword,
+                  child: Text(AppLocalizations.of(context)!.tForgotPassword,
                       style: TextStyle(
                         color: Colors.blue,
                         fontSize: 14,

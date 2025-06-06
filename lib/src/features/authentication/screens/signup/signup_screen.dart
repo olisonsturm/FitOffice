@@ -26,16 +26,16 @@ class SignupScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const FormHeaderWidget(
+              FormHeaderWidget(
                   image: tWelcomeScreenImage,
                   heightBetween: tFormHeight * 2,
-                  title: tSignUpTitle,
-                  subTitle: tSignUpSubTitle,
+                  title: AppLocalizations.of(context)!.tSignUpTitle,
+                  subTitle: AppLocalizations.of(context)!.tSignUpSubTitle,
                   imageHeight: 0.2
               ),
               const SignUpFormWidget(),
               ClickableRichTextWidget(
-                text1: tAlreadyHaveAnAccount,
+                text1: AppLocalizations.of(context)!.tAlreadyHaveAnAccount,
                 text2: AppLocalizations.of(context)!.tLogin,
                 onPressed: () => Get.off(() => const LoginScreen()),
               ),

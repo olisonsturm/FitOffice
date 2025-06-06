@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import 'package:fit_office/src/features/core/controllers/friends_controller.dart';
 import 'package:fit_office/src/features/core/screens/profile/widgets/custom_profile_button.dart';
@@ -9,7 +9,6 @@ import 'package:fit_office/src/features/core/controllers/profile_controller.dart
 import 'package:fit_office/src/features/core/screens/profile/widgets/avatar.dart';
 import 'package:intl/intl.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/confirmation_dialog.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../dashboard/widgets/statistics.dart';
 
@@ -49,7 +48,7 @@ class _FriendProfileState extends State<FriendProfile> {
       final userDoc = querySnapshot.docs.first;
       return UserModel.fromSnapshot(userDoc);
     } else {
-      throw Exception(tNoUserFound);
+        throw Exception(AppLocalizations.of(context)!.tNoUserFound);
     }
   }
 
@@ -62,10 +61,11 @@ class _FriendProfileState extends State<FriendProfile> {
   Widget build(BuildContext context) {
     final txtTheme = Theme.of(context).textTheme;
     final currentEmail = ProfileController.instance.user.value?.email;
+    final localisation = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(tProfile),
+        title: Text(localisation.tProfile),
         backgroundColor: Colors.grey,
       ),
       body: Padding(
@@ -78,7 +78,7 @@ class _FriendProfileState extends State<FriendProfile> {
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData) {
-              return const Center(child: Text(tNoUserFound));
+              return Center(child: Text(localisation.tNoUserFound));
             } else {
               final friend = snapshot.data!;
               return Column(
@@ -115,14 +115,14 @@ class _FriendProfileState extends State<FriendProfile> {
                       future: controller.getNumberOfFriends(widget.userName),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) return const SizedBox.shrink();
-                        return Text('${snapshot.data} $tFriends');
+                        return Text('${snapshot.data} ${localisation.tFriends}');
                       },
                     ),
                   ),
                   const SizedBox(height: 5),
                   Center(
                     child: Text(
-                      "$tJoined: ${formatTimestamp(friend.createdAt!)}",
+                      "${localisation.tJoined}: ${formatTimestamp(friend.createdAt!)}",
                       style:
                           txtTheme.bodyLarge?.copyWith(color: Colors.grey[500]),
                     ),
@@ -141,8 +141,8 @@ class _FriendProfileState extends State<FriendProfile> {
                           ? Colors.red
                           : (isPendingLocal ? Colors.grey : Colors.green),
                       label: widget.isFriend
-                          ? tDeleteFriend
-                          : (isPendingLocal ? tRequestPending : tSendRequest),
+                          ? localisation.tDeleteFriend
+                          : (isPendingLocal ? localisation.tRequestPending : localisation.tSendRequest),
                       textColor: widget.isFriend
                           ? Colors.red
                           : (isPendingLocal ? Colors.grey : Colors.green),
@@ -150,7 +150,7 @@ class _FriendProfileState extends State<FriendProfile> {
                         if (widget.isFriend) {
                           showConfirmationDialogModel(
                             context: context,
-                            title: tDeleteFriend,
+                            title: localisation.tDeleteFriend,
                             content:
                                 "Are you sure to end your friendship with ${widget.userName}?",
                             onConfirm: () async {
@@ -163,11 +163,11 @@ class _FriendProfileState extends State<FriendProfile> {
                               await controller.removeFriendship(
                                   currentEmail!, widget.userName);
 
-                              Get.snackbar(tFriendshipDeleted,
-                                  "${widget.userName}$tFriendDeleted");
+                              Get.snackbar(localisation.tFriendshipDeleted,
+                                  "${widget.userName}${localisation.tFriendDeleted}");
                             },
-                            cancel: tNo,
-                            confirm: AppLocalizations.of(context)!.tYes,
+                            cancel: localisation.tNo,
+                            confirm: localisation.tYes,
                           );
                         } else if (isPendingLocal) {
                         } else {
@@ -177,8 +177,8 @@ class _FriendProfileState extends State<FriendProfile> {
                           FriendsController controller = FriendsController();
                           await controller.sendFriendRequest(
                               currentEmail!, widget.userName);
-                          Get.snackbar(tRequestSent,
-                              "$tSentRequestToUser${widget.userName}");
+                          Get.snackbar(localisation.tRequestSent,
+                              "${localisation.tSentRequestToUser}${widget.userName}");
                         }
                       },
                     ),
