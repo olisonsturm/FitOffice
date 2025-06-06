@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:fit_office/src/constants/sizes.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import '../../../controllers/otp_controller.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OTPScreen extends StatelessWidget {
   const OTPScreen({super.key});
@@ -41,7 +42,7 @@ class OTPScreen extends StatelessWidget {
                   onPressed: () {
                     OTPController.instance.verifyOTP(otp);
                   },
-                  child: const Text(tNext)),
+                  child: Text(AppLocalizations.of(context)!.tNext)),
             ),
           ],
         ),

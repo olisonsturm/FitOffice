@@ -9,6 +9,7 @@ import 'package:fit_office/src/features/core/controllers/profile_controller.dart
 import 'package:fit_office/src/features/core/screens/profile/widgets/avatar.dart';
 import 'package:intl/intl.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/confirmation_dialog.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../dashboard/widgets/statistics.dart';
 
@@ -166,7 +167,7 @@ class _FriendProfileState extends State<FriendProfile> {
                                   "${widget.userName}$tFriendDeleted");
                             },
                             cancel: tNo,
-                            confirm: tYes,
+                            confirm: AppLocalizations.of(context)!.tYes,
                           );
                         } else if (isPendingLocal) {
                         } else {

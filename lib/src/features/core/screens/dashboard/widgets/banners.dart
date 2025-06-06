@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../../constants/colors.dart';
 import '../../../../../constants/image_strings.dart';
-import '../../../../../constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fit_office/src/constants/sizes.dart';
 
 class DashboardBanners extends StatelessWidget {
@@ -45,8 +45,8 @@ class DashboardBanners extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 25),
-                Text(tDashboardBannerTitle1, style: txtTheme.headlineMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
-                Text(tDashboardBannerSubTitle, style: txtTheme.bodyMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
+                Text(AppLocalizations.of(context)!.tDashboardBannerTitle1, style: txtTheme.headlineMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
+                Text(AppLocalizations.of(context)!.tDashboardBannerSubTitle, style: txtTheme.bodyMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
               ],
             ),
           ),
@@ -78,8 +78,8 @@ class DashboardBanners extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 25),
-                  Text(tDashboardBannerTitle2, style: txtTheme.headlineMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
-                  Text(tDashboardBannerSubTitle, style: txtTheme.bodyMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  Text(AppLocalizations.of(context)!.tDashboardBannerTitle2, style: txtTheme.headlineMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
+                  Text(AppLocalizations.of(context)!.tDashboardBannerSubTitle, style: txtTheme.bodyMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
                 ],
               ),
             ),

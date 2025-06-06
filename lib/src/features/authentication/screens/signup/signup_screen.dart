@@ -8,6 +8,7 @@ import '../../../../common_widgets/buttons/clickable_richtext_widget.dart';
 import '../../../../common_widgets/form/form_header_widget.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/sizes.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignupScreen extends StatelessWidget {
   const SignupScreen({super.key});
@@ -35,7 +36,7 @@ class SignupScreen extends StatelessWidget {
               const SignUpFormWidget(),
               ClickableRichTextWidget(
                 text1: tAlreadyHaveAnAccount,
-                text2: tLogin,
+                text2: AppLocalizations.of(context)!.tLogin,
                 onPressed: () => Get.off(() => const LoginScreen()),
               ),
             ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:fit_office/src/utils/helper/helper_controller.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../../common_widgets/buttons/primary_button.dart';
 import '../../../../../constants/colors.dart';
 import '../../../../../constants/sizes.dart';
@@ -78,7 +79,7 @@ class SignUpFormWidget extends StatelessWidget {
                   errorMaxLines: 3,
                   label: RichText(
                     text: TextSpan(
-                      text: tEmail,
+                      text: AppLocalizations.of(context)!.tEmail,
                       style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
                       children: const [
                         TextSpan(

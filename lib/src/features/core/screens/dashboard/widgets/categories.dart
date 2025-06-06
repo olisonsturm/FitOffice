@@ -1,4 +1,4 @@
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/favorites_filter.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/mental_filter.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/physicals_filter.dart';
@@ -56,19 +56,19 @@ class DashboardCategoriesState extends State<DashboardCategories> {
 
   void _loadExerciseCount() async {
     String countUpperBody =
-        await _dbController.getNumberOfExercisesByCategory(tUpperBody);
+        await _dbController.getNumberOfExercisesByCategory(AppLocalizations.of(context)!.tUpperBody);
     String countLowerBody =
-        await _dbController.getNumberOfExercisesByCategory(tLowerBody);
+        await _dbController.getNumberOfExercisesByCategory(AppLocalizations.of(context)!.tLowerBody);
     String countFullBody =
-        await _dbController.getNumberOfExercisesByCategory(tFullBody);
+        await _dbController.getNumberOfExercisesByCategory(AppLocalizations.of(context)!.tFullBody);
     String countPsychological =
-        await _dbController.getNumberOfExercisesByCategory(tMind);
+        await _dbController.getNumberOfExercisesByCategory(AppLocalizations.of(context)!.tMind);
 
     setState(() {
-      upperBodyCount = "$countUpperBody $tDashboardExerciseUnits";
-      lowerBodyCount = "$countLowerBody $tDashboardExerciseUnits";
-      fullBodyCount = "$countFullBody $tDashboardExerciseUnits";
-      psychologicalCount = "$countPsychological $tDashboardExerciseUnits";
+      upperBodyCount = "$countUpperBody ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
+      lowerBodyCount = "$countLowerBody ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
+      fullBodyCount = "$countFullBody ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
+      psychologicalCount = "$countPsychological ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
     });
   }
 
@@ -88,7 +88,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
 
     setState(() {
       _userFavorites = favoriteNames;
-      favoriteCount = "${favoriteNames.length} $tDashboardExerciseUnits";
+      favoriteCount = "${favoriteNames.length} ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
     });
   }
 
@@ -102,7 +102,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
       } else {
         _userFavorites.add(exerciseName);
       }
-      favoriteCount = "${_userFavorites.length} $tDashboardExerciseUnits";
+      favoriteCount = "${_userFavorites.length} ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
     });
 
     try {
@@ -118,12 +118,12 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         } else {
           _userFavorites.remove(exerciseName);
         }
-        favoriteCount = "${_userFavorites.length} $tDashboardExerciseUnits";
+        favoriteCount = "${_userFavorites.length} ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
       });
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text(tUpdateFavoriteException)),
+          SnackBar(
+              content: Text(AppLocalizations.of(context)!.tUpdateFavoriteException)),
         );
       }
     }
@@ -185,15 +185,15 @@ class DashboardCategoriesState extends State<DashboardCategories> {
 
     final list = [
       DashboardCategoriesModel(
-        tAbbreviationUpperBody,
-        tUpperBody,
+        AppLocalizations.of(context)!.tAbbreviationUpperBody,
+        AppLocalizations.of(context)!.tUpperBody,
         upperBodyCount,
         () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ExerciseFilter(
-              category: tUpperBody,
-              heading: tUpperBody,
+            builder: (context) => ExerciseFilter(
+              category: AppLocalizations.of(context)!.tUpperBody,
+              heading: AppLocalizations.of(context)!.tUpperBody,
             ),
           ),
         ).then((_) {
@@ -203,15 +203,15 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         }),
       ),
       DashboardCategoriesModel(
-        tAbbreviationLowerBody,
-        tLowerBody,
+        AppLocalizations.of(context)!.tAbbreviationLowerBody,
+        AppLocalizations.of(context)!.tLowerBody,
         lowerBodyCount,
         () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ExerciseFilter(
-              category: tLowerBody,
-              heading: tLowerBody,
+            builder: (context) => ExerciseFilter(
+              category: AppLocalizations.of(context)!.tLowerBody,
+              heading: AppLocalizations.of(context)!.tLowerBody,
             ),
           ),
         ).then((_) {
@@ -221,15 +221,15 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         }),
       ),
       DashboardCategoriesModel(
-        tAbbreviationFullBody,
-        tFullBody,
+        AppLocalizations.of(context)!.tAbbreviationFullBody,
+        AppLocalizations.of(context)!.tFullBody,
         fullBodyCount,
         () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ExerciseFilter(
-              category: tFullBody,
-              heading: tFullBody,
+            builder: (context) => ExerciseFilter(
+              category: AppLocalizations.of(context)!.tFullBody,
+              heading: AppLocalizations.of(context)!.tFullBody,
             ),
           ),
         ).then((_) {
@@ -242,15 +242,15 @@ class DashboardCategoriesState extends State<DashboardCategories> {
 
     final listPsychologicalExercises = [
       DashboardCategoriesModel(
-        tAbbreviationMind,
-        tMind,
+        AppLocalizations.of(context)!.tAbbreviationMind,
+        AppLocalizations.of(context)!.tMind,
         psychologicalCount,
         () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ExerciseFilter(
-              category: tMind,
-              heading: tMind,
+            builder: (context) => ExerciseFilter(
+              category: AppLocalizations.of(context)!.tMind,
+              heading: AppLocalizations.of(context)!.tMind,
             ),
           ),
         ).then((_) {
@@ -263,15 +263,15 @@ class DashboardCategoriesState extends State<DashboardCategories> {
 
     final listFavouriteExercises = [
       DashboardCategoriesModel(
-        tAbbreviationFavorites,
-        tFavorites,
+        AppLocalizations.of(context)!.tAbbreviationFavorites,
+        AppLocalizations.of(context)!.tFavorites,
         favoriteCount,
         () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const ExerciseFilter(
-                heading: tFavorites,
+              builder: (context) => ExerciseFilter(
+                heading: AppLocalizations.of(context)!.tFavorites,
                 showOnlyFavorites: true,
               ),
             ),
@@ -287,8 +287,8 @@ class DashboardCategoriesState extends State<DashboardCategories> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          tDashboardPhysicalExercisesTitle,
+        Text(
+          AppLocalizations.of(context)!.tDashboardPhysicalExercisesTitle,
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
@@ -297,8 +297,8 @@ class DashboardCategoriesState extends State<DashboardCategories> {
           txtTheme: widget.txtTheme,
         ),
         const SizedBox(height: 20),
-        const Text(
-          tDashboardPsychologicalExercisesTitle,
+        Text(
+          AppLocalizations.of(context)!.tDashboardPsychologicalExercisesTitle,
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
@@ -307,8 +307,8 @@ class DashboardCategoriesState extends State<DashboardCategories> {
           txtTheme: widget.txtTheme,
         ),
         const SizedBox(height: 20),
-        const Text(
-          tDashboardFavouriteExercises,
+        Text(
+          AppLocalizations.of(context)!.tDashboardFavouriteExercises,
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
@@ -317,8 +317,8 @@ class DashboardCategoriesState extends State<DashboardCategories> {
           txtTheme: widget.txtTheme,
         ),
         const SizedBox(height: 20),
-        const Text(
-          tDashboardAllExercises,
+        Text(
+          AppLocalizations.of(context)!.tDashboardAllExercises,
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         AllExercisesList(

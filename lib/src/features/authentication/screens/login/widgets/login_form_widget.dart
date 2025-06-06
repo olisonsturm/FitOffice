@@ -8,6 +8,7 @@ import '../../../../../constants/sizes.dart';
 import '../../../../../constants/text_strings.dart';
 import '../../../../../utils/helper/helper_controller.dart';
 import '../../forget_password/forget_password_options/forget_password_model_bottom_sheet.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginFormWidget extends StatelessWidget {
   const LoginFormWidget({super.key});
@@ -31,13 +32,13 @@ class LoginFormWidget extends StatelessWidget {
                 validator: Helper.validateEmail,
                 decoration: InputDecoration(
                   prefixIcon: Icon(LineAwesomeIcons.user),
-                  hintText: tEmail,
+                  hintText: AppLocalizations.of(context)!.tEmail,
                   errorStyle:
                   const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
                   label: RichText(
                     text: TextSpan(
-                      text: tEmail,
+                      text: AppLocalizations.of(context)!.tEmail,
                       style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
                     ),
                   ),
@@ -95,7 +96,7 @@ class LoginFormWidget extends StatelessWidget {
               // Login Button
               Obx(() => TPrimaryButton(
                 isLoading: controller.isLoading.value,
-                text: tLogin.tr,
+                text: AppLocalizations.of(context)!.tLogin.tr,
                 onPressed: controller.isLoading.value
                     ? () {}
                     : () => controller.login(),

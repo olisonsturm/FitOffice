@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../../common_widgets/form/form_header_widget.dart';
 import '../../../../../constants/sizes.dart';
 import '../../../../../constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ForgetPasswordScreen {
   static Future<dynamic> buildShowModalBottomSheet(BuildContext context, {required bool enableEdit, String? email}) {
@@ -35,8 +36,8 @@ return showModalBottomSheet(
               TextFormField(
                 initialValue: email,
                 decoration: InputDecoration(
-                  label: const Text(tEmail),
-                  hintText: tEmail,
+                  label: Text(AppLocalizations.of(context)!.tEmail),
+                  hintText: AppLocalizations.of(context)!.tEmail,
                   prefixIcon: const Icon(Icons.mail_outline_rounded),
                   enabled: enableEdit,
                 ),
@@ -60,7 +61,7 @@ return showModalBottomSheet(
                       Helper.warningSnackBar(title: 'Warning', message: 'Please enter your email');
                     }
                   },
-                  child: const Text(tYes),
+                  child: Text(AppLocalizations.of(context)!.tYes),
                 ),
               ),
             ],

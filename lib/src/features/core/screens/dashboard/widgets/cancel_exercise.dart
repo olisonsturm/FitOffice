@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CancelExerciseDialog extends StatelessWidget {
   final String exerciseName;
@@ -29,7 +29,7 @@ class CancelExerciseDialog extends StatelessWidget {
                       children: [
                         const SizedBox(height: 10),
                         Text(
-                          tCancelExercise,
+                          AppLocalizations.of(context)!.tCancelExercise,
                           style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -38,7 +38,7 @@ class CancelExerciseDialog extends StatelessWidget {
                         ),
                         const SizedBox(height: 24),
                         Text(
-                          tCancelExerciseMessage,
+                          AppLocalizations.of(context)!.tCancelExerciseMessage,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 18,
@@ -76,7 +76,7 @@ class CancelExerciseDialog extends StatelessWidget {
                                 icon: const Icon(Icons.cancel,
                                     color: tWhiteColor),
                                 label: Text(
-                                  tCancelExercisePositive,
+                                  AppLocalizations.of(context)!.tCancelExercisePositive,
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: tWhiteColor,
@@ -104,8 +104,8 @@ class CancelExerciseDialog extends StatelessWidget {
                                 ),
                                 icon: const Icon(Icons.undo_sharp,
                                     color: Colors.white),
-                                label: const Text(
-                                  tCancelExerciseNegative,
+                                label: Text(
+                                  AppLocalizations.of(context)!.tCancelExerciseNegative,
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.white,

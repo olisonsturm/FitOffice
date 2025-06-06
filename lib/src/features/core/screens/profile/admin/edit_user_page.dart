@@ -6,6 +6,7 @@ import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class EditUserPage extends StatefulWidget {
@@ -164,8 +165,8 @@ class _EditUserPageState extends State<EditUserPage> {
                 TextFormField(
                   controller: _emailController,
                   readOnly: isEditMode,
-                  decoration: const InputDecoration(
-                    labelText: tEmail,
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.tEmail,
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) => value == null || value.isEmpty ? tRequired : null,
