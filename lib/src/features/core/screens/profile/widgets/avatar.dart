@@ -7,7 +7,8 @@ import '../../../../../constants/image_strings.dart';
 import 'avatar_zoom.dart';
 
 class Avatar extends StatefulWidget {
-  const Avatar({super.key});
+  final String? userEmail;
+  const Avatar({super.key, this.userEmail});
 
   @override
   ImageWithIconSate createState() => ImageWithIconSate();
@@ -28,7 +29,7 @@ class ImageWithIconSate extends State<Avatar> {
 
   Future<void> _loadAvatar() async {
     try {
-      final imageProvider = await _storageService.getProfilePicture();
+      final imageProvider = await _storageService.getProfilePicture(userEmail: widget.userEmail);
       setState(() {
         _currentAvatar = imageProvider;
       });

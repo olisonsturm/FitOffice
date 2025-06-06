@@ -83,7 +83,7 @@ class _FriendProfileState extends State<FriendProfile> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Center(child: Avatar()),
+                  Center(child: Avatar(userEmail: friend.email)),
                   const SizedBox(height: 20),
                   Center(
                     child: Text(
