@@ -72,26 +72,37 @@ class StorageService {
   }
 
   /// Retrieves the public URL of a user's profile picture
-  Future<ImageProvider> getProfilePicture() async {
+  Future<ImageProvider> getProfilePicture({String? userEmail}) async {
     try {
-      // Retrieve the user document
-      final userData = await controller.getUserData();
-      final UserModel user = userData;
-
-      // Ensure the user ID is valid
-      if (user.id == null) {
-        throw Exception('User ID is null');
-      }
+      late final DocumentSnapshot doc;
 
       // Fetch the user's Firestore document
-      final doc = await firestore.collection('users').doc(user.id).get();
+      if (userEmail != null){
+        final querySnapshot = await firestore
+            .collection('users')
+            .where('email', isEqualTo: userEmail)
+            .limit(1)
+            .get();
 
-      if (!doc.exists) {
-        throw Exception('User document not found for userId: ${user.id}');
+        if (querySnapshot.docs.isNotEmpty) {
+          doc = querySnapshot.docs.first;
+        }
+      } else {
+        final userData = await controller.getUserData();
+        final UserModel user = userData;
+
+        // Ensure the user ID is valid
+        if (user.id == null) {
+          throw Exception('User ID is null');
+        }
+        doc = await firestore.collection('users').doc(user.id).get();
+        if (!doc.exists) {
+          throw Exception('User document not found for userId: ${user.id}');
+        }
       }
 
       // Retrieve the profilePicture field (file path) from the document
-      final profilePicturePath = doc.data()?['profilePicture'] as String?;
+      final profilePicturePath = (doc.data() as Map<String, dynamic>?)?['profilePicture'] as String?;
 
       if (profilePicturePath == null || profilePicturePath.isEmpty) {
         // Fallback to a default profile picture from assets
