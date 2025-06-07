@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
@@ -101,8 +101,9 @@ class _AllUsersPageState extends State<AllUsersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          AppBar(title: const Text(tAllUsers), backgroundColor: Colors.grey),
+      appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.tAllUsers),
+          backgroundColor: Colors.grey),
       body: isUserLoaded
           ? Padding(
               padding: const EdgeInsets.all(16.0),
@@ -125,7 +126,7 @@ class _AllUsersPageState extends State<AllUsersPage> {
                   ),
                   const SizedBox(height: 16),
                   _filteredUsers.isEmpty
-                      ? const Text(tNoUsersFound)
+                      ? Text(AppLocalizations.of(context)!.tNoUsersFound)
                       : Expanded(
                           child: ListView.builder(
                             itemCount: _filteredUsers.length,
@@ -169,18 +170,21 @@ class _AllUsersPageState extends State<AllUsersPage> {
                                                   context: context,
                                                   builder: (context) =>
                                                       AlertDialog(
-                                                    title: const Text(
-                                                        tDeleteEditUserHeading),
+                                                    title: Text(AppLocalizations
+                                                            .of(context)!
+                                                        .tDeleteEditUserHeading),
                                                     content: Text(
-                                                        '$tAskDeleteUser${user.fullName}$tDeleteUserConsequence'),
+                                                        '${AppLocalizations.of(context)!.tAskDeleteUser}${user.fullName}${AppLocalizations.of(context)!.tDeleteUserConsequence}'),
                                                     actions: [
                                                       TextButton(
                                                         onPressed: () {
                                                           Navigator.of(context)
                                                               .pop();
                                                         },
-                                                        child:
-                                                            const Text(tCancel),
+                                                        child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .tCancel),
                                                       ),
                                                       TextButton(
                                                         onPressed: () async {
@@ -194,8 +198,10 @@ class _AllUsersPageState extends State<AllUsersPage> {
                                                               .delete();
                                                           _loadData();
                                                         },
-                                                        child: const Text(
-                                                          tDelete,
+                                                        child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .tDelete,
                                                           style: TextStyle(
                                                               color:
                                                                   Colors.red),

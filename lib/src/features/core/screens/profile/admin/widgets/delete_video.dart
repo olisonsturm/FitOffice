@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ConfirmVideoDeleteDialog extends StatelessWidget {
   const ConfirmVideoDeleteDialog({super.key});
@@ -24,7 +24,7 @@ class ConfirmVideoDeleteDialog extends StatelessWidget {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      tDeleteVideo,
+                      AppLocalizations.of(context)!.tDeleteVideo,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -34,7 +34,7 @@ class ConfirmVideoDeleteDialog extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      tDeleteVideoMessage,
+                      AppLocalizations.of(context)!.tDeleteVideoMessage,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 18,
@@ -57,8 +57,8 @@ class ConfirmVideoDeleteDialog extends StatelessWidget {
                               side: BorderSide.none,
                             ),
                             icon: const Icon(Icons.delete, color: tWhiteColor),
-                            label: const Text(
-                              tDeleteVideoPositive,
+                            label: Text(
+                              AppLocalizations.of(context)!.tDeleteVideoPositive,
                               style: TextStyle(
                                 fontSize: 18,
                                 color: tWhiteColor,
@@ -82,8 +82,8 @@ class ConfirmVideoDeleteDialog extends StatelessWidget {
                               side: BorderSide.none,
                             ),
                             icon: const Icon(Icons.undo, color: Colors.white),
-                            label: const Text(
-                              tDeleteVideoNegative,
+                            label: Text(
+                              AppLocalizations.of(context)!.tDeleteVideoNegative,
                               style: TextStyle(
                                 fontSize: 18,
                                 color: Colors.white,

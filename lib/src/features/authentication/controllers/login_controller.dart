@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../constants/text_strings.dart';
 import '../../../repository/authentication_repository/authentication_repository.dart';
 import '../../../utils/helper/helper_controller.dart';
 
@@ -18,7 +18,7 @@ class LoginController extends GetxController {
   final isLoading = false.obs;
 
   /// [EmailAndPasswordLogin]
-  Future<void> login() async {
+  Future<void> login(BuildContext context) async {
     try {
       isLoading.value = true;
       if (!loginFormKey.currentState!.validate()) {
@@ -30,7 +30,7 @@ class LoginController extends GetxController {
       auth.setInitialScreen(auth.firebaseUser);
     } catch (e) {
       isLoading.value = false;
-      Helper.errorSnackBar(title: tOhSnap, message: e.toString());
+      Helper.errorSnackBar(title: AppLocalizations.of(context)!.tOhSnap, message: e.toString());
     }
   }
 }

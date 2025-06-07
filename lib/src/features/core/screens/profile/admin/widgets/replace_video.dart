@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ReplaceVideoDialog extends StatelessWidget {
   const ReplaceVideoDialog({super.key});
@@ -24,7 +24,7 @@ class ReplaceVideoDialog extends StatelessWidget {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      tReplaceVideo,
+                      AppLocalizations.of(context)!.tReplaceVideo,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -34,7 +34,7 @@ class ReplaceVideoDialog extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      tReplaceVideoMessage,
+                      AppLocalizations.of(context)!.tReplaceVideoMessage,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 18,
@@ -58,8 +58,8 @@ class ReplaceVideoDialog extends StatelessWidget {
                               side: BorderSide.none,
                             ),
                             icon: const Icon(Icons.refresh, color: tWhiteColor),
-                            label: const Text(
-                              tReplaceVideoPositive,
+                            label: Text(
+                              AppLocalizations.of(context)!.tReplaceVideoPositive,
                               style: TextStyle(
                                 fontSize: 18,
                                 color: tWhiteColor,
@@ -83,8 +83,8 @@ class ReplaceVideoDialog extends StatelessWidget {
                               side: BorderSide.none,
                             ),
                             icon: const Icon(Icons.undo, color: Colors.white),
-                            label: const Text(
-                              tReplaceVideoNegative,
+                            label: Text(
+                              AppLocalizations.of(context)!.tReplaceVideoNegative,
                               style: TextStyle(
                                 fontSize: 18,
                                 color: Colors.white,

@@ -2,6 +2,7 @@ import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/sizes.dart';
 import 'package:fit_office/src/features/core/screens/progress/widgets/progress_chapter_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});
@@ -88,7 +89,7 @@ class ProgressScreenState extends State<ProgressScreen> {
             return ProgressChapterWidget(
               key: _chapterKeys[chapterIndex], // GlobalKey für jedes Kapitel
               chapterIndex: chapterIndex,
-              title: 'Chapter ${chapterIndex + 1}',
+              title: '${AppLocalizations.of(context)!.tChapter} ${chapterIndex + 1}',
               currentStep: currentStep,
               startStep: chapterStart,
               stepCount: stepsPerChapter,

@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/repository/authentication_repository/authentication_repository.dart';
 import 'package:fit_office/src/utils/helper/helper_controller.dart';
+import '../../../constants/text_strings.dart';
 
 class MailVerificationController extends GetxController {
 
@@ -19,7 +19,7 @@ class MailVerificationController extends GetxController {
     try {
       await AuthenticationRepository.instance.sendEmailVerification();
     } catch (e) {
-      Helper.errorSnackBar(title: tOhSnap, message: e.toString());
+        Helper.errorSnackBar(title: tOhSnap, message: e.toString());
     }
   }
 

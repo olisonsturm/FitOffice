@@ -1,7 +1,7 @@
 //TODO: Add functionality to the share button and add colors to constants
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../add_friends.dart';
 
 class AddFriendsButton extends StatelessWidget {
@@ -41,8 +41,8 @@ class AddFriendsButton extends StatelessWidget {
                 );
               },
               icon: const Icon(Icons.person_add_alt_1, color: Colors.blue),
-              label: const Text(
-                tAddFriendsButton,
+              label: Text(
+                AppLocalizations.of(context)!.tAddFriendsButton,
                 style: TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.w800,

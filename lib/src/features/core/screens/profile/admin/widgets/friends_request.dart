@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class FriendRequestsWidget extends StatefulWidget {
@@ -64,7 +64,7 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
         Row(
           children: [
             Text(
-              tFriendshipRequests,
+              AppLocalizations.of(context)!.tFriendshipRequests,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -83,7 +83,7 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
           const Center(child: CircularProgressIndicator())
         else if (_requests.isEmpty)
           Text(
-            tNoRequests,
+            AppLocalizations.of(context)!.tNoRequests,
             style:
                 TextStyle(color: isDarkMode ? Colors.white70 : Colors.black54),
           )
@@ -119,7 +119,8 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
 
                     final senderData =
                         senderSnap.data!.data() as Map<String, dynamic>;
-                    final senderName = senderData['username'] ?? tUnknown;
+                    final senderName = senderData['username'] ??
+                        AppLocalizations.of(context)!.tUnknown;
 
                     final Timestamp sinceTimestamp = doc['since'] as Timestamp;
                     final DateTime sinceDate = sinceTimestamp.toDate();

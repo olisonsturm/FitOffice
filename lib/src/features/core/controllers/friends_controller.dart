@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../constants/text_strings.dart';
 import '../../authentication/models/user_model.dart';
 
 class FriendsController {
@@ -93,7 +94,7 @@ class FriendsController {
     return null;
   }
 
-  Future<UserModel> getFriend(String userName) async {
+  Future<UserModel> getFriend(String userName, BuildContext context) async {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('username', isEqualTo: userName)
@@ -103,7 +104,7 @@ class FriendsController {
       final userDoc = querySnapshot.docs.first;
       return UserModel.fromSnapshot(userDoc);
     } else {
-      throw Exception(tNoUserFound);
+      throw Exception(AppLocalizations.of(context)!.tNoUserFound);
     }
   }
 

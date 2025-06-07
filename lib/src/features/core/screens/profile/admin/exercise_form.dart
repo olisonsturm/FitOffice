@@ -7,6 +7,7 @@ import 'package:fit_office/src/features/core/screens/profile/admin/widgets/delet
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../../constants/colors.dart';
 import '../../../../../constants/text_strings.dart';
@@ -104,8 +105,8 @@ class _ExerciseFormState extends State<ExerciseForm> {
   void _showConfirmationDialog(bool isEdit) {
     showConfirmationDialogModel(
       context: context,
-      title: tSaveChanges,
-      content: tSaveExerciseConfirmation,
+      title: AppLocalizations.of(context)!.tSaveChanges,
+      content: AppLocalizations.of(context)!.tSaveExerciseConfirmation,
       onConfirm: isEdit ? _saveExercise : _addExercise,
     );
   }
@@ -117,7 +118,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
     String? videoUrl = uploadedVideoUrl;
 
     if ((name.isEmpty || description.isEmpty || category == null) && mounted) {
-      _showSnackbar(tFillOutAllFields);
+      _showSnackbar(AppLocalizations.of(context)!.tFillOutAllFields);
       return;
     }
 
@@ -129,7 +130,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
       }
 
       if (videoUrl == null) {
-        throw Exception(tNoVideoSelected);
+        throw Exception(AppLocalizations.of(context)!.tNoVideoSelected);
       }
 
       await exerciseController.saveExercise(
@@ -140,7 +141,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
       );
 
       if (mounted) {
-        _showSnackbar(tExerciseAdded);
+        _showSnackbar(AppLocalizations.of(context)!.tExerciseAdded);
       }
 
       _resetForm();
@@ -164,7 +165,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
             originalVideo.isNotEmpty);
 
     if (name.isEmpty || description.isEmpty || category == null || !hasVideo) {
-      _showSnackbar(tFillOutAllFields);
+      _showSnackbar(AppLocalizations.of(context)!.tFillOutAllFields);
       return;
     }
 
@@ -176,7 +177,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
           exerciseController.deleteVideoByUrl(_videoToDelete!);
         } catch (e) {
           if (mounted) {
-            _showSnackbar('$tDeleteVideoFailed: $e');
+            _showSnackbar('${AppLocalizations.of(context)!.tDeleteVideoFailed}: $e');
           }
         }
       }
@@ -203,7 +204,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
       uploadedVideoUrl = finalVideoUrl;
 
       if (mounted) {
-        _showSnackbar(tChangesSaved);
+        _showSnackbar(AppLocalizations.of(context)!.tChangesSaved);
         Navigator.pop(context, updatedData);
       }
     } catch (e) {
@@ -292,9 +293,10 @@ class _ExerciseFormState extends State<ExerciseForm> {
         category: _selectedCategory,
         videoFile: _selectedVideoFile,
         uploadedUrl: uploadedVideoUrl);
+    final localisation = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.isEdit ? tEditExerciseHeading : tAddExercisesHeader),
+        title: Text(widget.isEdit ? localisation.tEditExerciseHeading : localisation.tAddExercisesHeader),
         backgroundColor: tCardBgColor,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -303,10 +305,10 @@ class _ExerciseFormState extends State<ExerciseForm> {
               if (hasChanged) {
                 showConfirmationDialogModel(
                   context: context,
-                  title: tDiscardChangesQuestion,
-                  content: tDiscardChangesText,
-                  confirm: tDiscardChanges,
-                  cancel: tCancel,
+                  title: localisation.tDiscardChangesQuestion,
+                  content: localisation.tDiscardChangesText,
+                  confirm: localisation.tDiscardChanges,
+                  cancel: localisation.tCancel,
                   onConfirm: () {
                     Navigator.pop(context);
                   },
@@ -323,10 +325,10 @@ class _ExerciseFormState extends State<ExerciseForm> {
                   uploadedVideoUrl: uploadedVideoUrl)) {
                 showConfirmationDialogModel(
                   context: context,
-                  title: tDiscardChangesQuestion,
-                  content: tDiscardChangesText,
-                  confirm: tDiscardChanges,
-                  cancel: tCancel,
+                  title: localisation.tDiscardChangesQuestion,
+                  content: localisation.tDiscardChangesText,
+                  confirm: localisation.tDiscardChanges,
+                  cancel: localisation.tCancel,
                   onConfirm: () {
                     Navigator.pop(context);
                   },
@@ -345,7 +347,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
           TextField(
             controller: _nameController,
             decoration: InputDecoration(
-              labelText: tName,
+              labelText: localisation.tName,
               labelStyle: TextStyle(color: tBottomNavBarSelectedColor),
               floatingLabelStyle: TextStyle(
                   color: tBottomNavBarSelectedColor,
@@ -370,7 +372,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
               maxLines: 5,
               style: TextStyle(color: isDarkMode ? tWhiteColor : tBlackColor),
               decoration: InputDecoration(
-                labelText: tDescription,
+                labelText: localisation.tDescription,
                 labelStyle: TextStyle(color: tBottomNavBarSelectedColor),
                 floatingLabelStyle: TextStyle(
                     color: tBottomNavBarSelectedColor,
@@ -392,7 +394,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
           DropdownButtonFormField<String>(
             value: _selectedCategory,
             decoration: InputDecoration(
-              labelText: tCategory,
+              labelText: localisation.tCategory,
               labelStyle: TextStyle(color: tBottomNavBarSelectedColor),
               floatingLabelStyle: TextStyle(color: tBottomNavBarSelectedColor),
               filled: true,
@@ -463,7 +465,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
                                   .refFromURL(uploadedVideoUrl!);
                               await ref.delete();
 
-                              _showSnackbar(tVideoDeleteSuccess);
+                              _showSnackbar(localisation.tVideoDeleteSuccess);
                             } catch (e) {
                               _showSnackbar(e.toString());
                             }
@@ -536,7 +538,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
                                     });
 
                                     _checkIfChanged();
-                                    _showSnackbar(tVideoDeleteSuccess);
+                                    _showSnackbar(localisation.tVideoDeleteSuccess);
                                   },
                                   iconSize: 28,
                                   padding: EdgeInsets.zero,
@@ -561,7 +563,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
                             ),
                             child: Center(
                               child: Text(
-                                tNoVideoAvailable,
+                                localisation.tNoVideoAvailable,
                                 style: TextStyle(
                                   color: isDarkMode
                                       ? Colors.white70
@@ -621,9 +623,9 @@ class _ExerciseFormState extends State<ExerciseForm> {
 
                   _checkIfChanged();
 
-                  _showSnackbar(tVideoSelected);
+                  _showSnackbar(localisation.tVideoSelected);
                 } else {
-                  _showSnackbar(tNoVideoSelected);
+                  _showSnackbar(localisation.tNoVideoSelected);
                 }
               },
               icon: Icon(
@@ -634,13 +636,13 @@ class _ExerciseFormState extends State<ExerciseForm> {
                 widget.isEdit &&
                         (isVideoMarkedForDeletion ||
                             (uploadedVideoUrl == null && originalVideo.isEmpty))
-                    ? tUploadVideo
+                    ? localisation.tUploadVideo
                     : (isVideoMarkedForDeletion ||
                             (uploadedVideoUrl == null &&
                                 widget.isEdit == false &&
                                 _selectedVideoFile == null))
-                        ? tUploadVideo
-                        : tReplaceVideo,
+                        ? localisation.tUploadVideo
+                        : localisation.tReplaceVideo,
                 style: TextStyle(
                   color: tBlackColor,
                   fontWeight: FontWeight.w800,
@@ -692,7 +694,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 label: Text(
-                  widget.isEdit ? tSave : tAdd,
+                  widget.isEdit ? localisation.tSave : localisation.tAdd,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

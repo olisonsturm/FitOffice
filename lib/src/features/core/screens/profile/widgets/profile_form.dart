@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import '../../../../../constants/sizes.dart';
-import '../../../../../constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../../repository/authentication_repository/authentication_repository.dart';
 import '../../../../../repository/user_repository/user_repository.dart';
 import '../../../../../utils/helper/helper_controller.dart';
@@ -77,6 +77,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileController());
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final localisation = AppLocalizations.of(context)!;
 
     return Form(
       key: _formKey,
@@ -84,21 +85,21 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
         children: [
           TextFormField(
             controller: widget.userName,
-            validator: Helper.validateUsername,
-            decoration: const InputDecoration(label: Text(tUserName), prefixIcon: Icon(LineAwesomeIcons.user)),
+            validator: (value) => Helper.validateUsername(value, context),
+            decoration: InputDecoration(label: Text(localisation.tUserName), prefixIcon: Icon(LineAwesomeIcons.user)),
             enabled: false,
           ),
           const SizedBox(height: tFormHeight - 20),
           TextFormField(
             controller: widget.fullName,
-            validator: Helper.validateFullName,
-            decoration: const InputDecoration(label: Text(tFullName), prefixIcon: Icon(LineAwesomeIcons.user_tag_solid)),
+            validator: (value) => Helper.validateFullName(value, context),
+            decoration: InputDecoration(label: Text(localisation.tFullName), prefixIcon: Icon(LineAwesomeIcons.user_tag_solid)),
           ),
           const SizedBox(height: tFormHeight - 20),
           TextFormField(
             controller: widget.email,
-            validator: Helper.validateEmail,
-            decoration: const InputDecoration(label: Text(tEmail), prefixIcon: Icon(LineAwesomeIcons.envelope)),
+            validator: (value) => Helper.validateEmail(value, context),
+            decoration: InputDecoration(label: Text(localisation.tEmail), prefixIcon: Icon(LineAwesomeIcons.envelope)),
             enabled: false,
           ),
           const SizedBox(height: tFormHeight - 20),
@@ -107,7 +108,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
           CustomProfileButton(
             isDark: isDark,
             icon: LineAwesomeIcons.key_solid,
-            label: tResetPassword,
+            label: localisation.tResetPassword,
             onPress: () {
               ForgetPasswordScreen.buildShowModalBottomSheet(
                 context,
@@ -123,7 +124,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
           CustomProfileButton(
             isDark: isDark,
             icon: LineAwesomeIcons.save_solid,
-            label: tSaveProfile,
+            label: localisation.tSaveProfile,
             onPress: isEdited
                 ? () {
                 final userData = UserModel(
@@ -135,7 +136,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                 );
 
                 // Update the user record and global state
-                controller.updateRecord(userData);
+                controller.updateRecord(userData, context);
 
                 // Close the modal after saving
                 if (context.mounted) {
@@ -153,7 +154,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
           CustomProfileButton(
             isDark: isDark,
             icon: LineAwesomeIcons.trash_solid,
-            label: tDelete,
+            label: localisation.tDelete,
             onPress: () async {
               try {
                 // Delete Firebase Auth account
@@ -165,19 +166,19 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                 });
 
                 // Show success message
-                Helper.successSnackBar(title: tSuccess, message: 'Account deleted successfully');
+                Helper.successSnackBar(title: localisation.tSuccess, message: 'Account deleted successfully');
               } on FirebaseAuthException catch (e) {
                 // Log the error code and message
                 if (kDebugMode) {
                   print('FirebaseAuthException: ${e.code} - ${e.message}');
                 }
-                Helper.errorSnackBar(title: tOhSnap, message: 'Failed to delete account: ${e.message}');
+                Helper.errorSnackBar(title: localisation.tOhSnap, message: 'Failed to delete account: ${e.message}');
               } catch (e) {
                 // Log any other errors
                 if (kDebugMode) {
                   print('Exception: $e');
                 }
-                Helper.errorSnackBar(title: tOhSnap, message: 'Failed to delete account: $e');
+                Helper.errorSnackBar(title: localisation.tOhSnap, message: 'Failed to delete account: $e');
               }
             },
             iconColor: Colors.red,

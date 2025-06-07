@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DeleteExerciseDialog extends StatefulWidget {
   final Map<String, dynamic> exercise;
@@ -50,7 +50,7 @@ class _DeleteExerciseDialogState extends State<DeleteExerciseDialog> {
       if (mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text(tGotDeleted)),
+          SnackBar(content: Text(AppLocalizations.of(context)!.tGotDeleted)),
         );
         widget.onSuccess?.call();
       }
@@ -89,7 +89,7 @@ class _DeleteExerciseDialogState extends State<DeleteExerciseDialog> {
                     children: [
                       const SizedBox(height: 10),
                       Text(
-                        tDeleteExercise,
+                        AppLocalizations.of(context)!.tDeleteExercise,
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -99,7 +99,7 @@ class _DeleteExerciseDialogState extends State<DeleteExerciseDialog> {
                       ),
                       const SizedBox(height: 24),
                       Text(
-                        tDeleteExerciseMessage,
+                        AppLocalizations.of(context)!.tDeleteExerciseMessage,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 18,
@@ -134,8 +134,8 @@ class _DeleteExerciseDialogState extends State<DeleteExerciseDialog> {
                               ),
                               icon:
                                   const Icon(Icons.delete, color: tWhiteColor),
-                              label: const Text(
-                                tDelete,
+                              label: Text(
+                                AppLocalizations.of(context)!.tDelete,
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: tWhiteColor,
@@ -162,8 +162,8 @@ class _DeleteExerciseDialogState extends State<DeleteExerciseDialog> {
                               ),
                               icon: const Icon(Icons.undo_sharp,
                                   color: Colors.white),
-                              label: const Text(
-                                tCancel,
+                              label: Text(
+                                AppLocalizations.of(context)!.tCancel,
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.white,

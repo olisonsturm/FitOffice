@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import 'package:fit_office/src/repository/authentication_repository/authentication_repository.dart';
 import 'package:fit_office/src/repository/user_repository/user_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../utils/helper/helper_controller.dart';
 
@@ -42,26 +44,26 @@ class ProfileController extends GetxController {
   }
 
   /// Update user data and update the global state
-  Future<void> updateRecord(UserModel updatedUser) async {
+  Future<void> updateRecord(UserModel updatedUser, BuildContext context) async {
     try {
       await _userRepo.updateUserRecord(updatedUser.id!, updatedUser.toJson());
       user.value = updatedUser; // Update global state
       Helper.successSnackBar(
-          title: tCongratulations, message: 'Profile Record has been updated!');
+          title: AppLocalizations.of(context)!.tCongratulations, message: 'Profile Record has been updated!');
     } catch (e) {
       Helper.errorSnackBar(title: 'Error', message: e.toString());
     }
   }
 
   /// Delete the authenticated user's account
-  Future<void> deleteUser() async {
+  Future<void> deleteUser(BuildContext context) async {
     try {
       final userId = _authRepo.getUserID;
       if (userId.isNotEmpty) {
         await _userRepo.deleteUser(userId);
         user.value = null; // Clear global state
         Helper.successSnackBar(
-            title: tCongratulations, message: 'Account has been deleted!');
+            title: AppLocalizations.of(context)!.tCongratulations, message: 'Account has been deleted!');
       } else {
         Helper.warningSnackBar(
             title: 'Error', message: 'User cannot be deleted!');

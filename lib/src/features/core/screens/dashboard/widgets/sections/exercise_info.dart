@@ -1,4 +1,3 @@
-import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/cancel_exercise.dart';
 import 'package:fit_office/src/utils/helper/dialog_helper.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/start_exercise.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/video_player.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../end_exercise.dart';
 
@@ -29,9 +29,10 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final description =
-        widget.exerciseData['description'] ?? tExerciseNoDescription;
+        widget.exerciseData['description'] ?? localizations.tExerciseNoDescription;
 
     final videoUrl = widget.exerciseData['video'];
     final hasVideo = videoUrl != null &&
@@ -57,7 +58,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
             ),
             child: Center(
               child: Text(
-                tNoVideoAvailable,
+                localizations.tNoVideoAvailable,
                 style: TextStyle(
                   color: isDarkMode ? Colors.white70 : tDarkGreyColor,
                 ),
@@ -90,7 +91,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(tExerciseVideo,
+                  Text(localizations.tExerciseVideo,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -99,7 +100,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                   const SizedBox(height: 12),
                   videoContent,
                   const SizedBox(height: 20),
-                  Text(tExerciseDescription,
+                  Text(localizations.tExerciseDescription,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -139,8 +140,8 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                     ),
                                     label: Text(
                                       isPaused
-                                          ? tExerciseResume
-                                          : tExercisePause,
+                                          ? localizations.tExerciseResume
+                                          : localizations.tExercisePause,
                                       style:
                                           const TextStyle(color: tWhiteColor),
                                     ),
@@ -166,8 +167,8 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                     ),
                                     icon: const Icon(Icons.check_circle,
                                         color: tWhiteColor),
-                                    label: const Text(
-                                      tExerciseFinish,
+                                    label: Text(
+                                      localizations.tExerciseFinish,
                                       style: TextStyle(color: tWhiteColor),
                                     ),
                                     onPressed: () async {
@@ -202,8 +203,8 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                               ),
                               icon:
                                   const Icon(Icons.cancel, color: tWhiteColor),
-                              label: const Text(
-                                tCancelExercise,
+                              label: Text(
+                                localizations.tCancelExercise,
                                 style: TextStyle(color: tWhiteColor),
                               ),
                               onPressed: () async {
@@ -227,8 +228,8 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                           child: ElevatedButton.icon(
                             icon: const Icon(Icons.play_arrow,
                                 color: tWhiteColor),
-                            label: const Text(
-                              tExerciseStart,
+                            label: Text(
+                              localizations.tExerciseStart,
                               style: TextStyle(color: tWhiteColor),
                             ),
                             style: ElevatedButton.styleFrom(
@@ -246,7 +247,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                 await showUnifiedDialog(
                                   context: context,
                                   builder: (_) =>
-                                      ActiveTimerDialog.forAction('start'),
+                                      ActiveTimerDialog.forAction('start', context),
                                 );
                                 return;
                               }

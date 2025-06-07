@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/image_strings.dart';
 import 'package:fit_office/src/constants/sizes.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../utils/animations/fade_in_animation/animation_design.dart';
 import '../../../../utils/animations/fade_in_animation/fade_in_animation_controller.dart';
 import '../../../../utils/animations/fade_in_animation/fade_in_animation_model.dart';
@@ -41,11 +42,11 @@ class SplashScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  tAppName,
+                  AppLocalizations.of(context)!.tAppName,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 Text(
-                  tAppTagLine,
+                  AppLocalizations.of(context)!.tAppTagLine,
                   style: Theme.of(context).textTheme.displayMedium,
                 )
               ],

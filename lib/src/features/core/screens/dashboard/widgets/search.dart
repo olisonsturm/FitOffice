@@ -1,6 +1,6 @@
 import 'package:fit_office/global_overlay.dart';
 import 'package:flutter/material.dart';
-import '../../../../../constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DashboardSearchBox extends StatefulWidget {
   const DashboardSearchBox({
@@ -95,7 +95,7 @@ class DashboardSearchBoxState extends State<DashboardSearchBox> {
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
-                  hintText: tDashboardSearch,
+                  hintText: AppLocalizations.of(context)!.tDashboardSearch,
                   hintStyle: baseStyle?.copyWith(
                     color: isDark ? Colors.white70 : Colors.grey[700],
                   ),
@@ -125,8 +125,8 @@ class DashboardSearchBoxState extends State<DashboardSearchBox> {
                     });
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text(tDashboardExerciseSearchNoInput)),
+                      SnackBar(
+                          content: Text(AppLocalizations.of(context)!.tDashboardExerciseSearchNoInput)),
                     );
                   }
                 }),

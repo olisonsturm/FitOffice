@@ -2,15 +2,17 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter/cupertino.dart';
 import '../../authentication/models/user_model.dart';
 import 'package:intl/intl.dart';
 import 'package:string_similarity/string_similarity.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DbController {
   late UserModel user;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Future<String?> fetchActiveStreakSteps() async {
+  Future<String?> fetchActiveStreakSteps(BuildContext context) async {
     final userId = user.id;
     //This query must be edited when database structure is defined
     final streaksRef =
@@ -29,13 +31,13 @@ class DbController {
       }
     } on SocketException {
       // Network error occurred, handle accordingly
-      return tDashboardNoInternetConnection;
+      return AppLocalizations.of(context)!.tDashboardNoInternetConnection;
     } on FirebaseException {
       // Handle other Firestore specific exceptions
-      return tDashboardDatabaseException;
+      return AppLocalizations.of(context)!.tDashboardDatabaseException;
     } catch (e) {
       // Catch all other errors
-      return tDashboardUnexpectedError;
+      return AppLocalizations.of(context)!.tDashboardUnexpectedError;
     }
 
     return "0";
@@ -61,7 +63,7 @@ class DbController {
     }
   }
 
-  Future<String?> lastExerciseOfUser() async {
+  Future<String?> lastExerciseOfUser(BuildContext context) async {
     try {
       final userId = user.id;
 
@@ -85,17 +87,17 @@ class DbController {
           String startedAtString = timestampToString(startedAt);
           return startedAtString;
         } else {
-          return tDashboardNoValidDate;
+          return AppLocalizations.of(context)!.tDashboardNoValidDate;
         }
       } else {
-        return tDashboardNoExercisesDone;
+        return AppLocalizations.of(context)!.tDashboardNoExercisesDone;
       }
     } catch (e) {
-      return tDashboardExceptionLoadingExercise;
+      return AppLocalizations.of(context)!.tDashboardExceptionLoadingExercise;
     }
   }
 
-  Future<String?> durationOfLastExercise() async {
+  Future<String?> durationOfLastExercise(BuildContext context) async {
     final userId = user.id;
 
     //Query needs to be edited if database structure changes
@@ -123,7 +125,7 @@ class DbController {
 
         return formattedDuration;
       } else {
-        return tDashboardTimestampsMissing;
+        return AppLocalizations.of(context)!.tDashboardTimestampsMissing;
       }
     }
     return null;

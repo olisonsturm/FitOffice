@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit_office/src/constants/colors.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/screens/profile/friend_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -113,7 +113,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
 
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('$tFriendshipRequestWithdraw$username')),
+              SnackBar(content: Text('${AppLocalizations.of(context)!.tFriendshipRequestWithdraw}$username')),
             );
           }
         }
@@ -125,7 +125,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text(tFriendDeleteException)),
+          SnackBar(content: Text(AppLocalizations.of(context)!.tFriendDeleteException)),
         );
       }
     }
@@ -140,11 +140,12 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(tAddFriendsHeader),
+          title: Text(localizations.tAddFriendsHeader),
           backgroundColor: tCardBgColor,
         ),
         body: Padding(
@@ -155,7 +156,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                 controller: _searchController,
                 focusNode: _searchFocus,
                 decoration: InputDecoration(
-                  hintText: tFriendsSearchHint,
+                  hintText: localizations.tFriendsSearchHint,
                   prefixIcon: const Icon(Icons.search),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12)),
@@ -166,7 +167,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
               if (isSearching)
                 const CircularProgressIndicator()
               else if (results.isEmpty && _searchController.text.length >= 2)
-                const Text(tNoResults)
+                Text(localizations.tNoResults)
               else
                 Expanded(
                   child: ListView.builder(
@@ -196,8 +197,8 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                                 });
 
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(tFriendDeleteException)),
+                                    SnackBar(
+                                        content: Text(localizations.tFriendDeleteException)),
                                   );
                               }
                             },
@@ -263,8 +264,8 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                                 });
 
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(tExceptionAddingFriend)),
+                                  SnackBar(
+                                      content: Text(localizations.tExceptionAddingFriend)),
                                 );
                               }
                             },
