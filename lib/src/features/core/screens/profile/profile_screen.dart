@@ -235,7 +235,7 @@ class ProfileScreen extends StatelessWidget {
                   CustomProfileDropdownButton(
                     icon: LineAwesomeIcons.language_solid,
                     isDark: isDark,
-                    selectedValue: 'en',
+                    selectedValue: Get.locale?.languageCode ?? 'en',
                     items: const [
                       DropdownMenuItem(value: 'en', child: Text('English 🇬🇧')),
                       DropdownMenuItem(value: 'de', child: Text('Deutsch 🇩🇪')),
