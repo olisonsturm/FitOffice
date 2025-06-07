@@ -85,20 +85,20 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
         children: [
           TextFormField(
             controller: widget.userName,
-            validator: Helper.validateUsername,
+            validator: (value) => Helper.validateUsername(value, context),
             decoration: InputDecoration(label: Text(localisation.tUserName), prefixIcon: Icon(LineAwesomeIcons.user)),
             enabled: false,
           ),
           const SizedBox(height: tFormHeight - 20),
           TextFormField(
             controller: widget.fullName,
-            validator: Helper.validateFullName,
+            validator: (value) => Helper.validateFullName(value, context),
             decoration: InputDecoration(label: Text(localisation.tFullName), prefixIcon: Icon(LineAwesomeIcons.user_tag_solid)),
           ),
           const SizedBox(height: tFormHeight - 20),
           TextFormField(
             controller: widget.email,
-            validator: Helper.validateEmail,
+            validator: (value) => Helper.validateEmail(value, context),
             decoration: InputDecoration(label: Text(localisation.tEmail), prefixIcon: Icon(LineAwesomeIcons.envelope)),
             enabled: false,
           ),
@@ -136,7 +136,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                 );
 
                 // Update the user record and global state
-                controller.updateRecord(userData);
+                controller.updateRecord(userData, context);
 
                 // Close the modal after saving
                 if (context.mounted) {

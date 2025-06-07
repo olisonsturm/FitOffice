@@ -11,7 +11,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/screens/profile/widgets/update_profile_modal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../constants/colors.dart';
-import '../../../../constants/text_strings.dart';
 import '../../../../repository/authentication_repository/authentication_repository.dart';
 import '../../controllers/profile_controller.dart';
 import 'admin/add_friends.dart';
@@ -101,7 +100,7 @@ class ProfileScreen extends StatelessWidget {
                           isDark: isDark,
                           icon: LineAwesomeIcons.dumbbell_solid,
                           title: "100",
-                          subtitle: "Completed Workouts",
+                          subtitle: AppLocalizations.of(context)!.tCompletedWorkouts,
                           iconColor: Colors.orange,
                         ),
                       ),
@@ -134,7 +133,7 @@ class ProfileScreen extends StatelessWidget {
                                 context: context,
                                 barrierDismissible: false,
                                 builder: (_) =>
-                                    ActiveTimerDialog.forAction('editprofile'),
+                                    ActiveTimerDialog.forAction('editprofile', context),
                               );
                               return;
                             }
@@ -161,12 +160,12 @@ class ProfileScreen extends StatelessWidget {
                                 context: context,
                                 barrierDismissible: false,
                                 builder: (_) =>
-                                    ActiveTimerDialog.forAction('logout'),
+                                    ActiveTimerDialog.forAction('logout', context),
                               );
                               return;
                             }
 
-                            _showLogoutModal();
+                            _showLogoutModal(context);
                           },
                         ),
                       ),
@@ -181,7 +180,7 @@ class ProfileScreen extends StatelessWidget {
                   CustomProfileButton(
                     isDark: isDark,
                     icon: LineAwesomeIcons.user_plus_solid,
-                    label: "Add Friends",
+                    label: AppLocalizations.of(context)!.tAddFriendsHeader,
                     onPress: () async {
                       final timerController =
                           Get.find<ExerciseTimerController>();
@@ -191,7 +190,7 @@ class ProfileScreen extends StatelessWidget {
                           context: context,
                           barrierDismissible: false,
                           builder: (_) =>
-                              ActiveTimerDialog.forAction('addfriends'),
+                              ActiveTimerDialog.forAction('addfriends', context),
                         );
                         return;
                       }
@@ -203,7 +202,7 @@ class ProfileScreen extends StatelessWidget {
                     //auch mit dem Dialog anpassen!
                     isDark: isDark,
                     icon: LineAwesomeIcons.user_friends_solid,
-                    label: "View Friends",
+                    label: AppLocalizations.of(context)!.tViewFriends,
                     onPress: () async {
                       final timerController =
                           Get.find<ExerciseTimerController>();
@@ -213,7 +212,7 @@ class ProfileScreen extends StatelessWidget {
                           context: context,
                           barrierDismissible: false,
                           builder: (_) =>
-                              ActiveTimerDialog.forAction('viewfriends'),
+                              ActiveTimerDialog.forAction('viewfriends', context),
                         );
                         return;
                       }
@@ -223,14 +222,14 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const Divider(),
                   const SizedBox(height: 10),
-                  Text("Settings",
+                  Text(AppLocalizations.of(context)!.tSettings,
                       style: txtTheme.headlineSmall
                           ?.copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
                   CustomProfileButton(
                     isDark: isDark,
                     icon: LineAwesomeIcons.bell_solid,
-                    label: "Notifications",
+                    label: AppLocalizations.of(context)!.tNotifications,
                     onPress: () {},
                   ),
                   CustomProfileDropdownButton(
@@ -260,7 +259,7 @@ class ProfileScreen extends StatelessWidget {
                   CustomProfileButton(
                     isDark: isDark,
                     icon: LineAwesomeIcons.info_solid,
-                    label: "About",
+                    label: AppLocalizations.of(context)!.tAbout,
                     onPress: () {},
                   ),
                   Row(
@@ -299,37 +298,37 @@ class ProfileScreen extends StatelessWidget {
                   CustomProfileButton(
                     isDark: isDark,
                     icon: LineAwesomeIcons.question_circle_solid,
-                    label: "Help & Support",
+                    label: AppLocalizations.of(context)!.tHelpSupport,
                     onPress: () {},
                   ),
                   CustomProfileButton(
                     isDark: isDark,
                     icon: LineAwesomeIcons.bug_solid,
-                    label: "Report a Bug",
+                    label: AppLocalizations.of(context)!.tReportBug,
                     onPress: () {},
                   ),
                   CustomProfileButton(
                     isDark: isDark,
                     icon: LineAwesomeIcons.file_contract_solid,
-                    label: "Terms & Conditions",
+                    label: AppLocalizations.of(context)!.tTerms,
                     onPress: () {},
                   ),
                   CustomProfileButton(
                     isDark: isDark,
                     icon: LineAwesomeIcons.file_signature_solid,
-                    label: "Privacy Policy",
+                    label: AppLocalizations.of(context)!.tPrivacyPolicy,
                     onPress: () {},
                   ),
                   CustomProfileButton(
                     isDark: isDark,
                     icon: LineAwesomeIcons.file_contract_solid,
-                    label: "Licenses",
+                    label: AppLocalizations.of(context)!.tLicenses,
                     onPress: () {},
                   ),
                   if (user.role == "admin") ...[
                     const Divider(),
                     const SizedBox(height: 10),
-                    Text("Admin Settings",
+                    Text(AppLocalizations.of(context)!.tAdminSettings,
                         style: txtTheme.headlineSmall
                             ?.copyWith(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 10),
@@ -347,7 +346,7 @@ class ProfileScreen extends StatelessWidget {
                             context: context,
                             barrierDismissible: false,
                             builder: (_) =>
-                                ActiveTimerDialog.forAction('admin'),
+                                ActiveTimerDialog.forAction('admin', context),
                           );
                           return;
                         }
@@ -368,7 +367,7 @@ class ProfileScreen extends StatelessWidget {
                             context: context,
                             barrierDismissible: false,
                             builder: (_) =>
-                                ActiveTimerDialog.forAction('admin'),
+                                ActiveTimerDialog.forAction('admin', context),
                           );
                           return;
                         }
@@ -389,7 +388,7 @@ class ProfileScreen extends StatelessWidget {
                             context: context,
                             barrierDismissible: false,
                             builder: (_) =>
-                                ActiveTimerDialog.forAction('admin'),
+                                ActiveTimerDialog.forAction('admin', context),
                           );
                           return;
                         }
@@ -410,7 +409,7 @@ class ProfileScreen extends StatelessWidget {
                             context: context,
                             barrierDismissible: false,
                             builder: (_) =>
-                                ActiveTimerDialog.forAction('admin'),
+                                ActiveTimerDialog.forAction('admin', context),
                           );
                           return;
                         }
@@ -473,7 +472,7 @@ class ProfileScreen extends StatelessWidget {
   }
 
   //TODO: all PopUpModals with Yes and No should be in one style; maybe the same style as all other PopUps! Texts should be added to text_strings.dart
-  void _showLogoutModal() {
+  void _showLogoutModal(BuildContext context) {
     final isDarkMode = Get.isDarkMode;
 
     Get.dialog(
@@ -492,7 +491,7 @@ class ProfileScreen extends StatelessWidget {
                     children: [
                       const SizedBox(height: 10),
                       Text(
-                        tLogout,
+                        AppLocalizations.of(context)!.tLogout,
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -501,8 +500,8 @@ class ProfileScreen extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 24),
-                      const Text(
-                        tLogoutMessage,
+                      Text(
+                        AppLocalizations.of(context)!.tLogoutMessage,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 18,
@@ -530,8 +529,8 @@ class ProfileScreen extends StatelessWidget {
                               ),
                               icon:
                                   const Icon(Icons.logout, color: Colors.white),
-                              label: const Text(
-                                tLogoutPositive,
+                              label: Text(
+                                AppLocalizations.of(context)!.tLogoutPositive,
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.white,
@@ -557,8 +556,8 @@ class ProfileScreen extends StatelessWidget {
                               ),
                               icon:
                                   const Icon(Icons.cancel, color: Colors.white),
-                              label: const Text(
-                                tLogoutNegative,
+                              label: Text(
+                                AppLocalizations.of(context)!.tLogoutNegative,
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.white,

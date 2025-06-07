@@ -163,7 +163,7 @@ class StatisticsWidget extends StatelessWidget {
           final dbController = DbController()..user = user;
 
           return FutureBuilder<String?>(
-            future: dbController.lastExerciseOfUser(),
+            future: dbController.lastExerciseOfUser(context),
             builder: (context, stepsSnapshot) {
               if (stepsSnapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -208,7 +208,7 @@ class StatisticsWidget extends StatelessWidget {
           final dbController = DbController()..user = user;
 
           return FutureBuilder<String?>(
-            future: dbController.durationOfLastExercise(),
+            future: dbController.durationOfLastExercise(context),
             builder: (context, stepsSnapshot) {
               if (stepsSnapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -302,7 +302,7 @@ class StatisticsWidget extends StatelessWidget {
 
           return FutureBuilder<Map<String, dynamic>?>(
             future: statisticsController
-                .getLongestStreak(userEmail == null ? user.email : userEmail!),
+                .getLongestStreak(userEmail == null ? user.email : userEmail!, context),
             builder: (context, streakSnapshot) {
               if (streakSnapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());

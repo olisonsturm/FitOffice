@@ -29,7 +29,7 @@ class LoginFormWidget extends StatelessWidget {
               TextFormField(
                 controller: controller.email,
                 autofillHints: const [AutofillHints.username],
-                validator: Helper.validateEmail,
+                validator: (value) => Helper.validateEmail(value, context),
                 decoration: InputDecoration(
                   prefixIcon: Icon(LineAwesomeIcons.user),
                   hintText: AppLocalizations.of(context)!.tEmail,
@@ -99,7 +99,7 @@ class LoginFormWidget extends StatelessWidget {
                 text: AppLocalizations.of(context)!.tLogin.tr,
                 onPressed: controller.isLoading.value
                     ? () {}
-                    : () => controller.login(),
+                    : () => controller.login(context),
               )),
             ],
           ),

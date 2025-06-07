@@ -33,13 +33,13 @@ class DashboardState extends State<Dashboard> {
   String _getPageTitle() {
     switch (_selectedIndex) {
       case 0:
-        return 'Progress';
+        return AppLocalizations.of(context)!.tProgress;
       case 1:
-        return 'Library';
+        return AppLocalizations.of(context)!.tLibrary;
       case 2:
-        return 'Statistics';
+        return AppLocalizations.of(context)!.tStatistics;
       case 3:
-        return 'Profile';
+        return AppLocalizations.of(context)!.tProfile;
       default:
         return '';
     }
@@ -123,22 +123,22 @@ class DashboardState extends State<Dashboard> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: tBottomNavBarSelectedColor,
         unselectedItemColor: tBottomNavBarUnselectedColor,
-        items: const [
+        items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.route),
-            label: 'Progress',
+            label: AppLocalizations.of(context)!.tProgress,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.book),
-            label: 'Library',
+            label: AppLocalizations.of(context)!.tLibrary,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.insert_chart),
-            label: 'Statistics',
+            label: AppLocalizations.of(context)!.tStatistics,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Profile',
+            label: AppLocalizations.of(context)!.tProfile,
           ),
         ],
       ),

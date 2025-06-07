@@ -29,7 +29,7 @@ class SignUpFormWidget extends StatelessWidget {
               TextFormField(
                 controller: controller.userName,
                 autofillHints: const [AutofillHints.username],
-                validator: Helper.validateUsername,
+                validator: (value) => Helper.validateUsername(value, context),
                 decoration: InputDecoration(
                   errorStyle: const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
@@ -54,7 +54,7 @@ class SignUpFormWidget extends StatelessWidget {
               TextFormField(
                 controller: controller.fullName,
                 autofillHints: const [AutofillHints.name],
-                validator: Helper.validateFullName,
+                validator: (value) => Helper.validateFullName(value, context),
                 decoration: InputDecoration(
                   errorStyle: const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
@@ -73,7 +73,7 @@ class SignUpFormWidget extends StatelessWidget {
               TextFormField(
                 controller: controller.email,
                 autofillHints: const [AutofillHints.email],
-                validator: Helper.validateEmail,
+                validator: (value) => Helper.validateEmail(value, context),
                 decoration: InputDecoration(
                   errorStyle: const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
@@ -98,7 +98,7 @@ class SignUpFormWidget extends StatelessWidget {
               Obx(() => TextFormField(
                 controller: controller.password,
                 autofillHints: const [AutofillHints.newPassword],
-                validator: Helper.validatePassword,
+                validator: (value) => Helper.validatePassword(value, context),
                 obscureText: !controller.showPassword.value,
                 decoration: InputDecoration(
                   errorStyle:
@@ -134,7 +134,7 @@ class SignUpFormWidget extends StatelessWidget {
                 autofillHints: const [AutofillHints.newPassword],
                 obscureText: !controller.showPassword.value,
                 validator: (value) =>
-                    Helper.repeatPassword(value!, controller),
+                    Helper.repeatPassword(value!, controller, context),
                 decoration: InputDecoration(
                   errorStyle:
                   const TextStyle(overflow: TextOverflow.visible),

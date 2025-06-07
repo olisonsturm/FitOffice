@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ActiveTimerDialog extends StatelessWidget {
   final String title;
@@ -14,61 +15,61 @@ class ActiveTimerDialog extends StatelessWidget {
     required this.buttonText,
   });
 
-  factory ActiveTimerDialog.forAction(String actionType) {
+  factory ActiveTimerDialog.forAction(String actionType, BuildContext context) {
     switch (actionType) {
       case 'delete':
-        return const ActiveTimerDialog(
-          title: tActiveExercise,
-          message: tActiveExerciseDialogMessageDelete,
-          buttonText: tActiveExerciseAnswer,
+        return ActiveTimerDialog(
+          title: AppLocalizations.of(context)!.tActiveExercise,
+          message: AppLocalizations.of(context)!.tActiveExerciseDialogMessageDelete,
+          buttonText: AppLocalizations.of(context)!.tActiveExerciseAnswer,
         );
       case 'edit':
-        return const ActiveTimerDialog(
-          title: tActiveExercise,
-          message: tActiveExerciseDialogMessageEdit,
-          buttonText: tActiveExerciseAnswer,
+        return ActiveTimerDialog(
+          title: AppLocalizations.of(context)!.tActiveExercise,
+          message: AppLocalizations.of(context)!.tActiveExerciseDialogMessageEdit,
+          buttonText: AppLocalizations.of(context)!.tActiveExerciseAnswer,
         );
       case 'start':
-        return const ActiveTimerDialog(
-          title: tActiveExercise,
-          message: tActiveExerciseDialogMessageStart,
-          buttonText: tActiveExerciseAnswer,
+        return ActiveTimerDialog(
+          title: AppLocalizations.of(context)!.tActiveExercise,
+          message: AppLocalizations.of(context)!.tActiveExerciseDialogMessageStart,
+          buttonText: AppLocalizations.of(context)!.tActiveExerciseAnswer,
         );
         case 'editprofile':
-        return const ActiveTimerDialog(
-          title: tActiveExercise,
-          message: tActiveExerciseDialogMessageEditProfile,
-          buttonText: tActiveExerciseAnswer,
+        return ActiveTimerDialog(
+          title: AppLocalizations.of(context)!.tActiveExercise,
+          message: AppLocalizations.of(context)!.tActiveExerciseDialogMessageEditProfile,
+          buttonText: AppLocalizations.of(context)!.tActiveExerciseAnswer,
         );
         case 'logout':
-        return const ActiveTimerDialog(
-          title: tActiveExercise,
-          message: tActiveExerciseDialogMessageLogout,
-          buttonText: tActiveExerciseAnswer,
+        return ActiveTimerDialog(
+          title: AppLocalizations.of(context)!.tActiveExercise,
+          message: AppLocalizations.of(context)!.tActiveExerciseDialogMessageLogout,
+          buttonText: AppLocalizations.of(context)!.tActiveExerciseAnswer,
         );
         case 'addfriends':
-        return const ActiveTimerDialog(
-          title: tActiveExercise,
-          message: tActiveExerciseDialogMessageAddFriends,
-          buttonText: tActiveExerciseAnswer,
+        return ActiveTimerDialog(
+          title: AppLocalizations.of(context)!.tActiveExercise,
+          message: AppLocalizations.of(context)!.tActiveExerciseDialogMessageAddFriends,
+          buttonText: AppLocalizations.of(context)!.tActiveExerciseAnswer,
         );
         case 'viewfriends':
-        return const ActiveTimerDialog(
-          title: tActiveExercise,
-          message: tActiveExerciseDialogMessageViewFriends,
-          buttonText: tActiveExerciseAnswer,
+        return ActiveTimerDialog(
+          title: AppLocalizations.of(context)!.tActiveExercise,
+          message: AppLocalizations.of(context)!.tActiveExerciseDialogMessageViewFriends,
+          buttonText: AppLocalizations.of(context)!.tActiveExerciseAnswer,
         );
         case 'admin':
-        return const ActiveTimerDialog(
-          title: tActiveExercise,
-          message: tActiveExerciseDialogMessageAdmin,
-          buttonText: tActiveExerciseAnswer,
+        return ActiveTimerDialog(
+          title: AppLocalizations.of(context)!.tActiveExercise,
+          message: AppLocalizations.of(context)!.tActiveExerciseDialogMessageAdmin,
+          buttonText: AppLocalizations.of(context)!.tActiveExerciseAnswer,
         );
       default:
-        return const ActiveTimerDialog(
-          title: tActiveExercise,
-          message: tActiveExerciseDialogMessageDefault,
-          buttonText: tActiveExerciseAnswer,
+        return ActiveTimerDialog(
+          title: AppLocalizations.of(context)!.tActiveExercise,
+          message: AppLocalizations.of(context)!.tActiveExerciseDialogMessageDefault,
+          buttonText: AppLocalizations.of(context)!.tActiveExerciseAnswer,
         );
     }
   }

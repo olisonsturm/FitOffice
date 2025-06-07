@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StatisticsController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -187,7 +188,7 @@ class StatisticsController {
     }
   }
 
-  Future<Map<String, dynamic>?> getLongestStreak(String userEmail) async {
+  Future<Map<String, dynamic>?> getLongestStreak(String userEmail, BuildContext context) async {
     final userRef = await _getUserDocRef(userEmail);
 
     final allStreaksSnapshot = await userRef.collection('streaks').get();
@@ -224,7 +225,7 @@ class StatisticsController {
     return {
       'lengthInDays': maxDays,
       'startDate': _formatDate(longestStart!),
-      'endDate': isActiveStreak ? tStreakStillActive : _formatDate(longestEnd!),
+      'endDate': isActiveStreak ? AppLocalizations.of(context)!.tStreakStillActive : _formatDate(longestEnd!),
     };
   }
 

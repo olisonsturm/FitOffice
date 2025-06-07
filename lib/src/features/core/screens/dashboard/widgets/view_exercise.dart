@@ -122,7 +122,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
       await showUnifiedDialog(
         barrierDismissible: false,
         context: context,
-        builder: (_) => ActiveTimerDialog.forAction('edit'),
+        builder: (_) => ActiveTimerDialog.forAction('edit', context),
       );
       return;
     }

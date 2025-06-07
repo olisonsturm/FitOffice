@@ -246,7 +246,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
                         await showUnifiedDialog<void>(
                           context: context,
                           builder: (ctx) =>
-                              ActiveTimerDialog.forAction('start'),
+                              ActiveTimerDialog.forAction('start', context),
                         );
                         return;
                       }
@@ -282,7 +282,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
                           await showUnifiedDialog(
                             barrierDismissible: false,
                             context: context,
-                            builder: (_) => ActiveTimerDialog.forAction('edit'),
+                            builder: (_) => ActiveTimerDialog.forAction('edit', context),
                           );
                           return;
                         }
@@ -306,7 +306,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
                             barrierDismissible: false,
                             context: context,
                             builder: (_) =>
-                                ActiveTimerDialog.forAction('delete'),
+                                ActiveTimerDialog.forAction('delete', context),
                           );
                           return;
                         }

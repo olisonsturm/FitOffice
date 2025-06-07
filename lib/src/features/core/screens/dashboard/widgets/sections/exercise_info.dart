@@ -247,7 +247,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                 await showUnifiedDialog(
                                   context: context,
                                   builder: (_) =>
-                                      ActiveTimerDialog.forAction('start'),
+                                      ActiveTimerDialog.forAction('start', context),
                                 );
                                 return;
                               }
