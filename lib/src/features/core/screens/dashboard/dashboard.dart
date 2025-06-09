@@ -12,6 +12,7 @@ import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
+import '../../../authentication/models/user_model.dart';
 import '../../controllers/db_controller.dart';
 import '../../controllers/profile_controller.dart';
 import '../../controllers/statistics_controller.dart';
@@ -66,26 +67,47 @@ class DashboardState extends State<Dashboard> {
 
   void checkAndStartTutorial() async {
     final prefs = await SharedPreferences.getInstance();
-    final hasSeenTutorial = prefs.getBool('seenTutorial') ?? false;
+    final hasSeenTutorial = prefs.getBool('seenTutorial_${_currentUser.email}') ?? false;
 
     if (!hasSeenTutorial) {
       _initTargets();
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        TutorialCoachMark(
-          targets: targets,
-          alignSkip: Alignment.bottomRight,
-          onFinish: () {
-            prefs.setBool('seenTutorial', true);
-          },
-          onClickTarget: (target) {},
-          onSkip: () {
-            prefs.setBool('seenTutorial', true);
-            return true;
-          },
-          onClickOverlay: (target) {},
-        ).show(context: context);
+        startTutorialStep(0);
       });
     }
+  }
+
+  void startTutorialStep(int step) async{
+    setState(() {
+      _selectedIndex = step;
+    });
+
+    final user = await _profileController.getUserData();
+    Future.delayed(const Duration(milliseconds: 300), () {
+      tutorialCoachMark = TutorialCoachMark(
+        targets: targets,
+        alignSkip: Alignment.bottomRight,
+        onFinish: () {
+          if (step == targets.length - 1) {
+            SharedPreferences.getInstance().then((prefs) {
+              prefs.setBool('seenTutorial_${user.email}', true);
+            });
+          }
+        },
+        onClickTarget: (_) {},
+        onSkip: () {
+          SharedPreferences.getInstance().then((prefs) {
+            prefs.setBool('seenTutorial_${user.email}', true);
+          });
+          return true;
+        },
+        onClickOverlay: (_) {},
+      );
+
+      if (mounted) {
+        tutorialCoachMark.show(context: context);
+      }
+    });
   }
 
   void _initTargets() {
@@ -116,6 +138,32 @@ class DashboardState extends State<Dashboard> {
         ],
       ),
       TargetFocus(
+        identify: "full_screen_step",
+        shape: ShapeLightFocus.RRect,
+        enableOverlayTab: true,
+        radius: 0,
+        targetPosition: TargetPosition(Size.zero, Offset.zero),
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 120,
+                  width: 120,
+                  child: Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
+                ),
+                Text(
+                  "Hier siehst du die einzelnen Schritte",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                _buildNavigationButtons(1),
+              ],
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
         keyTarget: _libraryTabKey,
         enableOverlayTab: false,
         shape: ShapeLightFocus.Circle,
@@ -133,14 +181,14 @@ class DashboardState extends State<Dashboard> {
                   AppLocalizations.of(context)!.tLibraryTutorial,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                _buildNavigationButtons(1),
+                _buildNavigationButtons(2),
               ],
             ),
           ),
         ],
       ),
       TargetFocus(
-        keyTarget: _progressTabKey,
+        keyTarget: _statisticsTabKey,
         enableOverlayTab: false,
         shape: ShapeLightFocus.Circle,
         contents: [
@@ -157,14 +205,14 @@ class DashboardState extends State<Dashboard> {
                   AppLocalizations.of(context)!.tStatisticsTutorial,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                _buildNavigationButtons(0),
+                _buildNavigationButtons(3),
               ],
             ),
           ),
         ],
       ),
       TargetFocus(
-        keyTarget: _progressTabKey,
+        keyTarget: _profileTabKey,
         enableOverlayTab: false,
         shape: ShapeLightFocus.Circle,
         contents: [
@@ -181,7 +229,7 @@ class DashboardState extends State<Dashboard> {
                   AppLocalizations.of(context)!.tProfileTutorial,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                _buildNavigationButtons(0),
+                _buildNavigationButtons(4),
               ],
             ),
           ),
@@ -199,14 +247,14 @@ class DashboardState extends State<Dashboard> {
         if (step > 0)
           TextButton(
             onPressed: () {
-              tutorialCoachMark.previous();
+              startTutorialStep(step - 1);
             },
             child: Text(AppLocalizations.of(context)!.tBack),
           ),
         if (step < targets.length - 1)
           TextButton(
             onPressed: () {
-              tutorialCoachMark.next();
+              startTutorialStep(step + 1);
             },
             child: Text(AppLocalizations.of(context)!.tContinue),
           ),
@@ -214,6 +262,9 @@ class DashboardState extends State<Dashboard> {
           ElevatedButton(
             onPressed: () {
               tutorialCoachMark.finish();
+              SharedPreferences.getInstance().then((prefs) {
+                prefs.setBool('seenTutorial_${_currentUser.email}', true);
+              });
             },
             child: Text(AppLocalizations.of(context)!.tGotIt),
           ),
@@ -222,14 +273,22 @@ class DashboardState extends State<Dashboard> {
   }
 
   final StreakController _streakController = Get.put(StreakController());
+  late UserModel _currentUser;
 
   @override
   void initState() {
     super.initState();
+    _initializeDashboard();
+  }
+
+  void _initializeDashboard() async {
+    _currentUser = await _profileController.getUserData();
     _streakController.loadStreakData();
     _loadUserFavorites();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      checkAndStartTutorial();
+      Future.delayed(const Duration(milliseconds: 300), () {
+        checkAndStartTutorial();
+      });
     });
   }
 
