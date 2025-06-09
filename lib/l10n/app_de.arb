@@ -269,5 +269,11 @@
   "tProgress": "Fortschritt",
   "tLibrary": "Bibliothek",
   "tStatistics": "Statistiken",
-  "tChapter": "Kapitel"
+  "tChapter": "Kapitel",
+  "tProgressTutorial": "Hier kannst du deinen Fortschritt sehen.",
+  "tLibraryTutorial": "Hier kannst du alle Übungen finden.",
+  "tStatisticsTutorial": "Hier kannst du deine Statistiken sehen.",
+  "tProfileTutorial": "Hier kannst du dein Profil, Freunde und Einstellungen finden.",
+  "tBack": "Zurück",
+  "tGotIt": "Verstanden"
 }

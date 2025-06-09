@@ -269,5 +269,11 @@
   "tProgress": "Progress",
   "tLibrary": "Library",
   "tStatistics": "Statistics",
-  "tChapter": "Chapter"
+  "tChapter": "Chapter",
+  "tProgressTutorial": "Here you can find your progress.",
+  "tLibraryTutorial": "Here you can find all exercises.",
+  "tStatisticsTutorial": "Here you can see all your statistics.",
+  "tProfileTutorial": "Here you can find your profile, friends and settings.",
+  "tBack": "Back",
+  "tGotIt": "Got it"
 }
