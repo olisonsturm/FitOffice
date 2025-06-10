@@ -136,7 +136,7 @@ class DashboardState extends State<Dashboard> {
 
     _languageSelectionCoachMark = TutorialCoachMark(
       targets: [languageTarget],
-      alignSkip: Alignment.bottomRight,
+      alignSkip: Alignment.topRight,
       onFinish: () {},
       onClickTarget: (_) {},
       onSkip: () {
@@ -167,42 +167,72 @@ class DashboardState extends State<Dashboard> {
   }
 
   int tutorialStep = 0;
+  int counter = 0;
 
   void startTutorialStep(int step) async {
-    if (step >= targets.length || step < 0) {
-      return;
-    }
+    if (_isShowingTutorial) return;
+    _isShowingTutorial = true;
+
+    if (step >= targets.length || step < 0) return;
+
     tutorialCoachMark?.finish();
 
     final user = await _profileController.getUserData();
+
     setState(() {
       tutorialStep = step;
-      if (step == 1) {
-      } else if (step > 1) {
-        _selectedIndex = step - 1;
-      } else {
-        _selectedIndex = step;
+
+      final currentTarget = targets[step];
+      final key = currentTarget.keyTarget;
+
+      if (key == _progressTabKey) {
+        _selectedIndex = 0;
+      } else if (key == _libraryTabKey) {
+        _selectedIndex = 1;
+      } else if (key == _statisticsTabKey) {
+        _selectedIndex = 2;
+      } else if (key == _profileTabKey) {
+        _selectedIndex = 3;
       }
     });
+
     Future.delayed(const Duration(milliseconds: 300), () {
       tutorialCoachMark = TutorialCoachMark(
         initialFocus: step,
         targets: targets,
-        alignSkip: Alignment.bottomRight,
+        alignSkip: Alignment.topRight,
         onFinish: () {
           if (step == targets.length - 1) {
             SharedPreferences.getInstance().then((prefs) {
               prefs.setBool('seenTutorial_${user.email}', true);
             });
           }
+          _isShowingTutorial = false;
         },
         onClickTarget: (_) {
-
+          setState(() {
+            switch (counter) {
+              case 0:
+                _selectedIndex = 0;
+              case 1:
+                _selectedIndex = 1;
+              case 2:
+                _selectedIndex = 2;
+              case 3:
+                _selectedIndex = 3;
+              case 4:
+                _selectedIndex = 3;
+              default:
+                _selectedIndex = 0;
+            }
+            counter++;
+          });
         },
         onSkip: () {
           SharedPreferences.getInstance().then((prefs) {
             prefs.setBool('seenTutorial_${user.email}', true);
           });
+          _isShowingTutorial = false;
           return true;
         },
         onClickOverlay: (_) {},
@@ -225,8 +255,6 @@ class DashboardState extends State<Dashboard> {
     });
   }
 
-
-
   void _initTargets() {
     targets.clear();
     targets.addAll([
@@ -237,7 +265,7 @@ class DashboardState extends State<Dashboard> {
         contents: [
           TargetContent(
             align: ContentAlign.top,
-              child: Column(
+            child: Column(
               children: [
                 SizedBox(
                   height: 120,
@@ -253,8 +281,8 @@ class DashboardState extends State<Dashboard> {
                 ),
                 _buildNavigationButtons(0),
               ],
-              ),
             ),
+          ),
         ],
       ),
       TargetFocus(
@@ -400,6 +428,7 @@ class DashboardState extends State<Dashboard> {
 
   final StreakController _streakController = Get.put(StreakController());
   late UserModel _currentUser;
+  bool _isShowingTutorial = false;
 
   @override
   void initState() {
@@ -476,7 +505,7 @@ class DashboardState extends State<Dashboard> {
         unselectedItemColor: tBottomNavBarUnselectedColor,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.route, key: _progressTabKey),
+            icon: Container(key: _progressTabKey, child: Icon(Icons.route)),
             label: AppLocalizations.of(context)!.tProgress,
           ),
           BottomNavigationBarItem(
