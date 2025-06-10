@@ -275,5 +275,7 @@
   "tStatisticsTutorial": "Hier kannst du deine Statistiken sehen.",
   "tProfileTutorial": "Hier kannst du dein Profil, Freunde und Einstellungen finden.",
   "tBack": "Zurück",
-  "tGotIt": "Verstanden"
+  "tGotIt": "Verstanden",
+  "tTutorialLanguage": "Hi, ich bin FittyFuchs. Ich würde dir gerne FitOffice zeigen. Wähle deine Sprache.",
+  "tLanguageChange": "Du kannst die Sprache später im Profil ändern."
 }

@@ -35,6 +35,7 @@ class DashboardState extends State<Dashboard> {
   final GlobalKey _statisticsTabKey = GlobalKey();
   final GlobalKey _profileTabKey = GlobalKey();
   List<TargetFocus> targets = [];
+  TutorialCoachMark? _languageSelectionCoachMark;
 
   int _selectedIndex = 0;
   String favoriteCount = '';
@@ -61,30 +62,131 @@ class DashboardState extends State<Dashboard> {
         userFavorites.map((e) => e['name'] as String).toList();
 
     setState(() {
-      favoriteCount = "${favoriteNames.length} ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
+      favoriteCount =
+          "${favoriteNames.length} ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
     });
   }
 
   void checkAndStartTutorial() async {
     final prefs = await SharedPreferences.getInstance();
-    final hasSeenTutorial = prefs.getBool('seenTutorial_${_currentUser.email}') ?? false;
+    final hasSeenTutorial =
+        prefs.getBool('seenTutorial_${_currentUser.email}') ?? false;
 
     if (!hasSeenTutorial) {
-      _initTargets();
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        startTutorialStep(0);
-      });
+      _showLanguageSelection();
     }
   }
 
-  void startTutorialStep(int step) async{
-    setState(() {
-      _selectedIndex = step;
+  void _showLanguageSelection() {
+    final languageTarget = TargetFocus(
+      identify: "language_select",
+      shape: ShapeLightFocus.RRect,
+      enableOverlayTab: false,
+      radius: 10,
+      targetPosition: TargetPosition(Size.zero, Offset.zero),
+      contents: [
+        TargetContent(
+          align: ContentAlign.bottom,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 120,
+                width: 120,
+                child: Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
+              ),
+              Text(
+                AppLocalizations.of(context)!.tTutorialLanguage,
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => _selectLanguageAndContinue('en'),
+                        child: const Text('English 🇬🇧'),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => _selectLanguageAndContinue('de'),
+                        child: const Text('Deutsch 🇩🇪'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                AppLocalizations.of(context)!.tLanguageChange,
+                style: const TextStyle(fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    _languageSelectionCoachMark = TutorialCoachMark(
+      targets: [languageTarget],
+      alignSkip: Alignment.bottomRight,
+      onFinish: () {},
+      onClickTarget: (_) {},
+      onSkip: () {
+        return true;
+      },
+      onClickOverlay: (_) {},
+      colorShadow: Colors.red,
+    );
+
+    if (mounted) {
+      _languageSelectionCoachMark!.show(context: context);
+    }
+  }
+
+  Future<void> _selectLanguageAndContinue(String languageCode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('locale', languageCode);
+    Get.updateLocale(Locale(languageCode));
+
+    Future.delayed(const Duration(milliseconds: 200), () {
+      _languageSelectionCoachMark?.finish();
     });
 
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    _initTargets();
+    startTutorialStep(0);
+  }
+
+  int tutorialStep = 0;
+
+  void startTutorialStep(int step) async {
+    if (step >= targets.length || step < 0) {
+      return;
+    }
+    tutorialCoachMark?.finish();
+
     final user = await _profileController.getUserData();
+    setState(() {
+      tutorialStep = step;
+      if (step == 1) {
+      } else if (step > 1) {
+        _selectedIndex = step - 1;
+      } else {
+        _selectedIndex = step;
+      }
+    });
     Future.delayed(const Duration(milliseconds: 300), () {
       tutorialCoachMark = TutorialCoachMark(
+        initialFocus: step,
         targets: targets,
         alignSkip: Alignment.bottomRight,
         onFinish: () {
@@ -94,7 +196,9 @@ class DashboardState extends State<Dashboard> {
             });
           }
         },
-        onClickTarget: (_) {},
+        onClickTarget: (_) {
+
+        },
         onSkip: () {
           SharedPreferences.getInstance().then((prefs) {
             prefs.setBool('seenTutorial_${user.email}', true);
@@ -105,10 +209,23 @@ class DashboardState extends State<Dashboard> {
       );
 
       if (mounted) {
-        tutorialCoachMark.show(context: context);
+        tutorialCoachMark!.show(context: context);
       }
     });
   }
+
+  Future<void> changeTutorialLanguage(String languageCode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('locale', languageCode);
+    Get.updateLocale(Locale(languageCode));
+
+    Future.delayed(const Duration(milliseconds: 300), () {
+      _initTargets();
+      startTutorialStep(0);
+    });
+  }
+
+
 
   void _initTargets() {
     targets.clear();
@@ -120,7 +237,7 @@ class DashboardState extends State<Dashboard> {
         contents: [
           TargetContent(
             align: ContentAlign.top,
-            child: Column(
+              child: Column(
               children: [
                 SizedBox(
                   height: 120,
@@ -129,12 +246,15 @@ class DashboardState extends State<Dashboard> {
                 ),
                 Text(
                   AppLocalizations.of(context)!.tProgressTutorial,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
                 _buildNavigationButtons(0),
               ],
+              ),
             ),
-          ),
         ],
       ),
       TargetFocus(
@@ -179,7 +299,10 @@ class DashboardState extends State<Dashboard> {
                 ),
                 Text(
                   AppLocalizations.of(context)!.tLibraryTutorial,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
                 _buildNavigationButtons(2),
               ],
@@ -203,7 +326,10 @@ class DashboardState extends State<Dashboard> {
                 ),
                 Text(
                   AppLocalizations.of(context)!.tStatisticsTutorial,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
                 _buildNavigationButtons(3),
               ],
@@ -238,7 +364,7 @@ class DashboardState extends State<Dashboard> {
     ]);
   }
 
-  late TutorialCoachMark tutorialCoachMark;
+  TutorialCoachMark? tutorialCoachMark;
 
   Widget _buildNavigationButtons(int step) {
     return Row(
@@ -261,7 +387,7 @@ class DashboardState extends State<Dashboard> {
         if (step == targets.length - 1)
           ElevatedButton(
             onPressed: () {
-              tutorialCoachMark.finish();
+              tutorialCoachMark!.finish();
               SharedPreferences.getInstance().then((prefs) {
                 prefs.setBool('seenTutorial_${_currentUser.email}', true);
               });
@@ -291,7 +417,6 @@ class DashboardState extends State<Dashboard> {
       });
     });
   }
-
 
   @override
   Widget build(BuildContext context) {

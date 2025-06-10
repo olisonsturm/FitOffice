@@ -275,5 +275,7 @@
   "tStatisticsTutorial": "Here you can see all your statistics.",
   "tProfileTutorial": "Here you can find your profile, friends and settings.",
   "tBack": "Back",
-  "tGotIt": "Got it"
+  "tGotIt": "Got it",
+  "tTutorialLanguage": "Hi, my name is FittyFuchs. I'd like to show you FitOffice. Choose your tutorial language.",
+  "tLanguageChange": "You can change this anytime in your profile."
 }
