@@ -188,71 +188,73 @@ class DashboardState extends State<Dashboard> {
     });
 
     Future.delayed(const Duration(milliseconds: 300), () {
-      tutorialCoachMark = TutorialCoachMark(
-        initialFocus: step,
-        targets: targets,
-        alignSkip: Alignment.topRight,
-        skipWidget: Padding(
-          padding: const EdgeInsets.only(top: 40.0, right: 16.0),
-          child: Align(
-            alignment: Alignment.topRight,
-            child: GestureDetector(
-              onTap: () {
-                tutorialCoachMark?.skip();
-              },
-              child: Text(
-                AppLocalizations.of(context)!.tSkip,
-                style: TextStyle(
-                  color: Get.context?.theme.brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+      if (mounted) {
+        tutorialCoachMark = TutorialCoachMark(
+          initialFocus: step,
+          targets: targets,
+          alignSkip: Alignment.topRight,
+          skipWidget: Padding(
+            padding: const EdgeInsets.only(top: 40.0, right: 16.0),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: GestureDetector(
+                onTap: () {
+                  tutorialCoachMark?.skip();
+                },
+                child: Text(
+                  AppLocalizations.of(context)!.tSkip,
+                  style: TextStyle(
+                    color: Get.context?.theme.brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        onFinish: () {
-          SharedPreferences.getInstance().then((prefs) {
-            prefs.setBool('seenTutorial_${user.email}', true);
-          });
-          _isShowingTutorial = false;
-        },
-        onClickTarget: (target) async {
-          setState(() {
-            switch (counter) {
-              case 0:
-                _selectedIndex = 0;
-              case 1:
-                _selectedIndex = 1;
-              case 2:
-                _selectedIndex = 2;
-              case 3:
-                _selectedIndex = 3;
-              case 4:
-                _selectedIndex = 3;
-              default:
-                _selectedIndex = 0;
-            }
-            counter++;
-          });
-
-          if (target.identify == "full_screen_step_profile_2") {
+          onFinish: () {
             SharedPreferences.getInstance().then((prefs) {
               prefs.setBool('seenTutorial_${user.email}', true);
             });
-          }
-        },
-        onSkip: () {
-          SharedPreferences.getInstance().then((prefs) {
-            prefs.setBool('seenTutorial_${user.email}', true);
-          });
-          _isShowingTutorial = false;
-          return true;
-        },
-        onClickOverlay: (_) {},
-      );
+            _isShowingTutorial = false;
+          },
+          onClickTarget: (target) async {
+            setState(() {
+              switch (counter) {
+                case 0:
+                  _selectedIndex = 0;
+                case 1:
+                  _selectedIndex = 1;
+                case 2:
+                  _selectedIndex = 2;
+                case 3:
+                  _selectedIndex = 3;
+                case 4:
+                  _selectedIndex = 3;
+                default:
+                  _selectedIndex = 0;
+              }
+              counter++;
+            });
+
+            if (target.identify == "full_screen_step_profile_2") {
+              SharedPreferences.getInstance().then((prefs) {
+                prefs.setBool('seenTutorial_${user.email}', true);
+              });
+            }
+          },
+          onSkip: () {
+            SharedPreferences.getInstance().then((prefs) {
+              prefs.setBool('seenTutorial_${user.email}', true);
+            });
+            _isShowingTutorial = false;
+            return true;
+          },
+          onClickOverlay: (_) {},
+        );
+      }
 
       if (mounted) {
         tutorialCoachMark!.show(context: context);
@@ -295,7 +297,6 @@ class DashboardState extends State<Dashboard> {
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
                 ),
-                _buildNavigationButtons(0),
               ],
             ),
           ),
@@ -339,8 +340,6 @@ class DashboardState extends State<Dashboard> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  _buildNavigationButtons(1),
                 ],
               ),
             ),
@@ -368,7 +367,6 @@ class DashboardState extends State<Dashboard> {
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
                 ),
-                _buildNavigationButtons(2),
               ],
             ),
           ),
@@ -422,7 +420,6 @@ class DashboardState extends State<Dashboard> {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        _buildNavigationButtons(2),
                       ],
                     ),
                   ),
@@ -453,7 +450,6 @@ class DashboardState extends State<Dashboard> {
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
                 ),
-                _buildNavigationButtons(3),
               ],
             ),
           ),
@@ -632,7 +628,6 @@ class DashboardState extends State<Dashboard> {
                           ? Colors.white
                           : Colors.white),
                 ),
-                _buildNavigationButtons(4),
               ],
             ),
           ),
@@ -742,38 +737,6 @@ class DashboardState extends State<Dashboard> {
   }
 
   TutorialCoachMark? tutorialCoachMark;
-
-  Widget _buildNavigationButtons(int step) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        if (step > 0)
-          TextButton(
-            onPressed: () {
-              startTutorialStep(step - 1);
-            },
-            child: Text(AppLocalizations.of(context)!.tBack),
-          ),
-        if (step < targets.length - 1)
-          TextButton(
-            onPressed: () {
-              startTutorialStep(step + 1);
-            },
-            child: Text(AppLocalizations.of(context)!.tContinue),
-          ),
-        if (step == targets.length - 1)
-          ElevatedButton(
-            onPressed: () {
-              tutorialCoachMark!.finish();
-              SharedPreferences.getInstance().then((prefs) {
-                prefs.setBool('seenTutorial_${_currentUser.email}', true);
-              });
-            },
-            child: Text(AppLocalizations.of(context)!.tGotIt),
-          ),
-      ],
-    );
-  }
 
   final StreakController _streakController = Get.put(StreakController());
   late UserModel _currentUser;
