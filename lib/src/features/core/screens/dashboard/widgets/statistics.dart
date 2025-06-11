@@ -171,14 +171,14 @@ class StatisticsWidget extends StatelessWidget {
                 return _styledCard(
                   icon: Icons.schedule,
                   iconColor: Colors.white,
-                  title: 'Zeitpunkt der letzten Übung',
+                  title: AppLocalizations.of(context)!.tLastExercise,
                   content: stepsSnapshot.data!,
                 );
               } else {
                 return _styledCard(
                   icon: Icons.schedule,
                   iconColor: Colors.white,
-                  title: 'Zeitpunkt der letzten Übung',
+                  title: AppLocalizations.of(context)!.tLastExercise,
                   content: 'Keine Übungen vorhanden.',
                 );
               }
@@ -216,14 +216,14 @@ class StatisticsWidget extends StatelessWidget {
                 return _styledCard(
                   icon: Icons.run_circle,
                   iconColor: Colors.white,
-                  title: 'Dauer der letzten Übung',
+                  title: AppLocalizations.of(context)!.tDurationLastExercise,
                   content: stepsSnapshot.data!,
                 );
               } else {
                 return _styledCard(
                   icon: Icons.run_circle,
                   iconColor: Colors.white,
-                  title: 'Dauer der letzten Übung',
+                  title: AppLocalizations.of(context)!.tDurationLastExercise,
                   content: 'Keine Übungen vorhanden.',
                 );
               }

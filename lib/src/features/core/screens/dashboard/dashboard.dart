@@ -192,6 +192,25 @@ class DashboardState extends State<Dashboard> {
         initialFocus: step,
         targets: targets,
         alignSkip: Alignment.topRight,
+        skipWidget: Padding(
+          padding: const EdgeInsets.only(top: 40.0, right: 16.0),
+          child: Align(
+            alignment: Alignment.topRight,
+            child: GestureDetector(
+              onTap: () {
+                tutorialCoachMark?.skip();
+              },
+              child: Text(
+                AppLocalizations.of(context)!.tSkip,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        ),
         onFinish: () {
           if (step == targets.length - 1) {
             SharedPreferences.getInstance().then((prefs) {
@@ -259,8 +278,8 @@ class DashboardState extends State<Dashboard> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 120,
-                  width: 120,
+                  height: 130,
+                  width: 180,
                   child: Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
                 ),
                 Text(
@@ -531,7 +550,7 @@ class DashboardState extends State<Dashboard> {
         ],
       ),
       TargetFocus(
-        identify: "full_screen_step_statistics",
+        identify: "full_screen_step_statistics_3",
         shape: ShapeLightFocus.RRect,
         enableOverlayTab: true,
         radius: 0,
@@ -598,6 +617,102 @@ class DashboardState extends State<Dashboard> {
                 ),
                 _buildNavigationButtons(4),
               ],
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: "full_screen_step_profile",
+        shape: ShapeLightFocus.RRect,
+        enableOverlayTab: true,
+        radius: 0,
+        targetPosition: TargetPosition(Size.zero, Offset.zero),
+        contents: [
+          TargetContent(
+            align: ContentAlign.custom,
+            customPosition: CustomTargetContentPosition(
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            ),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 120),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: 130,
+                      width: 180,
+                      child: Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: Text(
+                        AppLocalizations.of(context)!.tTutorialProfile,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Get.context?.theme.brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: "full_screen_step_profile_2",
+        shape: ShapeLightFocus.RRect,
+        enableOverlayTab: true,
+        radius: 0,
+        targetPosition: TargetPosition(Size.zero, Offset.zero),
+        contents: [
+          TargetContent(
+            align: ContentAlign.custom,
+            customPosition: CustomTargetContentPosition(
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            ),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 120),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: 130,
+                      width: 180,
+                      child: Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: Text(
+                        AppLocalizations.of(context)!.tTutorialProfile2,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Get.context?.theme.brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],

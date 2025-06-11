@@ -283,5 +283,10 @@
   "tTutorialStatistics": "Here you will find all the important statistics. You can activate a streak by doing one exercise per day for 5 minutes. You will receive one step for each day. The number of steps is displayed at the top left of the flame. But beware: the streak will be reset to 0 if you exercise for less than 5 minutes! Click to continue.",
   "tTutorialStatistics1": "Here you will find all the important statistics. You can activate a streak by doing one exercise per day for 5 minutes.",
   "tTutorialStatistics2": "You will receive one step for each day. The number of steps is displayed at the top left of the flame.",
-  "tTutorialStatistics3": "But beware: the streak will be reset to 0 if you exercise for less than 5 minutes! Click to continue."
+  "tTutorialStatistics3": "But beware: the streak will be reset to 0 if you exercise for less than 5 minutes! Click to continue.",
+  "tLastExercise": "Last exercise done",
+  "tDurationLastExercise": "Duration of last exercise",
+  "tTutorialProfile": "That's the profile site. Here you can edit your profile and make friends. All necessary settings can be found here.",
+  "tTutorialProfile2": "That's all from me. I wish you much fun exploring the app. There are many interesting functionalities to explore! See you!",
+  "tSkip": "Skip"
 }
