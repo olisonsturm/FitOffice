@@ -85,53 +85,65 @@ class GlobalExerciseOverlay {
                       ),
                       child: Row(
                         children: [
-                          GestureDetector(
-                            onTap: () {
-                              final exerciseData = {
-                                'name': timerController.exerciseName.value,
-                                'category':
-                                    timerController.exerciseCategory.value,
-                              };
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => ExerciseDetailScreen(
-                                    exerciseData: exerciseData,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Row(
-                              children: [
-                                const Icon(Icons.fitness_center,
-                                    color: tWhiteColor),
-                                const SizedBox(width: 12),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      timerController.exerciseName.value,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        color: tWhiteColor,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
+                          /// Text- & Icon-Bereich links
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                final exerciseData = {
+                                  'name': timerController.exerciseName.value,
+                                  'category':
                                       timerController.exerciseCategory.value,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        color: tPaleWhiteColor,
-                                        fontSize: 13,
-                                      ),
+                                };
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => ExerciseDetailScreen(
+                                      exerciseData: exerciseData,
                                     ),
-                                  ],
-                                ),
-                              ],
+                                  ),
+                                );
+                              },
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.fitness_center,
+                                      color: tWhiteColor),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          timerController.exerciseName.value,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: const TextStyle(
+                                            color: tWhiteColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          timerController
+                                              .exerciseCategory.value,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: const TextStyle(
+                                            color: tPaleWhiteColor,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          const Spacer(),
+
+                          const SizedBox(width: 12),
+
+                          /// Timer
                           Text(
                             timerController.formattedTime.value,
                             style: const TextStyle(
@@ -140,10 +152,14 @@ class GlobalExerciseOverlay {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
+
                           const SizedBox(width: 12),
+
+                          /// Steuer-Buttons
                           SizedBox(
                             height: 48,
                             child: Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 if (!hideControlButtons) ...[
                                   IconButton(
@@ -165,10 +181,9 @@ class GlobalExerciseOverlay {
                                     icon: const Icon(Icons.check_circle,
                                         color: tWhiteColor),
                                     onPressed: () async {
-                                      final libraryState =
-                                          context.findAncestorStateOfType<
+                                      final libraryState = context
+                                          .findAncestorStateOfType<
                                               LibraryScreenState>();
-
                                       final confirmed =
                                           await showUnifiedDialog<bool>(
                                         barrierDismissible: false,
@@ -179,9 +194,9 @@ class GlobalExerciseOverlay {
                                               .exerciseName.value,
                                         ),
                                       );
-
                                       if (confirmed == true) {
-                                        timerController.stopAndSave(shouldSave: true);
+                                        timerController.stopAndSave(
+                                            shouldSave: true);
                                       }
                                     },
                                   ),
@@ -189,10 +204,9 @@ class GlobalExerciseOverlay {
                                     icon: const Icon(Icons.cancel,
                                         color: tWhiteColor),
                                     onPressed: () async {
-                                      final libraryState =
-                                          context.findAncestorStateOfType<
+                                      final libraryState = context
+                                          .findAncestorStateOfType<
                                               LibraryScreenState>();
-
                                       final confirmed =
                                           await showUnifiedDialog<bool>(
                                         barrierDismissible: false,
@@ -203,9 +217,9 @@ class GlobalExerciseOverlay {
                                               .exerciseName.value,
                                         ),
                                       );
-
                                       if (confirmed == true) {
-                                        timerController.stopAndSave(shouldSave: false);
+                                        timerController.stopAndSave(
+                                            shouldSave: false);
                                       }
                                     },
                                   ),

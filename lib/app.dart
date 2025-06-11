@@ -15,11 +15,6 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-
-    /// -- Hier nach dem Build das Overlay initialisieren TODO: Das Overlay wird ein zweites Mal initalisiert???
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      GlobalExerciseOverlay().init(Get.context!);
-    });
   }
 
   @override
