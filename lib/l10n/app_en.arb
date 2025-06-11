@@ -277,5 +277,7 @@
   "tBack": "Back",
   "tGotIt": "Got it",
   "tTutorialLanguage": "Hi, my name is FittyFuchs. I'd like to show you FitOffice. Choose your tutorial language.",
-  "tLanguageChange": "You can change this anytime in your profile."
+  "tLanguageChange": "You can change this anytime in your profile.",
+  "tTutorialCategories": "You can choose between exercises of different categories. Click anywhere to continue.",
+  "tTutorialSteps": "Here you can see your steps. If you do exercises of 5 minutes per day, you will make one step forward. Click to continue."
 }

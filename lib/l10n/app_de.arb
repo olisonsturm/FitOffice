@@ -277,5 +277,7 @@
   "tBack": "Zurück",
   "tGotIt": "Verstanden",
   "tTutorialLanguage": "Hi, ich bin FittyFuchs. Ich würde dir gerne FitOffice zeigen. Wähle deine Sprache.",
-  "tLanguageChange": "Du kannst die Sprache später im Profil ändern."
+  "tLanguageChange": "Du kannst die Sprache später im Profil ändern.",
+  "tTutorialCategories": "Du kannst zwischen Übungen aus verschiedenen Kategorien wählen. Klicke um fortzufahren.",
+  "tTutorialSteps": "Hier siehst du deine gemachten Schritte. Für jeden Tag an dem du mindestens 5 Minuten lang Übungen machst, machst du einen Schritt nach vorne. Klicke um fortzufahren."
 }

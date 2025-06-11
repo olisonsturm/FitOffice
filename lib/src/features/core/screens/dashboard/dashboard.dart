@@ -35,7 +35,6 @@ class DashboardState extends State<Dashboard> {
   final GlobalKey _statisticsTabKey = GlobalKey();
   final GlobalKey _profileTabKey = GlobalKey();
   List<TargetFocus> targets = [];
-  TutorialCoachMark? _languageSelectionCoachMark;
 
   int _selectedIndex = 0;
   String favoriteCount = '';
@@ -78,77 +77,70 @@ class DashboardState extends State<Dashboard> {
   }
 
   void _showLanguageSelection() {
-    final languageTarget = TargetFocus(
-      identify: "language_select",
-      shape: ShapeLightFocus.RRect,
-      enableOverlayTab: false,
-      radius: 10,
-      targetPosition: TargetPosition(Size.zero, Offset.zero),
-      contents: [
-        TargetContent(
-          align: ContentAlign.bottom,
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => Dialog(
+        backgroundColor: Get.context?.theme.brightness == Brightness.dark
+            ? Colors.black
+            : Colors.white,
+        insetPadding: EdgeInsets.zero,
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          padding: const EdgeInsets.all(32),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
                 height: 120,
                 width: 120,
                 child: Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
               ),
+              const SizedBox(height: 24),
               Text(
                 AppLocalizations.of(context)!.tTutorialLanguage,
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Get.context?.theme.brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () => _selectLanguageAndContinue('en'),
-                        child: const Text('English 🇬🇧'),
-                      ),
+              const SizedBox(height: 32),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => _selectLanguageAndContinue('en'),
+                      child: const Text('English 🇬🇧'),
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () => _selectLanguageAndContinue('de'),
-                        child: const Text('Deutsch 🇩🇪'),
-                      ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => _selectLanguageAndContinue('de'),
+                      child: const Text('Deutsch 🇩🇪'),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 32),
               Text(
                 AppLocalizations.of(context)!.tLanguageChange,
-                style: const TextStyle(fontSize: 14),
+                style: TextStyle(
+                    color: Get.context?.theme.brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black),
                 textAlign: TextAlign.center,
               ),
             ],
           ),
         ),
-      ],
+      ),
     );
-
-    _languageSelectionCoachMark = TutorialCoachMark(
-      targets: [languageTarget],
-      alignSkip: Alignment.topRight,
-      onFinish: () {},
-      onClickTarget: (_) {},
-      onSkip: () {
-        return true;
-      },
-      onClickOverlay: (_) {},
-      colorShadow: Colors.red,
-    );
-
-    if (mounted) {
-      _languageSelectionCoachMark!.show(context: context);
-    }
   }
 
   Future<void> _selectLanguageAndContinue(String languageCode) async {
@@ -156,12 +148,11 @@ class DashboardState extends State<Dashboard> {
     await prefs.setString('locale', languageCode);
     Get.updateLocale(Locale(languageCode));
 
-    Future.delayed(const Duration(milliseconds: 200), () {
-      _languageSelectionCoachMark?.finish();
-    });
+    if (mounted) {
+      Navigator.of(context).pop();
+    }
 
     await Future.delayed(const Duration(milliseconds: 300));
-
     _initTargets();
     startTutorialStep(0);
   }
@@ -293,20 +284,40 @@ class DashboardState extends State<Dashboard> {
         targetPosition: TargetPosition(Size.zero, Offset.zero),
         contents: [
           TargetContent(
-            align: ContentAlign.bottom,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 120,
-                  width: 120,
-                  child: Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
-                ),
-                Text(
-                  "Hier siehst du die einzelnen Schritte",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                _buildNavigationButtons(1),
-              ],
+            align: ContentAlign.custom,
+            customPosition: CustomTargetContentPosition(
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: 130,
+                    width: 180,
+                    child: Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Text(
+                      AppLocalizations.of(context)!.tTutorialSteps,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Get.context?.theme.brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildNavigationButtons(1),
+                ],
+              ),
             ),
           ),
         ],
@@ -321,8 +332,8 @@ class DashboardState extends State<Dashboard> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 120,
-                  width: 120,
+                  height: 130,
+                  width: 180,
                   child: Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
                 ),
                 Text(
@@ -339,6 +350,64 @@ class DashboardState extends State<Dashboard> {
         ],
       ),
       TargetFocus(
+        identify: "mind_favorites_info",
+        shape: ShapeLightFocus.RRect,
+        enableOverlayTab: true,
+        radius: 0,
+        targetPosition: TargetPosition(Size.zero, Offset.zero),
+        contents: [
+          TargetContent(
+            align: ContentAlign.custom,
+            customPosition: CustomTargetContentPosition(
+              top: 200,
+              left: 0,
+              right: 0,
+            ),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.6,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          height: 130,
+                          width: 180,
+                          child: Lottie.asset(
+                            'assets/lottie/FittyFuchsOffice.json',
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 180,
+                          child: Text(
+                            AppLocalizations.of(context)!.tTutorialCategories,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Get.context?.theme.brightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        _buildNavigationButtons(2),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
         keyTarget: _statisticsTabKey,
         enableOverlayTab: false,
         shape: ShapeLightFocus.Circle,
@@ -348,8 +417,8 @@ class DashboardState extends State<Dashboard> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 120,
-                  width: 120,
+                  height: 130,
+                  width: 180,
                   child: Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
                 ),
                 Text(
@@ -375,8 +444,8 @@ class DashboardState extends State<Dashboard> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 120,
-                  width: 120,
+                  height: 130,
+                  width: 180,
                   child: Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
                 ),
                 Text(
