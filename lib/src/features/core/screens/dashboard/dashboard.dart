@@ -93,8 +93,8 @@ class DashboardState extends State<Dashboard> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: 120,
-                width: 120,
+                height: 130,
+                width: 180,
                 child: Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
               ),
               const SizedBox(height: 24),
@@ -203,7 +203,9 @@ class DashboardState extends State<Dashboard> {
               child: Text(
                 AppLocalizations.of(context)!.tSkip,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Get.context?.theme.brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
@@ -212,14 +214,12 @@ class DashboardState extends State<Dashboard> {
           ),
         ),
         onFinish: () {
-          if (step == targets.length - 1) {
-            SharedPreferences.getInstance().then((prefs) {
-              prefs.setBool('seenTutorial_${user.email}', true);
-            });
-          }
+          SharedPreferences.getInstance().then((prefs) {
+            prefs.setBool('seenTutorial_${user.email}', true);
+          });
           _isShowingTutorial = false;
         },
-        onClickTarget: (_) {
+        onClickTarget: (target) async {
           setState(() {
             switch (counter) {
               case 0:
@@ -237,6 +237,12 @@ class DashboardState extends State<Dashboard> {
             }
             counter++;
           });
+
+          if (target.identify == "full_screen_step_profile_2") {
+            SharedPreferences.getInstance().then((prefs) {
+              prefs.setBool('seenTutorial_${user.email}', true);
+            });
+          }
         },
         onSkip: () {
           SharedPreferences.getInstance().then((prefs) {
@@ -478,7 +484,8 @@ class DashboardState extends State<Dashboard> {
                     SizedBox(
                       height: 130,
                       width: 180,
-                      child: Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
+                      child:
+                          Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -487,9 +494,10 @@ class DashboardState extends State<Dashboard> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Get.context?.theme.brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
+                          color:
+                              Get.context?.theme.brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -526,7 +534,8 @@ class DashboardState extends State<Dashboard> {
                     SizedBox(
                       height: 130,
                       width: 180,
-                      child: Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
+                      child:
+                          Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -535,9 +544,10 @@ class DashboardState extends State<Dashboard> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Get.context?.theme.brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
+                          color:
+                              Get.context?.theme.brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -574,7 +584,8 @@ class DashboardState extends State<Dashboard> {
                     SizedBox(
                       height: 130,
                       width: 180,
-                      child: Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
+                      child:
+                          Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -583,9 +594,10 @@ class DashboardState extends State<Dashboard> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Get.context?.theme.brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
+                          color:
+                              Get.context?.theme.brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -613,7 +625,12 @@ class DashboardState extends State<Dashboard> {
                 ),
                 Text(
                   AppLocalizations.of(context)!.tProfileTutorial,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Get.context?.theme.brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.white),
                 ),
                 _buildNavigationButtons(4),
               ],
@@ -646,7 +663,8 @@ class DashboardState extends State<Dashboard> {
                     SizedBox(
                       height: 130,
                       width: 180,
-                      child: Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
+                      child:
+                          Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -655,9 +673,10 @@ class DashboardState extends State<Dashboard> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Get.context?.theme.brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
+                          color:
+                              Get.context?.theme.brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -694,7 +713,8 @@ class DashboardState extends State<Dashboard> {
                     SizedBox(
                       height: 130,
                       width: 180,
-                      child: Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
+                      child:
+                          Lottie.asset('assets/lottie/FittyFuchsOffice.json'),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -703,9 +723,10 @@ class DashboardState extends State<Dashboard> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Get.context?.theme.brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
+                          color:
+                              Get.context?.theme.brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
                         ),
                         textAlign: TextAlign.center,
                       ),
