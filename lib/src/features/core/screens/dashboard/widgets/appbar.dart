@@ -43,33 +43,47 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
     final themeController = Get.put(_ThemeController());
 
     final Widget centerTitle = subtitle == null
-        ? Text(
-            title,
-            style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: isDark ? tWhiteColor : tBlackColor),
-            textAlign: TextAlign.center,
-          )
-        : Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? tWhiteColor : tBlackColor),
-              ),
-              Text(
-                subtitle!,
-                style: TextStyle(
-                  fontSize: 14,
+        ? SizedBox(
+            width: MediaQuery.of(context).size.width * 0.5,
+            child: Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white70 : Colors.black45,
+                  color: isDark ? tWhiteColor : tBlackColor),
+              textAlign: TextAlign.center,
+            ),
+          )
+        : SizedBox(
+            width: MediaQuery.of(context).size.width * 0.4,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? tWhiteColor : tBlackColor),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-            ],
+                Text(
+                  subtitle!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white70 : Colors.black45,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           );
 
     return AppBar(
