@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/utils/app_bindings.dart';
 import 'package:fit_office/src/utils/theme/theme.dart';
-import 'package:fit_office/global_overlay.dart';
 
 class App extends StatefulWidget {
   final Locale initialLocale;
@@ -20,11 +19,6 @@ class _AppState extends State<App> {
     super.initState();
 
     _appLocale = widget.initialLocale;
-
-    /// -- Hier nach dem Build das Overlay initialisieren TODO: Das Overlay wird ein zweites Mal initalisiert???
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      GlobalExerciseOverlay().init(Get.context!);
-    });
   }
   late Locale _appLocale;
 
@@ -46,8 +40,8 @@ class _AppState extends State<App> {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: [
-        Locale('en'), // English
-        Locale('de'), // Spanish
+        Locale('en'),
+        Locale('de'),
       ],
 
       /// -- README(Docs[4]) -- To use Screen Transitions here
