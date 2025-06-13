@@ -4,7 +4,7 @@ import 'package:fit_office/src/features/core/screens/statistics/statistics_scree
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/colors.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/categories.dart';
 import 'package:fit_office/src/features/core/screens/profile/profile_screen.dart';
@@ -33,13 +33,13 @@ class DashboardState extends State<Dashboard> {
   String _getPageTitle() {
     switch (_selectedIndex) {
       case 0:
-        return 'Progress';
+        return AppLocalizations.of(context)!.tProgress;
       case 1:
-        return 'Library';
+        return AppLocalizations.of(context)!.tLibrary;
       case 2:
-        return 'Statistics';
+        return AppLocalizations.of(context)!.tStatistics;
       case 3:
-        return 'Profile';
+        return AppLocalizations.of(context)!.tProfile;
       default:
         return '';
     }
@@ -52,7 +52,7 @@ class DashboardState extends State<Dashboard> {
         userFavorites.map((e) => e['name'] as String).toList();
 
     setState(() {
-      favoriteCount = "${favoriteNames.length} $tDashboardExerciseUnits";
+      favoriteCount = "${favoriteNames.length} ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
     });
   }
 
@@ -68,9 +68,6 @@ class DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    final txtTheme = Theme.of(context).textTheme;
-    final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
     return Scaffold(
       appBar: SliderAppBar(
         title: _getPageTitle(),
@@ -83,8 +80,8 @@ class DashboardState extends State<Dashboard> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const ExerciseFilter(
-                heading: tFavorites,
+              builder: (context) => ExerciseFilter(
+                heading: AppLocalizations.of(context)!.tFavorites,
                 showOnlyFavorites: true,
               ),
             ),
@@ -126,22 +123,22 @@ class DashboardState extends State<Dashboard> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: tBottomNavBarSelectedColor,
         unselectedItemColor: tBottomNavBarUnselectedColor,
-        items: const [
+        items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.route),
-            label: 'Progress',
+            label: AppLocalizations.of(context)!.tProgress,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.book),
-            label: 'Library',
+            label: AppLocalizations.of(context)!.tLibrary,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.insert_chart),
-            label: 'Statistics',
+            label: AppLocalizations.of(context)!.tStatistics,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Profile',
+            label: AppLocalizations.of(context)!.tProfile,
           ),
         ],
       ),

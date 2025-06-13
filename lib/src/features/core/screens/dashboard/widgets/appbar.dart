@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit_office/src/constants/colors.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../controllers/statistics_controller.dart';
 
@@ -108,9 +108,9 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                   Obx(() {
                     final streakCtrl = Get.find<StreakController>();
                     if (streakCtrl.isLoading.value) {
-                      return const Text(tLoading);
+                      return Text(AppLocalizations.of(context)!.tLoading);
                     } else if (streakCtrl.isError.value) {
-                      return const Text(tError);
+                      return Text(AppLocalizations.of(context)!.tError);
                     }
 
                     final bool hasStreak = streakCtrl.hasStreak.value;

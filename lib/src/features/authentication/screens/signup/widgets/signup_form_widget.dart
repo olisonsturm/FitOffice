@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:fit_office/src/utils/helper/helper_controller.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../../common_widgets/buttons/primary_button.dart';
 import '../../../../../constants/colors.dart';
 import '../../../../../constants/sizes.dart';
-import '../../../../../constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../controllers/signup_controller.dart';
 
 //TODO: If the document of the user already exists, the user account will be still created.
@@ -28,13 +29,13 @@ class SignUpFormWidget extends StatelessWidget {
               TextFormField(
                 controller: controller.userName,
                 autofillHints: const [AutofillHints.username],
-                validator: Helper.validateUsername,
+                validator: (value) => Helper.validateUsername(value, context),
                 decoration: InputDecoration(
                   errorStyle: const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
                   label: RichText(
                     text: TextSpan(
-                      text: tUserName,
+                      text: AppLocalizations.of(context)!.tUserName,
                       style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
                       children: const [
                         TextSpan(
@@ -53,13 +54,13 @@ class SignUpFormWidget extends StatelessWidget {
               TextFormField(
                 controller: controller.fullName,
                 autofillHints: const [AutofillHints.name],
-                validator: Helper.validateFullName,
+                validator: (value) => Helper.validateFullName(value, context),
                 decoration: InputDecoration(
                   errorStyle: const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
                   label: RichText(
                     text: TextSpan(
-                      text: tFullName,
+                      text: AppLocalizations.of(context)!.tFullName,
                       style: TextStyle(color: isDark ? tWhiteColor : tBlackColor)
                     ),
                   ),
@@ -72,13 +73,13 @@ class SignUpFormWidget extends StatelessWidget {
               TextFormField(
                 controller: controller.email,
                 autofillHints: const [AutofillHints.email],
-                validator: Helper.validateEmail,
+                validator: (value) => Helper.validateEmail(value, context),
                 decoration: InputDecoration(
                   errorStyle: const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
                   label: RichText(
                     text: TextSpan(
-                      text: tEmail,
+                      text: AppLocalizations.of(context)!.tEmail,
                       style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
                       children: const [
                         TextSpan(
@@ -97,7 +98,7 @@ class SignUpFormWidget extends StatelessWidget {
               Obx(() => TextFormField(
                 controller: controller.password,
                 autofillHints: const [AutofillHints.newPassword],
-                validator: Helper.validatePassword,
+                validator: (value) => Helper.validatePassword(value, context),
                 obscureText: !controller.showPassword.value,
                 decoration: InputDecoration(
                   errorStyle:
@@ -105,7 +106,7 @@ class SignUpFormWidget extends StatelessWidget {
                   errorMaxLines: 3,
                   label: RichText(
                     text: TextSpan(
-                      text: tPassword,
+                      text: AppLocalizations.of(context)!.tPassword,
                       style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
                       children: const [
                         TextSpan(
@@ -133,7 +134,7 @@ class SignUpFormWidget extends StatelessWidget {
                 autofillHints: const [AutofillHints.newPassword],
                 obscureText: !controller.showPassword.value,
                 validator: (value) =>
-                    Helper.repeatPassword(value!, controller),
+                    Helper.repeatPassword(value!, controller, context),
                 decoration: InputDecoration(
                   errorStyle:
                   const TextStyle(overflow: TextOverflow.visible),
@@ -165,7 +166,7 @@ class SignUpFormWidget extends StatelessWidget {
               // Submit Button
               Obx(() => TPrimaryButton(
                 isLoading: controller.isLoading.value,
-                text: tSignup.tr,
+                text: AppLocalizations.of(context)!.tSignup.tr,
                 onPressed: () async {
                   if (controller.signupFormKey.currentState!.validate()) {
                     bool usernameExists = await Helper.isUsernameTaken(
@@ -173,7 +174,7 @@ class SignUpFormWidget extends StatelessWidget {
                     if (usernameExists) {
                       Helper.errorSnackBar(
                           title: 'Error',
-                          message: tUserNameAlreadyExists);
+                          message: AppLocalizations.of(context)!.tUserNameAlreadyExists);
                     } else {
                       controller.createUser();
                     }

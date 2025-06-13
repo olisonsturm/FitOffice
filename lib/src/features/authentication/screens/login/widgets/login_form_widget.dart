@@ -8,6 +8,7 @@ import '../../../../../constants/sizes.dart';
 import '../../../../../constants/text_strings.dart';
 import '../../../../../utils/helper/helper_controller.dart';
 import '../../forget_password/forget_password_options/forget_password_model_bottom_sheet.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginFormWidget extends StatelessWidget {
   const LoginFormWidget({super.key});
@@ -28,16 +29,16 @@ class LoginFormWidget extends StatelessWidget {
               TextFormField(
                 controller: controller.email,
                 autofillHints: const [AutofillHints.username],
-                validator: Helper.validateEmail,
+                validator: (value) => Helper.validateEmail(value, context),
                 decoration: InputDecoration(
                   prefixIcon: Icon(LineAwesomeIcons.user),
-                  hintText: tEmail,
+                  hintText: AppLocalizations.of(context)!.tEmail,
                   errorStyle:
                   const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
                   label: RichText(
                     text: TextSpan(
-                      text: tEmail,
+                      text: AppLocalizations.of(context)!.tEmail,
                       style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
                     ),
                   ),
@@ -56,11 +57,11 @@ class LoginFormWidget extends StatelessWidget {
                   prefixIcon: const Icon(Icons.fingerprint),
                   label: RichText(
                     text: TextSpan(
-                      text: tPassword,
+                      text: AppLocalizations.of(context)!.tPassword,
                       style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
                     ),
                   ),
-                  hintText: tPassword,
+                  hintText: AppLocalizations.of(context)!.tPassword,
                   suffixIcon: IconButton(
                     icon: controller.showPassword.value
                         ? const Icon(LineAwesomeIcons.eye)
@@ -84,7 +85,7 @@ class LoginFormWidget extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 0),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  child: const Text(tForgotPassword,
+                  child: Text(AppLocalizations.of(context)!.tForgotPassword,
                       style: TextStyle(
                         color: Colors.blue,
                         fontSize: 14,
@@ -95,10 +96,10 @@ class LoginFormWidget extends StatelessWidget {
               // Login Button
               Obx(() => TPrimaryButton(
                 isLoading: controller.isLoading.value,
-                text: tLogin.tr,
+                text: AppLocalizations.of(context)!.tLogin.tr,
                 onPressed: controller.isLoading.value
                     ? () {}
-                    : () => controller.login(),
+                    : () => controller.login(context),
               )),
             ],
           ),

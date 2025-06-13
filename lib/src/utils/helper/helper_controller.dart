@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../constants/colors.dart';
 import '../../constants/sizes.dart';
 import '../../constants/text_strings.dart';
@@ -10,10 +11,10 @@ class Helper extends GetxController {
 
 
   /* -- ============= VALIDATIONS ================ -- */
-  static String? validateUsername(String? value) {
-    if (value!.isEmpty) return tUserNameCannotEmpty;
-    if (!RegExp(r'^[a-z0-9._]+$').hasMatch(value)) return tInvalidUserName;
-    if (value.length < 4) return tUserNameLength;
+  static String? validateUsername(String? value, BuildContext context) {
+    if (value!.isEmpty) return AppLocalizations.of(context)!.tUserNameCannotEmpty;
+    if (!RegExp(r'^[a-z0-9._]+$').hasMatch(value)) return AppLocalizations.of(context)!.tInvalidUserName;
+    if (value.length < 4) return AppLocalizations.of(context)!.tUserNameLength;
     return null;
   }
 
@@ -26,8 +27,8 @@ class Helper extends GetxController {
     return querySnapshot.docs.isNotEmpty;
   }
 
-  static String? validateFullName(String? value) {
-    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value!)) return tInvalidFullName;
+  static String? validateFullName(String? value, BuildContext context) {
+    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value!)) return AppLocalizations.of(context)!.tInvalidFullName;
     return null;
   }
 
@@ -43,31 +44,31 @@ class Helper extends GetxController {
       sample_user@stud.dhbw-villingen-schwenningen.de
       another.example@dhbw-mosbach.de
    *////
-  static String? validateEmail(String? value) {
-    if (value == null || value.isEmpty) return tEmailCannotEmpty;
-    if (!GetUtils.isEmail(value)) return tInvalidEmailFormat;
+  static String? validateEmail(String? value, BuildContext context) {
+    if (value == null || value.isEmpty) return AppLocalizations.of(context)!.tEmailCannotEmpty;
+    if (!GetUtils.isEmail(value)) return AppLocalizations.of(context)!.tInvalidEmailFormat;
     // TODO: Uncomment this line to restrict email domains after development phase
     //if (!RegExp(r'^[\w\.-]+@[\w\.-]*dhbw[\w\.-]*\.de$').hasMatch(value)) return tOnlyDHBWEmailAllowed;
     return null;
   }
 
-  static String? validatePassword(String? value) {
-    if (value == null || value.isEmpty) return 'Password cannot be empty';
+  static String? validatePassword(String? value, BuildContext context) {
+    if (value == null || value.isEmpty) return AppLocalizations.of(context)!.tPasswordEmptyException;
 
     String pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
     RegExp regex = RegExp(pattern);
     if (!regex.hasMatch(value)) {
-      return tPasswordRequirements;
+      return AppLocalizations.of(context)!.tPasswordRequirements;
     }
     return null;
   }
 
-  static String? repeatPassword(String value, controller) {
+  static String? repeatPassword(String value, controller, BuildContext context) {
     if (value.isEmpty) {
-      return 'Please repeat your password';
+      return AppLocalizations.of(context)!.tPleaseRepeatPassword;
     }
     if (value != controller.password.text) {
-      return 'Passwords do not match';
+      return AppLocalizations.of(context)!.tPasswordsDoNotMatch;
     }
     return null;
   }

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/screens/profile/friend_profile.dart';
 import 'package:flutter/material.dart';
 
@@ -94,8 +94,8 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
             SnackBar(
               content: Text(
                 isPending
-                    ? '$tFriendshipRequestWithdraw$userName'
-                    : '$userName$tFriendDeleted',
+                    ? '${AppLocalizations.of(context)!.tFriendshipRequestWithdraw}$userName'
+                    : '$userName${AppLocalizations.of(context)!.tFriendDeleted}',
               ),
             ),
           );
@@ -105,7 +105,9 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
       if (mounted) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text(tFriendDeleteException)),
+            SnackBar(
+                content:
+                    Text(AppLocalizations.of(context)!.tFriendDeleteException)),
           );
         });
       }
@@ -130,7 +132,7 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
         Row(
           children: [
             Text(
-              tFriends,
+              AppLocalizations.of(context)!.tFriends,
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -141,7 +143,9 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
               TextButton(
                 onPressed: () => setState(() => showAll = !showAll),
                 child: Text(
-                  showAll ? tShowLess : tShowAll,
+                  showAll
+                      ? AppLocalizations.of(context)!.tShowLess
+                      : AppLocalizations.of(context)!.tShowAll,
                   style: const TextStyle(color: Colors.blue),
                 ),
               ),
@@ -177,7 +181,8 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                 itemCount: displayedFriends.length,
                 itemBuilder: (context, index) {
                   final friend = displayedFriends[index];
-                  final name = friend['username'] ?? tUnknown;
+                  final name = friend['username'] ??
+                      AppLocalizations.of(context)!.tUnknown;
                   final status = friend['status'];
                   final isPending = status == 'pending';
 

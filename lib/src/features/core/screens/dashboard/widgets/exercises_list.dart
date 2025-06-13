@@ -11,7 +11,7 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/start_exe
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import '../../../controllers/exercise_timer.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FullWidthDivider extends StatelessWidget {
   const FullWidthDivider({super.key});
@@ -86,7 +86,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text(tUpdateFavoriteException)),
+          SnackBar(content: Text(AppLocalizations.of(context)!.tUpdateFavoriteException)),
         );
       }
     } finally {
@@ -125,9 +125,9 @@ class _AllExercisesListState extends State<AllExercisesList> {
         final List<Widget> listWidgets = [];
 
         if (sortedList.isEmpty) {
-          return const Padding(
+          return Padding(
             padding: EdgeInsets.all(16),
-            child: Text(tDashboardExerciseNotFound),
+            child: Text(AppLocalizations.of(context)!.tDashboardExerciseNotFound),
           );
         }
 
@@ -261,7 +261,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
                         await showUnifiedDialog<void>(
                           context: context,
                           builder: (ctx) =>
-                              ActiveTimerDialog.forAction('start'),
+                              ActiveTimerDialog.forAction('start', context),
                         );
                         return;
                       }
@@ -297,7 +297,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
                           await showUnifiedDialog(
                             barrierDismissible: false,
                             context: context,
-                            builder: (_) => ActiveTimerDialog.forAction('edit'),
+                            builder: (_) => ActiveTimerDialog.forAction('edit', context),
                           );
                           return;
                         }
@@ -323,7 +323,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
                             barrierDismissible: false,
                             context: context,
                             builder: (_) =>
-                                ActiveTimerDialog.forAction('delete'),
+                                ActiveTimerDialog.forAction('delete', context),
                           );
                           return;
                         }

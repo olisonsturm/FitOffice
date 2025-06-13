@@ -8,6 +8,7 @@ import '../../../../common_widgets/buttons/clickable_richtext_widget.dart';
 import '../../../../common_widgets/form/form_header_widget.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/sizes.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignupScreen extends StatelessWidget {
   const SignupScreen({super.key});
@@ -25,17 +26,17 @@ class SignupScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const FormHeaderWidget(
+              FormHeaderWidget(
                   image: tWelcomeScreenImage,
                   heightBetween: tFormHeight * 2,
-                  title: tSignUpTitle,
-                  subTitle: tSignUpSubTitle,
+                  title: AppLocalizations.of(context)!.tSignUpTitle,
+                  subTitle: AppLocalizations.of(context)!.tSignUpSubTitle,
                   imageHeight: 0.2
               ),
               const SignUpFormWidget(),
               ClickableRichTextWidget(
-                text1: tAlreadyHaveAnAccount,
-                text2: tLogin,
+                text1: AppLocalizations.of(context)!.tAlreadyHaveAnAccount,
+                text2: AppLocalizations.of(context)!.tLogin,
                 onPressed: () => Get.off(() => const LoginScreen()),
               ),
             ],
