@@ -130,8 +130,11 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     final updated = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => ExerciseForm(isEdit: true, exercise: widget.exerciseData, exerciseName: widget.exerciseData['name'],)
-      ),
+          builder: (_) => ExerciseForm(
+                isEdit: true,
+                exercise: widget.exerciseData,
+                exerciseName: widget.exerciseData['name'],
+              )),
     );
 
     if (updated != null && updated is Map<String, dynamic>) {
@@ -211,7 +214,10 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: selectedTab == 0
                   ? ExerciseInfoTab(exerciseData: widget.exerciseData)
-                  : ExerciseHistoryTab(name: widget.exerciseData['name']),
+                  : ExerciseHistoryTab(
+                      name: (widget.exerciseData['name'] ?? '')
+                          .toString()
+                          .trim()),
             ),
           ),
         ],
