@@ -160,10 +160,10 @@ class StatisticsWidget extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         } else if (userSnapshot.hasData) {
           final user = userSnapshot.data as UserModel;
-          final dbController = DbController()..user = user;
+          final statisticsController = StatisticsController();
 
           return FutureBuilder<String?>(
-            future: dbController.lastExerciseOfUser(context),
+            future: statisticsController.getTimeOfLastExercise(user.email, context),
             builder: (context, stepsSnapshot) {
               if (stepsSnapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -179,7 +179,7 @@ class StatisticsWidget extends StatelessWidget {
                   icon: Icons.schedule,
                   iconColor: Colors.white,
                   title: AppLocalizations.of(context)!.tLastExercise,
-                  content: 'Keine Übungen vorhanden.',
+                  content: AppLocalizations.of(context)!.tNoExercisesDone,
                 );
               }
             },

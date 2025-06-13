@@ -63,40 +63,6 @@ class DbController {
     }
   }
 
-  Future<String?> lastExerciseOfUser(BuildContext context) async {
-    try {
-      final userId = user.id;
-
-      //Query needs to be edited if database structure changes
-      final exerciseHistoryRef = firestore
-          .collection('users')
-          .doc(userId)
-          .collection('exerciseHistory');
-
-      final querySnapshot = await exerciseHistoryRef
-          .orderBy('completedAt', descending: true)
-          .limit(1)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final doc = querySnapshot.docs.first;
-
-        final startedAt = doc.data()['startedAt'];
-
-        if (startedAt != null && startedAt is Timestamp) {
-          String startedAtString = timestampToString(startedAt);
-          return startedAtString;
-        } else {
-          return AppLocalizations.of(context)!.tDashboardNoValidDate;
-        }
-      } else {
-        return AppLocalizations.of(context)!.tDashboardNoExercisesDone;
-      }
-    } catch (e) {
-      return AppLocalizations.of(context)!.tDashboardExceptionLoadingExercise;
-    }
-  }
-
   Future<String?> durationOfLastExercise(BuildContext context) async {
     final userId = user.id;
 
