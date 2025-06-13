@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 
 import '../../../../../constants/colors.dart';
 import '../../../../authentication/models/user_model.dart';
-import '../../../controllers/db_controller.dart';
 import '../../../controllers/profile_controller.dart';
 
 class StatisticsWidget extends StatelessWidget {
@@ -205,10 +204,10 @@ class StatisticsWidget extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         } else if (userSnapshot.hasData) {
           final user = userSnapshot.data as UserModel;
-          final dbController = DbController()..user = user;
+          final statisticsController = StatisticsController();
 
           return FutureBuilder<String?>(
-            future: dbController.durationOfLastExercise(context),
+            future: statisticsController.getDurationOfLastExercise(user.email, context),
             builder: (context, stepsSnapshot) {
               if (stepsSnapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -224,7 +223,7 @@ class StatisticsWidget extends StatelessWidget {
                   icon: Icons.run_circle,
                   iconColor: Colors.white,
                   title: AppLocalizations.of(context)!.tDurationLastExercise,
-                  content: 'Keine Übungen vorhanden.',
+                  content: AppLocalizations.of(context)!.tNoExercisesDone,
                 );
               }
             },

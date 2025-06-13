@@ -63,40 +63,6 @@ class DbController {
     }
   }
 
-  Future<String?> durationOfLastExercise(BuildContext context) async {
-    final userId = user.id;
-
-    //Query needs to be edited if database structure changes
-    final exerciseHistoryRef =
-        firestore.collection('users').doc(userId).collection('exerciseHistory');
-
-    final querySnapshot = await exerciseHistoryRef
-        .orderBy('completedAt', descending: true)
-        .limit(1)
-        .get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      final doc = querySnapshot.docs.first;
-      final data = doc.data();
-
-      final Timestamp? startedAt = data['startedAt'];
-      final Timestamp? completedAt = data['completedAt'];
-
-      if (startedAt != null && completedAt != null) {
-        final DateTime start = startedAt.toDate();
-        final DateTime end = completedAt.toDate();
-
-        final Duration duration = end.difference(start);
-        String formattedDuration = _formatDuration(duration);
-
-        return formattedDuration;
-      } else {
-        return AppLocalizations.of(context)!.tDashboardTimestampsMissing;
-      }
-    }
-    return null;
-  }
-
   Future<String> getNumberOfExercisesByCategory(String category) async {
     final numberOfExercisesByCategory = await firestore
         .collection('exercises')

@@ -253,6 +253,25 @@ class StatisticsController {
     final formatted = DateFormat('dd.MM.yyyy HH:mm').format(dateTime);
     return formatted;
   }
+
+  Future<String> getDurationOfLastExercise(
+      String userEmail, BuildContext context) async {
+    final localisations = AppLocalizations.of(context)!;
+    final userRef = await _getUserDocRef(userEmail);
+    final exercise = await userRef
+        .collection('exerciseLogs')
+        .orderBy('endTime', descending: true)
+        .limit(1)
+        .get();
+    if (exercise.docs.isEmpty) return localisations.tNoExercisesDone;
+    final doc = exercise.docs.first;
+    final Timestamp start = doc['startTime'];
+    final Timestamp end = doc['endTime'];
+    final Duration duration = end.toDate().difference(start.toDate());
+    final String formattedDuration =
+        '${duration.inMinutes.toString().padLeft(2, '0')}:${(duration.inSeconds % 60).toString().padLeft(2, '0')} min';
+    return formattedDuration;
+  }
 }
 
 class StreakController extends GetxController {
