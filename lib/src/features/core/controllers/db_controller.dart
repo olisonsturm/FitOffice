@@ -274,4 +274,21 @@ class DbController {
       await addFavorite(email, exerciseName);
     }
   }
+
+  Future<void> deleteExciseLogsOfExercise(String exerciseName) async {
+    final usersSnapshot = await firestore.collection('users').get();
+
+    for (final userDoc in usersSnapshot.docs) {
+      final userRef = userDoc.reference;
+
+      final logsSnapshot = await userRef
+          .collection('exerciseLogs')
+          .where('exerciseName', isEqualTo: exerciseName)
+          .get();
+
+      for (final logDoc in logsSnapshot.docs) {
+        await logDoc.reference.delete();
+      }
+    }
+  }
 }
