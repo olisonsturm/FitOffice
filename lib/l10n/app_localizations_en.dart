@@ -929,4 +929,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tSkip => 'Skip';
+
+  @override
+  String get tMinutes => 'Minutes';
+
+  @override
+  String get tSeconds => 'Seconds';
+
+  @override
+  String get tHistoryNoUserData => 'User data not found.';
+
+  @override
+  String get tHistoryNoExercise1 => 'No exercise history found for';
+
+  @override
+  String get tHistoryNoExercise2 =>
+      '. Start tracking your exercises to see them here.';
 }

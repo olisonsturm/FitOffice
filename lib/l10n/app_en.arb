@@ -292,5 +292,10 @@
   "tDurationLastExercise": "Duration of last exercise",
   "tTutorialProfile": "That's the profile site. Here you can edit your profile and make friends. All necessary settings can be found here.",
   "tTutorialProfile2": "That's all from me. I wish you much fun exploring the app. There are many interesting functionalities to explore! See you!",
-  "tSkip": "Skip"
+  "tSkip": "Skip",
+  "tMinutes": "Minutes",
+  "tSeconds": "Seconds",
+  "tHistoryNoUserData": "User data not found.",
+  "tHistoryNoExercise1": "No exercise history found for",
+  "tHistoryNoExercise2": ". Start tracking your exercises to see them here."
 }
