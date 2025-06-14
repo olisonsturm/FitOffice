@@ -5,7 +5,6 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../constants/colors.dart';
 import '../../constants/sizes.dart';
-import '../../constants/text_strings.dart';
 
 class Helper extends GetxController {
 

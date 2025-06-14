@@ -194,6 +194,7 @@
   "tShowLess": "Show less",
   "tFriends": "Friends",
   "tFriendNow": " is your friend now.",
+  "tNoFriendsYet": "You don't have any friends yet.",
   "tExceptionAddingFriend": "Couldn't add friend",
   "tFriendDeleted": " isn't your friend anymore.",
   "tFriendDeleteException": "Couldn't delete friend.",

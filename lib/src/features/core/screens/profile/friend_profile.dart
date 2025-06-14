@@ -10,7 +10,7 @@ import 'package:fit_office/src/features/core/screens/profile/widgets/avatar.dart
 import 'package:intl/intl.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/confirmation_dialog.dart';
 
-import '../dashboard/widgets/statistics.dart';
+import '../statistics/widgets/statistics.dart';
 
 class FriendProfile extends StatefulWidget {
   final String userName;
@@ -39,6 +39,7 @@ class _FriendProfileState extends State<FriendProfile> {
   }
 
   Future<UserModel> getFriend(String userName) async {
+    final localizations = AppLocalizations.of(context)!;
     final querySnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('username', isEqualTo: userName)
@@ -48,7 +49,7 @@ class _FriendProfileState extends State<FriendProfile> {
       final userDoc = querySnapshot.docs.first;
       return UserModel.fromSnapshot(userDoc);
     } else {
-        throw Exception(AppLocalizations.of(context)!.tNoUserFound);
+        throw Exception(localizations.tNoUserFound);
     }
   }
 

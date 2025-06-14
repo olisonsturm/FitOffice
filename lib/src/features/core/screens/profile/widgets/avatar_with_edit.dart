@@ -34,36 +34,37 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
   Future<void> _loadAvatar() async {
     try {
       final imageProvider = await _storageService.getProfilePicture();
-      setState(() {
-        _currentAvatar = imageProvider;
-      });
+      if (mounted) {
+        setState(() {
+          _currentAvatar = imageProvider;
+        });
+      }
     } catch (e) {
       debugPrint('Error loading avatar: $e');
-      setState(() {
-        _currentAvatar = const AssetImage(tDefaultAvatar);
-      });
+      if (mounted) {
+        setState(() {
+          _currentAvatar = const AssetImage(tDefaultAvatar);
+        });
+      }
     }
   }
-
 
   Future<void> _pickAndCropImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    if (pickedFile != null) {
+    if (pickedFile != null && mounted) {
       final imageBytes = await pickedFile.readAsBytes();
       final cropController = CropController();
 
       final croppedImage = await Navigator.push<File?>(
-        context,
+        context, // Use context directly here since we just checked mounted
         MaterialPageRoute(
           builder: (context) => Scaffold(
             appBar: AppBar(
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  if (mounted) Navigator.pop(context, null);
-                },
+                onPressed: () => Navigator.pop(context, null),
               ),
               title: const Text('Crop Image'),
               actions: [
@@ -78,7 +79,6 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
               controller: cropController,
               aspectRatio: 1,
               onCropped: (result) async {
-                if (!mounted) return;
                 switch (result) {
                   case CropSuccess(:final croppedImage):
                     final tempDir = Directory.systemTemp;
@@ -97,7 +97,7 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
                     break;
                   case CropFailure(:final cause):
                     debugPrint('Crop failed: $cause');
-                    if (mounted) Navigator.pop(context, null);
+                    Navigator.pop(context, null);
                     break;
                 }
               },
@@ -106,17 +106,23 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
         ),
       );
 
-      if (croppedImage != null) {
+      if (croppedImage != null && mounted) {
         setState(() {
           _selectedImage = croppedImage;
-          Helper.successSnackBar(title: 'Success', message: 'Avatar updated successfully');
         });
+
+        // Show success message
+        if (mounted) {
+          Helper.successSnackBar(title: 'Success', message: 'Avatar updated successfully');
+        }
 
         try {
           final avatar = await StorageService().getProfilePicture();
-          setState(() {
-            _currentAvatar = avatar;
-          });
+          if (mounted) {
+            setState(() {
+              _currentAvatar = avatar;
+            });
+          }
         } catch (error) {
           debugPrint('Error fetching profile picture: $error');
         }

@@ -194,6 +194,7 @@
   "tShowLess": "Weniger anzeigen",
   "tFriends": "Freunde",
   "tFriendNow": " ist jetzt dein Freund.",
+  "tNoFriendsYet": "Du hast noch keine Freunde.",
   "tExceptionAddingFriend": "Freund konnte nicht hinzugefügt werden",
   "tFriendDeleted": " ist nicht mehr dein Freund.",
   "tFriendDeleteException": "Freund konnte nicht entfernt werden.",

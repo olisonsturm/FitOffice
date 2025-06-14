@@ -244,7 +244,7 @@ class LevelBubble extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: (isDarkMode ? Colors.deepPurpleAccent : Colors.redAccent)
-                .withOpacity(0.6),
+                .withValues(alpha: 0.6),
             blurRadius: 12,
             offset: const Offset(4, 4),
           ),
@@ -272,7 +272,7 @@ class AnimatedAvatar extends StatelessWidget {
         border: Border.all(color: Colors.white, width: 4),
         boxShadow: [
           BoxShadow(
-            color: Colors.deepOrangeAccent.withOpacity(0.5),
+            color: Colors.deepOrangeAccent.withValues(alpha: 0.5),
             blurRadius: 10,
             spreadRadius: 2,
           ),
