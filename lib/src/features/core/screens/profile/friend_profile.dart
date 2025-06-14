@@ -189,17 +189,17 @@ class _FriendProfileState extends State<FriendProfile> {
                     StatisticsWidget(
                       txtTheme: txtTheme,
                       userEmail: friend.email,
-                    ).buildStreakCard(controller, isDark),
+                    ).buildStreakCard(friend.email, isDark, context),
                     const SizedBox(height: 12),
                     StatisticsWidget(
                             txtTheme: txtTheme,
                             userEmail: friend.email)
-                        .buildTopExercisesCard(controller, isDark),
+                        .buildTopExercisesCard(friend.email, isDark, context),
                     const SizedBox(height: 12),
                     StatisticsWidget(
                             txtTheme: txtTheme,
                             userEmail: friend.email)
-                        .buildLongestStreakCard(controller, isDark)
+                        .buildLongestStreakCard(friend.email, isDark, context)
                   ]
                 ],
               );

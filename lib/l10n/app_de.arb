@@ -270,5 +270,8 @@
   "tProgress": "Fortschritt",
   "tLibrary": "Bibliothek",
   "tStatistics": "Statistiken",
-  "tChapter": "Kapitel"
+  "tChapter": "Kapitel",
+  "tLastExerciseDuration": "Letzte Übung Dauer",
+  "tNoExercisesAvailable": "Keine Übungen verfügbar",
+  "tLastExerciseTime": "Zeit der letzten Übung"
 }
