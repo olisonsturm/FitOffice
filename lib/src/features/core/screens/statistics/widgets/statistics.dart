@@ -1,3 +1,4 @@
+import 'package:fit_office/src/constants/colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/controllers/statistics_controller.dart';
 import 'package:flutter/material.dart';
@@ -83,8 +84,8 @@ class StatisticsWidget extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.local_fire_department,
-                          color: streakSteps > 0 ? Colors.orange : Colors.grey,
+                      Icon(Icons.local_fire_department_outlined,
+                          color: streakSteps > 0 ? tPrimaryColor : Colors.grey,
                           size: 40),
                       const SizedBox(width: 16),
                       Expanded(
@@ -167,7 +168,7 @@ class StatisticsWidget extends StatelessWidget {
               } else if (stepsSnapshot.hasData && stepsSnapshot.data != null) {
                 return _styledCard(
                   icon: Icons.schedule,
-                  iconColor: Colors.white,
+                  iconColor: tPrimaryColor,
                   title: 'Zeitpunkt der letzten Übung',
                   content: stepsSnapshot.data!,
                   isDark: isDark,
@@ -175,7 +176,7 @@ class StatisticsWidget extends StatelessWidget {
               } else {
                 return _styledCard(
                   icon: Icons.schedule,
-                  iconColor: Colors.white,
+                  iconColor: Colors.grey,
                   title: 'Zeitpunkt der letzten Übung',
                   content: 'Keine Übungen vorhanden.',
                   isDark: isDark,
@@ -214,16 +215,16 @@ class StatisticsWidget extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               } else if (stepsSnapshot.hasData && stepsSnapshot.data != null) {
                 return _styledCard(
-                  icon: Icons.run_circle,
-                  iconColor: Colors.white,
+                  icon: Icons.run_circle_outlined,
+                  iconColor: tPrimaryColor,
                   title: 'Dauer der letzten Übung',
                   content: stepsSnapshot.data!,
                   isDark: isDark,
                 );
               } else {
                 return _styledCard(
-                  icon: Icons.run_circle,
-                  iconColor: Colors.white,
+                  icon: Icons.run_circle_outlined,
+                  iconColor: Colors.grey,
                   title: 'Dauer der letzten Übung',
                   content: 'Keine Übungen vorhanden.',
                   isDark: isDark,
@@ -266,15 +267,15 @@ class StatisticsWidget extends StatelessWidget {
               } else if (topExercisesSnapshot.hasData &&
                   topExercisesSnapshot.data!.isNotEmpty) {
                 return _styledListCard(
-                  icon: Icons.star,
-                  iconColor: Colors.amber,
+                  icon: Icons.star_border_outlined,
+                  iconColor: tPrimaryColor,
                   title: localizations.tTop3Exercises,
                   items: topExercisesSnapshot.data!,
                   isDark: isDark,
                 );
               } else {
                 return _styledTextBlockCard(
-                    icon: Icons.star,
+                    icon: Icons.star_border_outlined,
                     iconColor: Colors.grey,
                     title: localizations.tTop3Exercises,
                     lines: [localizations.tNoExercisesDone],
@@ -318,8 +319,8 @@ class StatisticsWidget extends StatelessWidget {
                 final data = streakSnapshot.data!;
 
                 return _styledTextBlockCard(
-                  icon: Icons.auto_graph,
-                  iconColor: Colors.amber,
+                  icon: Icons.auto_graph_outlined,
+                  iconColor: tPrimaryColor,
                   title: localizations.tLongestStreak,
                   isDark: isDark,
                   lines: [
@@ -330,7 +331,7 @@ class StatisticsWidget extends StatelessWidget {
                 );
               } else {
                 return _styledTextBlockCard(
-                  icon: Icons.auto_graph,
+                  icon: Icons.auto_graph_outlined,
                   iconColor: Colors.grey,
                   title: localizations.tLongestStreak,
                   lines: [localizations.tNoStreak],
