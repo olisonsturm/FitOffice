@@ -929,4 +929,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tSkip => 'Skip';
+
+  @override
+  String get tLoadingProgress => 'Loading progress...';
 }

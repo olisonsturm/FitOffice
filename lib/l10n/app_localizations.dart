@@ -1855,6 +1855,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Skip'**
   String get tSkip;
+
+  /// No description provided for @tTutorialDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Tutorial done!'**
+  String get tLoadingProgress;
 }
 
 class _AppLocalizationsDelegate

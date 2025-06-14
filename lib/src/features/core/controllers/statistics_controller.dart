@@ -272,6 +272,25 @@ class StatisticsController {
         '${duration.inMinutes.toString().padLeft(2, '0')}:${(duration.inSeconds % 60).toString().padLeft(2, '0')} min';
     return formattedDuration;
   }
+
+  Future<int> getTotalExercises(String userEmail) async {
+    final userSnapshot = await firestore
+        .collection('users')
+        .where('email', isEqualTo: userEmail)
+        .get();
+
+    if (userSnapshot.docs.isEmpty) return 0;
+
+    final userDocId = userSnapshot.docs.first.id;
+
+    final exerciseLogsSnapshot = await firestore
+        .collection('users')
+        .doc(userDocId)
+        .collection('exerciseLogs')
+        .get();
+
+    return exerciseLogsSnapshot.docs.length;
+  }
 }
 
 class StreakController extends GetxController {
