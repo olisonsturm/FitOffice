@@ -141,6 +141,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -196,7 +197,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                                   friendshipStatus[username] = 'accepted';
                                 });
 
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  scaffoldMessenger.showSnackBar(
                                     SnackBar(
                                         content: Text(localizations.tFriendDeleteException)),
                                   );
@@ -263,7 +264,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                                   friendshipStatus[username] = null;
                                 });
 
-                                ScaffoldMessenger.of(context).showSnackBar(
+                                scaffoldMessenger.showSnackBar(
                                   SnackBar(
                                       content: Text(localizations.tExceptionAddingFriend)),
                                 );

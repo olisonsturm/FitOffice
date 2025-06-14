@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import 'package:fit_office/src/repository/authentication_repository/authentication_repository.dart';
 import 'package:fit_office/src/repository/user_repository/user_repository.dart';
@@ -45,11 +44,12 @@ class ProfileController extends GetxController {
 
   /// Update user data and update the global state
   Future<void> updateRecord(UserModel updatedUser, BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
     try {
       await _userRepo.updateUserRecord(updatedUser.id!, updatedUser.toJson());
       user.value = updatedUser; // Update global state
       Helper.successSnackBar(
-          title: AppLocalizations.of(context)!.tCongratulations, message: 'Profile Record has been updated!');
+          title: localizations.tCongratulations, message: 'Profile Record has been updated!');
     } catch (e) {
       Helper.errorSnackBar(title: 'Error', message: e.toString());
     }
@@ -57,13 +57,14 @@ class ProfileController extends GetxController {
 
   /// Delete the authenticated user's account
   Future<void> deleteUser(BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
     try {
       final userId = _authRepo.getUserID;
       if (userId.isNotEmpty) {
         await _userRepo.deleteUser(userId);
         user.value = null; // Clear global state
         Helper.successSnackBar(
-            title: AppLocalizations.of(context)!.tCongratulations, message: 'Account has been deleted!');
+            title: localizations.tCongratulations, message: 'Account has been deleted!');
       } else {
         Helper.warningSnackBar(
             title: 'Error', message: 'User cannot be deleted!');

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:flutter/cupertino.dart';
 import '../../authentication/models/user_model.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +12,7 @@ class DbController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Future<String?> fetchActiveStreakSteps(BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
     final userId = user.id;
     //This query must be edited when database structure is defined
     final streaksRef =
@@ -31,13 +31,13 @@ class DbController {
       }
     } on SocketException {
       // Network error occurred, handle accordingly
-      return AppLocalizations.of(context)!.tDashboardNoInternetConnection;
+      return localizations.tDashboardNoInternetConnection;
     } on FirebaseException {
       // Handle other Firestore specific exceptions
-      return AppLocalizations.of(context)!.tDashboardDatabaseException;
+      return localizations.tDashboardDatabaseException;
     } catch (e) {
       // Catch all other errors
-      return AppLocalizations.of(context)!.tDashboardUnexpectedError;
+      return localizations.tDashboardUnexpectedError;
     }
 
     return "0";
@@ -47,20 +47,6 @@ class DbController {
     DateTime dateTime = timestamp.toDate();
     String formattedDate = DateFormat('dd.MM.yyyy HH:mm').format(dateTime);
     return formattedDate;
-  }
-
-  String _formatDuration(Duration duration) {
-    int hours = duration.inHours;
-    int minutes = duration.inMinutes.remainder(60);
-    int seconds = duration.inSeconds.remainder(60);
-
-    if (hours > 0) {
-      return '${hours}h ${minutes}m ${seconds}s';
-    } else if (minutes > 0) {
-      return '${minutes}m ${seconds}s';
-    } else {
-      return '${seconds}s';
-    }
   }
 
   Future<String> getNumberOfExercisesByCategory(String category) async {

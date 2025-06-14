@@ -46,6 +46,7 @@ return showModalBottomSheet(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () async {
+                    final localizations = AppLocalizations.of(context)!;
                     if (email != null && email.isNotEmpty) {
                       try {
                         await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
@@ -53,7 +54,7 @@ return showModalBottomSheet(
                         Helper.successSnackBar(title: 'Success', message: 'Password reset email sent');
                       } catch (e) {
                         // TODO Is it working like this?
-                        Helper.errorSnackBar(title: AppLocalizations.of(context)!.tOhSnap, message: e.toString());
+                        Helper.errorSnackBar(title: localizations.tOhSnap, message: e.toString());
                       }
                     } else {
                       // TODO Is it working like this?

@@ -95,6 +95,8 @@ class FriendsController {
   }
 
   Future<UserModel> getFriend(String userName, BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
+
     final querySnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('username', isEqualTo: userName)
@@ -104,7 +106,7 @@ class FriendsController {
       final userDoc = querySnapshot.docs.first;
       return UserModel.fromSnapshot(userDoc);
     } else {
-      throw Exception(AppLocalizations.of(context)!.tNoUserFound);
+      throw Exception(localizations.tNoUserFound);
     }
   }
 

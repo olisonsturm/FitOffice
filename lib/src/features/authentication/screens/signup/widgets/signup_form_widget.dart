@@ -6,7 +6,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../../common_widgets/buttons/primary_button.dart';
 import '../../../../../constants/colors.dart';
 import '../../../../../constants/sizes.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../controllers/signup_controller.dart';
 
 //TODO: If the document of the user already exists, the user account will be still created.
@@ -168,13 +167,14 @@ class SignUpFormWidget extends StatelessWidget {
                 isLoading: controller.isLoading.value,
                 text: AppLocalizations.of(context)!.tSignup.tr,
                 onPressed: () async {
+                  final localizations = AppLocalizations.of(context)!;
                   if (controller.signupFormKey.currentState!.validate()) {
                     bool usernameExists = await Helper.isUsernameTaken(
                         controller.userName.text);
                     if (usernameExists) {
                       Helper.errorSnackBar(
                           title: 'Error',
-                          message: AppLocalizations.of(context)!.tUserNameAlreadyExists);
+                          message: localizations.tUserNameAlreadyExists);
                     } else {
                       controller.createUser();
                     }

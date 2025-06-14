@@ -1,8 +1,14 @@
 import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/exercise_form.dart';
+import 'package:fit_office/src/features/core/screens/profile/widgets/about_modal.dart';
+import 'package:fit_office/src/features/core/screens/profile/widgets/bug_report_modal.dart';
 import 'package:fit_office/src/features/core/screens/profile/widgets/facet_display_card.dart';
+import 'package:fit_office/src/features/core/screens/profile/widgets/help_support_modal.dart';
+import 'package:fit_office/src/features/core/screens/profile/widgets/privacy_policy_modal.dart';
+import 'package:fit_office/src/features/core/screens/profile/widgets/terms_cond_modal.dart';
 import 'package:fit_office/src/utils/helper/dialog_helper.dart';
+import 'package:fit_office/src/utils/helper/helper_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -12,6 +18,7 @@ import 'package:fit_office/src/features/core/screens/profile/widgets/update_prof
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../constants/colors.dart';
 import '../../../../repository/authentication_repository/authentication_repository.dart';
+import '../../../../utils/helper/app_info.dart';
 import '../../controllers/profile_controller.dart';
 import 'admin/add_friends.dart';
 import 'admin/edit_user_page.dart';
@@ -99,7 +106,7 @@ class ProfileScreen extends StatelessWidget {
                         child: FactDisplayCard(
                           isDark: isDark,
                           icon: LineAwesomeIcons.dumbbell_solid,
-                          title: "100",
+                          title: "100", // TODO: Replace with actual data of completed workouts
                           subtitle: AppLocalizations.of(context)!.tCompletedWorkouts,
                           iconColor: Colors.orange,
                         ),
@@ -171,19 +178,15 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
                   const Divider(),
                   FriendsBoxWidget(currentUserId: user.id!),
-                  const SizedBox(height: 10),
-                  FriendRequestsWidget(currentUserId: user.id!),
-                  const SizedBox(height: 10),
                   CustomProfileButton(
                     isDark: isDark,
                     icon: LineAwesomeIcons.user_plus_solid,
                     label: AppLocalizations.of(context)!.tAddFriendsHeader,
                     onPress: () async {
                       final timerController =
-                          Get.find<ExerciseTimerController>();
+                      Get.find<ExerciseTimerController>();
                       if (timerController.isRunning.value ||
                           timerController.isPaused.value) {
                         await showUnifiedDialog(
@@ -198,28 +201,30 @@ class ProfileScreen extends StatelessWidget {
                       Get.to(() => AddFriendsScreen(currentUserId: user.id!));
                     },
                   ),
-                  CustomProfileButton(
-                    //auch mit dem Dialog anpassen!
-                    isDark: isDark,
-                    icon: LineAwesomeIcons.user_friends_solid,
-                    label: AppLocalizations.of(context)!.tViewFriends,
-                    onPress: () async {
-                      final timerController =
-                          Get.find<ExerciseTimerController>();
-                      if (timerController.isRunning.value ||
-                          timerController.isPaused.value) {
-                        await showUnifiedDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (_) =>
-                              ActiveTimerDialog.forAction('viewfriends', context),
-                        );
-                        return;
-                      }
-
-                      Get.to(() => const AllUsersPage());
-                    },
-                  ),
+                  FriendRequestsWidget(currentUserId: user.id!),
+                  const SizedBox(height: 10),
+                  // CustomProfileButton(
+                  //   //auch mit dem Dialog anpassen!
+                  //   isDark: isDark,
+                  //   icon: LineAwesomeIcons.user_friends_solid,
+                  //   label: AppLocalizations.of(context)!.tViewFriends,
+                  //   onPress: () async {
+                  //     final timerController =
+                  //         Get.find<ExerciseTimerController>();
+                  //     if (timerController.isRunning.value ||
+                  //         timerController.isPaused.value) {
+                  //       await showUnifiedDialog(
+                  //         context: context,
+                  //         barrierDismissible: false,
+                  //         builder: (_) =>
+                  //             ActiveTimerDialog.forAction('viewfriends', context),
+                  //       );
+                  //       return;
+                  //     }
+                  //
+                  //     Get.to(() => const AllUsersPage());
+                  //   },
+                  // ),
                   const Divider(),
                   const SizedBox(height: 10),
                   Text(AppLocalizations.of(context)!.tSettings,
@@ -230,7 +235,9 @@ class ProfileScreen extends StatelessWidget {
                     isDark: isDark,
                     icon: LineAwesomeIcons.bell_solid,
                     label: AppLocalizations.of(context)!.tNotifications,
-                    onPress: () {},
+                    onPress: () async {
+                      Helper.warningSnackBar(title: "Info", message: "Feature not implemented yet");
+                    },
                   ),
                   CustomProfileDropdownButton(
                     icon: LineAwesomeIcons.language_solid,
@@ -260,7 +267,9 @@ class ProfileScreen extends StatelessWidget {
                     isDark: isDark,
                     icon: LineAwesomeIcons.info_solid,
                     label: AppLocalizations.of(context)!.tAbout,
-                    onPress: () {},
+                    onPress: () {
+                      AboutModal.show(context);
+                    },
                   ),
                   Row(
                     children: [
@@ -285,12 +294,17 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 10),
                       Expanded(
-                        child: FactDisplayCard(
-                          isDark: isDark,
-                          icon: LineAwesomeIcons.info_circle_solid,
-                          title: "Version 1.0",
-                          subtitle: "FitOffice",
-                          iconColor: Colors.blue,
+                        child: FutureBuilder<String>(
+                          future: AppInfo.getFullVersionInfo(),
+                          builder: (context, snapshot) {
+                            return FactDisplayCard(
+                              isDark: isDark,
+                              icon: LineAwesomeIcons.info_circle_solid,
+                              title: "${snapshot.data ?? '...'}",
+                              subtitle: "Version",
+                              iconColor: Colors.blue,
+                            );
+                          },
                         ),
                       ),
                     ],
@@ -299,31 +313,47 @@ class ProfileScreen extends StatelessWidget {
                     isDark: isDark,
                     icon: LineAwesomeIcons.question_circle_solid,
                     label: AppLocalizations.of(context)!.tHelpSupport,
-                    onPress: () {},
+                    onPress: () {
+                      HelpSupportModal.show(context);
+                    },
                   ),
                   CustomProfileButton(
                     isDark: isDark,
                     icon: LineAwesomeIcons.bug_solid,
                     label: AppLocalizations.of(context)!.tReportBug,
-                    onPress: () {},
+                    onPress: () {
+                      BugReportModal.show(context);
+                    },
                   ),
                   CustomProfileButton(
                     isDark: isDark,
                     icon: LineAwesomeIcons.file_contract_solid,
                     label: AppLocalizations.of(context)!.tTerms,
-                    onPress: () {},
+                    onPress: () {
+                      TermsConditionsModal.show(context, isDark: isDark);
+                    },
                   ),
                   CustomProfileButton(
                     isDark: isDark,
                     icon: LineAwesomeIcons.file_signature_solid,
                     label: AppLocalizations.of(context)!.tPrivacyPolicy,
-                    onPress: () {},
+                    onPress: () {
+                      PrivacyPolicyModal.show(context, isDark: isDark);
+                    },
                   ),
                   CustomProfileButton(
                     isDark: isDark,
                     icon: LineAwesomeIcons.file_contract_solid,
                     label: AppLocalizations.of(context)!.tLicenses,
-                    onPress: () {},
+                    onPress: () async {
+                      final version = await AppInfo.getFullVersionInfo();
+                      showLicensePage(
+                        context: context,
+                        applicationName: 'FitOffice',
+                        applicationVersion: version,
+                        applicationLegalese: '© ${DateTime.now().year} DHBW Ravensburg',
+                      );
+                    },
                   ),
                   if (user.role == "admin") ...[
                     const Divider(),
@@ -448,7 +478,7 @@ class ProfileScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 16),
                           Text(
-                            "© ${DateTime.now().year} FitOffice",
+                            "© ${DateTime.now().year} DHBW Ravensburg. All rights reserved.",
                             textAlign: TextAlign.center,
                             style: txtTheme.bodySmall?.copyWith(
                               color: Colors.grey[500],

@@ -111,20 +111,27 @@ class CustomProfileDropdownButtonState extends State<CustomProfileDropdownButton
       ),
       child: Row(
         children: [
-          Icon(widget.icon, color: Colors.orangeAccent),
+          Icon(widget.icon, color: Colors.orangeAccent, size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: currentValue,
                 isExpanded: true,
-                icon: Icon(Icons.arrow_downward, color: isDark ? Colors.white : Colors.black),
+                icon: Icon(
+                  Icons.keyboard_arrow_down,
+                  color: isDark ? Colors.white : Colors.black,
+                  size: 24,
+                ),
                 dropdownColor: isDark ? Colors.grey[850] : Colors.white,
                 style: TextStyle(
                   color: isDark ? Colors.white : Colors.black,
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
+                  height: 1.0,
                 ),
+                isDense: true,
+                itemHeight: null,
                 items: widget.items,
                 onChanged: (value) {
                   if (value != null) {

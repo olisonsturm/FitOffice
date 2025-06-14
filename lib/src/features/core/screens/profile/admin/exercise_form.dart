@@ -112,6 +112,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
   }
 
   Future<void> _addExercise() async {
+    final localizations = AppLocalizations.of(context)!;
     final name = _nameController.text.trim();
     final description = _descriptionController.text.trim();
     final category = _selectedCategory;
@@ -130,7 +131,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
       }
 
       if (videoUrl == null) {
-        throw Exception(AppLocalizations.of(context)!.tNoVideoSelected);
+        throw Exception(localizations.tNoVideoSelected);
       }
 
       await exerciseController.saveExercise(

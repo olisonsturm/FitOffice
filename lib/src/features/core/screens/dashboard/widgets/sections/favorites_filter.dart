@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/features/core/models/dashboard/categories_model.dart';
 
 class DashboardFavoritesSection extends StatelessWidget {
@@ -14,6 +13,7 @@ class DashboardFavoritesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return SizedBox(
       height: 45,
       child: ListView.builder(
@@ -33,7 +33,7 @@ class DashboardFavoritesSection extends StatelessWidget {
                     height: 45,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: tDarkColor,
+                      color: isDark ? Colors.grey[800] : Colors.red.withValues(alpha: 0.3),
                     ),
                     child: Center(
                       child: Text(
