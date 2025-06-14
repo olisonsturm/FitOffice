@@ -895,15 +895,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tTutorialSteps =>
-      'Here you can see your steps. If you do exercises of 5 minutes per day, you will make one step forward. Click to continue.';
+      'Here you can see your steps. If you do exercises of 5 minutes per day, you will make one step forward.';
 
   @override
   String get tTutorialStatistics =>
-      'Here you will find all the important statistics. You can activate a streak by doing one exercise per day for 5 minutes. You will receive one step for each day. The number of steps is displayed at the top left of the flame. But beware: the streak will be reset to 0 if you exercise for less than 5 minutes! Click to continue.';
+      'Here you will find all the important statistics. You can activate a streak by doing exercises per day for at least 5 minutes. You will receive one step for each day. The number of steps is displayed at the top left of the flame. But beware: the streak will be reset to 0 if you exercise for less than 5 minutes! Click to continue.';
 
   @override
   String get tTutorialStatistics1 =>
-      'Here you will find all the important statistics. You can activate a streak by doing one exercise per day for 5 minutes.';
+      'Here you will find all the important statistics. You can activate a streak by doing exercises per day for at least 5 minutes.';
 
   @override
   String get tTutorialStatistics2 =>
