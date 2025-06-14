@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../authentication/models/user_model.dart';
-import '../../../controllers/db_controller.dart';
 import '../../../controllers/profile_controller.dart';
 
 class StatisticsWidget extends StatelessWidget {
@@ -165,11 +164,11 @@ class StatisticsWidget extends StatelessWidget {
 
   /// Last Exercise Card
   Widget buildLastExerciseCard(UserModel user, bool isDark, BuildContext context) {
-    final dbController = DbController()..user = user;
     final localizations = AppLocalizations.of(context)!;
+    final statisticsController = StatisticsController();
 
     return FutureBuilder<String?>(
-      future: dbController.lastExerciseOfUser(context),
+      future: statisticsController.getTimeOfLastExercise(user.email, context),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return _buildLoadingCard(icon: Icons.schedule);
@@ -190,11 +189,11 @@ class StatisticsWidget extends StatelessWidget {
 
   /// Duration Card
   Widget buildDurationCard(UserModel user, bool isDark, BuildContext context) {
-    final dbController = DbController()..user = user;
+    final statisticsController = StatisticsController();
     final localizations = AppLocalizations.of(context)!;
 
     return FutureBuilder<String?>(
-      future: dbController.durationOfLastExercise(context),
+      future: statisticsController.getDurationOfLastExercise(user.email, context),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return _buildLoadingCard(icon: Icons.run_circle_outlined);

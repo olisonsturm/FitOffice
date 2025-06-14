@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -22,6 +23,7 @@ class DeleteExerciseDialog extends StatefulWidget {
 
 class _DeleteExerciseDialogState extends State<DeleteExerciseDialog> {
   bool isDeleting = false;
+  final dbController = DbController();
 
   Future<void> _deleteExercise() async {
     setState(() => isDeleting = true);
@@ -45,6 +47,8 @@ class _DeleteExerciseDialogState extends State<DeleteExerciseDialog> {
             .collection('exercises')
             .doc(docId)
             .delete();
+
+        dbController.deleteExciseLogsOfExercise(widget.exerciseName);
       }
 
       if (mounted) {

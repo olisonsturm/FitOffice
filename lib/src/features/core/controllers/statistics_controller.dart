@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 
 class StatisticsController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -170,12 +171,8 @@ class StatisticsController {
           final exerciseDoc = exercises.docs.first;
           final exerciseTime = (exerciseDoc['startTime'] as Timestamp).toDate();
 
-          failedAtTime = DateTime(
-            exerciseTime.year,
-            exerciseTime.month,
-            exerciseTime.day,
-            23, 59, 59
-          );
+          failedAtTime = DateTime(exerciseTime.year, exerciseTime.month,
+              exerciseTime.day, 23, 59, 59);
         }
 
         if (startedAt.isBefore(todayStart)) {
@@ -188,7 +185,8 @@ class StatisticsController {
     }
   }
 
-  Future<Map<String, dynamic>?> getLongestStreak(String userEmail, BuildContext context) async {
+  Future<Map<String, dynamic>?> getLongestStreak(
+      String userEmail, BuildContext context) async {
     final localizations = AppLocalizations.of(context)!;
     final userRef = await _getUserDocRef(userEmail);
 
@@ -226,7 +224,9 @@ class StatisticsController {
     return {
       'lengthInDays': maxDays,
       'startDate': _formatDate(longestStart!),
-      'endDate': isActiveStreak ? localizations.tStreakStillActive : _formatDate(longestEnd!),
+      'endDate': isActiveStreak
+          ? localizations.tStreakStillActive
+          : _formatDate(longestEnd!),
     };
   }
 
@@ -235,6 +235,42 @@ class StatisticsController {
     final month = date.month.toString().padLeft(2, '0');
     final year = date.year.toString();
     return '$day.$month.$year';
+  }
+
+  Future<String> getTimeOfLastExercise(
+      String userEmail, BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
+    final userRef = await _getUserDocRef(userEmail);
+    final exercise = await userRef
+        .collection('exerciseLogs')
+        .orderBy('endTime', descending: true)
+        .limit(1)
+        .get();
+    if (exercise.docs.isEmpty) return localizations.tNoExercisesDone;
+    final doc = exercise.docs.first;
+    final Timestamp timestamp = doc['endTime'];
+    final DateTime dateTime = timestamp.toDate();
+    final formatted = DateFormat('dd.MM.yyyy HH:mm').format(dateTime);
+    return formatted;
+  }
+
+  Future<String> getDurationOfLastExercise(
+      String userEmail, BuildContext context) async {
+    final localisations = AppLocalizations.of(context)!;
+    final userRef = await _getUserDocRef(userEmail);
+    final exercise = await userRef
+        .collection('exerciseLogs')
+        .orderBy('endTime', descending: true)
+        .limit(1)
+        .get();
+    if (exercise.docs.isEmpty) return localisations.tNoExercisesDone;
+    final doc = exercise.docs.first;
+    final Timestamp start = doc['startTime'];
+    final Timestamp end = doc['endTime'];
+    final Duration duration = end.toDate().difference(start.toDate());
+    final String formattedDuration =
+        '${duration.inMinutes.toString().padLeft(2, '0')}:${(duration.inSeconds % 60).toString().padLeft(2, '0')} min';
+    return formattedDuration;
   }
 }
 

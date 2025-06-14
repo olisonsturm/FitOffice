@@ -49,91 +49,6 @@ class DbController {
     return formattedDate;
   }
 
-  String _formatDuration(Duration duration) {
-    int hours = duration.inHours;
-    int minutes = duration.inMinutes.remainder(60);
-    int seconds = duration.inSeconds.remainder(60);
-
-    if (hours > 0) {
-      return '${hours}h ${minutes}m ${seconds}s';
-    } else if (minutes > 0) {
-      return '${minutes}m ${seconds}s';
-    } else {
-      return '${seconds}s';
-    }
-  }
-
-  Future<String?> lastExerciseOfUser(BuildContext context) async {
-    final localizations = AppLocalizations.of(context)!;
-
-    try {
-      final userId = user.id;
-
-      //Query needs to be edited if database structure changes
-      final exerciseHistoryRef = firestore
-          .collection('users')
-          .doc(userId)
-          .collection('exerciseHistory');
-
-      final querySnapshot = await exerciseHistoryRef
-          .orderBy('completedAt', descending: true)
-          .limit(1)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final doc = querySnapshot.docs.first;
-
-        final startedAt = doc.data()['startedAt'];
-
-        if (startedAt != null && startedAt is Timestamp) {
-          String startedAtString = timestampToString(startedAt);
-          return startedAtString;
-        } else {
-          return localizations.tDashboardNoValidDate;
-        }
-      } else {
-        return localizations.tDashboardNoExercisesDone;
-      }
-    } catch (e) {
-      return localizations.tDashboardExceptionLoadingExercise;
-    }
-  }
-
-  Future<String?> durationOfLastExercise(BuildContext context) async {
-    final localizations = AppLocalizations.of(context)!;
-    final userId = user.id;
-
-    //Query needs to be edited if database structure changes
-    final exerciseHistoryRef =
-        firestore.collection('users').doc(userId).collection('exerciseHistory');
-
-    final querySnapshot = await exerciseHistoryRef
-        .orderBy('completedAt', descending: true)
-        .limit(1)
-        .get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      final doc = querySnapshot.docs.first;
-      final data = doc.data();
-
-      final Timestamp? startedAt = data['startedAt'];
-      final Timestamp? completedAt = data['completedAt'];
-
-      if (startedAt != null && completedAt != null) {
-        final DateTime start = startedAt.toDate();
-        final DateTime end = completedAt.toDate();
-
-        final Duration duration = end.difference(start);
-        String formattedDuration = _formatDuration(duration);
-
-        return formattedDuration;
-      } else {
-        return localizations.tDashboardTimestampsMissing;
-      }
-    }
-    return null;
-  }
-
   Future<String> getNumberOfExercisesByCategory(String category) async {
     final numberOfExercisesByCategory = await firestore
         .collection('exercises')
@@ -343,6 +258,23 @@ class DbController {
       await removeFavorite(email, exerciseName);
     } else {
       await addFavorite(email, exerciseName);
+    }
+  }
+
+  Future<void> deleteExciseLogsOfExercise(String exerciseName) async {
+    final usersSnapshot = await firestore.collection('users').get();
+
+    for (final userDoc in usersSnapshot.docs) {
+      final userRef = userDoc.reference;
+
+      final logsSnapshot = await userRef
+          .collection('exerciseLogs')
+          .where('exerciseName', isEqualTo: exerciseName)
+          .get();
+
+      for (final logDoc in logsSnapshot.docs) {
+        await logDoc.reference.delete();
+      }
     }
   }
 }
