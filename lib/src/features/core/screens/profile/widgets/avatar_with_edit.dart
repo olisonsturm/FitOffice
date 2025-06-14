@@ -79,6 +79,7 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
               controller: cropController,
               aspectRatio: 1,
               onCropped: (result) async {
+
                 switch (result) {
                   case CropSuccess(:final croppedImage):
                     final tempDir = Directory.systemTemp;
@@ -92,7 +93,6 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
                     } catch (e) {
                       debugPrint('Error uploading avatar: $e');
                     }
-
                     Navigator.pop(context, tempFile);
                     break;
                   case CropFailure(:final cause):
