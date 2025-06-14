@@ -7,7 +7,6 @@ import '../../../../utils/animations/fade_in_animation/animation_design.dart';
 import '../../../../utils/animations/fade_in_animation/fade_in_animation_controller.dart';
 import '../../../../utils/animations/fade_in_animation/fade_in_animation_model.dart';
 import '../../../../constants/colors.dart';
-import '../../../../constants/text_strings.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

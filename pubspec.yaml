@@ -50,6 +50,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   shared_preferences: ^2.5.3
+  package_info_plus: ^8.3.0
 
 dev_dependencies:
   flutter_test:
@@ -70,7 +71,7 @@ dependency_overrides:
 
 flutter:
   uses-material-design: true
-  generate: true
+  generate: true # TODO: WILL BE DEPRECATED IN FUTURE (CHANGE TO FLUTTER GEN)
   assets:
     - assets/logo/
     - assets/images/

@@ -9,7 +9,6 @@ import '../../controllers/db_controller.dart';
 import '../../controllers/profile_controller.dart';
 import '../dashboard/widgets/categories.dart';
 import '../dashboard/widgets/search.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final GlobalKey<LibraryScreenState> libraryKey = GlobalKey<LibraryScreenState>();
 
@@ -35,7 +34,6 @@ class LibraryScreenState extends State<LibraryScreen> {
   bool _searchHasFocus = false;
   String _searchText = '';
 
-  List<String> _userFavorites = [];
   String favoriteCount = '';
 
   void forceRedirectFocus() {
@@ -61,18 +59,18 @@ class LibraryScreenState extends State<LibraryScreen> {
   }
 
   //TODO: Unused by now
-  void _toggleFavorite(String exerciseName) async {
-    final user = await _profileController.getUserData();
-    final isFavorite = _userFavorites.contains(exerciseName);
-
-    if (isFavorite) {
-      await _dbController.removeFavorite(user.email, exerciseName);
-    } else {
-      await _dbController.addFavorite(user.email, exerciseName);
-    }
-
-    _loadUserFavorites();
-  }
+  // void _toggleFavorite(String exerciseName) async {
+  //   final user = await _profileController.getUserData();
+  //   final isFavorite = _userFavorites.contains(exerciseName);
+  //
+  //   if (isFavorite) {
+  //     await _dbController.removeFavorite(user.email, exerciseName);
+  //   } else {
+  //     await _dbController.addFavorite(user.email, exerciseName);
+  //   }
+  //
+  //   _loadUserFavorites();
+  // }
 
   void _loadUserFavorites() async {
     final user = await _profileController.getUserData();
@@ -81,7 +79,6 @@ class LibraryScreenState extends State<LibraryScreen> {
     userFavorites.map((e) => e['name'] as String).toList();
 
     setState(() {
-      _userFavorites = favoriteNames;
       favoriteCount = "${favoriteNames.length} ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
     });
   }

@@ -27,8 +27,6 @@ class _AllUsersPageState extends State<AllUsersPage> {
 
   late UserModel _currentUser;
   bool isUserLoaded = false;
-  bool _searchHasFocus = false;
-  String _searchText = '';
 
   List<UserModel> _allUsers = [];
   List<UserModel> _filteredUsers = [];
@@ -115,12 +113,10 @@ class _AllUsersPageState extends State<AllUsersPage> {
                     onTextChanged: (query) {
                       _categoriesKey.currentState?.updateSearchQuery(query);
                       setState(() {
-                        _searchText = query;
                       });
                     },
                     onFocusChanged: (hasFocus) {
                       setState(() {
-                        _searchHasFocus = hasFocus;
                       });
                     },
                   ),
