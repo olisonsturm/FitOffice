@@ -304,8 +304,20 @@ class BugReportModal {
 
   static Future<void> _launchUrl(String url) async {
     final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    try {
+      if (await canLaunchUrl(uri)) {
+        final bool launched = await launchUrl(
+          uri,
+          mode: LaunchMode.externalApplication
+        );
+        if (!launched) {
+          debugPrint('Could not launch $url');
+        }
+      } else {
+        debugPrint('Cannot launch $url');
+      }
+    } catch (e) {
+      debugPrint('Error launching URL: $e');
     }
   }
 }
