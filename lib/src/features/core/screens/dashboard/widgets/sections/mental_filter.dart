@@ -14,6 +14,7 @@ class DashboardMentalSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return SizedBox(
       height: 45,
       child: ListView.builder(
@@ -33,7 +34,7 @@ class DashboardMentalSection extends StatelessWidget {
                     height: 45,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: tDarkColor,
+                      color: isDark ? Colors.grey[800] : tPrimaryColor.withValues(alpha: 0.1),
                     ),
                     child: Center(
                       child: Text(

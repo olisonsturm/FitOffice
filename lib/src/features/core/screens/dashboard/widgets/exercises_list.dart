@@ -2,7 +2,6 @@ import 'package:fit_office/src/features/core/screens/profile/admin/exercise_form
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:string_similarity/string_similarity.dart';
-import 'package:fit_office/src/constants/colors.dart';
 import '../../../../../utils/helper/dialog_helper.dart';
 import '../../../controllers/profile_controller.dart';
 import '../../profile/admin/delete_exercise.dart';
@@ -205,13 +204,18 @@ class _AllExercisesListState extends State<AllExercisesList> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-      child: Material(
-        color: isDark ? Colors.grey[800] : tWhiteColor,
-        elevation: 2,
-        borderRadius: BorderRadius.circular(12),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+      child: Container(
+        decoration: BoxDecoration(
+          color: isDark ? Colors.grey[800] : Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isDark ? Colors.grey.withValues(alpha: 0.5) : Colors.grey.withValues(alpha: 0.5),
+            width: 1.5,
+          ),
+        ),
         child: InkWell(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
           highlightColor: Colors.grey.shade300,
           splashColor: Colors.grey.shade300,
           onTap: () async {
@@ -254,7 +258,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.play_arrow),
-                    color: isDark ? tWhiteColor : tPaleBlackColor,
+                    color: isDark ? Colors.white : Colors.grey[800],
                     onPressed: () async {
                       if (timerController.isRunning.value ||
                           timerController.isPaused.value) {
@@ -287,7 +291,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
                     IconButton(
                       icon: Icon(
                         Icons.edit,
-                        color: isDark ? tWhiteColor : tPaleBlackColor,
+                        color: isDark ? Colors.white : Colors.grey[800],
                       ),
                       onPressed: () async {
                         final timerController =
