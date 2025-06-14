@@ -3,7 +3,7 @@ import 'package:fit_office/src/features/core/screens/profile/admin/widgets/confi
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/save_button.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 

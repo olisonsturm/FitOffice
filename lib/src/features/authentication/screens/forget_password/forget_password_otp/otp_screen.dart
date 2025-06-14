@@ -3,7 +3,7 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fit_office/src/constants/sizes.dart';
 import '../../../controllers/otp_controller.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 
 class OTPScreen extends StatelessWidget {
   const OTPScreen({super.key});

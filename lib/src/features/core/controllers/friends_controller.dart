@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 
 import '../../authentication/models/user_model.dart';
 

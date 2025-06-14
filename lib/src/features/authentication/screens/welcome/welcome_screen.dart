@@ -8,7 +8,7 @@ import '../../../../utils/animations/fade_in_animation/animation_design.dart';
 import '../../../../utils/animations/fade_in_animation/fade_in_animation_controller.dart';
 import '../../../../utils/animations/fade_in_animation/fade_in_animation_model.dart';
 import '../login/login_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});

@@ -4,7 +4,7 @@ import 'package:fit_office/src/features/core/screens/statistics/statistics_scree
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/constants/colors.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/categories.dart';
 import 'package:fit_office/src/features/core/screens/profile/profile_screen.dart';

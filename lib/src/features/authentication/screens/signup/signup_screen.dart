@@ -7,7 +7,7 @@ import '../../../../common_widgets/buttons/clickable_richtext_widget.dart';
 import '../../../../common_widgets/form/form_header_widget.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/sizes.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 
 class SignupScreen extends StatelessWidget {
   const SignupScreen({super.key});

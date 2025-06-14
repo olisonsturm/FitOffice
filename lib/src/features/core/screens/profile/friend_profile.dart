@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import 'package:fit_office/src/features/core/controllers/friends_controller.dart';
 import 'package:fit_office/src/features/core/screens/profile/widgets/custom_profile_button.dart';

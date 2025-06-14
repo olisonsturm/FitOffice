@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 
 class CancelExerciseDialog extends StatelessWidget {
   final String exerciseName;

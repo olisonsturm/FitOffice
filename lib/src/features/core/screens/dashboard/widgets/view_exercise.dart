@@ -1,4 +1,4 @@
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/exercise_history.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/exercise_info.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/exercise_form.dart';
