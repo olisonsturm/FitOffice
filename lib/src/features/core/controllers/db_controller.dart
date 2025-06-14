@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import '../../authentication/models/user_model.dart';
 import 'package:intl/intl.dart';
 import 'package:string_similarity/string_similarity.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 
 class DbController {
   late UserModel user;

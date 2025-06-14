@@ -2,7 +2,7 @@ import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/sizes.dart';
 import 'package:fit_office/src/features/core/screens/progress/widgets/progress_chapter_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});

@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:fit_office/src/constants/sizes.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/screens/profile/widgets/update_profile_modal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../constants/colors.dart';

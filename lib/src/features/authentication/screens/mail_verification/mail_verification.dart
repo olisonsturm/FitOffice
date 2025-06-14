@@ -4,7 +4,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:fit_office/src/constants/sizes.dart';
 import 'package:fit_office/src/repository/authentication_repository/authentication_repository.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 import '../../controllers/mail_verification_controller.dart';
 
 class MailVerification extends StatelessWidget {

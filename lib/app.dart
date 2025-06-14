@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/utils/app_bindings.dart';
 import 'package:fit_office/src/utils/theme/theme.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/common_widgets/form/form_header_widget.dart';
 import 'package:fit_office/src/constants/image_strings.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:fit_office/src/features/authentication/screens/signup/signup_screen.dart';
 import '../../../../common_widgets/buttons/clickable_richtext_widget.dart';
 import '../../../../constants/colors.dart';

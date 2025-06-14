@@ -7,7 +7,7 @@ import '../../../../../constants/colors.dart';
 import '../../../../../constants/sizes.dart';
 import '../../../../../utils/helper/helper_controller.dart';
 import '../../forget_password/forget_password_options/forget_password_model_bottom_sheet.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 
 class LoginFormWidget extends StatelessWidget {
   const LoginFormWidget({super.key});

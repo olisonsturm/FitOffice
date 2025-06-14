@@ -10,7 +10,7 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/start_exe
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import '../../../controllers/exercise_timer.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 
 class FullWidthDivider extends StatelessWidget {
   const FullWidthDivider({super.key});

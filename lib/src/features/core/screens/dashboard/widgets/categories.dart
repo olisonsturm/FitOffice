@@ -1,4 +1,4 @@
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/favorites_filter.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/mental_filter.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/physicals_filter.dart';

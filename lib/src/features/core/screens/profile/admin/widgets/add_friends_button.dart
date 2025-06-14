@@ -1,7 +1,7 @@
 //TODO: Add functionality to the share button and add colors to constants
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fit_office/l10n/app_localizations.dart';
 import '../add_friends.dart';
 
 class AddFriendsButton extends StatelessWidget {
