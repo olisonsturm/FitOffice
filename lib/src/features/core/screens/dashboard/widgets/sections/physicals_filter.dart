@@ -5,7 +5,6 @@ import 'package:fit_office/src/features/core/models/dashboard/categories_model.d
 class DashboardPhysicalSection extends StatelessWidget {
   final List<DashboardCategoriesModel> categories;
   final TextTheme txtTheme;
-
   const DashboardPhysicalSection({
     super.key,
     required this.categories,
@@ -14,6 +13,8 @@ class DashboardPhysicalSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return SizedBox(
       height: 45,
       child: ListView.builder(
@@ -33,12 +34,12 @@ class DashboardPhysicalSection extends StatelessWidget {
                     height: 45,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: tDarkColor,
+                      color: isDark ? Colors.grey[800] : tPrimaryColor.withValues(alpha: 0.1),
                     ),
                     child: Center(
                       child: Text(
                         item.title,
-                        style: txtTheme.titleLarge?.apply(color: Colors.white),
+                        style: txtTheme.titleLarge?.apply(color: isDark ? Colors.white : tPrimaryColor),
                       ),
                     ),
                   ),

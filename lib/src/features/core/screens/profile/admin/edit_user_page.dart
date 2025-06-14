@@ -80,6 +80,8 @@ class _EditUserPageState extends State<EditUserPage> {
   }
 
   Future<void> _saveChanges() async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final localisations = AppLocalizations.of(context)!;
     if (_formKey.currentState!.validate()) {
       setState(() => isLoading = true);
 
@@ -95,8 +97,8 @@ class _EditUserPageState extends State<EditUserPage> {
       try {
         if (isEditMode) {
           await _dbController.updateUser(userData);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(AppLocalizations.of(context)!.tUserUpdated)),
+          scaffoldMessenger.showSnackBar(
+            SnackBar(content: Text(localisations.tUserUpdated)),
           );
         } else {
           _signUpController.userName.text = _userNameController.text.trim();

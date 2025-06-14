@@ -19,6 +19,7 @@ class LoginController extends GetxController {
 
   /// [EmailAndPasswordLogin]
   Future<void> login(BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
     try {
       isLoading.value = true;
       if (!loginFormKey.currentState!.validate()) {
@@ -30,7 +31,7 @@ class LoginController extends GetxController {
       auth.setInitialScreen(auth.firebaseUser);
     } catch (e) {
       isLoading.value = false;
-      Helper.errorSnackBar(title: AppLocalizations.of(context)!.tOhSnap, message: e.toString());
+      Helper.errorSnackBar(title: localizations.tOhSnap, message: e.toString());
     }
   }
 }

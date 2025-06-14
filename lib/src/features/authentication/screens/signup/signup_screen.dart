@@ -1,7 +1,6 @@
 import 'package:fit_office/src/features/authentication/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/image_strings.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/features/authentication/screens/signup/widgets/signup_form_widget.dart';
 import 'package:get/get.dart';
 import '../../../../common_widgets/buttons/clickable_richtext_widget.dart';

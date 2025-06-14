@@ -189,6 +189,7 @@ class StatisticsController {
   }
 
   Future<Map<String, dynamic>?> getLongestStreak(String userEmail, BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
     final userRef = await _getUserDocRef(userEmail);
 
     final allStreaksSnapshot = await userRef.collection('streaks').get();
@@ -225,7 +226,7 @@ class StatisticsController {
     return {
       'lengthInDays': maxDays,
       'startDate': _formatDate(longestStart!),
-      'endDate': isActiveStreak ? AppLocalizations.of(context)!.tStreakStillActive : _formatDate(longestEnd!),
+      'endDate': isActiveStreak ? localizations.tStreakStillActive : _formatDate(longestEnd!),
     };
   }
 

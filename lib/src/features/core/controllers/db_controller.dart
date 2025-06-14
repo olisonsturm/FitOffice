@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:flutter/cupertino.dart';
 import '../../authentication/models/user_model.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +12,7 @@ class DbController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Future<String?> fetchActiveStreakSteps(BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
     final userId = user.id;
     //This query must be edited when database structure is defined
     final streaksRef =
@@ -31,13 +31,13 @@ class DbController {
       }
     } on SocketException {
       // Network error occurred, handle accordingly
-      return AppLocalizations.of(context)!.tDashboardNoInternetConnection;
+      return localizations.tDashboardNoInternetConnection;
     } on FirebaseException {
       // Handle other Firestore specific exceptions
-      return AppLocalizations.of(context)!.tDashboardDatabaseException;
+      return localizations.tDashboardDatabaseException;
     } catch (e) {
       // Catch all other errors
-      return AppLocalizations.of(context)!.tDashboardUnexpectedError;
+      return localizations.tDashboardUnexpectedError;
     }
 
     return "0";
@@ -64,6 +64,8 @@ class DbController {
   }
 
   Future<String?> lastExerciseOfUser(BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
+
     try {
       final userId = user.id;
 
@@ -87,17 +89,18 @@ class DbController {
           String startedAtString = timestampToString(startedAt);
           return startedAtString;
         } else {
-          return AppLocalizations.of(context)!.tDashboardNoValidDate;
+          return localizations.tDashboardNoValidDate;
         }
       } else {
-        return AppLocalizations.of(context)!.tDashboardNoExercisesDone;
+        return localizations.tDashboardNoExercisesDone;
       }
     } catch (e) {
-      return AppLocalizations.of(context)!.tDashboardExceptionLoadingExercise;
+      return localizations.tDashboardExceptionLoadingExercise;
     }
   }
 
   Future<String?> durationOfLastExercise(BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
     final userId = user.id;
 
     //Query needs to be edited if database structure changes
@@ -125,7 +128,7 @@ class DbController {
 
         return formattedDuration;
       } else {
-        return AppLocalizations.of(context)!.tDashboardTimestampsMissing;
+        return localizations.tDashboardTimestampsMissing;
       }
     }
     return null;

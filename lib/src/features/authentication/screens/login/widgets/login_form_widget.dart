@@ -5,7 +5,6 @@ import 'package:fit_office/src/common_widgets/buttons/primary_button.dart';
 import 'package:fit_office/src/features/authentication/controllers/login_controller.dart';
 import '../../../../../constants/colors.dart';
 import '../../../../../constants/sizes.dart';
-import '../../../../../constants/text_strings.dart';
 import '../../../../../utils/helper/helper_controller.dart';
 import '../../forget_password/forget_password_options/forget_password_model_bottom_sheet.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

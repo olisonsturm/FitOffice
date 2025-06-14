@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fit_office/src/constants/colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+
+import '../../widgets/avatar.dart';
 
 class FriendRequestsWidget extends StatefulWidget {
   final String currentUserId;
@@ -56,7 +59,7 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
+    final isDark = theme.brightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,40 +71,48 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: isDarkMode ? Colors.white : Colors.black87,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
             const Spacer(),
             IconButton(
-              icon: const Icon(Icons.refresh, color: Colors.blue),
+              icon: const Icon(Icons.refresh, color: tPrimaryColor),
               onPressed: _loadRequests,
             ),
           ],
         ),
         const SizedBox(height: 8),
         if (_isLoading)
-          const Center(child: CircularProgressIndicator())
+          const Center(child: CircularProgressIndicator(color: tPrimaryColor))
         else if (_requests.isEmpty)
-          Text(
-            AppLocalizations.of(context)!.tNoRequests,
-            style:
-                TextStyle(color: isDarkMode ? Colors.white70 : Colors.black54),
+          Container(
+            decoration: BoxDecoration(
+              color: isDark ? Colors.grey[800] : Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+                width: 1.5,
+              ),
+            ),
+            padding: const EdgeInsets.all(16),
+            child: Center(
+              child: Text(
+                AppLocalizations.of(context)!.tNoRequests,
+                style: TextStyle(
+                  color: isDark ? Colors.white70 : Colors.black54,
+                ),
+              ),
+            ),
           )
         else
           Container(
             decoration: BoxDecoration(
-              color: isDarkMode ? Colors.black : Colors.white,
+              color: isDark ? Colors.grey[800] : Colors.white,
+              borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: isDarkMode ? Colors.white24 : Colors.grey.shade300,
+                color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+                width: 1.5,
               ),
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: isDarkMode ? Colors.black54 : Colors.black12,
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
             ),
             constraints: const BoxConstraints(maxHeight: 168),
             child: ListView.builder(
@@ -118,14 +129,14 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
                     if (!senderSnap.hasData) return const SizedBox.shrink();
 
                     final senderData =
-                        senderSnap.data!.data() as Map<String, dynamic>;
+                    senderSnap.data!.data() as Map<String, dynamic>;
                     final senderName = senderData['username'] ??
                         AppLocalizations.of(context)!.tUnknown;
 
                     final Timestamp sinceTimestamp = doc['since'] as Timestamp;
                     final DateTime sinceDate = sinceTimestamp.toDate();
                     final Duration difference =
-                        DateTime.now().difference(sinceDate);
+                    DateTime.now().difference(sinceDate);
 
                     String timeAgo;
                     if (difference.inDays >= 1) {
@@ -137,13 +148,19 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
                     }
 
                     return ListTile(
-                      leading: const Icon(Icons.person, color: Colors.blue),
+                      leading: SizedBox(
+                        width: 30,
+                        height: 30,
+                        child: Avatar(
+                          userEmail: senderData['email'],
+                        ),
+                      ),
                       title: Row(
                         children: [
                           Text(
                             senderName,
                             style: TextStyle(
-                              color: isDarkMode ? Colors.white : Colors.black87,
+                              color: isDark ? Colors.white : Colors.black87,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -152,7 +169,7 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
                             '($timeAgo)',
                             style: TextStyle(
                               color:
-                                  isDarkMode ? Colors.white54 : Colors.black54,
+                              isDark ? Colors.white54 : Colors.black54,
                               fontSize: 12,
                             ),
                           ),
