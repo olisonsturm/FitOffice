@@ -1,3 +1,4 @@
+import 'package:fit_office/global_overlay.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/exercise_history.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/exercise_info.dart';
@@ -100,7 +101,9 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
           isFavorite = !isFavorite;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.tUpdateFavoriteException)),
+          SnackBar(
+              content:
+                  Text(AppLocalizations.of(context)!.tUpdateFavoriteException)),
         );
       }
     } finally {
@@ -210,15 +213,24 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
             ),
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: selectedTab == 0
-                  ? ExerciseInfoTab(exerciseData: widget.exerciseData)
-                  : ExerciseHistoryTab(
-                      name: (widget.exerciseData['name'] ?? '')
-                          .toString()
-                          .trim()),
-            ),
+            child: Obx(() {
+              final isOverlayVisible =
+                  Get.find<ExerciseTimerController>().isRunning.value;
+              return Padding(
+                padding: EdgeInsets.fromLTRB(
+                  16,
+                  0,
+                  16,
+                  isOverlayVisible ? GlobalExerciseOverlay.overlayHeight : 0,
+                ),
+                child: selectedTab == 0
+                    ? ExerciseInfoTab(exerciseData: widget.exerciseData)
+                    : ExerciseHistoryTab(
+                        name: (widget.exerciseData['name'] ?? '')
+                            .toString()
+                            .trim()),
+              );
+            }),
           ),
         ],
       ),

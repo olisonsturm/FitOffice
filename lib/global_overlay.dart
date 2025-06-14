@@ -257,4 +257,7 @@ class GlobalExerciseOverlay {
   void setDialogOpen(bool isOpen) {
     _dialogIsOpen.value = isOpen;
   }
+
+  static const double overlayHeight = 86;
+
 }
