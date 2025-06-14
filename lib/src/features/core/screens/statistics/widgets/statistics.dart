@@ -12,35 +12,34 @@ class StatisticsWidget extends StatelessWidget {
   const StatisticsWidget(
       {super.key,
       required this.txtTheme,
-      required this.isDark,
       this.userEmail});
 
   final TextTheme txtTheme;
-  final bool isDark;
   final String? userEmail;
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileController());
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        buildStreakCard(controller),
+        buildStreakCard(controller, isDark),
         const SizedBox(height: 10),
-        _buildLastExerciseCard(controller),
+        _buildLastExerciseCard(controller, isDark),
         const SizedBox(height: 10),
-        _buildDurationCard(controller),
+        _buildDurationCard(controller, isDark),
         const SizedBox(height: 10),
-        buildTopExercisesCard(controller),
+        buildTopExercisesCard(controller, isDark),
         const SizedBox(height: 10),
-        buildLongestStreakCard(controller)
+        buildLongestStreakCard(controller, isDark)
       ],
     );
   }
 
   /// Streak-Card
-  Widget buildStreakCard(ProfileController controller) {
+  Widget buildStreakCard(ProfileController controller, isDark) {
     return FutureBuilder(
       future: controller.getUserData(),
       builder: (context, userSnapshot) {
@@ -75,15 +74,12 @@ class StatisticsWidget extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: isDark ? tSecondaryColor : tCardBgColor,
+                    color: isDark ? Colors.grey[800] : Colors.white,
                     borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 6,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
+                    border: Border.all(
+                      color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+                      width: 1.5,
+                    ),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,6 +131,7 @@ class StatisticsWidget extends StatelessWidget {
                   iconColor: Colors.red,
                   title: localizations.tError,
                   content: localizations.tLoadingError,
+                  isDark: isDark,
                 );
               }
             },
@@ -145,6 +142,7 @@ class StatisticsWidget extends StatelessWidget {
             iconColor: Colors.red,
             title: localizations.tError,
             content: localizations.tLoadingError,
+            isDark: isDark,
           );
         }
       },
@@ -152,7 +150,7 @@ class StatisticsWidget extends StatelessWidget {
   }
 
   /// Last-Exercise-Card
-  Widget _buildLastExerciseCard(ProfileController controller) {
+  Widget _buildLastExerciseCard(ProfileController controller, isDark) {
     return FutureBuilder(
       future: controller.getUserData(),
       builder: (context, userSnapshot) {
@@ -173,6 +171,7 @@ class StatisticsWidget extends StatelessWidget {
                   iconColor: Colors.white,
                   title: 'Zeitpunkt der letzten Übung',
                   content: stepsSnapshot.data!,
+                  isDark: isDark,
                 );
               } else {
                 return _styledCard(
@@ -180,6 +179,7 @@ class StatisticsWidget extends StatelessWidget {
                   iconColor: Colors.white,
                   title: 'Zeitpunkt der letzten Übung',
                   content: 'Keine Übungen vorhanden.',
+                  isDark: isDark,
                 );
               }
             },
@@ -190,6 +190,7 @@ class StatisticsWidget extends StatelessWidget {
             iconColor: Colors.red,
             title: 'Fehler',
             content: 'Fehler beim Laden der Nutzerdaten.',
+            isDark: isDark,
           );
         }
       },
@@ -197,7 +198,7 @@ class StatisticsWidget extends StatelessWidget {
   }
 
   /// Duration-of-Last-Exercise-Card
-  Widget _buildDurationCard(ProfileController controller) {
+  Widget _buildDurationCard(ProfileController controller, isDark) {
     return FutureBuilder(
       future: controller.getUserData(),
       builder: (context, userSnapshot) {
@@ -218,6 +219,7 @@ class StatisticsWidget extends StatelessWidget {
                   iconColor: Colors.white,
                   title: 'Dauer der letzten Übung',
                   content: stepsSnapshot.data!,
+                  isDark: isDark,
                 );
               } else {
                 return _styledCard(
@@ -225,6 +227,7 @@ class StatisticsWidget extends StatelessWidget {
                   iconColor: Colors.white,
                   title: 'Dauer der letzten Übung',
                   content: 'Keine Übungen vorhanden.',
+                  isDark: isDark,
                 );
               }
             },
@@ -235,6 +238,7 @@ class StatisticsWidget extends StatelessWidget {
             iconColor: Colors.red,
             title: 'Fehler',
             content: 'Fehler beim Laden der Nutzerdaten.',
+            isDark: isDark,
           );
         }
       },
@@ -242,7 +246,7 @@ class StatisticsWidget extends StatelessWidget {
   }
 
   /// Top-3-Exercises-Card
-  Widget buildTopExercisesCard(ProfileController controller) {
+  Widget buildTopExercisesCard(ProfileController controller, isDark) {
     return FutureBuilder(
       future: controller.getUserData(),
       builder: (context, userSnapshot) {
@@ -267,13 +271,16 @@ class StatisticsWidget extends StatelessWidget {
                   iconColor: Colors.amber,
                   title: localizations.tTop3Exercises,
                   items: topExercisesSnapshot.data!,
+                  isDark: isDark,
                 );
               } else {
                 return _styledTextBlockCard(
                     icon: Icons.star,
                     iconColor: Colors.grey,
                     title: localizations.tTop3Exercises,
-                    lines: [localizations.tNoExercisesDone]);
+                    lines: [localizations.tNoExercisesDone],
+                    isDark: isDark,
+                );
               }
             },
           );
@@ -283,13 +290,14 @@ class StatisticsWidget extends StatelessWidget {
             iconColor: Colors.red,
             title: localizations.tError,
             content: localizations.tLoadingError,
+            isDark: isDark,
           );
         }
       },
     );
   }
 
-  Widget buildLongestStreakCard(ProfileController controller) {
+  Widget buildLongestStreakCard(ProfileController controller, isDark) {
     return FutureBuilder(
       future: controller.getUserData(),
       builder: (context, userSnapshot) {
@@ -314,6 +322,7 @@ class StatisticsWidget extends StatelessWidget {
                   icon: Icons.auto_graph,
                   iconColor: Colors.amber,
                   title: localizations.tLongestStreak,
+                  isDark: isDark,
                   lines: [
                     '${localizations.tStartDate}${data['startDate']}',
                     '${localizations.tEndDate}${data['endDate']}',
@@ -326,6 +335,7 @@ class StatisticsWidget extends StatelessWidget {
                   iconColor: Colors.grey,
                   title: localizations.tLongestStreak,
                   lines: [localizations.tNoStreak],
+                  isDark: isDark,
                 );
               }
             },
@@ -336,6 +346,7 @@ class StatisticsWidget extends StatelessWidget {
             iconColor: Colors.red,
             title: localizations.tError,
             content: localizations.tLoadingError,
+            isDark: isDark,
           );
         }
       },
@@ -348,20 +359,18 @@ class StatisticsWidget extends StatelessWidget {
     required Color iconColor,
     required String title,
     required String content,
+    required bool isDark,
   }) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? tSecondaryColor : tCardBgColor,
+        color: isDark ? Colors.grey[800] : Colors.white,
         borderRadius: BorderRadius.circular(10),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 6,
-            offset: Offset(0, 3),
-          ),
-        ],
+        border: Border.all(
+          color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+          width: 1.5,
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -389,20 +398,18 @@ class StatisticsWidget extends StatelessWidget {
     required Color iconColor,
     required String title,
     required List<String> items,
+    required bool isDark,
   }) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? tSecondaryColor : tCardBgColor,
+        color: isDark ? Colors.grey[800] : Colors.white,
         borderRadius: BorderRadius.circular(10),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 6,
-            offset: Offset(0, 3),
-          ),
-        ],
+        border: Border.all(
+          color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+          width: 1.5,
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -434,20 +441,18 @@ class StatisticsWidget extends StatelessWidget {
     required Color iconColor,
     required String title,
     required List<String> lines,
+    required bool isDark,
   }) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? tSecondaryColor : tCardBgColor,
+        color: isDark ? Colors.grey[800] : Colors.white,
         borderRadius: BorderRadius.circular(10),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 6,
-            offset: Offset(0, 3),
-          ),
-        ],
+        border: Border.all(
+          color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+          width: 1.5,
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

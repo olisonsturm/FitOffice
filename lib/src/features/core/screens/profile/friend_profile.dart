@@ -63,6 +63,7 @@ class _FriendProfileState extends State<FriendProfile> {
     final txtTheme = Theme.of(context).textTheme;
     final currentEmail = ProfileController.instance.user.value?.email;
     final localisation = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
@@ -187,23 +188,18 @@ class _FriendProfileState extends State<FriendProfile> {
                   if (widget.isFriend == true) ...[
                     StatisticsWidget(
                       txtTheme: txtTheme,
-                      isDark: Theme.of(context).brightness == Brightness.dark,
                       userEmail: friend.email,
-                    ).buildStreakCard(controller),
+                    ).buildStreakCard(controller, isDark),
                     const SizedBox(height: 12),
                     StatisticsWidget(
                             txtTheme: txtTheme,
-                            isDark:
-                                Theme.of(context).brightness == Brightness.dark,
                             userEmail: friend.email)
-                        .buildTopExercisesCard(controller),
+                        .buildTopExercisesCard(controller, isDark),
                     const SizedBox(height: 12),
                     StatisticsWidget(
                             txtTheme: txtTheme,
-                            isDark:
-                                Theme.of(context).brightness == Brightness.dark,
                             userEmail: friend.email)
-                        .buildLongestStreakCard(controller)
+                        .buildLongestStreakCard(controller, isDark)
                   ]
                 ],
               );
