@@ -49,14 +49,23 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
           widget.exerciseData['name'];
       ExerciseDetailScreen.currentTabIndex.value = 0;
 
-      if (Get.find<ExerciseTimerController>().isRunning.value) {
-        setState(() => showScrollDownButton = true);
-      }
+      final timerActive = Get.find<ExerciseTimerController>().isRunning.value;
+
+      final position = _scrollController.position;
+      final isScrollable = position.maxScrollExtent > 0;
+
+      setState(() {
+        showScrollDownButton = timerActive && isScrollable;
+      });
 
       _scrollController.addListener(() {
-        if (_scrollController.offset >=
-                _scrollController.position.maxScrollExtent &&
-            !_scrollController.position.outOfRange) {
+        final position = _scrollController.position;
+        const delta = 40.0;
+
+        final isNearBottom =
+            position.maxScrollExtent - position.pixels <= delta;
+
+        if (isNearBottom && !position.outOfRange) {
           if (showScrollDownButton) {
             setState(() => showScrollDownButton = false);
           }
