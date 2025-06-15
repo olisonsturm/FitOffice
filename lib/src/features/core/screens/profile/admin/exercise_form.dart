@@ -298,7 +298,9 @@ class _ExerciseFormState extends State<ExerciseForm> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.isEdit ? localisation.tEditExerciseHeading : localisation.tAddExercisesHeader),
-        backgroundColor: tCardBgColor,
+        backgroundColor: tPrimaryColor,
+        elevation: 0,
+        scrolledUnderElevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () async {

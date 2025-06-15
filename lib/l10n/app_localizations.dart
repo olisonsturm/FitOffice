@@ -989,7 +989,7 @@ abstract class AppLocalizations {
   /// No description provided for @tAddExercises.
   ///
   /// In en, this message translates to:
-  /// **'ADD EXERCISES'**
+  /// **'Add Exercises'**
   String get tAddExercises;
 
   /// No description provided for @tAddExercisesHeader.
@@ -1259,7 +1259,7 @@ abstract class AppLocalizations {
   /// No description provided for @tFriendNow.
   ///
   /// In en, this message translates to:
-  /// **' is your friend now.'**
+  /// **'is your friend now.'**
   String get tFriendNow;
 
   /// No description provided for @tNoFriendsYet.
@@ -1277,19 +1277,19 @@ abstract class AppLocalizations {
   /// No description provided for @tFriendDeleted.
   ///
   /// In en, this message translates to:
-  /// **' isn\'t your friend anymore.'**
+  /// **'isn\'t your friend anymore'**
   String get tFriendDeleted;
 
   /// No description provided for @tFriendDeleteException.
   ///
   /// In en, this message translates to:
-  /// **'Couldn\'t delete friend.'**
+  /// **'Couldn\'t delete friend'**
   String get tFriendDeleteException;
 
   /// No description provided for @tIsAlreadyYourFriend.
   ///
   /// In en, this message translates to:
-  /// **' is already your friend.'**
+  /// **'is already your friends'**
   String get tIsAlreadyYourFriend;
 
   /// No description provided for @tFriendshipRequests.
@@ -1861,6 +1861,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Loading progress...'**
   String get tLoadingProgress;
+
+  /// No description provided for @tCancelRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Request'**
+  String get tCancelRequest;
+
+  /// No description provided for @tCancelRequestConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel the friendship request with'**
+  String get tCancelRequestConfirm;
+
+  /// No description provided for @tRemoveFriend.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Friend'**
+  String get tRemoveFriend;
+
+  /// No description provided for @tRemoveFriendConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure to end your friendship with'**
+  String get tRemoveFriendConfirm;
+
+  /// No description provided for @tFriendRequestSentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Friendship request sent to'**
+  String get tFriendRequestSentTo;
+
+  /// No description provided for @tFriendshipAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'Friendship already exists with'**
+  String get tFriendshipAlreadyExists;
+
+  /// No description provided for @tRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get tRemove;
+
+  /// No description provided for @tInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get tInfo;
+
+  /// No description provided for @tFriendRequestDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Friendship request denied'**
+  String get tFriendRequestDenied;
+
+  /// No description provided for @tFriendRequestAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Friendship request accepted'**
+  String get tFriendRequestAccepted;
 }
 
 class _AppLocalizationsDelegate

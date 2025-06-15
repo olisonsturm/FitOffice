@@ -487,7 +487,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Bitte beende zuerst deine aktive Übung, bevor du mit Verwaltungsaufgaben fortfährst.';
 
   @override
-  String get tAddExercises => 'ÜBUNGEN HINZUFÜGEN';
+  String get tAddExercises => 'Übung hinzufügen';
 
   @override
   String get tAddExercisesHeader => 'Übungen hinzufügen';
@@ -624,7 +624,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tFriends => 'Freunde';
 
   @override
-  String get tFriendNow => ' ist jetzt dein Freund.';
+  String get tFriendNow => 'ist jetzt dein Freund';
 
   @override
   String get tNoFriendsYet => 'Du hast noch keine Freunde.';
@@ -639,7 +639,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tFriendDeleteException => 'Freund konnte nicht entfernt werden.';
 
   @override
-  String get tIsAlreadyYourFriend => ' ist bereits dein Freund.';
+  String get tIsAlreadyYourFriend => 'ist bereits dein Freund';
 
   @override
   String get tFriendshipRequests => 'Freundschaftsanfragen';
@@ -942,4 +942,37 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tLoadingProgress => 'Lade Fortschritt...';
+
+  @override
+  String get tCancelRequest => 'Abbrechen der Freundschaftsanfrage';
+
+  @override
+  String get tCancelRequestConfirm => 'Ablehnen der Freundschaftsanfrage von';
+
+  @override
+  String get tRemoveFriend => 'Freundschaft beenden';
+
+  @override
+  String get tRemoveFriendConfirm =>
+      'Möchtest du die Freundschaft mit folgendem Benutzer beenden:';
+
+  @override
+  String get tFriendRequestSentTo =>
+      'Freundschaftsanfrage an folgenden Benutzer gesendet:';
+
+  @override
+  String get tFriendshipAlreadyExists =>
+      'Freundschaftsanfrage existiert bereits';
+
+  @override
+  String get tRemove => 'Remove';
+
+  @override
+  String get tInfo => 'Info';
+
+  @override
+  String get tFriendRequestDenied => 'Freundschaftsanfrage abgelehnt';
+
+  @override
+  String get tFriendRequestAccepted => 'Freundschaftsanfrage angenommen';
 }

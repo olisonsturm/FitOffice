@@ -158,7 +158,7 @@ class _FriendProfileState extends State<FriendProfile> {
                               context: context,
                               title: localisation.tDeleteFriend,
                               content:
-                                  "Are you sure to end your friendship with ${widget.userName}?",
+                                  "${AppLocalizations.of(context)!.tRemoveFriendConfirm} ${widget.userName}?",
                               onConfirm: () async {
                                 setState(() {
                                   isPendingLocal = false;
@@ -167,10 +167,7 @@ class _FriendProfileState extends State<FriendProfile> {
                                 FriendsController controller =
                                     FriendsController();
                                 await controller.removeFriendship(
-                                    currentEmail!, widget.userName);
-
-                                Get.snackbar(localisation.tFriendshipDeleted,
-                                    "${widget.userName}${localisation.tFriendDeleted}");
+                                    currentEmail!, widget.userName, context);
                               },
                               cancel: localisation.tNo,
                               confirm: localisation.tYes,
@@ -182,9 +179,7 @@ class _FriendProfileState extends State<FriendProfile> {
                             });
                             FriendsController controller = FriendsController();
                             await controller.sendFriendRequest(
-                                currentEmail!, widget.userName);
-                            Get.snackbar(localisation.tRequestSent,
-                                "${localisation.tSentRequestToUser}${widget.userName}");
+                                currentEmail!, widget.userName, context);
                           }
                         },
                       ),

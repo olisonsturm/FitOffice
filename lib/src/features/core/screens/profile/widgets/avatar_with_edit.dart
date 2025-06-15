@@ -157,6 +157,9 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
 
   @override
   Widget build(BuildContext context) {
+    // Use a different hero tag from the regular Avatar widget
+    const String heroTag = 'editableAvatar';
+
     return Stack(
       children: [
         SizedBox(
@@ -171,6 +174,7 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
                     imageProvider: _selectedImage != null
                         ? FileImage(_selectedImage!)
                         : _isLoading ? const AssetImage(tDefaultAvatar) : _currentAvatar,
+                    heroTag: heroTag,
                   ),
                   transitionsBuilder: (_, animation, __, child) {
                     return FadeTransition(opacity: animation, child: child);
@@ -179,10 +183,11 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
               );
             },
             child: Hero(
-              tag: 'avatarHero',
+              tag: heroTag,
               child: CircleAvatar(
                 radius: 50,
-                backgroundImage: _selectedImage != null
+                backgroundImage: const AssetImage(tDefaultAvatar),
+                foregroundImage: _selectedImage != null
                     ? FileImage(_selectedImage!)
                     : _isLoading ? const AssetImage(tDefaultAvatar) : _currentAvatar,
               ),

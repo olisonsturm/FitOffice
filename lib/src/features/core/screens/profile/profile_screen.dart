@@ -393,49 +393,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     CustomProfileButton(
                       isDark: isDark,
-                      icon: Icons.delete,
-                      label: localisation.tDeleteEditUser,
-                      onPress: () async {
-                        final timerController =
-                            Get.find<ExerciseTimerController>();
-                        if (timerController.isRunning.value ||
-                            timerController.isPaused.value) {
-                          await showUnifiedDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (_) =>
-                                ActiveTimerDialog.forAction('admin', context),
-                          );
-                          return;
-                        }
-
-                        Get.to(() => const AllUsersPage());
-                      },
-                    ),
-                    CustomProfileButton(
-                      isDark: isDark,
-                      icon: Icons.person_add,
-                      label: localisation.tAddUser,
-                      onPress: () async {
-                        final timerController =
-                            Get.find<ExerciseTimerController>();
-                        if (timerController.isRunning.value ||
-                            timerController.isPaused.value) {
-                          await showUnifiedDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (_) =>
-                                ActiveTimerDialog.forAction('admin', context),
-                          );
-                          return;
-                        }
-
-                        Get.to(() => const EditUserPage());
-                      },
-                    ),
-                    CustomProfileButton(
-                      isDark: isDark,
-                      icon: LineAwesomeIcons.user_check_solid,
+                      icon: LineAwesomeIcons.user_edit_solid,
                       label: "User Management",
                       onPress: () async {
                         final timerController =
@@ -508,7 +466,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  //TODO: all PopUpModals with Yes and No should be in one style; maybe the same style as all other PopUps! Texts should be added to text_strings.dart
+  //TODO: all PopUpModals with Yes and No should be in one style; maybe the same style as all other PopUps! Texts should be added to localizations!
   void _showLogoutModal(BuildContext context) {
     final isDarkMode = Get.isDarkMode;
 

@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/screens/profile/friend_profile.dart';
+import 'package:fit_office/src/utils/helper/helper_controller.dart';
+import 'package:fit_office/src/utils/theme/widget_themes/dialog_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -36,15 +38,19 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
 
   void _searchUsers(String query) async {
     if (query.length < 2) {
-      setState(() {
-        results = [];
-        isSearching = false;
-        friendshipStatus.clear();
-      });
+      if (mounted) {
+        setState(() {
+          results = [];
+          isSearching = false;
+          friendshipStatus.clear();
+        });
+      }
       return;
     }
 
-    setState(() => isSearching = true);
+    if (mounted) {
+      setState(() => isSearching = true);
+    }
 
     try {
       final snapshot =
@@ -67,21 +73,27 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
         statusMap[username] = status;
       }
 
-      setState(() {
-        results = filtered;
-        friendshipStatus = statusMap;
-        isSearching = false;
-      });
+      if (mounted) {
+        setState(() {
+          results = filtered;
+          friendshipStatus = statusMap;
+          isSearching = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        results = [];
-        friendshipStatus.clear();
-        isSearching = false;
-      });
+      if (mounted) {
+        setState(() {
+          results = [];
+          friendshipStatus.clear();
+          isSearching = false;
+        });
+      }
     }
   }
 
   Future<void> _withdrawFriendRequest(String username) async {
+    if (!mounted) return;
+
     setState(() {
       friendshipStatus[username] = null;
     });
@@ -112,23 +124,88 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
           await pendingQuery.docs.first.reference.delete();
 
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('${AppLocalizations.of(context)!.tFriendshipRequestWithdraw}$username')),
-            );
+            Helper.warningSnackBar(title: AppLocalizations.of(context)!.tInfo,
+              message: AppLocalizations.of(context)!.tFriendshipRequestWithdraw + username);
           }
         }
       }
     } catch (e) {
-      setState(() {
-        friendshipStatus[username] = 'pending';
-      });
-
       if (mounted) {
+        setState(() {
+          friendshipStatus[username] = 'pending';
+        });
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(AppLocalizations.of(context)!.tFriendDeleteException)),
         );
       }
     }
+  }
+
+  // New method to show confirmation dialog before removing friend or withdrawing request
+  void _showDeleteConfirmationDialog(String userName, bool isPending) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final localization = AppLocalizations.of(context)!;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          isPending
+              ? localization.tCancelRequest
+              : localization.tRemoveFriend,
+        ),
+        content: Text(
+          isPending
+              ? '${localization.tCancelRequestConfirm} $userName?'
+              : '${localization.tRemoveFriendConfirm} $userName?',
+        ),
+        actions: [
+          TextButton(
+            style: isDark
+                ? TDialogTheme.getDarkCancelButtonStyle()
+                : TDialogTheme.getLightCancelButtonStyle(),
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(localization.tCancel),
+          ),
+          TextButton(
+            style: isDark
+                ? TDialogTheme.getDarkDeleteButtonStyle()
+                : TDialogTheme.getLightDeleteButtonStyle(),
+            onPressed: () async {
+              Navigator.of(context).pop();
+
+              if (isPending) {
+                await _withdrawFriendRequest(userName);
+              } else {
+                if (!mounted) return;
+
+                setState(() {
+                  friendshipStatus[userName] = null;
+                });
+
+                try {
+                  await _controller.removeFriendship(
+                      currentUserEmail!, userName, context);
+                } catch (e) {
+                  if (mounted) {
+                    setState(() {
+                      friendshipStatus[userName] = 'accepted';
+                    });
+                  }
+                }
+              }
+            },
+            child: Text(
+              isPending
+                  ? localization.tCancel
+                  : localization.tRemove,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -147,7 +224,9 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(localizations.tAddFriendsHeader),
-          backgroundColor: tCardBgColor,
+          backgroundColor: tPrimaryColor,
+          elevation: 0,
+          scrolledUnderElevation: 0,
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -185,23 +264,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                             icon: const Icon(Icons.person_remove,
                                 color: Colors.red),
                             onPressed: () async {
-                              setState(() {
-                                friendshipStatus[username] = null;
-                              });
-
-                              try {
-                                await _controller.removeFriendship(
-                                    currentUserEmail!, username);
-                              } catch (e) {
-                                setState(() {
-                                  friendshipStatus[username] = 'accepted';
-                                });
-
-                                  scaffoldMessenger.showSnackBar(
-                                    SnackBar(
-                                        content: Text(localizations.tFriendDeleteException)),
-                                  );
-                              }
+                              _showDeleteConfirmationDialog(username, false);
                             },
                           ),
                           onTap: () {
@@ -227,7 +290,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                                 icon: const Icon(Icons.cancel,
                                     color: Colors.orange),
                                 onPressed: () =>
-                                    _withdrawFriendRequest(username),
+                                    _showDeleteConfirmationDialog(username, true),
                               ),
                             ],
                           ),
@@ -252,22 +315,24 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                             icon: const Icon(Icons.person_add,
                                 color: Colors.blue),
                             onPressed: () async {
+                              if (!mounted) return;
+
                               setState(() {
                                 friendshipStatus[username] = 'pending';
                               });
 
                               try {
                                 await _controller.sendFriendRequest(
-                                    currentUserEmail!, username);
+                                    currentUserEmail!, username, context);
                               } catch (e) {
-                                setState(() {
-                                  friendshipStatus[username] = null;
-                                });
+                                if (mounted) {
+                                  setState(() {
+                                    friendshipStatus[username] = null;
+                                  });
 
-                                scaffoldMessenger.showSnackBar(
-                                  SnackBar(
-                                      content: Text(localizations.tExceptionAddingFriend)),
-                                );
+                                  Helper.errorSnackBar(title: localizations.tError,
+                                    message: localizations.tExceptionAddingFriend);
+                                }
                               }
                             },
                           ),

@@ -54,6 +54,9 @@ class ImageWithIconSate extends State<Avatar> {
 
   @override
   Widget build(BuildContext context) {
+    // Generate a unique tag based on the user email if available
+    final String heroTag = 'profileAvatar${widget.userEmail ?? "main"}';
+
     return Stack(
       children: [
         SizedBox(
@@ -68,6 +71,7 @@ class ImageWithIconSate extends State<Avatar> {
                     imageProvider: _selectedImage != null
                         ? FileImage(_selectedImage!)
                         : _currentAvatar,
+                    heroTag: heroTag,
                   ),
                   transitionsBuilder: (_, animation, __, child) {
                     return FadeTransition(opacity: animation, child: child);
@@ -76,7 +80,7 @@ class ImageWithIconSate extends State<Avatar> {
               );
             },
             child: Hero(
-              tag: 'avatarHero',
+              tag: heroTag,
               child: CircleAvatar(
                 radius: 50,
                 backgroundImage: const AssetImage(tDefaultAvatar), // Immer als Hintergrund

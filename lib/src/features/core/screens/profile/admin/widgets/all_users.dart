@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import 'package:fit_office/src/features/core/controllers/profile_controller.dart';
+import 'package:fit_office/src/utils/theme/widget_themes/dialog_theme.dart';
 
+import '../../../../../../constants/colors.dart';
 import '../../../dashboard/widgets/categories.dart';
 import '../../../dashboard/widgets/search.dart';
+import '../../widgets/avatar.dart';
 import '../edit_user_page.dart';
 
 class AllUsersPage extends StatefulWidget {
@@ -89,9 +92,9 @@ class _AllUsersPageState extends State<AllUsersPage> {
 
     setState(() {
       _filteredUsers = _allUsers.where((user) {
-        final nameMatch = user.fullName.toLowerCase().contains(normalizedQuery);
+        final usernameMatch = user.userName.toLowerCase().contains(normalizedQuery);
         final emailMatch = user.email.toLowerCase().contains(normalizedQuery);
-        return nameMatch || emailMatch;
+        return usernameMatch || emailMatch;
       }).toList();
     });
   }
@@ -100,8 +103,10 @@ class _AllUsersPageState extends State<AllUsersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.tAllUsers),
-          backgroundColor: Colors.grey),
+          title: Text(AppLocalizations.of(context)!.tMenu3),
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          backgroundColor: tPrimaryColor),
       body: isUserLoaded
           ? Padding(
               padding: const EdgeInsets.all(16.0),
@@ -129,17 +134,36 @@ class _AllUsersPageState extends State<AllUsersPage> {
                             itemBuilder: (context, index) {
                               final user = _filteredUsers[index];
                               return Card(
+                                color: Colors.white,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  side: BorderSide(
+                                    color: Colors.grey.shade300,
+                                    width: 1.0,
+                                  ),
+                                ),
                                 child: ListTile(
-                                  leading: const Icon(Icons.person),
+                                  leading: SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: Avatar(
+                                      userEmail: user.email,
+                                    ),
+                                  ),
                                   title: Text(
-                                    user.fullName,
+                                    user.userName,
                                     style: const TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   subtitle: Text(
-                                      'Email: ${user.email}\nRole: ${user.role ?? 'No role'}'),
+                                      '${user.email}\nRole: ${user.role ?? 'No role'}',
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.black,
+                                      )),
                                   trailing: _currentUser.role == 'admin'
                                       ? Row(
                                           mainAxisSize: MainAxisSize.min,
@@ -170,9 +194,12 @@ class _AllUsersPageState extends State<AllUsersPage> {
                                                             .of(context)!
                                                         .tDeleteEditUserHeading),
                                                     content: Text(
-                                                        '${AppLocalizations.of(context)!.tAskDeleteUser}${user.fullName}${AppLocalizations.of(context)!.tDeleteUserConsequence}'),
+                                                        '${AppLocalizations.of(context)!.tAskDeleteUser}${user.userName}${AppLocalizations.of(context)!.tDeleteUserConsequence}'),
                                                     actions: [
                                                       TextButton(
+                                                        style: Theme.of(context).brightness == Brightness.dark
+                                                            ? TDialogTheme.getDarkCancelButtonStyle()
+                                                            : TDialogTheme.getLightCancelButtonStyle(),
                                                         onPressed: () {
                                                           Navigator.of(context)
                                                               .pop();
@@ -183,6 +210,9 @@ class _AllUsersPageState extends State<AllUsersPage> {
                                                                 .tCancel),
                                                       ),
                                                       TextButton(
+                                                        style: Theme.of(context).brightness == Brightness.dark
+                                                            ? TDialogTheme.getDarkDeleteButtonStyle()
+                                                            : TDialogTheme.getLightDeleteButtonStyle(),
                                                         onPressed: () async {
                                                           Navigator.of(context)
                                                               .pop();
@@ -198,9 +228,6 @@ class _AllUsersPageState extends State<AllUsersPage> {
                                                           AppLocalizations.of(
                                                                   context)!
                                                               .tDelete,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.red),
                                                         ),
                                                       ),
                                                     ],
