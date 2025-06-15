@@ -11,9 +11,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   google_fonts: ^6.1.0
-  intl: ^0.19.0
+  intl: ^0.20.2
 
   ## -- STATE MANAGEMENT
   get: ^4.6.6

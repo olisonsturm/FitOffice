@@ -1856,10 +1856,10 @@ abstract class AppLocalizations {
   /// **'Skip'**
   String get tSkip;
 
-  /// No description provided for @tTutorialDone.
+  /// No description provided for @tLoadingProgress.
   ///
   /// In en, this message translates to:
-  /// **'Tutorial done!'**
+  /// **'Loading progress...'**
   String get tLoadingProgress;
 }
 
