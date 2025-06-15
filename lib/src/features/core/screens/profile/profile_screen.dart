@@ -20,6 +20,7 @@ import '../../../../constants/colors.dart';
 import '../../../../repository/authentication_repository/authentication_repository.dart';
 import '../../../../utils/helper/app_info.dart';
 import '../../controllers/profile_controller.dart';
+import '../../controllers/statistics_controller.dart';
 import 'admin/add_friends.dart';
 import 'admin/edit_user_page.dart';
 import 'admin/widgets/all_users.dart';
@@ -103,12 +104,17 @@ class ProfileScreen extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: FactDisplayCard(
-                          isDark: isDark,
-                          icon: LineAwesomeIcons.dumbbell_solid,
-                          title: "100", // TODO: Replace with actual data of completed workouts
-                          subtitle: AppLocalizations.of(context)!.tCompletedWorkouts,
-                          iconColor: Colors.orange,
+                        child: FutureBuilder<int>(
+                          future: StatisticsController().getTotalExercises(user.email),
+                          builder: (context, snapshot) {
+                            return FactDisplayCard(
+                              isDark: isDark,
+                              icon: LineAwesomeIcons.dumbbell_solid,
+                              title: snapshot.data?.toString() ?? '0',
+                              subtitle: AppLocalizations.of(context)!.tCompletedWorkouts,
+                              iconColor: Colors.orange,
+                            );
+                          },
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -300,7 +306,7 @@ class ProfileScreen extends StatelessWidget {
                             return FactDisplayCard(
                               isDark: isDark,
                               icon: LineAwesomeIcons.info_circle_solid,
-                              title: "${snapshot.data ?? '...'}",
+                              title: snapshot.data ?? '...',
                               subtitle: "Version",
                               iconColor: Colors.blue,
                             );
@@ -346,9 +352,10 @@ class ProfileScreen extends StatelessWidget {
                     icon: LineAwesomeIcons.file_contract_solid,
                     label: AppLocalizations.of(context)!.tLicenses,
                     onPress: () async {
+                      final c = context;
                       final version = await AppInfo.getFullVersionInfo();
                       showLicensePage(
-                        context: context,
+                        context: c,
                         applicationName: 'FitOffice',
                         applicationVersion: version,
                         applicationLegalese: '© ${DateTime.now().year} DHBW Ravensburg',

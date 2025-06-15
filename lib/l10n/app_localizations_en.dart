@@ -945,4 +945,5 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tHistoryNoExercise2 =>
       '. Start tracking your exercises to see them here.';
+  String get tLoadingProgress => 'Loading progress...';
 }

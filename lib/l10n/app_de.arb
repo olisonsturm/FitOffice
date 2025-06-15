@@ -298,4 +298,5 @@
   "HistoryNoUserData": "Keine Daten für diesen Nutzer gefunden.",
   "tHistoryNoExercise1": "Keine Übungshistorie gefunden für",
   "tHistoryNoExercise2": ". Beginne eine Übungen zu erfassen, um deine Historie zu sehen."
+  "tLoadingProgress": "Lade Fortschritt..."
 }
