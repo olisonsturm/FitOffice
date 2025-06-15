@@ -9,7 +9,6 @@ import 'package:video_player/video_player.dart';
 import '../../../constants/text_strings.dart';
 
 class ExerciseController {
-
   final Map<String, String> categoryMap = {
     tUpperBody: 'Upper-Body',
     tLowerBody: 'Lower-Body',
@@ -39,13 +38,17 @@ class ExerciseController {
 
   Future<void> saveExercise({
     required String name,
+    required String nameEn,
     required String description,
+    required String descriptionEn,
     required String category,
     required String videoUrl,
   }) async {
     await FirebaseFirestore.instance.collection('exercises').add({
       'name': name,
+      'name_en': nameEn,
       'description': description,
+      'description_en': descriptionEn,
       'category': ExerciseController().categoryMap[category],
       'video': videoUrl,
     });
@@ -115,10 +118,14 @@ class ExerciseController {
 
   bool checkIfExerciseChanged({
     required String newName,
+    required String newNameEn,
     required String newDescription,
+    required String newDescriptionEn,
     required String newCategory,
     required String originalName,
+    required String originalNameEn,
     required String originalDescription,
+    required String originalDescriptionEn,
     required String originalCategory,
     required bool isVideoMarkedForDeletion,
     required File? pickedVideoFile,
@@ -131,12 +138,16 @@ class ExerciseController {
             originalVideo.isNotEmpty);
 
     final isValid = newName.isNotEmpty &&
+        newNameEn.isNotEmpty &&
+        newDescriptionEn.isNotEmpty &&
         newDescription.isNotEmpty &&
         newCategory.isNotEmpty &&
         hasVideo;
 
     final hasAnyChanged = newName.trim() != originalName.trim() ||
+        newNameEn.trim() != originalNameEn.trim() ||
         newDescription.trim() != originalDescription.trim() ||
+        newDescriptionEn.trim() != originalDescriptionEn ||
         newCategory != originalCategory ||
         pickedVideoFile != null ||
         (uploadedVideoUrl != null && uploadedVideoUrl != originalVideo) ||

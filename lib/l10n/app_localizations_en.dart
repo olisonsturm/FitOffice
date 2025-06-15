@@ -932,4 +932,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tLoadingProgress => 'Loading progress...';
+
+  @override
+  String get tGerman => ' (German)';
+
+  @override
+  String get tEnglish => ' (English)';
 }

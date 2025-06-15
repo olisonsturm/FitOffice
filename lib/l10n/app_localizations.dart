@@ -1861,6 +1861,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Loading progress...'**
   String get tLoadingProgress;
+
+  /// No description provided for @tGerman.
+  ///
+  /// In en, this message translates to:
+  /// **' (German)'**
+  String get tGerman;
+
+  /// No description provided for @tEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **' (English)'**
+  String get tEnglish;
 }
 
 class _AppLocalizationsDelegate

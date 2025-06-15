@@ -942,4 +942,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tLoadingProgress => 'Lade Fortschritt...';
+
+  @override
+  String get tGerman => ' (Deutsch)';
+
+  @override
+  String get tEnglish => ' (Englisch)';
 }
