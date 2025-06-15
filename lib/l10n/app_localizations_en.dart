@@ -895,15 +895,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tTutorialSteps =>
-      'Here you can see your steps. If you do exercises of 5 minutes per day, you will make one step forward.';
+      'Here you can see your steps. If you do exercises of 5 minutes per day, you will make one step forward. Click to continue.';
 
   @override
   String get tTutorialStatistics =>
-      'Here you will find all the important statistics. You can activate a streak by doing exercises per day for at least 5 minutes. You will receive one step for each day. The number of steps is displayed at the top left of the flame. But beware: the streak will be reset to 0 if you exercise for less than 5 minutes! Click to continue.';
+      'Here you will find all the important statistics. You can activate a streak by doing one exercise per day for 5 minutes. You will receive one step for each day. The number of steps is displayed at the top left of the flame. But beware: the streak will be reset to 0 if you exercise for less than 5 minutes! Click to continue.';
 
   @override
   String get tTutorialStatistics1 =>
-      'Here you will find all the important statistics. You can activate a streak by doing exercises per day for at least 5 minutes.';
+      'Here you will find all the important statistics. You can activate a streak by doing one exercise per day for 5 minutes.';
 
   @override
   String get tTutorialStatistics2 =>
@@ -931,5 +931,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tSkip => 'Skip';
 
   @override
+  String get tMinutes => 'Minutes';
+
+  @override
+  String get tSeconds => 'Seconds';
+
+  @override
+  String get tHistoryNoUserData => 'User data not found.';
+
+  @override
+  String get tHistoryNoExercise1 => 'No exercise history found for';
+
+  @override
+  String get tHistoryNoExercise2 =>
+      '. Start tracking your exercises to see them here.';
   String get tLoadingProgress => 'Loading progress...';
 }

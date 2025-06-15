@@ -1856,11 +1856,41 @@ abstract class AppLocalizations {
   /// **'Skip'**
   String get tSkip;
 
+  /// No description provided for @tMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get tMinutes;
+
+  /// No description provided for @tSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Seconds'**
+  String get tSeconds;
+
+  /// No description provided for @tHistoryNoUserData.
+  ///
+  /// In en, this message translates to:
+  /// **'User data not found.'**
+  String get tHistoryNoUserData;
+
+  /// No description provided for @tHistoryNoExercise1.
+  ///
+  /// In en, this message translates to:
+  /// **'No exercise history found for'**
+  String get tHistoryNoExercise1;
+
+  /// No description provided for @tHistoryNoExercise2.
+  ///
+  /// In en, this message translates to:
+  /// **'. Start tracking your exercises to see them here.'**
+  String get tHistoryNoExercise2;
   /// No description provided for @tTutorialDone.
   ///
   /// In en, this message translates to:
   /// **'Tutorial done!'**
   String get tLoadingProgress;
+ 
 }
 
 class _AppLocalizationsDelegate

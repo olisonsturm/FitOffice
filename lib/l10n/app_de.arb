@@ -293,5 +293,10 @@
   "tTutorialProfile": "Das ist die Profilseite. Hier kannst du u.a. dein Profil anpassen und Freundschaften schließen. Alle wichtigen Einstellungen findest du hier.",
   "tTutorialProfile2": "Das war's auch schon von mir. Ich wünsche dir viel Spaß beim Entdecken der App. Bis bald!",
   "tSkip": "Überspringen",
+  "tMinutes": "Minuten",
+  "tSeconds": "Sekunden",
+  "HistoryNoUserData": "Keine Daten für diesen Nutzer gefunden.",
+  "tHistoryNoExercise1": "Keine Übungshistorie gefunden für",
+  "tHistoryNoExercise2": ". Beginne eine Übungen zu erfassen, um deine Historie zu sehen.",
   "tLoadingProgress": "Lade Fortschritt..."
 }
