@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../authentication/models/user_model.dart';
 import 'package:intl/intl.dart';
 import 'package:string_similarity/string_similarity.dart';
@@ -60,11 +61,20 @@ class DbController {
 
   Future<List<Map<String, dynamic>>> getExercises(String exerciseName) async {
     final snapshot = await firestore.collection('exercises').get();
+    final prefs = await SharedPreferences.getInstance();
+    final locale = prefs.getString('locale');
 
     final results = snapshot.docs
         .where((doc) {
-          final name = doc['name'] as String;
-          final description = doc['description'] as String;
+      String name;
+      String description;
+          if (locale == 'de') {
+            name = doc['name'] as String;
+            description = doc['description'] as String;
+          } else {
+            name = doc['name_en'] as String;
+            description = doc['description_en'] as String;
+          }
           final nameSimilarity = StringSimilarity.compareTwoStrings(
             name.toLowerCase(),
             exerciseName.toLowerCase(),

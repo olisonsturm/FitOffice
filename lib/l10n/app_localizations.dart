@@ -1885,12 +1885,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'. Start tracking your exercises to see them here.'**
   String get tHistoryNoExercise2;
-  /// No description provided for @tTutorialDone.
+
+  /// No description provided for @tLoadingProgress.
   ///
   /// In en, this message translates to:
-  /// **'Tutorial done!'**
+  /// **'Loading progress...'**
   String get tLoadingProgress;
- 
+
+  /// No description provided for @tGerman.
+  ///
+  /// In en, this message translates to:
+  /// **' (German)'**
+  String get tGerman;
+
+  /// No description provided for @tEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **' (English)'**
+  String get tEnglish;
 }
 
 class _AppLocalizationsDelegate

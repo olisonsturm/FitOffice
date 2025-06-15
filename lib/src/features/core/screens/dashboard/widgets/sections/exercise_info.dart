@@ -8,6 +8,7 @@ import 'package:fit_office/src/features/core/screens/dashboard/widgets/start_exe
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/active_dialog.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/video_player.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../end_exercise.dart';
 
@@ -24,17 +25,40 @@ class ExerciseInfoTab extends StatefulWidget {
 
 class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
   final timerController = Get.find<ExerciseTimerController>();
+  String? _locale;
 
   bool get isRunningThisExercise =>
       timerController.isRunning.value &&
       timerController.exerciseName.value == widget.exerciseData['name'];
 
+  void _loadLocale() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _locale = prefs.getString('locale') ?? 'de';
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLocale();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final description = widget.exerciseData['description'] ??
-        localizations.tExerciseNoDescription;
+    String description;
+    if (_locale == 'de') {
+      description =
+          widget.exerciseData['description'] ??
+              localizations.tExerciseNoDescription;
+    } else {
+      description =
+          widget.exerciseData['description_en'] ??
+              localizations.tExerciseNoDescription;
+    }
 
     final videoUrl = widget.exerciseData['video'];
     final hasVideo = videoUrl != null &&

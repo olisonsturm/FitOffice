@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../utils/helper/dialog_helper.dart';
 import '../../../controllers/db_controller.dart';
@@ -35,6 +36,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   bool isAdmin = false;
   bool isProcessing = false;
   bool showScrollDownButton = false;
+  String? _locale;
 
   final ScrollController _scrollController = ScrollController();
   final DbController _dbController = DbController();
@@ -76,6 +78,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     isFavorite = widget.isFavorite;
     _loadFavoriteStatus();
     _loadUserRole();
+    _loadLocale();
   }
 
   @override
@@ -175,6 +178,13 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     }
   }
 
+  void _loadLocale() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _locale = prefs.getString('locale') ?? 'de';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -182,7 +192,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     return Scaffold(
       backgroundColor: isDarkMode ? Colors.black : tWhiteColor,
       appBar: SliderAppBar(
-        title: widget.exerciseData['name'] ?? '',
+        title: _locale == 'de' ? widget.exerciseData['name'] ?? '' : widget.exerciseData['name_en'] ?? '',
         subtitle: widget.exerciseData['category'] ?? '',
         showBackButton: true,
         showFavoriteIcon: true,
@@ -292,7 +302,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                     width: 45,
                     height: 45,
                     decoration: BoxDecoration(
-                      color: tBottomNavBarSelectedColor, 
+                      color: tBottomNavBarSelectedColor,
                       shape: BoxShape.circle,
                       boxShadow: const [
                         BoxShadow(
