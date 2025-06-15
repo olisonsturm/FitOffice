@@ -49,13 +49,13 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
           widget.exerciseData['name'];
       ExerciseDetailScreen.currentTabIndex.value = 0;
 
-      final timerActive = Get.find<ExerciseTimerController>().isRunning.value;
+      //final timerActive = Get.find<ExerciseTimerController>().isRunning.value;
 
       final position = _scrollController.position;
       final isScrollable = position.maxScrollExtent > 0;
 
       setState(() {
-        showScrollDownButton = timerActive && isScrollable;
+        showScrollDownButton = isScrollable;
       });
 
       _scrollController.addListener(() {
@@ -274,7 +274,9 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
           ),
           if (showScrollDownButton)
             Positioned(
-              bottom: GlobalExerciseOverlay.overlayHeight + 16,
+              bottom: Get.find<ExerciseTimerController>().isRunning.value
+                  ? GlobalExerciseOverlay.overlayHeight + 16
+                  : 32,
               left: 0,
               right: 0,
               child: Center(
@@ -290,7 +292,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                     width: 45,
                     height: 45,
                     decoration: BoxDecoration(
-                      color: tBottomNavBarSelectedColor, // dein Orange
+                      color: tBottomNavBarSelectedColor, 
                       shape: BoxShape.circle,
                       boxShadow: const [
                         BoxShadow(
