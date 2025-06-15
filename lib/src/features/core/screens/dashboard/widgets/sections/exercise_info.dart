@@ -13,8 +13,10 @@ import '../end_exercise.dart';
 
 class ExerciseInfoTab extends StatefulWidget {
   final Map<String, dynamic> exerciseData;
+  final ScrollController scrollController;
 
-  const ExerciseInfoTab({super.key, required this.exerciseData});
+  const ExerciseInfoTab(
+      {super.key, required this.exerciseData, required this.scrollController});
 
   @override
   State<ExerciseInfoTab> createState() => _ExerciseInfoTabState();
@@ -31,8 +33,8 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final description =
-        widget.exerciseData['description'] ?? localizations.tExerciseNoDescription;
+    final description = widget.exerciseData['description'] ??
+        localizations.tExerciseNoDescription;
 
     final videoUrl = widget.exerciseData['video'];
     final hasVideo = videoUrl != null &&
@@ -73,6 +75,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
           timerController.exerciseName.value == widget.exerciseData['name'];
 
       return ListView(
+        controller: widget.scrollController,
         padding: const EdgeInsets.symmetric(vertical: 8),
         children: [
           Card(
@@ -182,7 +185,8 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                         ),
                                       );
                                       if (confirmed == true) {
-                                        timerController.stopAndSave(shouldSave: true);
+                                        timerController.stopAndSave(
+                                            shouldSave: true);
                                       }
                                     },
                                   ),
@@ -217,7 +221,8 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                   ),
                                 );
                                 if (confirmed == true) {
-                                  timerController.stopAndSave(shouldSave: false);
+                                  timerController.stopAndSave(
+                                      shouldSave: false);
                                 }
                               },
                             ),
@@ -246,8 +251,8 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
                                   !isThisExerciseRunning) {
                                 await showUnifiedDialog(
                                   context: context,
-                                  builder: (_) =>
-                                      ActiveTimerDialog.forAction('start', context),
+                                  builder: (_) => ActiveTimerDialog.forAction(
+                                      'start', context),
                                 );
                                 return;
                               }

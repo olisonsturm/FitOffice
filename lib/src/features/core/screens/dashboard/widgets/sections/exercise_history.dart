@@ -5,11 +5,12 @@ import 'package:get/get.dart';
 import '../../../../controllers/profile_controller.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
-
 class ExerciseHistoryTab extends StatelessWidget {
   final String name;
+  final ScrollController scrollController;
 
-  const ExerciseHistoryTab({super.key, required this.name});
+  const ExerciseHistoryTab(
+      {super.key, required this.name, required this.scrollController});
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +70,7 @@ class ExerciseHistoryTab extends StatelessWidget {
             }
 
             return ListView.builder(
+              controller: scrollController,
               padding: const EdgeInsets.symmetric(vertical: 8),
               itemCount: docs.length,
               itemBuilder: (context, index) {
