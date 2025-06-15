@@ -260,11 +260,22 @@ class ProgressChapterWidget extends StatelessWidget {
                   ),
                 ),
 
-              // Paw icon
-              Icon(
-                Icons.pets,
-                size: size,
-                color: iconColor,
+              // TODO: AUSRICHTEN der Pfotenabdrücke
+              Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.rotationZ(
+                  (chapterIndex % 2 == 0
+                      ? -1
+                      : 1) *
+                    (stepIndex == 0
+                        ? 2
+                        : 2 + (stepIndex - 1) * 0.1 + (isCurrent ? 0.1 : 0.0)),
+                )..scale(chapterIndex % 2 == 0 ? -1.0 : 1.0, 1.0),
+                child: Icon(
+                  Icons.pets,
+                  size: size,
+                  color: iconColor,
+                ),
               ),
 
               // Completion indicator (Häkchen)
