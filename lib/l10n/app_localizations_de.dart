@@ -941,6 +941,22 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tSkip => 'Überspringen';
 
   @override
+  String get tMinutes => 'Minuten';
+
+  @override
+  String get tSeconds => 'Sekunden';
+
+  @override
+  String get tHistoryNoUserData => 'User data not found.';
+
+  @override
+  String get tHistoryNoExercise1 => 'Keine Übungshistorie gefunden für';
+
+  @override
+  String get tHistoryNoExercise2 =>
+      '. Beginne eine Übungen zu erfassen, um deine Historie zu sehen.';
+
+  @override
   String get tLoadingProgress => 'Lade Fortschritt...';
 
   @override

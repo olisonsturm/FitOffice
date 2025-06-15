@@ -287,4 +287,18 @@ class DbController {
       }
     }
   }
+
+  Future<Map<String, dynamic>?> getExerciseByName(String name) async {
+    final snapshot = await firestore
+        .collection('exercises')
+        .where('name', isEqualTo: name)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      return snapshot.docs.first.data();
+    } else {
+      return null;
+    }
+  }
 }
