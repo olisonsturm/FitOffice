@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:get/get.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});
@@ -22,6 +23,11 @@ class ProgressScreenState extends State<ProgressScreen>
   final ScrollController _scrollController = ScrollController();
   final List<GlobalKey> _chapterKeys = [];
 
+  // Konstante für die berechnete Höhe pro Kapitel (basierend auf deinen Logs)
+  static const double CHAPTER_HEIGHT = 693.0; // 677 + 16 padding
+  static const double SEPARATOR_HEIGHT = 18.0; // 2 + 8 + 8 margins
+  static const double TOTAL_ITEM_HEIGHT = CHAPTER_HEIGHT + SEPARATOR_HEIGHT; // 711.0
+
   // Animation controllers
   late AnimationController _stepAnimationController;
   late AnimationController _chapterAnimationController;
@@ -35,20 +41,20 @@ class ProgressScreenState extends State<ProgressScreen>
   void initState() {
     super.initState();
 
-    // Initialize animation controllers
+    // Initialize animation controllers - Animation schneller machen
     _stepAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 400), // Reduziert von 800ms auf 400ms
       vsync: this,
     );
 
     _chapterAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 1200),
+      duration: const Duration(milliseconds: 600), // Reduziert von 1200ms auf 600ms
       vsync: this,
     );
 
     _stepAnimation = CurvedAnimation(
       parent: _stepAnimationController,
-      curve: Curves.easeInOutBack,
+      curve: Curves.easeOutQuad, // Sanftere, schnellere Kurve statt easeInOutBack
     );
 
     _chapterAnimation = CurvedAnimation(
@@ -112,7 +118,6 @@ class ProgressScreenState extends State<ProgressScreen>
 
   int _calculateCurrentStep(int streakSteps, int secondsToday) {
     const int dailyGoalSeconds = 300; // 5 minutes
-    //const int maxStreakBreakDays = 5; // Reset after 5 days without training
 
     // If no streak or streak broken for too long, reset to 0
     if (streakSteps == 0) {
@@ -148,6 +153,23 @@ class ProgressScreenState extends State<ProgressScreen>
   }
 
   Future<void> _animateSingleStep(int step) async {
+    // Prüfen, ob wir zum nächsten Kapitel wechseln müssen (Tag 1 eines neuen Kapitels)
+    final bool isFirstStepOfNewChapter = step % stepsPerChapter == 1 && step > stepsPerChapter;
+    // Prüfen, ob wir am Ende eines Kapitels sind (Tag 5)
+    final bool isLastStepOfChapter = step % stepsPerChapter == 0;
+
+    // Aktuelle und nächste Kapitel berechnen
+    final int currentChapter = ((step - 1) / stepsPerChapter).floor();
+    final int nextChapter = (step / stepsPerChapter).floor();
+
+    // Wenn wir zum ersten Schritt eines neuen Kapitels wechseln, zuerst scrollen,
+    // damit der Benutzer die Animation sehen kann
+    if (isFirstStepOfNewChapter) {
+      // Hier scrollen wir zum neuen Kapitel vor der Animation
+      await _scrollToChapterAndWait(nextChapter);
+    }
+
+    // Jetzt aktualisieren wir den aktuellen Schritt und starten die Animation
     setState(() {
       currentStep = step;
     });
@@ -156,65 +178,81 @@ class ProgressScreenState extends State<ProgressScreen>
     _stepAnimationController.reset();
     await _stepAnimationController.forward();
 
-    // Kapitelwechsel nur bei bestimmten Schritten
-    final int currentChapter = (currentStep / stepsPerChapter).floor();
-
-    // Check if we completed a chapter
-    if (step % stepsPerChapter == 0) {
+    // Wenn wir gerade das letzte Step eines Kapitels abgeschlossen haben (Tag 5),
+    // sofort zum nächsten Kapitel scrollen, damit es bereit ist für Tag 1
+    if (isLastStepOfChapter) {
       // Animation für das AKTUELLE Kapitel (nicht das nächste)
       final int completedChapter = (step / stepsPerChapter).floor() - 1;
 
       if (completedChapter >= 0 && completedChapter < _chapterKeys.length) {
         // Kapitel-Animation auslösen
         await _animateChapterCompletion();
+
+        // HIER NEU: Nach Tag 5 Animation und Kapitelabschluss bereits zum
+        // nächsten Kapitel scrollen, ohne auf Tag 1 Animation zu warten
+        await _scrollToChapterAndWait(nextChapter);
       }
     }
-    // Nur beim ersten Schritt eines neuen Kapitels scrollen
-    else if (step % stepsPerChapter == 1 && step > stepsPerChapter) {
-      // Hier scrollen wir zum neuen Kapitel
-      _jumpToChapter(currentChapter);
-    }
-    // Bei allen anderen Schritten NICHT scrollen
   }
 
-  // Neue Methode: Direktes Springen ohne Animation
-  void _jumpToChapter(int chapterIndex) {
-    if (!_scrollController.hasClients || chapterIndex >= _chapterKeys.length) return;
+  // Neue Hilfsmethode: Scrollt zum Kapitel und wartet auf Abschluss der Animation
+  Future<void> _scrollToChapterAndWait(int chapterIndex) async {
+    if (!_scrollController.hasClients) return;
 
+    // Sicherstellen, dass wir immer zum korrekten Kapitel scrollen
     if (kDebugMode) {
       print("Springe zu Kapitel: $chapterIndex");
-    } // Debug-Info
+    }
 
-    // Sicherstellen, dass wir immer zum korrekten Kapitel scrollen, nicht zu einem vorherigen
-    final int currentChapter = (currentStep / stepsPerChapter).floor();
-    if (chapterIndex < currentChapter) {
-      if (kDebugMode) {
-        print("Korrektur: Springe zu aktuellem Kapitel $currentChapter statt zu $chapterIndex");
+    // Warte kurz, damit alle Widgets gerendert sind, dann scrolle zum Widget
+    return await Future.delayed(const Duration(milliseconds: 100), () async {
+      if (_scrollController.hasClients &&
+          chapterIndex < _chapterKeys.length &&
+          _chapterKeys[chapterIndex].currentContext != null) {
+
+        final context = _chapterKeys[chapterIndex].currentContext!;
+        final RenderBox renderBox = context.findRenderObject() as RenderBox;
+
+        // Berechne die absolute Position des Widgets
+        final Offset position = renderBox.localToGlobal(Offset.zero);
+
+        // Berechne die gewünschte Scroll-Position
+        final double targetOffset = _scrollController.offset + position.dy - kToolbarHeight - 50.0 - 8.0;
+
+        if (kDebugMode) {
+          print("Widget-Position: ${position.dy}, Scroll-Offset: ${_scrollController.offset}");
+          print("Ziel-Position: $targetOffset");
+        }
+
+        // Sicheres Scrollen
+        final double clampedOffset = targetOffset.clamp(
+            0.0,
+            _scrollController.position.maxScrollExtent
+        );
+
+        // Langsames Scrollen statt jumpTo
+        await _scrollController.animateTo(
+          clampedOffset,
+          duration: const Duration(milliseconds: 800), // Etwas schneller als 1200ms
+          curve: Curves.easeOutCubic, // Sanftere Kurve für schnelleres Scrollen
+        );
+
+        // Kurze Pause, damit der Benutzer das neue Kapitel sehen kann, bevor die Animation beginnt
+        return await Future.delayed(const Duration(milliseconds: 200));
+      } else {
+        // Fallback, wenn das Kapitel noch nicht gerendert ist
+        double targetOffset = chapterIndex * 720.0;
+        targetOffset = targetOffset.clamp(0.0, _scrollController.position.maxScrollExtent);
+
+        await _scrollController.animateTo(
+          targetOffset,
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeOutCubic,
+        );
+
+        return await Future.delayed(const Duration(milliseconds: 200));
       }
-      chapterIndex = currentChapter;
-    }
-
-    // Absolute Position berechnen, unabhängig von aktueller Scroll-Position
-    double targetOffset = 0.0;
-    for (int i = 0; i < chapterIndex; i++) {
-      // Summiere die Höhen aller vorherigen Kapitel + Trennlinien
-      final double itemHeight = _getItemHeight(i);
-      targetOffset += itemHeight;
-      targetOffset += 18.0; // Höhe der Trennlinie (2) + Margins (8+8)
-    }
-
-    // Sicheres Scrollen - verhindert Überschreiten der Grenzen
-    targetOffset = targetOffset.clamp(
-      0.0,
-      _scrollController.position.maxScrollExtent
-    );
-
-    if (kDebugMode) {
-      print("Scrolle zu Position: $targetOffset");
-    } // Debug-Info
-
-    // Direktes Springen ohne Animation
-    _scrollController.jumpTo(targetOffset);
+    });
   }
 
   Future<void> _animateChapterCompletion() async {
@@ -224,7 +262,7 @@ class ProgressScreenState extends State<ProgressScreen>
 
   void _scrollToCurrentChapter() {
     final int currentChapter = (currentStep / stepsPerChapter).floor();
-    if (currentChapter > 0 && currentChapter < _chapterKeys.length) {
+    if (currentChapter > 0) {
       _scrollToChapter(currentChapter);
     }
   }
@@ -236,70 +274,31 @@ class ProgressScreenState extends State<ProgressScreen>
     _animateToStep(nextStep);
   }
 
+  // Vereinfachte Methode mit Fallback auf konstante Werte
   double _getItemHeight(int chapterIndex) {
-    if (chapterIndex >= _chapterKeys.length) return 0.0;
+    if (chapterIndex >= _chapterKeys.length) return CHAPTER_HEIGHT;
 
     final context = _chapterKeys[chapterIndex].currentContext;
+
     if (context != null) {
       final RenderBox renderBox = context.findRenderObject() as RenderBox;
-      return renderBox.size.height + tDefaultSize;
+      final height = renderBox.size.height + 16.0; // Padding
+
+      if (kDebugMode) {
+        print("Chapter $chapterIndex actual height: ${renderBox.size.height}, total: $height");
+      }
+      return height;
     }
-    return 300.0; // Default height estimate
+
+    // Fallback auf konstante Höhe
+    return CHAPTER_HEIGHT;
   }
 
   void _scrollToChapter(int chapterIndex) {
     if (!_scrollController.hasClients) return;
 
-    // Prüfen, ob das Kapitel bereits sichtbar ist, um unnötiges Scrollen zu vermeiden
-    final currentContext = _chapterKeys[chapterIndex].currentContext;
-    if (currentContext != null) {
-      final RenderBox box = currentContext.findRenderObject() as RenderBox;
-      final position = box.localToGlobal(Offset.zero);
-
-      // Bildschirmgröße bestimmen
-      final screenHeight = MediaQuery.of(currentContext).size.height;
-      final topPadding = MediaQuery.of(currentContext).padding.top;
-      final chapterHeight = box.size.height;
-
-      // Berechne den sichtbaren Bereich
-      final visibleAreaTop = _scrollController.offset;
-      final visibleAreaBottom = _scrollController.offset + screenHeight - topPadding - kToolbarHeight;
-
-      // Prüfe, ob Kapitel bereits im sichtbaren Bereich ist
-      // Toleranz: Das Kapitel muss mindestens zu 75% sichtbar sein
-      final chapterTopY = position.dy - topPadding - kToolbarHeight;
-      final chapterBottomY = chapterTopY + chapterHeight;
-
-      final isChapterVisible =
-          chapterTopY >= visibleAreaTop - chapterHeight * 0.25 &&
-          chapterBottomY <= visibleAreaBottom + chapterHeight * 0.25;
-
-      // Nur scrollen, wenn das Kapitel nicht bereits sichtbar ist
-      if (!isChapterVisible) {
-        // Berechne die optimale Scroll-Position
-        final scrollOffset = position.dy -
-            MediaQuery.of(currentContext).padding.top -
-            kToolbarHeight - 16.0;
-
-        _scrollController.animateTo(
-          scrollOffset,
-          duration: const Duration(milliseconds: 800),
-          curve: Curves.easeOutQuint,
-        );
-      }
-    } else {
-      // Fallback-Methode bleibt unverändert
-      double targetOffset = 0.0;
-      for (int i = 0; i < chapterIndex; i++) {
-        targetOffset += _getItemHeight(i);
-      }
-
-      _scrollController.animateTo(
-        targetOffset,
-        duration: const Duration(milliseconds: 800),
-        curve: Curves.easeOutQuint,
-      );
-    }
+    // Verwende die gleiche Widget-basierte Methode
+    _scrollToChapterAndWait(chapterIndex);
   }
 
   @override
@@ -334,6 +333,11 @@ class ProgressScreenState extends State<ProgressScreen>
     final int lastFinishedChapter = (currentStep / stepsPerChapter).floor();
     final int visibleChapters = lastFinishedChapter + 2;
 
+    // Stelle sicher, dass genügend Keys vorhanden sind
+    while (_chapterKeys.length < visibleChapters) {
+      _chapterKeys.add(GlobalKey());
+    }
+
     return Scaffold(
       backgroundColor: isDark ? tBlackColor : tWhiteColor,
       body: Stack(
@@ -344,7 +348,7 @@ class ProgressScreenState extends State<ProgressScreen>
             child: ListView.separated(
               controller: _scrollController,
               physics: const AlwaysScrollableScrollPhysics(),
-              clipBehavior: Clip.none, // Wichtig: Verhindert Abschneiden der Animation
+              clipBehavior: Clip.none,
               itemCount: visibleChapters,
               separatorBuilder: (context, index) => Container(
                 height: 2,
@@ -358,15 +362,11 @@ class ProgressScreenState extends State<ProgressScreen>
                 final int chapterStart = chapterIndex * stepsPerChapter;
                 final bool isLocked = currentStep < chapterStart;
 
-                // Ensure we have enough keys
-                while (_chapterKeys.length <= chapterIndex) {
-                  _chapterKeys.add(GlobalKey());
-                }
-
                 return AnimatedBuilder(
                   animation: _stepAnimation,
                   builder: (context, child) {
-                    // Korrigierte Logik für die Zoom-Animation des Kapitels
+                    // Hier entfernen wir die Skalierungsanimation für das ganze Kapitel
+                    // und lassen nur das Aufleuchteffekt durch den Container-Gradient
                     final bool shouldAnimateThisChapter;
 
                     if (_isAnimating && currentStep % stepsPerChapter == 0) {
@@ -377,37 +377,30 @@ class ProgressScreenState extends State<ProgressScreen>
                     } else {
                       // Normale Animation innerhalb eines Kapitels
                       shouldAnimateThisChapter = _isAnimating &&
-                            currentStep >= chapterStart &&
-                            currentStep < chapterStart + stepsPerChapter;
+                          currentStep >= chapterStart &&
+                          currentStep < chapterStart + stepsPerChapter;
                     }
 
-                    final double animationScale = shouldAnimateThisChapter
-                        ? 1.0 + (_stepAnimation.value * 0.04)
-                        : 1.0;
-
+                    // Wir entfernen die Skalierung (Transform.scale) und belassen nur das Padding
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Transform.scale(
-                        scale: animationScale,
-                        alignment: Alignment.center,
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 4.0),
-                          clipBehavior: Clip.none, // Wichtig: Verhindert Abschneiden der Animation
-                          child: ProgressChapterWidget(
-                            key: _chapterKeys[chapterIndex],
-                            chapterIndex: chapterIndex,
-                            title: '${AppLocalizations.of(context)!.tChapter} ${chapterIndex + 1}',
-                            currentStep: currentStep,
-                            startStep: chapterStart,
-                            stepCount: stepsPerChapter,
-                            screenWidth: screenWidth,
-                            screenHeight: screenHeight,
-                            isLocked: isLocked,
-                            stepAnimation: _stepAnimation,
-                            chapterAnimation: _chapterAnimation,
-                            isAnimating: _isAnimating,
-                            stepsPerChapter: stepsPerChapter, // Neuer Parameter wird übergeben
-                          ),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 4.0),
+                        clipBehavior: Clip.none,
+                        child: ProgressChapterWidget(
+                          key: _chapterKeys[chapterIndex],
+                          chapterIndex: chapterIndex,
+                          title: '${AppLocalizations.of(context)!.tChapter} ${chapterIndex + 1}',
+                          currentStep: currentStep,
+                          startStep: chapterStart,
+                          stepCount: stepsPerChapter,
+                          screenWidth: screenWidth,
+                          screenHeight: screenHeight,
+                          isLocked: isLocked,
+                          stepAnimation: _stepAnimation,
+                          chapterAnimation: _chapterAnimation,
+                          isAnimating: _isAnimating,
+                          stepsPerChapter: stepsPerChapter,
                         ),
                       ),
                     );
@@ -420,11 +413,29 @@ class ProgressScreenState extends State<ProgressScreen>
           // Floating progress indicator
           if (_isAnimating)
             Positioned(
-              top: 50,
-              right: 20,
+              top: 2,
+              right: 16,
               child: AnimatedBuilder(
                 animation: _stepAnimation,
                 builder: (context, child) {
+                  // Berechne den Tag innerhalb des aktuellen Kapitels (1-basiert)
+                  // Berechnung des currentChapter und dayInChapter korrigiert
+                  final int currentChapter = (currentStep / stepsPerChapter).floor();
+                  int dayInChapter = currentStep - (currentChapter * stepsPerChapter);
+
+                  // Tag 0 sollte als Tag 5 angezeigt werden (Ende des vorherigen Kapitels)
+                  if (dayInChapter == 0) {
+                    dayInChapter = stepsPerChapter; // Damit wird 0 zu 5 (wenn stepsPerChapter=5 ist)
+                  }
+
+                  // Bei Übergang zum nächsten Kapitel: Wenn wir den ersten Step eines neuen Kapitels machen,
+                  // aber noch die Animation des letzten Steps vom vorherigen Kapitel läuft, zeige direkt Tag 1 an
+                  final bool isFirstStepOfNewChapter =
+                      dayInChapter == 1 && currentStep > stepsPerChapter && _isAnimating;
+
+                  // Beim Übergang zum neuen Kapitel direkt Tag 1 anzeigen, nicht Tag 5
+                  final String displayText = 'Tag ${isFirstStepOfNewChapter ? 1 : dayInChapter}';
+
                   return Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
@@ -442,13 +453,13 @@ class ProgressScreenState extends State<ProgressScreen>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          Icons.pets,
+                          LineAwesomeIcons.paw_solid,
                           color: Colors.white,
                           size: 20,
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 10),
                         Text(
-                          'Step $currentStep',
+                          displayText, // "Step" durch "Tag" ersetzt und Kapitel-relative Zahl
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -481,3 +492,4 @@ class ProgressScreenState extends State<ProgressScreen>
     );
   }
 }
+
