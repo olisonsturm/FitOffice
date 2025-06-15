@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:fit_office/src/features/core/controllers/profile_controller.dart';
 import 'package:fit_office/src/repository/firebase_storage/storage_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../../../constants/image_strings.dart';
 import 'avatar_zoom.dart';
@@ -15,8 +17,8 @@ class Avatar extends StatefulWidget {
 }
 
 class ImageWithIconSate extends State<Avatar> {
-
   final StorageService _storageService = StorageService();
+  final profileController = Get.find<ProfileController>();
 
   File? _selectedImage;
   late ImageProvider _currentAvatar = const AssetImage(tDefaultAvatar);
@@ -25,19 +27,28 @@ class ImageWithIconSate extends State<Avatar> {
   void initState() {
     super.initState();
     _loadAvatar();
+
+    // Listen to profile picture updates
+    ever(profileController.profilePictureUpdated, (_) {
+      _loadAvatar();
+    });
   }
 
   Future<void> _loadAvatar() async {
     try {
       final imageProvider = await _storageService.getProfilePicture(userEmail: widget.userEmail);
-      setState(() {
-        _currentAvatar = imageProvider;
-      });
+      if (mounted) {
+        setState(() {
+          _currentAvatar = imageProvider;
+        });
+      }
     } catch (e) {
       debugPrint('Error loading avatar: $e');
-      setState(() {
-        _currentAvatar = const AssetImage(tDefaultAvatar);
-      });
+      if (mounted) {
+        setState(() {
+          _currentAvatar = const AssetImage(tDefaultAvatar);
+        });
+      }
     }
   }
 
@@ -68,9 +79,10 @@ class ImageWithIconSate extends State<Avatar> {
               tag: 'avatarHero',
               child: CircleAvatar(
                 radius: 50,
-                backgroundImage: _selectedImage != null
+                backgroundImage: const AssetImage(tDefaultAvatar), // Immer als Hintergrund
+                foregroundImage: _selectedImage != null
                     ? FileImage(_selectedImage!)
-                    : _currentAvatar,
+                    : _currentAvatar, // Wird über den Hintergrund gelegt
               ),
             ),
           ),

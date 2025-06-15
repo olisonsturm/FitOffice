@@ -10,10 +10,12 @@ class UpdateProfileModal {
     final password = TextEditingController(text: user.password);
     final userName = TextEditingController(text: user.userName);
     final fullName = TextEditingController(text: user.fullName);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: isDark ? Colors.grey[900] : Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),

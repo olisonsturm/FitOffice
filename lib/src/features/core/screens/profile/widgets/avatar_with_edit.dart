@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:crop_your_image/crop_your_image.dart';
+import 'package:fit_office/src/features/core/controllers/profile_controller.dart';
 import 'package:fit_office/src/repository/firebase_storage/storage_service.dart';
 import 'package:fit_office/src/utils/helper/helper_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
@@ -19,11 +21,12 @@ class AvatarWithEdit extends StatefulWidget {
 }
 
 class ImageWithIconSate extends State<AvatarWithEdit> {
-
   final StorageService _storageService = StorageService();
+  final profileController = Get.find<ProfileController>();
 
   File? _selectedImage;
   late ImageProvider _currentAvatar = const AssetImage(tDefaultAvatar);
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -32,11 +35,18 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
   }
 
   Future<void> _loadAvatar() async {
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
+
     try {
       final imageProvider = await _storageService.getProfilePicture();
       if (mounted) {
         setState(() {
           _currentAvatar = imageProvider;
+          _isLoading = false;
         });
       }
     } catch (e) {
@@ -44,6 +54,7 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
       if (mounted) {
         setState(() {
           _currentAvatar = const AssetImage(tDefaultAvatar);
+          _isLoading = false;
         });
       }
     }
@@ -79,7 +90,6 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
               controller: cropController,
               aspectRatio: 1,
               onCropped: (result) async {
-
                 switch (result) {
                   case CropSuccess(:final croppedImage):
                     final tempDir = Directory.systemTemp;
@@ -90,6 +100,9 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
                     try {
                       await StorageService().uploadProfilePicture(XFile(tempFile.path));
                       debugPrint('Avatar uploaded successfully');
+
+                      // Notify profile controller about the profile picture update
+                      profileController.notifyProfilePictureUpdated();
                     } catch (e) {
                       debugPrint('Error uploading avatar: $e');
                     }
@@ -117,14 +130,26 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
         }
 
         try {
+          if (mounted) {
+            setState(() {
+              _isLoading = true;
+            });
+          }
+
           final avatar = await StorageService().getProfilePicture();
           if (mounted) {
             setState(() {
               _currentAvatar = avatar;
+              _isLoading = false;
             });
           }
         } catch (error) {
           debugPrint('Error fetching profile picture: $error');
+          if (mounted) {
+            setState(() {
+              _isLoading = false;
+            });
+          }
         }
       }
     }
@@ -145,7 +170,7 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
                   pageBuilder: (_, __, ___) => AvatarZoom(
                     imageProvider: _selectedImage != null
                         ? FileImage(_selectedImage!)
-                        : _currentAvatar,
+                        : _isLoading ? const AssetImage(tDefaultAvatar) : _currentAvatar,
                   ),
                   transitionsBuilder: (_, animation, __, child) {
                     return FadeTransition(opacity: animation, child: child);
@@ -159,7 +184,7 @@ class ImageWithIconSate extends State<AvatarWithEdit> {
                 radius: 50,
                 backgroundImage: _selectedImage != null
                     ? FileImage(_selectedImage!)
-                    : _currentAvatar,
+                    : _isLoading ? const AssetImage(tDefaultAvatar) : _currentAvatar,
               ),
             ),
           ),
