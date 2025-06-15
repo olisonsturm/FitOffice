@@ -144,7 +144,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tWelcomeTitle => 'FitOffice@DHBW';
 
   @override
-  String get tWelcomeSubTitle => 'Get fit. Stay focused. Thrive at DHBW.';
+  String get tWelcomeSubtitle =>
+      'Stay fit during your office day. Join us now!';
 
   @override
   String get tLoginTitle => 'Welcome Back,';

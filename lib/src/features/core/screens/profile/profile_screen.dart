@@ -22,7 +22,6 @@ import '../../../../utils/helper/app_info.dart';
 import '../../controllers/profile_controller.dart';
 import '../../controllers/statistics_controller.dart';
 import 'admin/add_friends.dart';
-import 'admin/edit_user_page.dart';
 import 'admin/widgets/all_users.dart';
 import 'admin/widgets/friends_box.dart';
 import 'admin/widgets/friends_request.dart';
@@ -352,10 +351,9 @@ class ProfileScreen extends StatelessWidget {
                     icon: LineAwesomeIcons.file_contract_solid,
                     label: AppLocalizations.of(context)!.tLicenses,
                     onPress: () async {
-                      final c = context;
                       final version = await AppInfo.getFullVersionInfo();
                       showLicensePage(
-                        context: c,
+                        context: context,
                         applicationName: 'FitOffice',
                         applicationVersion: version,
                         applicationLegalese: '© ${DateTime.now().year} DHBW Ravensburg',

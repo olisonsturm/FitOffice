@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/features/core/controllers/friends_controller.dart';
-import 'package:fit_office/src/utils/helper/helper_controller.dart';
 import 'package:fit_office/src/utils/theme/widget_themes/dialog_theme.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/screens/profile/friend_profile.dart';
@@ -200,13 +199,13 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
       builder: (context) => AlertDialog(
         title: Text(
           isPending
-              ? AppLocalizations.of(context)!.tCancelRequest
-              : AppLocalizations.of(context)!.tRemoveFriend,
+              ? localization.tCancelRequest
+              : localization.tRemoveFriend,
         ),
         content: Text(
           isPending
-              ? '${AppLocalizations.of(context)!.tCancelRequestConfirm} $userName?'
-              : '${AppLocalizations.of(context)!.tRemoveFriendConfirm} $userName?',
+              ? '${localization.tCancelRequestConfirm} $userName?'
+              : '${localization.tRemoveFriendConfirm} $userName?',
         ),
         actions: [
           TextButton(
@@ -214,7 +213,7 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                 ? TDialogTheme.getDarkCancelButtonStyle()
                 : TDialogTheme.getLightCancelButtonStyle(),
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context)!.tCancel),
+            child: Text(localization.tCancel),
           ),
           TextButton(
             style: isDark
@@ -243,8 +242,8 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
             },
             child: Text(
               isPending
-                  ? AppLocalizations.of(context)!.tCancel
-                  : AppLocalizations.of(context)!.tRemove,
+                  ? localization.tCancel
+                  : localization.tRemove,
             ),
           ),
         ],

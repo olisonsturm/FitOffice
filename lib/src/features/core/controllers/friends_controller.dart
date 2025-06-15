@@ -22,13 +22,6 @@ class FriendsController extends GetxController {
   StreamSubscription<QuerySnapshot>? _requestsSubscription;
 
   @override
-  void onInit() {
-    super.onInit();
-    // Initialisiere die Controller, aber lade Daten noch nicht
-    // Dies passiert später, wenn wir einen User haben
-  }
-
-  @override
   void onClose() {
     _friendsSubscription?.cancel();
     _requestsSubscription?.cancel();
@@ -57,10 +50,11 @@ class FriendsController extends GetxController {
         .where('status', whereIn: ['accepted', 'pending'])
         .snapshots();
 
-    // Als Empfänger: akzeptierte Freundschaften UND ausstehende Anfragen
+    // Als Empfänger: NUR akzeptierte Freundschaften (keine ausstehenden Anfragen)
     final receiverQuery = friendshipsRef
         .where('receiver', isEqualTo: userRef)
-        .snapshots(); // Holen aller Anfragen, bei denen der Benutzer Empfänger ist
+        .where('status', isEqualTo: 'accepted')
+        .snapshots();
 
     // Verarbeite beide Streams
     _friendsSubscription?.cancel(); // Alte Subscription beenden
@@ -73,6 +67,7 @@ class FriendsController extends GetxController {
       // Jetzt auch den zweiten Stream manuell abfragen und hinzufügen
       final receiverDocs = await friendshipsRef
           .where('receiver', isEqualTo: userRef)
+          .where('status', isEqualTo: 'accepted')
           .get();
 
       allDocs.addAll(receiverDocs.docs);
@@ -117,8 +112,6 @@ class FriendsController extends GetxController {
   Future<void> _processNewFriendData(String userId, List<DocumentSnapshot> docs) async {
     // Erstelle eine neue Liste für aktualisierte Freunde
     final List<Map<String, dynamic>> updatedFriends = [];
-    // Bestehende Freundschaftsdokument-IDs
-    final existingDocIds = friends.map((f) => f['friendshipDocId'] as String).toList();
 
     // Sammle zunächst alle gültigen Dokumente
     for (var doc in docs) {
@@ -152,6 +145,7 @@ class FriendsController extends GetxController {
   Future<void> sendFriendRequest(
       String senderEmail, String receiverUserName, BuildContext context) async {
     final usersRef = FirebaseFirestore.instance.collection('users');
+    final localizations = AppLocalizations.of(context)!;
 
     final senderQuery =
     await usersRef.where('email', isEqualTo: senderEmail).get();
@@ -160,8 +154,8 @@ class FriendsController extends GetxController {
 
     if (senderQuery.docs.isEmpty || receiverQuery.docs.isEmpty) {
       Helper.errorSnackBar(
-        title: AppLocalizations.of(context)!.tError,
-        message: AppLocalizations.of(context)!.tNoUserFound,
+        title: localizations.tError,
+        message: localizations.tNoUserFound,
       );
       return;
     }
@@ -194,7 +188,7 @@ class FriendsController extends GetxController {
       });
 
       // Hole Sender-Daten für die lokale UI-Aktualisierung
-      final senderData = senderQuery.docs.first.data() as Map<String, dynamic>;
+      final senderData = senderQuery.docs.first.data();
 
       // Manuelles Hinzufügen zur friends-Liste für sofortige UI-Aktualisierung
       friends.add({
@@ -207,14 +201,14 @@ class FriendsController extends GetxController {
 
       // Erfolgsmeldung anzeigen
       Helper.successSnackBar(
-        title: AppLocalizations.of(context)!.tSuccess,
-        message: '${AppLocalizations.of(context)!.tFriendRequestSentTo} $receiverUserName',
+        title: localizations.tSuccess,
+        message: '${localizations.tFriendRequestSentTo} $receiverUserName',
       );
     } else {
       // Es existiert bereits eine Freundschaftsanfrage
       Helper.warningSnackBar(
-        title: AppLocalizations.of(context)!.tInfo,
-        message: AppLocalizations.of(context)!.tFriendshipAlreadyExists,
+        title: localizations.tInfo,
+        message: localizations.tFriendshipAlreadyExists,
       );
     }
   }
@@ -292,7 +286,7 @@ class FriendsController extends GetxController {
       } else {
         Helper.successSnackBar(
           title: successTitle,
-          message: '$friendDeletedMessage $otherUserName',
+          message: '$otherUserName $friendDeletedMessage',
         );
       }
     } catch (e) {
@@ -305,11 +299,7 @@ class FriendsController extends GetxController {
   }
 
   Future<void> respondToFriendRequest(DocumentSnapshot doc, String newStatus, BuildContext context) async {
-    final senderRef = doc['sender'] as DocumentReference;
-    final senderDoc = await senderRef.get();
-    final senderData = senderDoc.data() as Map<String, dynamic>?;
-    final String senderName = senderData?['username'] ?? AppLocalizations.of(context)!.tUnknown;
-
+    final localizations = AppLocalizations.of(context)!;
     if (newStatus == 'denied') {
       await doc.reference.delete();
       // Entferne die Anfrage aus unserer Liste
@@ -317,8 +307,8 @@ class FriendsController extends GetxController {
 
       // Benachrichtigung anzeigen
       Helper.successSnackBar(
-        title: AppLocalizations.of(context)!.tInfo,
-        message: AppLocalizations.of(context)!.tFriendRequestDenied,
+        title: localizations.tInfo,
+        message: localizations.tFriendRequestDenied,
       );
     } else {
       await doc.reference.update({
@@ -328,8 +318,8 @@ class FriendsController extends GetxController {
 
       // Benachrichtigung anzeigen
       Helper.successSnackBar(
-        title: AppLocalizations.of(context)!.tSuccess,
-        message: AppLocalizations.of(context)!.tFriendRequestAccepted,
+        title: localizations.tSuccess,
+        message: localizations.tFriendRequestAccepted,
       );
     }
   }

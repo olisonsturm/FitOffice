@@ -24,9 +24,9 @@ class ProgressScreenState extends State<ProgressScreen>
   final List<GlobalKey> _chapterKeys = [];
 
   // Konstante für die berechnete Höhe pro Kapitel (basierend auf deinen Logs)
-  static const double CHAPTER_HEIGHT = 693.0; // 677 + 16 padding
-  static const double SEPARATOR_HEIGHT = 18.0; // 2 + 8 + 8 margins
-  static const double TOTAL_ITEM_HEIGHT = CHAPTER_HEIGHT + SEPARATOR_HEIGHT; // 711.0
+  static const double chapterHeight = 693.0; // 677 + 16 padding
+  static const double separatorHeight = 18.0; // 2 + 8 + 8 margins
+  static const double totalChapterHeight = chapterHeight + separatorHeight; // 711.0
 
   // Animation controllers
   late AnimationController _stepAnimationController;
@@ -158,8 +158,7 @@ class ProgressScreenState extends State<ProgressScreen>
     // Prüfen, ob wir am Ende eines Kapitels sind (Tag 5)
     final bool isLastStepOfChapter = step % stepsPerChapter == 0;
 
-    // Aktuelle und nächste Kapitel berechnen
-    final int currentChapter = ((step - 1) / stepsPerChapter).floor();
+    // nächste Kapitel berechnen
     final int nextChapter = (step / stepsPerChapter).floor();
 
     // Wenn wir zum ersten Schritt eines neuen Kapitels wechseln, zuerst scrollen,
@@ -206,11 +205,13 @@ class ProgressScreenState extends State<ProgressScreen>
 
     // Warte kurz, damit alle Widgets gerendert sind, dann scrolle zum Widget
     return await Future.delayed(const Duration(milliseconds: 100), () async {
+
+      final context = _chapterKeys[chapterIndex].currentContext!;
+
       if (_scrollController.hasClients &&
           chapterIndex < _chapterKeys.length &&
           _chapterKeys[chapterIndex].currentContext != null) {
 
-        final context = _chapterKeys[chapterIndex].currentContext!;
         final RenderBox renderBox = context.findRenderObject() as RenderBox;
 
         // Berechne die absolute Position des Widgets
@@ -272,26 +273,6 @@ class ProgressScreenState extends State<ProgressScreen>
 
     final nextStep = currentStep + 1;
     _animateToStep(nextStep);
-  }
-
-  // Vereinfachte Methode mit Fallback auf konstante Werte
-  double _getItemHeight(int chapterIndex) {
-    if (chapterIndex >= _chapterKeys.length) return CHAPTER_HEIGHT;
-
-    final context = _chapterKeys[chapterIndex].currentContext;
-
-    if (context != null) {
-      final RenderBox renderBox = context.findRenderObject() as RenderBox;
-      final height = renderBox.size.height + 16.0; // Padding
-
-      if (kDebugMode) {
-        print("Chapter $chapterIndex actual height: ${renderBox.size.height}, total: $height");
-      }
-      return height;
-    }
-
-    // Fallback auf konstante Höhe
-    return CHAPTER_HEIGHT;
   }
 
   void _scrollToChapter(int chapterIndex) {
@@ -365,22 +346,6 @@ class ProgressScreenState extends State<ProgressScreen>
                 return AnimatedBuilder(
                   animation: _stepAnimation,
                   builder: (context, child) {
-                    // Hier entfernen wir die Skalierungsanimation für das ganze Kapitel
-                    // und lassen nur das Aufleuchteffekt durch den Container-Gradient
-                    final bool shouldAnimateThisChapter;
-
-                    if (_isAnimating && currentStep % stepsPerChapter == 0) {
-                      // Wenn wir genau am Ende eines Kapitels sind,
-                      // animiere das ABGESCHLOSSENE Kapitel (nicht das nächste)
-                      final int completedChapterIndex = (currentStep / stepsPerChapter).floor() - 1;
-                      shouldAnimateThisChapter = chapterIndex == completedChapterIndex;
-                    } else {
-                      // Normale Animation innerhalb eines Kapitels
-                      shouldAnimateThisChapter = _isAnimating &&
-                          currentStep >= chapterStart &&
-                          currentStep < chapterStart + stepsPerChapter;
-                    }
-
                     // Wir entfernen die Skalierung (Transform.scale) und belassen nur das Padding
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),

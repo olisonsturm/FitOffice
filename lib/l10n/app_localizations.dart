@@ -356,11 +356,11 @@ abstract class AppLocalizations {
   /// **'FitOffice@DHBW'**
   String get tWelcomeTitle;
 
-  /// No description provided for @tWelcomeSubTitle.
+  /// No description provided for @tWelcomeSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Get fit. Stay focused. Thrive at DHBW.'**
-  String get tWelcomeSubTitle;
+  /// **'Stay fit during your office day. Join us now!'**
+  String get tWelcomeSubtitle;
 
   /// No description provided for @tLoginTitle.
   ///

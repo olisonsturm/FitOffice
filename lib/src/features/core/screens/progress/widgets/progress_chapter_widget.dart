@@ -50,20 +50,6 @@ class ProgressChapterWidget extends StatelessWidget {
     final Color completedColor = tPrimaryColor;
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Check if this chapter is currently being animated
-    bool isCurrentChapter;
-
-    // Korrigierte Logik für aktives Kapitel
-    if (currentStep % stepsPerChapter == 0 && isAnimating) {
-      // Wenn wir genau am Ende eines Kapitels sind, dann ist das
-      // ABGESCHLOSSENE Kapitel das aktive (nicht das nächste)
-      final int completedChapterIndex = (currentStep / stepsPerChapter).floor() - 1;
-      isCurrentChapter = chapterIndex == completedChapterIndex;
-    } else {
-      // Normale Berechnung innerhalb eines Kapitels
-      isCurrentChapter = currentStep >= startStep && currentStep < startStep + stepCount;
-    }
-
     // Check if chapter is completed
     final bool isCompleted = currentStep >= startStep + stepCount;
 
@@ -72,26 +58,6 @@ class ProgressChapterWidget extends StatelessWidget {
       curve: Curves.easeInOutCubic,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        // Entferne den orangefarbenen Gradient-Hintergrund und die Schatten
-        // gradient: isCurrentChapter && isAnimating
-        //     ? LinearGradient(
-        //   colors: [
-        //     tPrimaryColor.withValues(alpha: 0.1),
-        //     tSecondaryColor.withValues(alpha: 0.1),
-        //   ],
-        //   begin: Alignment.topLeft,
-        //   end: Alignment.bottomRight,
-        // )
-        //     : null,
-        // boxShadow: isCurrentChapter && isAnimating
-        //     ? [
-        //   BoxShadow(
-        //     color: tPrimaryColor.withValues(alpha: 0.2),
-        //     blurRadius: 20,
-        //     spreadRadius: 2,
-        //   ),
-        // ]
-        //     : null,
       ),
       child: Column(
         children: [

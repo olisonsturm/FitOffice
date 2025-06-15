@@ -148,8 +148,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tWelcomeTitle => 'FitOffice@DHBW';
 
   @override
-  String get tWelcomeSubTitle =>
-      'Werde fit. Bleib fokussiert. Entfalte dich an der DHBW.';
+  String get tWelcomeSubtitle =>
+      'Bleibe fit und fokussiert an der DHBW. Entdecke Übungen für Körper und Geist.';
 
   @override
   String get tLoginTitle => 'Willkommen zurück,';

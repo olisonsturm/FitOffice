@@ -15,7 +15,7 @@ const String tOnBoardingImage3 = "assets/lottie/FittyFuchsMusic.json";
 
 // -- Welcome Screen Image [Used in Login & SignUp]
 const String tWelcomeScreenImage = "assets/logo/dhbw.png";
-const String tLogoImage = "assets/logo/dhbw.png";
+const String tLogoImage = "assets/logo/fit_office_transparent.png";
 
 
 // -- SOCIAL Images
