@@ -51,7 +51,8 @@ import 'package:get/get.dart';
           title: tOnBoardingTitle1,
           subTitle: tOnBoardingSubTitle1,
           counterText: tOnBoardingCounter1,
-          bgColor: tOnBoardingPage1Color,
+          bgColorLight: tOnBoardingPage1Color,
+          bgColorDark: tOnBoardingPage1DarkColor,
         ),
       ),
       OnBoardingPageWidget(
@@ -60,7 +61,8 @@ import 'package:get/get.dart';
           title: tOnBoardingTitle2,
           subTitle: tOnBoardingSubTitle2,
           counterText: tOnBoardingCounter2,
-          bgColor: tOnBoardingPage2Color,
+          bgColorLight: tOnBoardingPage2Color,
+          bgColorDark: tOnBoardingPage2DarkColor,
         ),
       ),
       OnBoardingPageWidget(
@@ -69,11 +71,14 @@ import 'package:get/get.dart';
           title: tOnBoardingTitle3,
           subTitle: tOnBoardingSubTitle3,
           counterText: tOnBoardingCounter3,
-          bgColor: tOnBoardingPage3Color,
+          bgColorLight: tOnBoardingPage3Color,
+          bgColorDark: tOnBoardingPage3DarkColor,
         ),
       ),
       Container(
-        color: Colors.white,
+        color: Get.isDarkMode
+            ? tDarkColor // Dark background for dark mode
+            : Colors.white, // White background for light mode
         child: const Center(
           child: CircularProgressIndicator(
             color: tPrimaryColor,

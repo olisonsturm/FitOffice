@@ -13,10 +13,11 @@ class SignUpFormWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final controller = Get.put(SignUpController());
     return Container(
       padding: const EdgeInsets.only(top: 0, bottom: 0),
+      color: isDark ? tDarkColor : tWhiteColor,
       child: AutofillGroup(
         child: Form(
           key: controller.signupFormKey,
@@ -30,14 +31,14 @@ class SignUpFormWidget extends StatelessWidget {
                 validator: (value) => Helper.validateUsername(value, context),
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: isDark ? tDarkColor.withValues(alpha: 0.7) : Colors.grey[100],
+                  fillColor: isDark ? tDarkGreyColor : Colors.grey[100],
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
+                    borderSide: BorderSide(color: isDark ? tDarkGreyColor : Colors.grey.withValues(alpha: 0.3)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: isDark ? tWhiteColor : tBlackColor, width: 1.5),
+                    borderSide: BorderSide(color: isDark ? tWhiteColor : tPrimaryColor, width: 1.5),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -48,7 +49,7 @@ class SignUpFormWidget extends StatelessWidget {
                   label: RichText(
                     text: TextSpan(
                       text: AppLocalizations.of(context)!.tUserName,
-                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
+                      style: TextStyle(color: isDark ? tWhiteColor : tPrimaryColor),
                       children: const [
                         TextSpan(
                           text: ' *',
@@ -57,8 +58,9 @@ class SignUpFormWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  prefixIcon: const Icon(LineAwesomeIcons.user, color: tPrimaryColor,),
+                  prefixIcon: Icon(LineAwesomeIcons.user, color: isDark ? tWhiteColor : tPrimaryColor),
                 ),
+                style: TextStyle(color: isDark ? tWhiteColor : tDarkColor),
               ),
               const SizedBox(height: tFormHeight - 20),
 
@@ -69,14 +71,14 @@ class SignUpFormWidget extends StatelessWidget {
                 validator: (value) => Helper.validateFullName(value, context),
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: isDark ? tDarkColor.withValues(alpha: 0.7) : Colors.grey[100],
+                  fillColor: isDark ? tDarkGreyColor : Colors.grey[100],
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
+                    borderSide: BorderSide(color: isDark ? tDarkGreyColor : Colors.grey.withValues(alpha: 0.3)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: isDark ? tWhiteColor : tBlackColor, width: 1.5),
+                    borderSide: BorderSide(color: isDark ? tWhiteColor : tPrimaryColor, width: 1.5),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -87,11 +89,12 @@ class SignUpFormWidget extends StatelessWidget {
                   label: RichText(
                     text: TextSpan(
                       text: AppLocalizations.of(context)!.tFullName,
-                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor)
+                      style: TextStyle(color: isDark ? tWhiteColor : tPrimaryColor)
                     ),
                   ),
-                  prefixIcon: const Icon(LineAwesomeIcons.user_tag_solid, color: tPrimaryColor,),
+                  prefixIcon: Icon(LineAwesomeIcons.user_tag_solid, color: isDark ? tWhiteColor : tPrimaryColor),
                 ),
+                style: TextStyle(color: isDark ? tWhiteColor : tDarkColor),
               ),
               const SizedBox(height: tFormHeight - 20),
 
@@ -102,14 +105,14 @@ class SignUpFormWidget extends StatelessWidget {
                 validator: (value) => Helper.validateEmail(value, context),
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: isDark ? tDarkColor.withValues(alpha: 0.7) : Colors.grey[100],
+                  fillColor: isDark ? tDarkGreyColor : Colors.grey[100],
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
+                    borderSide: BorderSide(color: isDark ? tDarkGreyColor : Colors.grey.withValues(alpha: 0.3)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: isDark ? tWhiteColor : tBlackColor, width: 1.5),
+                    borderSide: BorderSide(color: isDark ? tWhiteColor : tPrimaryColor, width: 1.5),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -120,7 +123,7 @@ class SignUpFormWidget extends StatelessWidget {
                   label: RichText(
                     text: TextSpan(
                       text: AppLocalizations.of(context)!.tEmail,
-                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
+                      style: TextStyle(color: isDark ? tWhiteColor : tPrimaryColor),
                       children: const [
                         TextSpan(
                           text: ' *',
@@ -129,8 +132,9 @@ class SignUpFormWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  prefixIcon: const Icon(LineAwesomeIcons.envelope, color: tPrimaryColor,),
+                  prefixIcon: Icon(LineAwesomeIcons.envelope, color: isDark ? tWhiteColor : tPrimaryColor),
                 ),
+                style: TextStyle(color: isDark ? tWhiteColor : tDarkColor),
               ),
               const SizedBox(height: tFormHeight - 20),
 
@@ -142,14 +146,14 @@ class SignUpFormWidget extends StatelessWidget {
                 obscureText: !controller.showPassword.value,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: isDark ? tDarkColor.withValues(alpha: 0.7) : Colors.grey[100],
+                  fillColor: isDark ? tDarkGreyColor : Colors.grey[100],
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
+                    borderSide: BorderSide(color: isDark ? tDarkGreyColor : Colors.grey.withValues(alpha: 0.3)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: isDark ? tWhiteColor : tBlackColor, width: 1.5),
+                    borderSide: BorderSide(color: isDark ? tWhiteColor : tPrimaryColor, width: 1.5),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -161,7 +165,7 @@ class SignUpFormWidget extends StatelessWidget {
                   label: RichText(
                     text: TextSpan(
                       text: AppLocalizations.of(context)!.tPassword,
-                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
+                      style: TextStyle(color: isDark ? tWhiteColor : tPrimaryColor),
                       children: const [
                         TextSpan(
                           text: ' *',
@@ -170,15 +174,16 @@ class SignUpFormWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  prefixIcon: const Icon(Icons.fingerprint, color: tPrimaryColor,),
+                  prefixIcon: Icon(Icons.fingerprint, color: isDark ? tWhiteColor : tPrimaryColor),
                   suffixIcon: IconButton(
                     icon: controller.showPassword.value
-                        ? const Icon(LineAwesomeIcons.eye)
-                        : const Icon(LineAwesomeIcons.eye_slash),
+                        ? Icon(LineAwesomeIcons.eye, color: isDark ? tWhiteColor : tPrimaryColor)
+                        : Icon(LineAwesomeIcons.eye_slash, color: isDark ? tWhiteColor : tPrimaryColor),
                     onPressed: () => controller.showPassword.value =
                     !controller.showPassword.value,
                   ),
                 ),
+                style: TextStyle(color: isDark ? tWhiteColor : tDarkColor),
               )),
               const SizedBox(height: tFormHeight - 20),
 
@@ -191,14 +196,14 @@ class SignUpFormWidget extends StatelessWidget {
                     Helper.repeatPassword(value!, controller, context),
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: isDark ? tDarkColor.withValues(alpha: 0.7) : Colors.grey[100],
+                  fillColor: isDark ? tDarkGreyColor : Colors.grey[100],
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
+                    borderSide: BorderSide(color: isDark ? tDarkGreyColor : Colors.grey.withValues(alpha: 0.3)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: isDark ? tWhiteColor : tBlackColor, width: 1.5),
+                    borderSide: BorderSide(color: isDark ? tWhiteColor : tPrimaryColor, width: 1.5),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -210,7 +215,7 @@ class SignUpFormWidget extends StatelessWidget {
                   label: RichText(
                     text: TextSpan(
                       text: 'Confirm Password',
-                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
+                      style: TextStyle(color: isDark ? tWhiteColor : tPrimaryColor),
                       children: const [
                         TextSpan(
                           text: ' *',
@@ -219,15 +224,16 @@ class SignUpFormWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  prefixIcon: const Icon(Icons.fingerprint, color: tPrimaryColor,),
+                  prefixIcon: Icon(Icons.fingerprint, color: isDark ? tWhiteColor : tPrimaryColor),
                   suffixIcon: IconButton(
                     icon: controller.showPassword.value
-                        ? const Icon(LineAwesomeIcons.eye)
-                        : const Icon(LineAwesomeIcons.eye_slash),
+                        ? Icon(LineAwesomeIcons.eye, color: isDark ? tWhiteColor : tPrimaryColor)
+                        : Icon(LineAwesomeIcons.eye_slash, color: isDark ? tWhiteColor : tPrimaryColor),
                     onPressed: () => controller.showPassword.value =
                     !controller.showPassword.value,
                   ),
                 ),
+                style: TextStyle(color: isDark ? tWhiteColor : tDarkColor),
               )),
               const SizedBox(height: tFormHeight - 10),
 
@@ -252,7 +258,7 @@ class SignUpFormWidget extends StatelessWidget {
                   height: 50,
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   decoration: BoxDecoration(
-                    color: tPrimaryColor,
+                    color: isDark ? tPrimaryColor : tPrimaryColor,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       color: tPrimaryColor,
@@ -269,7 +275,7 @@ class SignUpFormWidget extends StatelessWidget {
                         : Text(
                             AppLocalizations.of(context)!.tSignup.toUpperCase(),
                             style: TextStyle(
-                              color: isDark ? tBlackColor : tWhiteColor,
+                              color: isDark ? tDarkColor : tWhiteColor,
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
                               letterSpacing: 0.5,
