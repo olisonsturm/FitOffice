@@ -256,7 +256,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             title: Text(
-              exerciseName ?? 'Unknown',
+              exerciseName,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
@@ -294,9 +294,10 @@ class _AllExercisesListState extends State<AllExercisesList> {
                         context: Get.context!,
                         barrierDismissible: false,
                         builder: (_) => StartExerciseDialog(
-                            exerciseName: exerciseName ?? 'Unknown'),
+                            exerciseName: exerciseName),
                       );
                       if (confirmed == true) {
+                        exerciseName = exercise['name'];
                         timerController.start(exerciseName, exerciseCategory);
                         Navigator.of(Get.context!)
                             .popUntil((route) => route.isFirst);
