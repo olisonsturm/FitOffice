@@ -15,196 +15,218 @@ class BugReportModal {
       ),
       backgroundColor: isDark ? Colors.grey[900] : Colors.white,
       builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            left: tDefaultSize,
-            right: tDefaultSize,
-            top: tDefaultSize,
-            bottom: MediaQuery.of(context).viewInsets.bottom + tDefaultSize,
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Center(
-                  child: Container(
-                    width: 50,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: isDark ? Colors.white54 : Colors.black54,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
+        return SizedBox(
+          height: MediaQuery.of(context).size.height * 0.8,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onVerticalDragEnd: (details) {
+              if (details.primaryVelocity != null && details.primaryVelocity! > 300) {
+                Navigator.of(context).pop();
+              }
+            },
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (notification) {
+                if (notification is ScrollUpdateNotification) {
+                  if (notification.metrics.pixels <= 0 && notification.dragDetails != null && notification.dragDetails!.delta.dy > 0) {
+                    Navigator.of(context).pop();
+                    return true;
+                  }
+                }
+                return false;
+              },
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: tDefaultSize,
+                  right: tDefaultSize,
+                  top: tDefaultSize,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + tDefaultSize,
                 ),
-                const SizedBox(height: 40),
-
-                // Header with Bug Icon
-                Center(
-                  child: Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: Colors.red.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Icon(
-                      Icons.bug_report,
-                      size: 40,
-                      color: Colors.red,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 25),
-
-                Center(
-                  child: Text(
-                    'Report a Bug',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.black87,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 8),
-
-                Center(
-                  child: Text(
-                    'Help us improve the app',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: isDark ? Colors.white54 : Colors.black54,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 30),
-
-                // Development & Issues Section
-                Container(
-                  decoration: BoxDecoration(
-                    color: isDark ? Colors.grey[800] : Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: Colors.grey.withAlpha((0.5 * 255).toInt()),
-                      width: 1.5,
-                    ),
-                  ),
-                  padding: const EdgeInsets.all(16),
+                child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        'Development & Issues',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-
-                      _buildContactItem(
-                        Icons.bug_report_outlined,
-                        'Report Bug',
-                        'Create new issue',
-                        isDark,
-                        onTap: () => _launchUrl('https://github.com/olisonsturm/FitOffice/issues/new'),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      _buildContactItem(
-                        Icons.code,
-                        'GitHub Repository',
-                        'View source code',
-                        isDark,
-                        onTap: () => _launchUrl('https://github.com/olisonsturm/FitOffice'),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // How to report a bug effectively
-                Container(
-                  decoration: BoxDecoration(
-                    color: isDark ? Colors.grey[800] : Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: Colors.grey.withAlpha((0.5 * 255).toInt()),
-                      width: 1.5,
-                    ),
-                  ),
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'How to Report Effectively',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        'When reporting a bug, please include:',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: isDark ? Colors.white70 : Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      _buildListItem('App version and device information', isDark),
-                      _buildListItem('Steps to reproduce the issue', isDark),
-                      _buildListItem('Expected vs. actual behavior', isDark),
-                      _buildListItem('Screenshots if applicable', isDark),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 30),
-
-                // Thank you note
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.red.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: Colors.red.withValues(alpha: 0.3),
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.favorite_outline,
-                        color: Colors.red,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          'Thank you for helping us improve FitOffice! Your feedback is valuable.',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: isDark ? Colors.white70 : Colors.black87,
+                      Center(
+                        child: Container(
+                          width: 50,
+                          height: 5,
+                          decoration: BoxDecoration(
+                            color: isDark ? Colors.white54 : Colors.black54,
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                       ),
+                      const SizedBox(height: 40),
+
+                      // Header with Bug Icon
+                      Center(
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: Colors.red.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: const Icon(
+                            Icons.bug_report,
+                            size: 40,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 25),
+
+                      Center(
+                        child: Text(
+                          'Report a Bug',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: isDark ? Colors.white : Colors.black87,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      Center(
+                        child: Text(
+                          'Help us improve the app',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: isDark ? Colors.white54 : Colors.black54,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 30),
+
+                      // Development & Issues Section
+                      Container(
+                        decoration: BoxDecoration(
+                          color: isDark ? Colors.grey[800] : Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+                            width: 1.5,
+                          ),
+                        ),
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Development & Issues',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: isDark ? Colors.white : Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+
+                            _buildContactItem(
+                              Icons.bug_report_outlined,
+                              'Report Bug',
+                              'Create new issue',
+                              isDark,
+                              onTap: () => _launchUrl('https://github.com/olisonsturm/FitOffice/issues/new'),
+                            ),
+
+                            const SizedBox(height: 16),
+
+                            _buildContactItem(
+                              Icons.code,
+                              'GitHub Repository',
+                              'View source code',
+                              isDark,
+                              onTap: () => _launchUrl('https://github.com/olisonsturm/FitOffice'),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // How to report a bug effectively
+                      Container(
+                        decoration: BoxDecoration(
+                          color: isDark ? Colors.grey[800] : Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+                            width: 1.5,
+                          ),
+                        ),
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'How to Report Effectively',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: isDark ? Colors.white : Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              'When reporting a bug, please include:',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: isDark ? Colors.white70 : Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            _buildListItem('App version and device information', isDark),
+                            _buildListItem('Steps to reproduce the issue', isDark),
+                            _buildListItem('Expected vs. actual behavior', isDark),
+                            _buildListItem('Screenshots if applicable', isDark),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 30),
+
+                      // Thank you note
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.red.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: Colors.red.withValues(alpha: 0.3),
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.favorite_outline,
+                              color: Colors.red,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                'Thank you for helping us improve FitOffice! Your feedback is valuable.',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: isDark ? Colors.white70 : Colors.black87,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 25),
                     ],
                   ),
                 ),
-
-                const SizedBox(height: 25),
-              ],
+              ),
             ),
           ),
         );

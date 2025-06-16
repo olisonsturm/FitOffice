@@ -116,7 +116,7 @@ class ExerciseHistoryTab extends StatelessWidget {
                           ),
                         ),
                         subtitle: Text(
-                          "${localizations.tDuration}: ${minutes} ${localizations.tMinutes} ${seconds} ${localizations.tSeconds}",
+                          "${localizations.tDuration}: $minutes ${localizations.tMinutes} $seconds ${localizations.tSeconds}",
                           style: TextStyle(
                             fontSize: 14,
                             color: isDarkMode ? Colors.white70 : Colors.grey,

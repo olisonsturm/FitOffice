@@ -18,6 +18,14 @@ class ProfileController extends GetxController {
   /// Reactive User Model for global state
   final user = Rx<UserModel?>(null);
 
+  /// Reactive variable to notify when profile picture is updated
+  final profilePictureUpdated = RxBool(false);
+
+  /// Method to notify when profile picture is updated
+  void notifyProfilePictureUpdated() {
+    profilePictureUpdated.toggle();
+  }
+
   /// Fetch user data using the authenticated user's ID
   Future<void> fetchUserData() async {
     try {

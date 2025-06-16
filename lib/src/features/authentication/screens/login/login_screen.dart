@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:fit_office/src/common_widgets/form/form_header_widget.dart';
 import 'package:fit_office/src/constants/image_strings.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:fit_office/src/features/authentication/screens/signup/signup_screen.dart';
-import '../../../../common_widgets/buttons/clickable_richtext_widget.dart';
 import '../../../../constants/colors.dart';
-import '../../../../constants/sizes.dart';
 import 'widgets/login_form_widget.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -14,32 +11,122 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: isDark ? tBlackColor : tWhiteColor,
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(tDefaultSpace),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FormHeaderWidget(
-                  image: tWelcomeScreenImage,
-                  title: AppLocalizations.of(context)!.tLoginTitle,
-                  subTitle: AppLocalizations.of(context)!.tLoginSubTitle,
-                  imageHeight: 0.2,
-                  heightBetween: tFormHeight * 2,
-              ),
-              //const SizedBox(height: tDefaultSpace * 2),
-              const LoginFormWidget(),
-              ClickableRichTextWidget(
-                text1: AppLocalizations.of(context)!.tDontHaveAnAccount,
-                text2: AppLocalizations.of(context)!.tSignup,
-                onPressed: () => Get.off(() => const SignupScreen()),
-              ),
-            ],
+      body: Center(
+        child: SingleChildScrollView(
+          child: Container(
+            width: width * 0.92,
+            constraints: BoxConstraints(
+              minHeight: height * 0.92,
+              maxWidth: 420,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Logo
+                Hero(
+                  tag: 'welcome-image-tag',
+                  child: Image(
+                    image: const AssetImage(tLogoImage),
+                    width: width * 0.5,
+                    height: width * 0.5,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Title
+                Text(
+                  AppLocalizations.of(context)!.tLoginTitle,
+                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: -0.5,
+                        color: isDark ? tWhiteColor : tBlackColor,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 12),
+                // Subtitle
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    AppLocalizations.of(context)!.tLoginSubTitle,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          height: 1.5,
+                          color: isDark
+                              ? tWhiteColor.withValues(alpha: 0.7)
+                              : tBlackColor.withValues(alpha: 0.7),
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 32),
+                // Login form in a card
+                Card(
+                  color: isDark ? tDarkColor : Colors.white,
+                  elevation: 6,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+                    child: Column(
+                      children: const [
+                        LoginFormWidget(),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Signup navigation styled as button
+                GestureDetector(
+                  onTap: () => Get.off(() => const SignupScreen()),
+                  child: Container(
+                    width: double.infinity,
+                    height: 50,
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
+                      color: isDark ? Colors.grey[800] : Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        AppLocalizations.of(context)!.tSignup.toUpperCase(),
+                        style: TextStyle(
+                          color: isDark ? tWhiteColor : tBlackColor,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Copyright
+                Text(
+                  '© 2025 DHBW Ravensburg',
+                  style: TextStyle(
+                    color: isDark
+                        ? tWhiteColor.withValues(alpha: 0.5)
+                        : tBlackColor.withValues(alpha: 0.5),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:fit_office/global_overlay.dart';
+import 'package:fit_office/src/utils/helper/helper_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
@@ -118,16 +119,14 @@ class DashboardSearchBoxState extends State<DashboardSearchBox> {
                   setState(() {});
                 },
                 onSubmitted: (value) {
+                  final localizations = AppLocalizations.of(context)!;
                   if (value.trim().isNotEmpty) {
                     widget.onSearchSubmitted(value.trim());
                     Future.delayed(const Duration(milliseconds: 100), () {
                       if (mounted) _focusNode.unfocus();
                     });
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text(AppLocalizations.of(context)!.tDashboardExerciseSearchNoInput)),
-                    );
+                    Helper.modernSnackBar(title: localizations.tInfo, message: localizations.tDashboardExerciseSearchNoInput);
                   }
                 }),
           ),

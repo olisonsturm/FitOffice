@@ -51,7 +51,6 @@ class DashboardTopCourses extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        Flexible(child: Image(image: AssetImage(list[index].image), height: 110)),
                       ],
                     ),
                     Row(

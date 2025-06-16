@@ -11,9 +11,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   google_fonts: ^6.1.0
-  intl: 0.20.2
+  intl: ^0.20.2
 
   ## -- STATE MANAGEMENT
   get: ^4.6.6
@@ -78,11 +78,6 @@ flutter:
     - assets/logo/
     - assets/images/
     - assets/images/profile/
-    - assets/images/dashboard/
-    - assets/images/splash_images/
-    - assets/images/welcome_images/
-    - assets/images/forget_password/
-    - assets/images/on_boarding_images/
     - assets/lottie/
 
 # Splash screen has been added in the 'splash.yaml' file in main project directory

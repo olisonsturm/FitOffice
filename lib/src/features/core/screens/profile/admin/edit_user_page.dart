@@ -145,7 +145,9 @@ class _EditUserPageState extends State<EditUserPage> {
       appBar: AppBar(
         title: Text(
             isEditMode ? localisations.tEditUser : localisations.tCreateUser),
-        backgroundColor: tCardBgColor,
+        backgroundColor: tPrimaryColor,
+        elevation: 0,
+        scrolledUnderElevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),

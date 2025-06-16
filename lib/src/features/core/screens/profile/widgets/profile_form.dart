@@ -12,7 +12,7 @@ import '../../../../../repository/authentication_repository/authentication_repos
 import '../../../../../repository/user_repository/user_repository.dart';
 import '../../../../../utils/helper/helper_controller.dart';
 import '../../../../authentication/models/user_model.dart';
-import '../../../../authentication/screens/forget_password/forget_password_options/forget_password_model_bottom_sheet.dart';
+import '../../../../authentication/screens/forget_password/forget_password_model_bottom_sheet.dart';
 import '../../../controllers/profile_controller.dart';
 
 // TODO: Add all the form fields, show the right timestamps not a hardcoded value, check if the username is already taken, and add a confirm popup before deleting the account.

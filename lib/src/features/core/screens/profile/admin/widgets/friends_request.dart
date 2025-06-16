@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit_office/src/constants/colors.dart';
+  import 'package:fit_office/src/features/core/controllers/friends_controller.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../widgets/avatar.dart';
 
@@ -15,45 +17,13 @@ class FriendRequestsWidget extends StatefulWidget {
 }
 
 class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
-  List<DocumentSnapshot> _requests = [];
-  bool _isLoading = true;
+  final FriendsController _friendsController = Get.find<FriendsController>();
 
   @override
   void initState() {
     super.initState();
-    _loadRequests();
-  }
-
-  Future<void> _loadRequests() async {
-    setState(() => _isLoading = true);
-    final currentUserRef = FirebaseFirestore.instance
-        .collection('users')
-        .doc(widget.currentUserId);
-
-    final snapshot = await FirebaseFirestore.instance
-        .collection('friendships')
-        .where('receiver', isEqualTo: currentUserRef)
-        .where('status', isEqualTo: 'pending')
-        .get();
-
-    setState(() {
-      _requests = snapshot.docs;
-      _isLoading = false;
-    });
-  }
-
-  Future<void> _respondToRequest(DocumentSnapshot doc, String newStatus) async {
-    if (newStatus == 'denied') {
-      await doc.reference.delete();
-    } else {
-      await doc.reference.update({
-        'status': newStatus,
-      });
-    }
-
-    setState(() {
-      _requests.removeWhere((d) => d.id == doc.id);
-    });
+    // Wir können Get.find verwenden, da der Controller bereits im FriendsBoxWidget initialisiert wurde
+    // Statt initState zu verwenden, könnten wir auch im build-Methode prüfen, ob wir bereits initialisiert sind
   }
 
   @override
@@ -75,126 +45,132 @@ class _FriendRequestsWidgetState extends State<FriendRequestsWidget> {
               ),
             ),
             const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.refresh, color: tPrimaryColor),
-              onPressed: _loadRequests,
-            ),
           ],
         ),
         const SizedBox(height: 8),
-        if (_isLoading)
-          const Center(child: CircularProgressIndicator(color: tPrimaryColor))
-        else if (_requests.isEmpty)
-          Container(
-            decoration: BoxDecoration(
-              color: isDark ? Colors.grey[800] : Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: Colors.grey.withAlpha((0.5 * 255).toInt()),
-                width: 1.5,
-              ),
-            ),
-            padding: const EdgeInsets.all(16),
-            child: Center(
-              child: Text(
-                AppLocalizations.of(context)!.tNoRequests,
-                style: TextStyle(
-                  color: isDark ? Colors.white70 : Colors.black54,
+
+        // Verwenden von Obx für reaktive Aktualisierung der UI
+        Obx(() {
+          if (_friendsController.isLoadingRequests.value) {
+            return const Center(child: CircularProgressIndicator(color: tPrimaryColor));
+          } else if (_friendsController.friendRequests.isEmpty) {
+            return Container(
+              decoration: BoxDecoration(
+                color: isDark ? Colors.grey[800] : Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+                  width: 1.5,
                 ),
               ),
-            ),
-          )
-        else
-          Container(
-            decoration: BoxDecoration(
-              color: isDark ? Colors.grey[800] : Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: Colors.grey.withAlpha((0.5 * 255).toInt()),
-                width: 1.5,
+              padding: const EdgeInsets.all(16),
+              child: Center(
+                child: Text(
+                  AppLocalizations.of(context)!.tNoRequests,
+                  style: TextStyle(
+                    color: isDark ? Colors.white70 : Colors.black54,
+                  ),
+                ),
               ),
-            ),
-            constraints: const BoxConstraints(maxHeight: 168),
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: _requests.length,
-              itemBuilder: (context, index) {
-                final doc = _requests[index];
-                final senderRef = doc['sender'] as DocumentReference;
+            );
+          } else {
+            return Container(
+              decoration: BoxDecoration(
+                color: isDark ? Colors.grey[800] : Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+                  width: 1.5,
+                ),
+              ),
+              constraints: const BoxConstraints(maxHeight: 168),
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: _friendsController.friendRequests.length,
+                itemBuilder: (context, index) {
+                  final doc = _friendsController.friendRequests[index];
+                  final senderRef = doc['sender'] as DocumentReference;
 
-                return FutureBuilder<DocumentSnapshot>(
-                  future: senderRef.get(),
-                  builder: (context, senderSnap) {
-                    if (!senderSnap.hasData) return const SizedBox.shrink();
+                  return FutureBuilder<DocumentSnapshot>(
+                    future: senderRef.get(),
+                    builder: (context, senderSnap) {
+                      if (!senderSnap.hasData) return const SizedBox.shrink();
 
-                    final senderData =
-                    senderSnap.data!.data() as Map<String, dynamic>;
-                    final senderName = senderData['username'] ??
-                        AppLocalizations.of(context)!.tUnknown;
+                      final senderData =
+                      senderSnap.data!.data() as Map<String, dynamic>;
+                      final senderName = senderData['username'] ??
+                          AppLocalizations.of(context)!.tUnknown;
 
-                    final Timestamp sinceTimestamp = doc['since'] as Timestamp;
-                    final DateTime sinceDate = sinceTimestamp.toDate();
-                    final Duration difference =
-                    DateTime.now().difference(sinceDate);
+                      final Timestamp sinceTimestamp = doc['since'] as Timestamp;
+                      final DateTime sinceDate = sinceTimestamp.toDate();
+                      final Duration difference =
+                      DateTime.now().difference(sinceDate);
 
-                    String timeAgo;
-                    if (difference.inDays >= 1) {
-                      timeAgo = '${difference.inDays}d ago';
-                    } else if (difference.inHours >= 1) {
-                      timeAgo = '${difference.inHours}h ago';
-                    } else {
-                      timeAgo = '${difference.inMinutes}min ago';
-                    }
+                      String timeAgo;
+                      if (difference.inDays >= 1) {
+                        timeAgo = '${difference.inDays}d ago';
+                      } else if (difference.inHours >= 1) {
+                        timeAgo = '${difference.inHours}h ago';
+                      } else {
+                        timeAgo = '${difference.inMinutes}min ago';
+                      }
 
-                    return ListTile(
-                      leading: SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: Avatar(
-                          userEmail: senderData['email'],
+                      return ListTile(
+                        leading: SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: Avatar(
+                            userEmail: senderData['email'],
+                          ),
                         ),
-                      ),
-                      title: Row(
-                        children: [
-                          Text(
-                            senderName,
-                            style: TextStyle(
-                              color: isDark ? Colors.white : Colors.black87,
-                              fontWeight: FontWeight.w600,
+                        title: Row(
+                          children: [
+                            Text(
+                              senderName,
+                              style: TextStyle(
+                                color: isDark ? Colors.white : Colors.black87,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '($timeAgo)',
-                            style: TextStyle(
-                              color:
-                              isDark ? Colors.white54 : Colors.black54,
-                              fontSize: 12,
+                            const SizedBox(width: 8),
+                            Text(
+                              '($timeAgo)',
+                              style: TextStyle(
+                                color:
+                                isDark ? Colors.white54 : Colors.black54,
+                                fontSize: 12,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.check, color: Colors.green),
-                            onPressed: () => _respondToRequest(doc, 'accepted'),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close, color: Colors.red),
-                            onPressed: () => _respondToRequest(doc, 'denied'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
+                          ],
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.check, color: Colors.green),
+                              onPressed: () => _respondToRequest(doc, 'accepted'),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.close, color: Colors.red),
+                              onPressed: () => _respondToRequest(doc, 'denied'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            );
+          }
+        }),
       ],
     );
+  }
+
+  Future<void> _respondToRequest(DocumentSnapshot doc, String newStatus) async {
+    // Verwende die respondToFriendRequest-Methode vom Controller mit dem BuildContext
+    await _friendsController.respondToFriendRequest(doc, newStatus, context);
   }
 }
