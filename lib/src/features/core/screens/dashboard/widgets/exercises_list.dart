@@ -1,6 +1,7 @@
 import 'package:fit_office/src/features/core/screens/profile/admin/exercise_form.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_similarity/string_similarity.dart';
 import '../../../../../utils/helper/dialog_helper.dart';
 import '../../../controllers/profile_controller.dart';
@@ -113,64 +114,79 @@ class _AllExercisesListState extends State<AllExercisesList> {
 
     return FutureBuilder<UserModel?>(
       future: ProfileController().getUserData(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
+      builder: (context, userSnapshot) {
+        if (!userSnapshot.hasData) {
           return _buildLoadingCard(context);
         }
 
-        final user = snapshot.data;
+        final user = userSnapshot.data;
         final isAdmin = user?.role == 'admin';
 
-        final List<Widget> listWidgets = [];
-
-        if (sortedList.isEmpty) {
-          return Padding(
-            padding: EdgeInsets.all(16),
-            child: Text(AppLocalizations.of(context)!.tDashboardExerciseNotFound),
-          );
-        }
-
-        if (isFiltered || !widget.showGroupedAlphabetically) {
-          for (int i = 0; i < sortedList.length; i++) {
-            listWidgets
-                .add(_buildExerciseCard(context, sortedList[i], isAdmin));
-            if (i < sortedList.length - 1) listWidgets.add(const Divider());
-          }
-        } else {
-          String lastLetter = '';
-          List<Map<String, dynamic>> buffer = [];
-
-          void flush(String tag) {
-            listWidgets.add(const SizedBox(height: 16));
-            listWidgets.add(_buildHeader(tag));
-            listWidgets.add(const Divider());
-
-            for (int i = 0; i < buffer.length; i++) {
-              listWidgets.add(_buildExerciseCard(context, buffer[i], isAdmin));
+        return FutureBuilder<SharedPreferences>(
+          future: SharedPreferences.getInstance(),
+          builder: (context, prefsSnapshot) {
+            if (!prefsSnapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
             }
-            buffer.clear();
-          }
 
-          for (final exercise in sortedList) {
-            final name = (exercise['name'] ?? '').toString();
-            if (name.isEmpty) continue;
-            final firstLetter = name[0].toUpperCase();
+            final locale = prefsSnapshot.data!.getString('locale') ?? 'de';
 
-            if (firstLetter != lastLetter) {
+            final List<Widget> listWidgets = [];
+
+            if (sortedList.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(AppLocalizations.of(context)!.tDashboardExerciseNotFound),
+              );
+            }
+
+            if (isFiltered || !widget.showGroupedAlphabetically) {
+              for (int i = 0; i < sortedList.length; i++) {
+                listWidgets.add(_buildExerciseCard(context, sortedList[i], isAdmin, locale));
+                if (i < sortedList.length - 1) listWidgets.add(const Divider());
+              }
+            } else {
+              String lastLetter = '';
+              List<Map<String, dynamic>> buffer = [];
+
+              void flush(String tag) {
+                listWidgets.add(const SizedBox(height: 16));
+                listWidgets.add(_buildHeader(tag));
+                listWidgets.add(const Divider());
+
+                for (int i = 0; i < buffer.length; i++) {
+                  listWidgets.add(_buildExerciseCard(context, buffer[i], isAdmin, locale));
+                }
+                buffer.clear();
+              }
+
+              for (final exercise in sortedList) {
+                String name = '';
+                if (locale == 'de') {
+                  name = (exercise['name'] ?? '').toString();
+                } else {
+                  name = (exercise['name_en'] ?? '').toString();
+                }
+                if (name.isEmpty) continue;
+                final firstLetter = name[0].toUpperCase();
+
+                if (firstLetter != lastLetter) {
+                  if (buffer.isNotEmpty) flush(lastLetter);
+                  lastLetter = firstLetter;
+                }
+
+                buffer.add(exercise);
+              }
+
               if (buffer.isNotEmpty) flush(lastLetter);
-              lastLetter = firstLetter;
             }
 
-            buffer.add(exercise);
-          }
-
-          if (buffer.isNotEmpty) flush(lastLetter);
-        }
-
-        return ListView(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: listWidgets,
+            return ListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: listWidgets,
+            );
+          },
         );
       },
     );
@@ -195,8 +211,13 @@ class _AllExercisesListState extends State<AllExercisesList> {
       );
 
   Widget _buildExerciseCard(
-      BuildContext context, Map<String, dynamic> exercise, bool isAdmin) {
-    final exerciseName = exercise['name'];
+      BuildContext context, Map<String, dynamic> exercise, bool isAdmin, String locale) {
+    String exerciseName;
+    if (locale == 'de') {
+      exerciseName = exercise['name'];
+    } else {
+      exerciseName = exercise['name_en'];
+    }
     final exerciseCategory = exercise['category'];
     final timerController = Get.find<ExerciseTimerController>();
     final isFavorite = widget.favorites.contains(exerciseName);
@@ -235,7 +256,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             title: Text(
-              exerciseName ?? 'Unknown',
+              exerciseName,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -274,9 +295,10 @@ class _AllExercisesListState extends State<AllExercisesList> {
                         context: Get.context!,
                         barrierDismissible: false,
                         builder: (_) => StartExerciseDialog(
-                            exerciseName: exerciseName ?? 'Unknown'),
+                            exerciseName: exerciseName),
                       );
                       if (confirmed == true) {
+                        exerciseName = exercise['name'];
                         timerController.start(exerciseName, exerciseCategory);
                         Navigator.of(Get.context!)
                             .popUntil((route) => route.isFirst);

@@ -1,4 +1,5 @@
 import 'package:fit_office/src/constants/colors.dart';
+import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/cancel_exercise.dart';
 import 'package:fit_office/src/features/core/screens/libary/library_screen.dart';
 import 'package:fit_office/src/utils/helper/dialog_helper.dart';
@@ -88,20 +89,23 @@ class GlobalExerciseOverlay {
                           /// Text- & Icon-Bereich links
                           Expanded(
                             child: GestureDetector(
-                              onTap: () {
-                                final exerciseData = {
-                                  'name': timerController.exerciseName.value,
-                                  'category':
-                                      timerController.exerciseCategory.value,
-                                };
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => ExerciseDetailScreen(
-                                      exerciseData: exerciseData,
+                              onTap: () async {
+                                final dbController =
+                                    Get.put(DbController(), permanent: true);
+
+                                final exerciseData =
+                                    await dbController.getExerciseByName(
+                                        timerController.exerciseName.value);
+
+                                if (exerciseData != null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ExerciseDetailScreen(
+                                          exerciseData: exerciseData),
                                     ),
-                                  ),
-                                );
+                                  );
+                                }
                               },
                               child: Row(
                                 children: [
@@ -181,8 +185,8 @@ class GlobalExerciseOverlay {
                                     icon: const Icon(Icons.check_circle,
                                         color: tWhiteColor),
                                     onPressed: () async {
-                                      final libraryState = context
-                                          .findAncestorStateOfType<
+                                      final libraryState =
+                                          context.findAncestorStateOfType<
                                               LibraryScreenState>();
                                       final confirmed =
                                           await showUnifiedDialog<bool>(
@@ -204,8 +208,8 @@ class GlobalExerciseOverlay {
                                     icon: const Icon(Icons.cancel,
                                         color: tWhiteColor),
                                     onPressed: () async {
-                                      final libraryState = context
-                                          .findAncestorStateOfType<
+                                      final libraryState =
+                                          context.findAncestorStateOfType<
                                               LibraryScreenState>();
                                       final confirmed =
                                           await showUnifiedDialog<bool>(
@@ -253,4 +257,7 @@ class GlobalExerciseOverlay {
   void setDialogOpen(bool isOpen) {
     _dialogIsOpen.value = isOpen;
   }
+
+  static const double overlayHeight = 86;
+
 }

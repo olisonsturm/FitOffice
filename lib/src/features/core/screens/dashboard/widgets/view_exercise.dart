@@ -1,3 +1,4 @@
+import 'package:fit_office/global_overlay.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/exercise_history.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/sections/exercise_info.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/appbar.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../utils/helper/dialog_helper.dart';
 import '../../../controllers/db_controller.dart';
@@ -33,21 +35,50 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   bool favoriteChanged = false;
   bool isAdmin = false;
   bool isProcessing = false;
+  bool showScrollDownButton = false;
+  String? _locale;
 
+  final ScrollController _scrollController = ScrollController();
   final DbController _dbController = DbController();
   final ProfileController _profileController = Get.put(ProfileController());
 
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ExerciseDetailScreen.currentExerciseName.value =
           widget.exerciseData['name'];
       ExerciseDetailScreen.currentTabIndex.value = 0;
+
+      //final timerActive = Get.find<ExerciseTimerController>().isRunning.value;
+
+      final position = _scrollController.position;
+      final isScrollable = position.maxScrollExtent > 0;
+
+      setState(() {
+        showScrollDownButton = isScrollable;
+      });
+
+      _scrollController.addListener(() {
+        final position = _scrollController.position;
+        const delta = 40.0;
+
+        final isNearBottom =
+            position.maxScrollExtent - position.pixels <= delta;
+
+        if (isNearBottom && !position.outOfRange) {
+          if (showScrollDownButton) {
+            setState(() => showScrollDownButton = false);
+          }
+        }
+      });
     });
+
     isFavorite = widget.isFavorite;
     _loadFavoriteStatus();
     _loadUserRole();
+    _loadLocale();
   }
 
   @override
@@ -100,7 +131,9 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
           isFavorite = !isFavorite;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.tUpdateFavoriteException)),
+          SnackBar(
+              content:
+                  Text(AppLocalizations.of(context)!.tUpdateFavoriteException)),
         );
       }
     } finally {
@@ -145,6 +178,13 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     }
   }
 
+  void _loadLocale() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _locale = prefs.getString('locale') ?? 'de';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -152,7 +192,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     return Scaffold(
       backgroundColor: isDarkMode ? Colors.black : tWhiteColor,
       appBar: SliderAppBar(
-        title: widget.exerciseData['name'] ?? '',
+        title: _locale == 'de' ? widget.exerciseData['name'] ?? '' : widget.exerciseData['name_en'] ?? '',
         subtitle: widget.exerciseData['category'] ?? '',
         showBackButton: true,
         showFavoriteIcon: true,
@@ -163,63 +203,125 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
         onBack: _handleBack,
         onEdit: _editExercise,
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: isDarkMode
-                    ? Colors.grey.shade700
-                    : tBottomNavBarUnselectedColor,
+          Column(
+            children: [
+              Container(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color:
+                      isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: isDarkMode
+                        ? Colors.grey.shade700
+                        : tBottomNavBarUnselectedColor,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: isDarkMode ? Colors.transparent : Colors.black12,
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _TabButton(
+                        text: AppLocalizations.of(context)!.tExerciseAbout,
+                        isSelected: selectedTab == 0,
+                        onTap: () {
+                          setState(() => selectedTab = 0);
+                          ExerciseDetailScreen.currentTabIndex.value = 0;
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: _TabButton(
+                        text: AppLocalizations.of(context)!.tExerciseHistory,
+                        isSelected: selectedTab == 1,
+                        onTap: () {
+                          setState(() => selectedTab = 1);
+                          ExerciseDetailScreen.currentTabIndex.value = 1;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: isDarkMode ? Colors.transparent : Colors.black12,
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: _TabButton(
-                    text: AppLocalizations.of(context)!.tExerciseAbout,
-                    isSelected: selectedTab == 0,
-                    onTap: () {
-                      setState(() => selectedTab = 0);
-                      ExerciseDetailScreen.currentTabIndex.value = 0;
-                    },
+              Expanded(
+                child: Obx(() {
+                  final isOverlayVisible =
+                      Get.find<ExerciseTimerController>().isRunning.value;
+                  return Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      16,
+                      0,
+                      16,
+                      isOverlayVisible
+                          ? GlobalExerciseOverlay.overlayHeight
+                          : 0,
+                    ),
+                    child: selectedTab == 0
+                        ? ExerciseInfoTab(
+                            exerciseData: widget.exerciseData,
+                            scrollController: _scrollController,
+                          )
+                        : ExerciseHistoryTab(
+                            name: (widget.exerciseData['name'] ?? '')
+                                .toString()
+                                .trim(),
+                            scrollController: _scrollController,
+                          ),
+                  );
+                }),
+              ),
+            ],
+          ),
+          if (showScrollDownButton)
+            Positioned(
+              bottom: Get.find<ExerciseTimerController>().isRunning.value
+                  ? GlobalExerciseOverlay.overlayHeight + 16
+                  : 32,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: GestureDetector(
+                  onTap: () {
+                    _scrollController.animateTo(
+                      _scrollController.position.maxScrollExtent,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeOut,
+                    );
+                  },
+                  child: Container(
+                    width: 45,
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: tBottomNavBarSelectedColor,
+                      shape: BoxShape.circle,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 6,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    alignment: Alignment.center,
+                    child: const Icon(
+                      Icons.keyboard_arrow_down,
+                      color: Colors.white,
+                      size: 32,
+                    ),
                   ),
                 ),
-                Expanded(
-                  child: _TabButton(
-                    text: AppLocalizations.of(context)!.tExerciseHistory,
-                    isSelected: selectedTab == 1,
-                    onTap: () {
-                      setState(() => selectedTab = 1);
-                      ExerciseDetailScreen.currentTabIndex.value = 1;
-                    },
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: selectedTab == 0
-                  ? ExerciseInfoTab(exerciseData: widget.exerciseData)
-                  : ExerciseHistoryTab(
-                      name: (widget.exerciseData['name'] ?? '')
-                          .toString()
-                          .trim()),
-            ),
-          ),
         ],
       ),
     );

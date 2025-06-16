@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/confirmation_dialog.dart';
 import 'package:fit_office/src/features/core/screens/profile/admin/widgets/delete_video.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
@@ -28,7 +29,9 @@ class ExerciseForm extends StatefulWidget {
 
 class _ExerciseFormState extends State<ExerciseForm> {
   TextEditingController _nameController = TextEditingController();
+  TextEditingController _nameEnController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
+  TextEditingController _descriptionEnController = TextEditingController();
   final TextEditingController _videoController = TextEditingController();
 
   final List<String> _categories = [tUpperBody, tLowerBody, tMental];
@@ -44,6 +47,8 @@ class _ExerciseFormState extends State<ExerciseForm> {
   late String originalDescription;
   late String originalVideo;
   late String originalCategory;
+  late String originalNameEn;
+  late String originalDescriptionEn;
 
   VideoPlayerController? _videoPlayerController;
   ChewieController? _chewieController;
@@ -87,6 +92,8 @@ class _ExerciseFormState extends State<ExerciseForm> {
   }
 
   void _resetForm() {
+    _nameEnController.clear();
+    _descriptionEnController.clear();
     exerciseController.resetForm(
         nameController: _nameController,
         descriptionController: _descriptionController,
@@ -114,7 +121,9 @@ class _ExerciseFormState extends State<ExerciseForm> {
   Future<void> _addExercise() async {
     final localizations = AppLocalizations.of(context)!;
     final name = _nameController.text.trim();
+    final nameEn = _nameEnController.text.trim();
     final description = _descriptionController.text.trim();
+    final descriptionEn = _descriptionEnController.text.trim();
     final category = _selectedCategory;
     String? videoUrl = uploadedVideoUrl;
 
@@ -136,7 +145,9 @@ class _ExerciseFormState extends State<ExerciseForm> {
 
       await exerciseController.saveExercise(
         name: name,
+        nameEn: nameEn,
         description: description,
+        descriptionEn: descriptionEn,
         category: category!,
         videoUrl: videoUrl,
       );
@@ -159,6 +170,8 @@ class _ExerciseFormState extends State<ExerciseForm> {
     final name = _nameController.text.trim();
     final description = _descriptionController.text.trim();
     final category = categoryMap[_selectedCategory];
+    final nameEn = _nameEnController.text.trim();
+    final descriptionEn = _descriptionEnController.text.trim();
 
     final hasVideo = !isVideoMarkedForDeletion &&
         (_selectedVideoFile != null ||
@@ -194,7 +207,9 @@ class _ExerciseFormState extends State<ExerciseForm> {
 
       final updatedData = {
         'name': name,
+        'name_en': nameEn,
         'description': description,
+        'description_en': descriptionEn,
         'category': category,
         'video': videoUrl,
       };
@@ -223,14 +238,20 @@ class _ExerciseFormState extends State<ExerciseForm> {
 
   void _checkIfChanged() {
     final name = _nameController.text.trim();
+    final nameEn = _nameEnController.text.trim();
     final description = _descriptionController.text.trim();
+    final descriptionEn = _descriptionEnController.text.trim();
     final category = _selectedCategory ?? '';
     final result = exerciseController.checkIfExerciseChanged(
       newName: name,
+      newNameEn: nameEn,
       newDescription: description,
+      newDescriptionEn: descriptionEn,
       newCategory: category,
       originalName: originalName,
+      originalNameEn: originalNameEn,
       originalDescription: originalDescription,
+      originalDescriptionEn: originalDescriptionEn,
       originalCategory: originalCategory,
       isVideoMarkedForDeletion: isVideoMarkedForDeletion,
       pickedVideoFile: _selectedVideoFile,
@@ -254,17 +275,24 @@ class _ExerciseFormState extends State<ExerciseForm> {
     super.initState();
     if (widget.isEdit && widget.exercise != null) {
       _nameController = TextEditingController(text: widget.exercise!['name']);
+      _nameEnController = TextEditingController(text: widget.exercise!['name_en']);
       _descriptionController =
           TextEditingController(text: widget.exercise!['description']);
+      _descriptionEnController =
+          TextEditingController(text: widget.exercise!['description_en']);
       _selectedCategory =
           reverseCategoryMap[widget.exercise!['category']] ?? tUpperBody;
       originalName = widget.exercise!['name'];
+      originalNameEn = widget.exercise!['name_en'];
       originalDescription = widget.exercise!['description'];
+      originalDescriptionEn = widget.exercise!['description_en'];
       originalVideo = widget.exercise!['video'];
       originalCategory = _selectedCategory!;
 
       _nameController.addListener(_checkIfChanged);
       _descriptionController.addListener(_checkIfChanged);
+      _nameEnController.addListener(_checkIfChanged);
+      _descriptionEnController.addListener(_checkIfChanged);
 
       initVideoPlayerEditVideo(widget.exercise!['video']);
     } else {
@@ -276,7 +304,9 @@ class _ExerciseFormState extends State<ExerciseForm> {
   @override
   void dispose() {
     _nameController.dispose();
+    _nameEnController.dispose();
     _descriptionController.dispose();
+    _descriptionEnController.dispose();
     _videoPlayerController?.dispose();
     if (!(widget.isEdit && widget.exercise != null)) {
       _videoController.dispose();
@@ -350,7 +380,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
           TextField(
             controller: _nameController,
             decoration: InputDecoration(
-              labelText: localisation.tName,
+              labelText: "${localisation.tName}${localisation.tGerman}",
               labelStyle: TextStyle(color: tBottomNavBarSelectedColor),
               floatingLabelStyle: TextStyle(
                   color: tBottomNavBarSelectedColor,
@@ -370,12 +400,35 @@ class _ExerciseFormState extends State<ExerciseForm> {
             ),
           ),
           const SizedBox(height: 12),
+              TextField(
+                controller: _nameEnController,
+                decoration: InputDecoration(
+                  labelText: "${localisation.tName}${localisation.tEnglish}",
+                  labelStyle: TextStyle(color: tBottomNavBarSelectedColor),
+                  floatingLabelStyle: TextStyle(
+                      color: tBottomNavBarSelectedColor,
+                      fontWeight: FontWeight.bold),
+                  filled: true,
+                  fillColor: isDarkMode ? Colors.grey[850] : tWhiteColor,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                        color: isDarkMode ? Colors.white24 : Colors.black12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide:
+                    BorderSide(color: tBottomNavBarSelectedColor, width: 2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
           TextField(
               controller: _descriptionController,
               maxLines: 5,
               style: TextStyle(color: isDarkMode ? tWhiteColor : tBlackColor),
               decoration: InputDecoration(
-                labelText: localisation.tDescription,
+                labelText: "${localisation.tDescription}${localisation.tGerman}",
                 labelStyle: TextStyle(color: tBottomNavBarSelectedColor),
                 floatingLabelStyle: TextStyle(
                     color: tBottomNavBarSelectedColor,
@@ -394,6 +447,30 @@ class _ExerciseFormState extends State<ExerciseForm> {
                 ),
               )),
           const SizedBox(height: 12),
+              TextField(
+                  controller: _descriptionEnController,
+                  maxLines: 5,
+                  style: TextStyle(color: isDarkMode ? tWhiteColor : tBlackColor),
+                  decoration: InputDecoration(
+                    labelText: "${localisation.tDescription}${localisation.tEnglish}",
+                    labelStyle: TextStyle(color: tBottomNavBarSelectedColor),
+                    floatingLabelStyle: TextStyle(
+                        color: tBottomNavBarSelectedColor,
+                        fontWeight: FontWeight.bold),
+                    filled: true,
+                    fillColor: isDarkMode ? Colors.grey[850] : tWhiteColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                          color: isDarkMode ? Colors.white24 : Colors.black12),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide:
+                      BorderSide(color: tBottomNavBarSelectedColor, width: 2),
+                    ),
+                  )),
+              const SizedBox(height: 12),
           DropdownButtonFormField<String>(
             value: _selectedCategory,
             decoration: InputDecoration(
