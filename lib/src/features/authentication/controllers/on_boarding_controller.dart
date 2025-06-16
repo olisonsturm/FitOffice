@@ -76,15 +76,33 @@ import 'package:get/get.dart';
         ),
       ),
       Container(
-        color: Get.isDarkMode
-            ? tDarkColor // Dark background for dark mode
-            : Colors.white, // White background for light mode
-        child: const Center(
-          child: CircularProgressIndicator(
-            color: tPrimaryColor,
-            strokeWidth: 2.0,
-          ),
-        ),
+        color: tPrimaryColor, // White background for light mode
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Hero(
+              tag: 'welcome-image-tag',
+              child: Image(
+                image: const AssetImage(tLogoImage),
+                width: Get.width * 0.7,
+                height: Get.width * 0.7,
+                fit: BoxFit.contain,
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 80),
+              child: Center(
+                child: LinearProgressIndicator(
+                  color: Colors.white,
+                  backgroundColor: Colors.transparent,
+                ),
+              ),
+            ),
+          ],
+        )
       )
     ];
   }

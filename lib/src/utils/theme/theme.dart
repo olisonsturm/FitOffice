@@ -31,6 +31,15 @@ class TAppTheme {
     outlinedButtonTheme: TOutlinedButtonTheme.lightOutlinedButtonTheme,
     inputDecorationTheme: TTextFormFieldTheme.lightInputDecorationTheme,
     dialogTheme: TDialogTheme.lightDialogTheme,
+    primaryColor: tPrimaryColor,
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: tPrimaryColor,
+    ),
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: tPrimaryColor,
+      selectionColor: tPrimaryColor.withValues(alpha: .3),
+      selectionHandleColor: tPrimaryColor,
+    ),
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -54,5 +63,14 @@ class TAppTheme {
     outlinedButtonTheme: TOutlinedButtonTheme.darkOutlinedButtonTheme,
     inputDecorationTheme: TTextFormFieldTheme.darkInputDecorationTheme,
     dialogTheme: TDialogTheme.darkDialogTheme,
+    primaryColor: tPrimaryColor,
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: tPrimaryColor,
+    ),
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: tPrimaryColor,
+      selectionColor: tPrimaryColor.withValues(alpha: .3),
+      selectionHandleColor: tPrimaryColor,
+    ),
   );
 }

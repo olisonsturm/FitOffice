@@ -191,7 +191,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
   Widget _buildHeader(String letter) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Text(letter,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+            style: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black87, fontSize: 14, fontWeight: FontWeight.bold)),
       );
 
   Widget _buildExerciseCard(
@@ -238,8 +238,9 @@ class _AllExercisesListState extends State<AllExercisesList> {
               exerciseName ?? 'Unknown',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
+                color: isDark ? Colors.white : Colors.black87,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -247,9 +248,9 @@ class _AllExercisesListState extends State<AllExercisesList> {
               exerciseCategory ?? 'No category',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
-                color: Color(0xFF777777),
+                color: isDark ? Colors.white70 : Colors.grey[800],
               ),
             ),
             trailing: IntrinsicWidth(

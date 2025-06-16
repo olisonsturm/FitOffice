@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../../constants/colors.dart';
-import '../../../../../constants/image_strings.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:fit_office/src/constants/sizes.dart';
 
@@ -40,7 +39,6 @@ class DashboardBanners extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Flexible(child: Image(image: AssetImage(tBookmarkIcon))),
                     Flexible(child: Icon(Icons.monitor_heart, size: 50,)),
                   ],
                 ),
@@ -73,7 +71,6 @@ class DashboardBanners extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Flexible(child: Image(image: AssetImage(tBookmarkIcon))),
                       Flexible(child: Icon(Icons.bolt, size: 50,)),
                     ],
                   ),
