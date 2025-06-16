@@ -192,7 +192,10 @@ class DashboardState extends State<Dashboard> {
         tutorialCoachMark = TutorialCoachMark(
           initialFocus: step,
           targets: targets,
+          pulseEnable: false,
           alignSkip: Alignment.topRight,
+          colorShadow: Colors.black,
+          opacityShadow: 0.8,
           skipWidget: Padding(
             padding: const EdgeInsets.only(top: 40.0, right: 16.0),
             child: Align(
@@ -204,9 +207,7 @@ class DashboardState extends State<Dashboard> {
                 child: Text(
                   AppLocalizations.of(context)!.tSkip,
                   style: TextStyle(
-                    color: Get.context?.theme.brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
@@ -274,6 +275,7 @@ class DashboardState extends State<Dashboard> {
   }
 
   void _initTargets() {
+    final screenSize = MediaQuery.of(context).size;
     targets.clear();
     targets.addAll([
       TargetFocus(
@@ -304,10 +306,14 @@ class DashboardState extends State<Dashboard> {
       ),
       TargetFocus(
         identify: "full_screen_step",
+        keyTarget: _fullscreenDummyKey,
+        pulseVariation: ConstantTween(1.0),
         shape: ShapeLightFocus.RRect,
+        color: Colors.black.withAlpha(204),
         enableOverlayTab: true,
         radius: 0,
-        targetPosition: TargetPosition(Size.zero, Offset.zero),
+        targetPosition: TargetPosition(Size(screenSize.width, screenSize.height),
+    Offset.zero),
         contents: [
           TargetContent(
             align: ContentAlign.custom,
@@ -333,9 +339,7 @@ class DashboardState extends State<Dashboard> {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Get.context?.theme.brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
+                        color: Colors.white,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -374,7 +378,9 @@ class DashboardState extends State<Dashboard> {
       ),
       TargetFocus(
         identify: "mind_favorites_info",
+        keyTarget: _fullscreenDummyKey,
         shape: ShapeLightFocus.RRect,
+        color: Colors.black.withAlpha(204),
         enableOverlayTab: true,
         radius: 0,
         targetPosition: TargetPosition(Size.zero, Offset.zero),
@@ -412,10 +418,7 @@ class DashboardState extends State<Dashboard> {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Get.context?.theme.brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
+                              color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -457,7 +460,9 @@ class DashboardState extends State<Dashboard> {
       ),
       TargetFocus(
         identify: "full_screen_step_statistics_1",
+        keyTarget: _fullscreenDummyKey,
         shape: ShapeLightFocus.RRect,
+        color: Colors.black.withAlpha(204),
         enableOverlayTab: true,
         radius: 0,
         targetPosition: TargetPosition(Size.zero, Offset.zero),
@@ -491,9 +496,7 @@ class DashboardState extends State<Dashboard> {
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color:
-                              Get.context?.theme.brightness == Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
+                              Colors.white,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -507,7 +510,9 @@ class DashboardState extends State<Dashboard> {
       ),
       TargetFocus(
         identify: "full_screen_step_statistics_2",
+        keyTarget: _fullscreenDummyKey,
         shape: ShapeLightFocus.RRect,
+        color: Colors.black.withAlpha(204),
         enableOverlayTab: true,
         radius: 0,
         targetPosition: TargetPosition(Size.zero, Offset.zero),
@@ -541,9 +546,7 @@ class DashboardState extends State<Dashboard> {
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color:
-                              Get.context?.theme.brightness == Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
+                              Colors.white,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -557,7 +560,9 @@ class DashboardState extends State<Dashboard> {
       ),
       TargetFocus(
         identify: "full_screen_step_statistics_3",
+        keyTarget: _fullscreenDummyKey,
         shape: ShapeLightFocus.RRect,
+        color: Colors.black.withAlpha(204),
         enableOverlayTab: true,
         radius: 0,
         targetPosition: TargetPosition(Size.zero, Offset.zero),
@@ -591,9 +596,7 @@ class DashboardState extends State<Dashboard> {
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color:
-                              Get.context?.theme.brightness == Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
+                              Colors.white,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -624,9 +627,7 @@ class DashboardState extends State<Dashboard> {
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Get.context?.theme.brightness == Brightness.dark
-                          ? Colors.white
-                          : Colors.white),
+                      color: Colors.white),
                 ),
               ],
             ),
@@ -635,7 +636,9 @@ class DashboardState extends State<Dashboard> {
       ),
       TargetFocus(
         identify: "full_screen_step_profile",
+        keyTarget: _fullscreenDummyKey,
         shape: ShapeLightFocus.RRect,
+        color: Colors.black.withAlpha(204),
         enableOverlayTab: true,
         radius: 0,
         targetPosition: TargetPosition(Size.zero, Offset.zero),
@@ -669,9 +672,7 @@ class DashboardState extends State<Dashboard> {
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color:
-                              Get.context?.theme.brightness == Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
+                              Colors.white,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -685,7 +686,9 @@ class DashboardState extends State<Dashboard> {
       ),
       TargetFocus(
         identify: "full_screen_step_profile_2",
+        keyTarget: _fullscreenDummyKey,
         shape: ShapeLightFocus.RRect,
+        color: Colors.black.withAlpha(204),
         enableOverlayTab: true,
         radius: 0,
         targetPosition: TargetPosition(Size.zero, Offset.zero),
@@ -719,9 +722,7 @@ class DashboardState extends State<Dashboard> {
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color:
-                              Get.context?.theme.brightness == Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
+                              Colors.white,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -758,6 +759,7 @@ class DashboardState extends State<Dashboard> {
       });
     });
   }
+  final GlobalKey _fullscreenDummyKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -802,6 +804,21 @@ class DashboardState extends State<Dashboard> {
               ProfileScreen(),
             ],
           ),
+          if (_isShowingTutorial)
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Container(
+                key: _fullscreenDummyKey,
+                width: 0,
+                height: 0,
+                decoration: BoxDecoration(
+                  color: Get.context?.theme.brightness == Brightness.dark
+                      ? const Color.fromARGB(204, 0, 0, 0)
+                      : const Color(0xFF333333), // exakt: schwarz mit 0.8 alpha
+                ),
+              ),
+            ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
