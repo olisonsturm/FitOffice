@@ -115,7 +115,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
       future: ProfileController().getUserData(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
+          return _buildLoadingCard(context);
         }
 
         final user = snapshot.data;
@@ -346,6 +346,82 @@ class _AllExercisesListState extends State<AllExercisesList> {
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Placeholder loading card, now lighter/more transparent to indicate loading state
+  Widget _buildLoadingCard(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark
+        ? Colors.grey[700]!.withValues(alpha: .4)
+        : Colors.grey[200]!.withValues(alpha: .7);
+    final borderColor = isDark
+        ? Colors.grey[500]!.withValues(alpha: .2)
+        : Colors.grey[400]!.withValues(alpha: .2);
+    final blockColor = isDark
+        ? Colors.white.withValues(alpha: .10)
+        : Colors.black.withValues(alpha: .07);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+      child: Container(
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: borderColor,
+            width: 1.5,
+          ),
+        ),
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          leading: Icon(
+            Icons.hourglass_empty,
+            color: Colors.grey.withValues(alpha: .4),
+            size: 32,
+          ),
+          title: Container(
+            height: 18,
+            width: 120,
+            decoration: BoxDecoration(
+              color: blockColor,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Container(
+              height: 14,
+              width: 80,
+              decoration: BoxDecoration(
+                color: blockColor,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: blockColor,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: blockColor,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ],
           ),
         ),
       ),
