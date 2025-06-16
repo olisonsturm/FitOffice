@@ -36,7 +36,7 @@ class DashboardState extends State<Dashboard> {
   final GlobalKey _profileTabKey = GlobalKey();
   List<TargetFocus> targets = [];
 
-  int _selectedIndex = 0;
+  int _selectedIndex = 1; // Default to Library tab
   String favoriteCount = '';
 
   String _getPageTitle() {

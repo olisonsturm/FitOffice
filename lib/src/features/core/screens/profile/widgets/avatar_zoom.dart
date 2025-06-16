@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class AvatarZoom extends StatelessWidget {
   final ImageProvider imageProvider;
+  final String heroTag;
 
   const AvatarZoom({
     super.key,
     required this.imageProvider,
+    required this.heroTag,
   });
 
   @override
@@ -16,7 +18,7 @@ class AvatarZoom extends StatelessWidget {
         children: [
           Center(
             child: Hero(
-              tag: 'avatarHero',
+              tag: heroTag,
               child: Container(
                 width: double.infinity,
                 height: MediaQuery.of(context).size.width,

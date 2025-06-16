@@ -51,7 +51,8 @@ import 'package:get/get.dart';
           title: tOnBoardingTitle1,
           subTitle: tOnBoardingSubTitle1,
           counterText: tOnBoardingCounter1,
-          bgColor: tOnBoardingPage1Color,
+          bgColorLight: tOnBoardingPage1Color,
+          bgColorDark: tOnBoardingPage1DarkColor,
         ),
       ),
       OnBoardingPageWidget(
@@ -60,7 +61,8 @@ import 'package:get/get.dart';
           title: tOnBoardingTitle2,
           subTitle: tOnBoardingSubTitle2,
           counterText: tOnBoardingCounter2,
-          bgColor: tOnBoardingPage2Color,
+          bgColorLight: tOnBoardingPage2Color,
+          bgColorDark: tOnBoardingPage2DarkColor,
         ),
       ),
       OnBoardingPageWidget(
@@ -69,17 +71,38 @@ import 'package:get/get.dart';
           title: tOnBoardingTitle3,
           subTitle: tOnBoardingSubTitle3,
           counterText: tOnBoardingCounter3,
-          bgColor: tOnBoardingPage3Color,
+          bgColorLight: tOnBoardingPage3Color,
+          bgColorDark: tOnBoardingPage3DarkColor,
         ),
       ),
       Container(
-        color: Colors.white,
-        child: const Center(
-          child: CircularProgressIndicator(
-            color: tPrimaryColor,
-            strokeWidth: 2.0,
-          ),
-        ),
+        color: tPrimaryColor, // White background for light mode
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Hero(
+              tag: 'welcome-image-tag',
+              child: Image(
+                image: const AssetImage(tLogoImage),
+                width: Get.width * 0.7,
+                height: Get.width * 0.7,
+                fit: BoxFit.contain,
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 80),
+              child: Center(
+                child: LinearProgressIndicator(
+                  color: Colors.white,
+                  backgroundColor: Colors.transparent,
+                ),
+              ),
+            ),
+          ],
+        )
       )
     ];
   }

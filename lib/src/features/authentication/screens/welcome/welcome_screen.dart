@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:fit_office/src/constants/sizes.dart';
 import 'package:fit_office/src/features/authentication/screens/signup/signup_screen.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/image_strings.dart';
@@ -20,61 +19,148 @@ class WelcomeScreen extends StatelessWidget {
 
     var mediaQuery = MediaQuery.of(context);
     var width = mediaQuery.size.width;
-    var height = mediaQuery.size.height;
     var brightness = mediaQuery.platformBrightness;
     final isDark = brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? tBlackColor : tWhiteColor,
+      backgroundColor: isDark ? tDarkColor : tWhiteColor,
       body: Stack(
         children: [
+          // Main content (logo, title, subtitle)
+          Positioned.fill(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Spacer(flex: 2), // Push content to about halfway down
+                Hero(
+                  tag: 'welcome-image-tag',
+                  child: Image(
+                    image: const AssetImage(tLogoImage),
+                    width: width * 0.7,
+                    height: width * 0.7,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  AppLocalizations.of(context)!.tWelcomeTitle,
+                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: -0.5,
+                    color: isDark ? tWhiteColor : tBlackColor,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Text(
+                    AppLocalizations.of(context)!.tWelcomeSubtitle,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      height: 1.5,
+                      color: isDark
+                          ? tWhiteColor.withValues(alpha: 0.7)
+                          : tBlackColor.withValues(alpha: 0.7),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Spacer(flex: 3), // Fill remaining space below
+              ],
+            ),
+          ),
+          // Buttons and copyright (animated, at the bottom)
           TFadeInAnimation(
             isTwoWayAnimation: false,
-            durationInMs: 1200,
+            durationInMs: 1400,
             animate: TAnimatePosition(
               bottomAfter: 0,
-              bottomBefore: -100,
+              bottomBefore: -50,
               leftBefore: 0,
               leftAfter: 0,
-              topAfter: 0,
-              topBefore: 0,
+              topAfter: null,
+              topBefore: null,
               rightAfter: 0,
               rightBefore: 0,
             ),
-            child: Container(
-              padding: const EdgeInsets.all(tDefaultSpace),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Hero(
-                      tag: 'welcome-image-tag',
-                      child: Image(
-                          image: const AssetImage(tWelcomeScreenImage), width: width * 0.7, height: height * 0.6)),
-                  Column(
-                    children: [
-                      Text(AppLocalizations.of(context)!.tWelcomeTitle, style: Theme.of(context).textTheme.displayMedium),
-                      Text(AppLocalizations.of(context)!.tWelcomeSubTitle,
-                          style: Theme.of(context).textTheme.bodyLarge, textAlign: TextAlign.center),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () => Get.to(() => const LoginScreen()),
-                          child: Text(AppLocalizations.of(context)!.tLogin.toUpperCase()),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Login button
+                    GestureDetector(
+                      onTap: () => Get.to(() => const LoginScreen()),
+                      child: Container(
+                        width: double.infinity,
+                        height: 56,
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: tPrimaryColor,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: tPrimaryColor,
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            AppLocalizations.of(context)!.tLogin.toUpperCase(),
+                            style: TextStyle(
+                              color: isDark ? tBlackColor : tWhiteColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 10.0),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () => Get.to(() => const SignupScreen()),
-                          child: Text(AppLocalizations.of(context)!.tSignup.toUpperCase()),
+                    ),
+                    const SizedBox(height: 10),
+                    // Signup button
+                    GestureDetector(
+                      onTap: () => Get.to(() => const SignupScreen()),
+                      child: Container(
+                        width: double.infinity,
+                        height: 56,
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: isDark ? Colors.grey[800] : Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            AppLocalizations.of(context)!.tSignup.toUpperCase(),
+                            style: TextStyle(
+                              color: isDark ? tWhiteColor : tBlackColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
                         ),
                       ),
-                    ],
-                  )
-                ],
+                    ),
+                    const SizedBox(height: 18),
+                    // Copyright
+                    Text(
+                      '© 2025 DHBW Ravensburg',
+                      style: TextStyle(
+                        color: isDark
+                            ? tWhiteColor.withValues(alpha: 0.5)
+                            : tBlackColor.withValues(alpha: 0.5),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

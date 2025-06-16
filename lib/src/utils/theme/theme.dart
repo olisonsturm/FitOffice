@@ -1,6 +1,7 @@
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/utils/theme/widget_themes/appbar_theme.dart';
+import 'package:fit_office/src/utils/theme/widget_themes/dialog_theme.dart';
 import 'package:fit_office/src/utils/theme/widget_themes/elevated_button_theme.dart';
 import 'package:fit_office/src/utils/theme/widget_themes/outlined_button_theme.dart';
 import 'package:fit_office/src/utils/theme/widget_themes/text_field_theme.dart';
@@ -29,6 +30,16 @@ class TAppTheme {
     elevatedButtonTheme: TElevatedButtonTheme.lightElevatedButtonTheme,
     outlinedButtonTheme: TOutlinedButtonTheme.lightOutlinedButtonTheme,
     inputDecorationTheme: TTextFormFieldTheme.lightInputDecorationTheme,
+    dialogTheme: TDialogTheme.lightDialogTheme,
+    primaryColor: tPrimaryColor,
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: tPrimaryColor,
+    ),
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: tPrimaryColor,
+      selectionColor: tPrimaryColor.withValues(alpha: .3),
+      selectionHandleColor: tPrimaryColor,
+    ),
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -51,5 +62,15 @@ class TAppTheme {
     elevatedButtonTheme: TElevatedButtonTheme.darkElevatedButtonTheme,
     outlinedButtonTheme: TOutlinedButtonTheme.darkOutlinedButtonTheme,
     inputDecorationTheme: TTextFormFieldTheme.darkInputDecorationTheme,
+    dialogTheme: TDialogTheme.darkDialogTheme,
+    primaryColor: tPrimaryColor,
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: tPrimaryColor,
+    ),
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: tPrimaryColor,
+      selectionColor: tPrimaryColor.withValues(alpha: .3),
+      selectionHandleColor: tPrimaryColor,
+    ),
   );
 }

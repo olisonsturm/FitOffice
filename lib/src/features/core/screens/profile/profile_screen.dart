@@ -22,7 +22,6 @@ import '../../../../utils/helper/app_info.dart';
 import '../../controllers/profile_controller.dart';
 import '../../controllers/statistics_controller.dart';
 import 'admin/add_friends.dart';
-import 'admin/edit_user_page.dart';
 import 'admin/widgets/all_users.dart';
 import 'admin/widgets/friends_box.dart';
 import 'admin/widgets/friends_request.dart';
@@ -283,7 +282,7 @@ class ProfileScreen extends StatelessWidget {
                         child: FactDisplayCard(
                           isDark: isDark,
                           icon: Icons.timer,
-                          title: "24h",
+                          title: "8h",
                           subtitle: "Support",
                           iconColor: Colors.green,
                         ),
@@ -294,7 +293,7 @@ class ProfileScreen extends StatelessWidget {
                           isDark: isDark,
                           icon: LineAwesomeIcons.bug_solid,
                           title: "No Bugs",
-                          subtitle: "Bugs Found",
+                          subtitle: "Bugs",
                           iconColor: Colors.red,
                         ),
                       ),
@@ -352,10 +351,9 @@ class ProfileScreen extends StatelessWidget {
                     icon: LineAwesomeIcons.file_contract_solid,
                     label: AppLocalizations.of(context)!.tLicenses,
                     onPress: () async {
-                      final c = context;
                       final version = await AppInfo.getFullVersionInfo();
                       showLicensePage(
-                        context: c,
+                        context: context,
                         applicationName: 'FitOffice',
                         applicationVersion: version,
                         applicationLegalese: '© ${DateTime.now().year} DHBW Ravensburg',
@@ -393,49 +391,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     CustomProfileButton(
                       isDark: isDark,
-                      icon: Icons.delete,
-                      label: localisation.tDeleteEditUser,
-                      onPress: () async {
-                        final timerController =
-                            Get.find<ExerciseTimerController>();
-                        if (timerController.isRunning.value ||
-                            timerController.isPaused.value) {
-                          await showUnifiedDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (_) =>
-                                ActiveTimerDialog.forAction('admin', context),
-                          );
-                          return;
-                        }
-
-                        Get.to(() => const AllUsersPage());
-                      },
-                    ),
-                    CustomProfileButton(
-                      isDark: isDark,
-                      icon: Icons.person_add,
-                      label: localisation.tAddUser,
-                      onPress: () async {
-                        final timerController =
-                            Get.find<ExerciseTimerController>();
-                        if (timerController.isRunning.value ||
-                            timerController.isPaused.value) {
-                          await showUnifiedDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (_) =>
-                                ActiveTimerDialog.forAction('admin', context),
-                          );
-                          return;
-                        }
-
-                        Get.to(() => const EditUserPage());
-                      },
-                    ),
-                    CustomProfileButton(
-                      isDark: isDark,
-                      icon: LineAwesomeIcons.user_check_solid,
+                      icon: LineAwesomeIcons.user_edit_solid,
                       label: "User Management",
                       onPress: () async {
                         final timerController =
@@ -508,7 +464,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  //TODO: all PopUpModals with Yes and No should be in one style; maybe the same style as all other PopUps! Texts should be added to text_strings.dart
+  //TODO: all PopUpModals with Yes and No should be in one style; maybe the same style as all other PopUps! Texts should be added to localizations!
   void _showLogoutModal(BuildContext context) {
     final isDarkMode = Get.isDarkMode;
 

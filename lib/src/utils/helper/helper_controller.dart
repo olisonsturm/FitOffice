@@ -124,7 +124,7 @@ class Helper extends GetxController {
     Get.snackbar(title, message,
         isDismissible: true,
         colorText: tWhiteColor,
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: tGreyColor,
         snackPosition: SnackPosition.BOTTOM,
         duration: const Duration(seconds: 5),
         margin: const EdgeInsets.all(tDefaultSpace - 10),
