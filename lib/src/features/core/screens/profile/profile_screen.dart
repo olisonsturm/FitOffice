@@ -282,7 +282,7 @@ class ProfileScreen extends StatelessWidget {
                         child: FactDisplayCard(
                           isDark: isDark,
                           icon: Icons.timer,
-                          title: "24h",
+                          title: "8h",
                           subtitle: "Support",
                           iconColor: Colors.green,
                         ),
@@ -293,7 +293,7 @@ class ProfileScreen extends StatelessWidget {
                           isDark: isDark,
                           icon: LineAwesomeIcons.bug_solid,
                           title: "No Bugs",
-                          subtitle: "Bugs Found",
+                          subtitle: "Bugs",
                           iconColor: Colors.red,
                         ),
                       ),

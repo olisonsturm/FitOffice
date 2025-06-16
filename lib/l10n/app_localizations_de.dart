@@ -975,4 +975,26 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tFriendRequestAccepted => 'Freundschaftsanfrage angenommen';
+
+  @override
+  String get tMinutes => 'Minuten';
+
+  @override
+  String get tSeconds => 'Sekunden';
+
+  @override
+  String get tHistoryNoUserData => 'Keine Daten für diesen Nutzer gefunden';
+
+  @override
+  String get tHistoryNoExercise1 => 'Keine Übungshistorie gefunden für';
+
+  @override
+  String get tHistoryNoExercise2 =>
+      '. Beginne eine Übungen zu erfassen, um deine Historie zu sehen';
+
+  @override
+  String get tGerman => ' (Deutsch)';
+
+  @override
+  String get tEnglish => ' (Englisch)';
 }

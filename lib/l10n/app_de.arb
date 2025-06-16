@@ -303,12 +303,12 @@
   "tRemove": "Remove",
   "tInfo": "Info",
   "tFriendRequestDenied": "Freundschaftsanfrage abgelehnt",
-  "tFriendRequestAccepted": "Freundschaftsanfrage angenommen"
+  "tFriendRequestAccepted": "Freundschaftsanfrage angenommen",
   "tMinutes": "Minuten",
   "tSeconds": "Sekunden",
-  "HistoryNoUserData": "Keine Daten für diesen Nutzer gefunden.",
+  "tHistoryNoUserData": "Keine Daten für diesen Nutzer gefunden",
   "tHistoryNoExercise1": "Keine Übungshistorie gefunden für",
-  "tHistoryNoExercise2": ". Beginne eine Übungen zu erfassen, um deine Historie zu sehen.",
+  "tHistoryNoExercise2": ". Beginne eine Übungen zu erfassen, um deine Historie zu sehen",
   "tGerman": " (Deutsch)",
   "tEnglish": " (Englisch)"
 }

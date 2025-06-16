@@ -303,7 +303,7 @@
   "tRemove": "Remove",
   "tInfo": "Info",
   "tFriendRequestDenied": "Friendship request denied",
-  "tFriendRequestAccepted": "Friendship request accepted"
+  "tFriendRequestAccepted": "Friendship request accepted",
   "tMinutes": "Minutes",
   "tSeconds": "Seconds",
   "tHistoryNoUserData": "User data not found.",
