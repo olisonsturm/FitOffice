@@ -70,20 +70,28 @@
     </application>
     <queries>
         <intent>
-        <action android:name="android.intent.action.VIEW" />
-        <data android:scheme="https" />
+            <action
+                android:name="android.intent.action.VIEW"/>
+            <data
+                android:scheme="https"/>
         </intent>
         <intent>
-        <action android:name="android.intent.action.VIEW" />
-        <data android:scheme="http" />
+            <action
+                android:name="android.intent.action.VIEW"/>
+            <data
+                android:scheme="http"/>
         </intent>
         <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="tel" />
+            <action
+                android:name="android.intent.action.VIEW"/>
+            <data
+                android:scheme="tel"/>
         </intent>
         <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="mailto" />
+            <action
+                android:name="android.intent.action.VIEW"/>
+            <data
+                android:scheme="mailto"/>
         </intent>
     </queries>
 </manifest>
