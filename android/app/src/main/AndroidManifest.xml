@@ -32,6 +32,14 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
+            <!-- Firebase Dynamic Links -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="fitoffice.page.link" />
+            </intent-filter>
         </activity>
         <!-- Facebook Login -->
         <meta-data
@@ -70,20 +78,28 @@
     </application>
     <queries>
         <intent>
-        <action android:name="android.intent.action.VIEW" />
-        <data android:scheme="https" />
+            <action
+                android:name="android.intent.action.VIEW"/>
+            <data
+                android:scheme="https"/>
         </intent>
         <intent>
-        <action android:name="android.intent.action.VIEW" />
-        <data android:scheme="http" />
+            <action
+                android:name="android.intent.action.VIEW"/>
+            <data
+                android:scheme="http"/>
         </intent>
         <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="tel" />
+            <action
+                android:name="android.intent.action.VIEW"/>
+            <data
+                android:scheme="tel"/>
         </intent>
         <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="mailto" />
+            <action
+                android:name="android.intent.action.VIEW"/>
+            <data
+                android:scheme="mailto"/>
         </intent>
     </queries>
 </manifest>

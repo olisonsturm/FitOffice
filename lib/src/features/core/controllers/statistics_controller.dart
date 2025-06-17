@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StatisticsController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -23,6 +24,8 @@ class StatisticsController {
   }
 
   Future<List<String>> getTop3Exercises(String userEmail) async {
+    final prefs = await SharedPreferences.getInstance();
+    final locale = prefs.getString('locale');
     final userSnapshot = await firestore
         .collection('users')
         .where('email', isEqualTo: userEmail)
@@ -41,14 +44,39 @@ class StatisticsController {
     final exerciseCounts = <String, int>{};
     final exerciseDurations = <String, int>{};
 
-    for (final doc in exerciseLogsSnapshot.docs) {
-      final exerciseName = doc['exerciseName'] as String?;
-      final duration = doc['duration'] as int?;
+    if (locale == 'de') {
+      for (final doc in exerciseLogsSnapshot.docs) {
+        final exerciseName = doc['exerciseName'] as String?;
+        final duration = doc['duration'] as int?;
 
-      if (exerciseName != null && duration != null) {
-        exerciseCounts[exerciseName] = (exerciseCounts[exerciseName] ?? 0) + 1;
-        exerciseDurations[exerciseName] =
-            (exerciseDurations[exerciseName] ?? 0) + duration;
+        if (exerciseName != null && duration != null) {
+          exerciseCounts[exerciseName] =
+              (exerciseCounts[exerciseName] ?? 0) + 1;
+          exerciseDurations[exerciseName] =
+              (exerciseDurations[exerciseName] ?? 0) + duration;
+        }
+      }
+    } else {
+      for (final doc in exerciseLogsSnapshot.docs) {
+        final exerciseName = doc['exerciseName'] as String?;
+        final duration = doc['duration'] as int?;
+
+        if (exerciseName != null && duration != null) {
+          final querySnapshot = await firestore
+              .collection('exercises')
+              .where('name', isEqualTo: exerciseName)
+              .limit(1)
+              .get();
+
+          if (querySnapshot.docs.isNotEmpty) {
+            final matchedExercise = querySnapshot.docs.first.data();
+            final nameEn = matchedExercise['name_en'] as String? ?? exerciseName;
+            exerciseCounts[nameEn] =
+                (exerciseCounts[nameEn] ?? 0) + 1;
+            exerciseDurations[nameEn] =
+                (exerciseDurations[nameEn] ?? 0) + duration;
+          }
+        }
       }
     }
 

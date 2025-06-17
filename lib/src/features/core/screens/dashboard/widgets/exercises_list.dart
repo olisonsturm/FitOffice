@@ -1,6 +1,7 @@
 import 'package:fit_office/src/features/core/screens/profile/admin/exercise_form.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_similarity/string_similarity.dart';
 import '../../../../../utils/helper/dialog_helper.dart';
 import '../../../controllers/profile_controller.dart';
@@ -113,64 +114,79 @@ class _AllExercisesListState extends State<AllExercisesList> {
 
     return FutureBuilder<UserModel?>(
       future: ProfileController().getUserData(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
+      builder: (context, userSnapshot) {
+        if (!userSnapshot.hasData) {
+          return _buildLoadingCard(context);
         }
 
-        final user = snapshot.data;
+        final user = userSnapshot.data;
         final isAdmin = user?.role == 'admin';
 
-        final List<Widget> listWidgets = [];
-
-        if (sortedList.isEmpty) {
-          return Padding(
-            padding: EdgeInsets.all(16),
-            child: Text(AppLocalizations.of(context)!.tDashboardExerciseNotFound),
-          );
-        }
-
-        if (isFiltered || !widget.showGroupedAlphabetically) {
-          for (int i = 0; i < sortedList.length; i++) {
-            listWidgets
-                .add(_buildExerciseCard(context, sortedList[i], isAdmin));
-            if (i < sortedList.length - 1) listWidgets.add(const Divider());
-          }
-        } else {
-          String lastLetter = '';
-          List<Map<String, dynamic>> buffer = [];
-
-          void flush(String tag) {
-            listWidgets.add(const SizedBox(height: 16));
-            listWidgets.add(_buildHeader(tag));
-            listWidgets.add(const Divider());
-
-            for (int i = 0; i < buffer.length; i++) {
-              listWidgets.add(_buildExerciseCard(context, buffer[i], isAdmin));
+        return FutureBuilder<SharedPreferences>(
+          future: SharedPreferences.getInstance(),
+          builder: (context, prefsSnapshot) {
+            if (!prefsSnapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
             }
-            buffer.clear();
-          }
 
-          for (final exercise in sortedList) {
-            final name = (exercise['name'] ?? '').toString();
-            if (name.isEmpty) continue;
-            final firstLetter = name[0].toUpperCase();
+            final locale = prefsSnapshot.data!.getString('locale') ?? 'de';
 
-            if (firstLetter != lastLetter) {
+            final List<Widget> listWidgets = [];
+
+            if (sortedList.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(AppLocalizations.of(context)!.tDashboardExerciseNotFound),
+              );
+            }
+
+            if (isFiltered || !widget.showGroupedAlphabetically) {
+              for (int i = 0; i < sortedList.length; i++) {
+                listWidgets.add(_buildExerciseCard(context, sortedList[i], isAdmin, locale));
+                if (i < sortedList.length - 1) listWidgets.add(const Divider());
+              }
+            } else {
+              String lastLetter = '';
+              List<Map<String, dynamic>> buffer = [];
+
+              void flush(String tag) {
+                listWidgets.add(const SizedBox(height: 16));
+                listWidgets.add(_buildHeader(tag));
+                listWidgets.add(const Divider());
+
+                for (int i = 0; i < buffer.length; i++) {
+                  listWidgets.add(_buildExerciseCard(context, buffer[i], isAdmin, locale));
+                }
+                buffer.clear();
+              }
+
+              for (final exercise in sortedList) {
+                String name = '';
+                if (locale == 'de') {
+                  name = (exercise['name'] ?? '').toString();
+                } else {
+                  name = (exercise['name_en'] ?? '').toString();
+                }
+                if (name.isEmpty) continue;
+                final firstLetter = name[0].toUpperCase();
+
+                if (firstLetter != lastLetter) {
+                  if (buffer.isNotEmpty) flush(lastLetter);
+                  lastLetter = firstLetter;
+                }
+
+                buffer.add(exercise);
+              }
+
               if (buffer.isNotEmpty) flush(lastLetter);
-              lastLetter = firstLetter;
             }
 
-            buffer.add(exercise);
-          }
-
-          if (buffer.isNotEmpty) flush(lastLetter);
-        }
-
-        return ListView(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: listWidgets,
+            return ListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: listWidgets,
+            );
+          },
         );
       },
     );
@@ -191,12 +207,17 @@ class _AllExercisesListState extends State<AllExercisesList> {
   Widget _buildHeader(String letter) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Text(letter,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+            style: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black87, fontSize: 14, fontWeight: FontWeight.bold)),
       );
 
   Widget _buildExerciseCard(
-      BuildContext context, Map<String, dynamic> exercise, bool isAdmin) {
-    final exerciseName = exercise['name'];
+      BuildContext context, Map<String, dynamic> exercise, bool isAdmin, String locale) {
+    String exerciseName;
+    if (locale == 'de') {
+      exerciseName = exercise['name'];
+    } else {
+      exerciseName = exercise['name_en'];
+    }
     final exerciseCategory = exercise['category'];
     final timerController = Get.find<ExerciseTimerController>();
     final isFavorite = widget.favorites.contains(exerciseName);
@@ -235,11 +256,12 @@ class _AllExercisesListState extends State<AllExercisesList> {
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             title: Text(
-              exerciseName ?? 'Unknown',
+              exerciseName,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
+                color: isDark ? Colors.white : Colors.black87,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -247,9 +269,9 @@ class _AllExercisesListState extends State<AllExercisesList> {
               exerciseCategory ?? 'No category',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
-                color: Color(0xFF777777),
+                color: isDark ? Colors.white70 : Colors.grey[800],
               ),
             ),
             trailing: IntrinsicWidth(
@@ -273,9 +295,10 @@ class _AllExercisesListState extends State<AllExercisesList> {
                         context: Get.context!,
                         barrierDismissible: false,
                         builder: (_) => StartExerciseDialog(
-                            exerciseName: exerciseName ?? 'Unknown'),
+                            exerciseName: exerciseName),
                       );
                       if (confirmed == true) {
+                        exerciseName = exercise['name'];
                         timerController.start(exerciseName, exerciseCategory);
                         Navigator.of(Get.context!)
                             .popUntil((route) => route.isFirst);
@@ -345,6 +368,82 @@ class _AllExercisesListState extends State<AllExercisesList> {
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Placeholder loading card, now lighter/more transparent to indicate loading state
+  Widget _buildLoadingCard(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark
+        ? Colors.grey[700]!.withValues(alpha: .4)
+        : Colors.grey[200]!.withValues(alpha: .7);
+    final borderColor = isDark
+        ? Colors.grey[500]!.withValues(alpha: .2)
+        : Colors.grey[400]!.withValues(alpha: .2);
+    final blockColor = isDark
+        ? Colors.white.withValues(alpha: .10)
+        : Colors.black.withValues(alpha: .07);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+      child: Container(
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: borderColor,
+            width: 1.5,
+          ),
+        ),
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          leading: Icon(
+            Icons.hourglass_empty,
+            color: Colors.grey.withValues(alpha: .4),
+            size: 32,
+          ),
+          title: Container(
+            height: 18,
+            width: 120,
+            decoration: BoxDecoration(
+              color: blockColor,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Container(
+              height: 14,
+              width: 80,
+              decoration: BoxDecoration(
+                color: blockColor,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: blockColor,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: blockColor,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ],
           ),
         ),
       ),

@@ -16,11 +16,14 @@ class StatisticScreenState extends State<StatisticScreen> {
 
     return Padding(
       padding: const EdgeInsets.all(tDashboardPadding),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          StatisticsWidget(txtTheme: txtTheme),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            StatisticsWidget(txtTheme: txtTheme),
+            const SizedBox(height: 20), // Extra padding at bottom
+          ],
+        ),
       ),
     );
   }

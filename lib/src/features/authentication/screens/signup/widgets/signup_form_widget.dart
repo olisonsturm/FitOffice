@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:fit_office/src/utils/helper/helper_controller.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
-import '../../../../../common_widgets/buttons/primary_button.dart';
 import '../../../../../constants/colors.dart';
 import '../../../../../constants/sizes.dart';
 import '../../../controllers/signup_controller.dart';
@@ -14,10 +13,11 @@ class SignUpFormWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final controller = Get.put(SignUpController());
     return Container(
-      padding: const EdgeInsets.only(top: tFormHeight - 15, bottom: 10),
+      padding: const EdgeInsets.only(top: 0, bottom: 0),
+      color: isDark ? tDarkColor : tWhiteColor,
       child: AutofillGroup(
         child: Form(
           key: controller.signupFormKey,
@@ -30,12 +30,26 @@ class SignUpFormWidget extends StatelessWidget {
                 autofillHints: const [AutofillHints.username],
                 validator: (value) => Helper.validateUsername(value, context),
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: isDark ? tDarkGreyColor : Colors.grey[100],
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: isDark ? tDarkGreyColor : Colors.grey.withValues(alpha: 0.3)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: isDark ? tWhiteColor : tPrimaryColor, width: 1.5),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.red),
+                  ),
                   errorStyle: const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
                   label: RichText(
                     text: TextSpan(
                       text: AppLocalizations.of(context)!.tUserName,
-                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
+                      style: TextStyle(color: isDark ? tWhiteColor : tPrimaryColor),
                       children: const [
                         TextSpan(
                           text: ' *',
@@ -44,8 +58,9 @@ class SignUpFormWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  prefixIcon: const Icon(LineAwesomeIcons.user),
+                  prefixIcon: Icon(LineAwesomeIcons.user, color: isDark ? tWhiteColor : tPrimaryColor),
                 ),
+                style: TextStyle(color: isDark ? tWhiteColor : tDarkColor),
               ),
               const SizedBox(height: tFormHeight - 20),
 
@@ -55,16 +70,31 @@ class SignUpFormWidget extends StatelessWidget {
                 autofillHints: const [AutofillHints.name],
                 validator: (value) => Helper.validateFullName(value, context),
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: isDark ? tDarkGreyColor : Colors.grey[100],
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: isDark ? tDarkGreyColor : Colors.grey.withValues(alpha: 0.3)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: isDark ? tWhiteColor : tPrimaryColor, width: 1.5),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.red),
+                  ),
                   errorStyle: const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
                   label: RichText(
                     text: TextSpan(
                       text: AppLocalizations.of(context)!.tFullName,
-                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor)
+                      style: TextStyle(color: isDark ? tWhiteColor : tPrimaryColor)
                     ),
                   ),
-                  prefixIcon: const Icon(LineAwesomeIcons.user_tag_solid),
+                  prefixIcon: Icon(LineAwesomeIcons.user_tag_solid, color: isDark ? tWhiteColor : tPrimaryColor),
                 ),
+                style: TextStyle(color: isDark ? tWhiteColor : tDarkColor),
               ),
               const SizedBox(height: tFormHeight - 20),
 
@@ -74,12 +104,26 @@ class SignUpFormWidget extends StatelessWidget {
                 autofillHints: const [AutofillHints.email],
                 validator: (value) => Helper.validateEmail(value, context),
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: isDark ? tDarkGreyColor : Colors.grey[100],
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: isDark ? tDarkGreyColor : Colors.grey.withValues(alpha: 0.3)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: isDark ? tWhiteColor : tPrimaryColor, width: 1.5),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.red),
+                  ),
                   errorStyle: const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
                   label: RichText(
                     text: TextSpan(
                       text: AppLocalizations.of(context)!.tEmail,
-                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
+                      style: TextStyle(color: isDark ? tWhiteColor : tPrimaryColor),
                       children: const [
                         TextSpan(
                           text: ' *',
@@ -88,8 +132,9 @@ class SignUpFormWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  prefixIcon: const Icon(LineAwesomeIcons.envelope),
+                  prefixIcon: Icon(LineAwesomeIcons.envelope, color: isDark ? tWhiteColor : tPrimaryColor),
                 ),
+                style: TextStyle(color: isDark ? tWhiteColor : tDarkColor),
               ),
               const SizedBox(height: tFormHeight - 20),
 
@@ -100,13 +145,27 @@ class SignUpFormWidget extends StatelessWidget {
                 validator: (value) => Helper.validatePassword(value, context),
                 obscureText: !controller.showPassword.value,
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: isDark ? tDarkGreyColor : Colors.grey[100],
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: isDark ? tDarkGreyColor : Colors.grey.withValues(alpha: 0.3)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: isDark ? tWhiteColor : tPrimaryColor, width: 1.5),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.red),
+                  ),
                   errorStyle:
                   const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
                   label: RichText(
                     text: TextSpan(
                       text: AppLocalizations.of(context)!.tPassword,
-                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
+                      style: TextStyle(color: isDark ? tWhiteColor : tPrimaryColor),
                       children: const [
                         TextSpan(
                           text: ' *',
@@ -115,15 +174,16 @@ class SignUpFormWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  prefixIcon: const Icon(Icons.fingerprint),
+                  prefixIcon: Icon(Icons.fingerprint, color: isDark ? tWhiteColor : tPrimaryColor),
                   suffixIcon: IconButton(
                     icon: controller.showPassword.value
-                        ? const Icon(LineAwesomeIcons.eye)
-                        : const Icon(LineAwesomeIcons.eye_slash),
+                        ? Icon(LineAwesomeIcons.eye, color: isDark ? tWhiteColor : tPrimaryColor)
+                        : Icon(LineAwesomeIcons.eye_slash, color: isDark ? tWhiteColor : tPrimaryColor),
                     onPressed: () => controller.showPassword.value =
                     !controller.showPassword.value,
                   ),
                 ),
+                style: TextStyle(color: isDark ? tWhiteColor : tDarkColor),
               )),
               const SizedBox(height: tFormHeight - 20),
 
@@ -135,13 +195,27 @@ class SignUpFormWidget extends StatelessWidget {
                 validator: (value) =>
                     Helper.repeatPassword(value!, controller, context),
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: isDark ? tDarkGreyColor : Colors.grey[100],
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: isDark ? tDarkGreyColor : Colors.grey.withValues(alpha: 0.3)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: isDark ? tWhiteColor : tPrimaryColor, width: 1.5),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.red),
+                  ),
                   errorStyle:
                   const TextStyle(overflow: TextOverflow.visible),
                   errorMaxLines: 3,
                   label: RichText(
                     text: TextSpan(
                       text: 'Confirm Password',
-                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
+                      style: TextStyle(color: isDark ? tWhiteColor : tPrimaryColor),
                       children: const [
                         TextSpan(
                           text: ' *',
@@ -150,23 +224,22 @@ class SignUpFormWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  prefixIcon: const Icon(Icons.fingerprint),
+                  prefixIcon: Icon(Icons.fingerprint, color: isDark ? tWhiteColor : tPrimaryColor),
                   suffixIcon: IconButton(
                     icon: controller.showPassword.value
-                        ? const Icon(LineAwesomeIcons.eye)
-                        : const Icon(LineAwesomeIcons.eye_slash),
+                        ? Icon(LineAwesomeIcons.eye, color: isDark ? tWhiteColor : tPrimaryColor)
+                        : Icon(LineAwesomeIcons.eye_slash, color: isDark ? tWhiteColor : tPrimaryColor),
                     onPressed: () => controller.showPassword.value =
                     !controller.showPassword.value,
                   ),
                 ),
+                style: TextStyle(color: isDark ? tWhiteColor : tDarkColor),
               )),
               const SizedBox(height: tFormHeight - 10),
 
               // Submit Button
-              Obx(() => TPrimaryButton(
-                isLoading: controller.isLoading.value,
-                text: AppLocalizations.of(context)!.tSignup.tr,
-                onPressed: () async {
+              Obx(() => GestureDetector(
+                onTap: controller.isLoading.value ? null : () async {
                   final localizations = AppLocalizations.of(context)!;
                   if (controller.signupFormKey.currentState!.validate()) {
                     bool usernameExists = await Helper.isUsernameTaken(
@@ -180,6 +253,36 @@ class SignUpFormWidget extends StatelessWidget {
                     }
                   }
                 },
+                child: Container(
+                  width: double.infinity,
+                  height: 50,
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    color: isDark ? tPrimaryColor : tPrimaryColor,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: tPrimaryColor,
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Center(
+                    child: controller.isLoading.value
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text(
+                            AppLocalizations.of(context)!.tSignup.toUpperCase(),
+                            style: TextStyle(
+                              color: isDark ? tDarkColor : tWhiteColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                  ),
+                ),
               )),
             ],
           ),

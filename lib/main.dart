@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fit_office/src/utils/services/deep_link_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -25,11 +27,18 @@ Future<void> main() async {
     Get.put(AuthenticationRepository());
   });
 
+  /// -- README(Docs[6]) -- Initialize GetX Deep Links
+  await DeepLinkService.initDeepLinks();
+
   final prefs = await SharedPreferences.getInstance();
   final localeCode = prefs.getString('locale') ?? 'en';
 
   /// -- Main App Starts here (app.dart) ...
-  runApp(App(initialLocale: Locale(localeCode)));
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]).then((_) {
+    runApp(App(initialLocale: Locale(localeCode)));
+  });
 
   //TODO: Ist das der richtige Zeitpunkt? Da es ja erst nach dem Build kommt? Somit auch nach dem Splash Loading.
   WidgetsBinding.instance.addPostFrameCallback((_) {

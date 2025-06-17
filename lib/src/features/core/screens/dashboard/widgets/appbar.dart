@@ -121,11 +121,6 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                 if (showStreak)
                   Obx(() {
                     final streakCtrl = Get.find<StreakController>();
-                    if (streakCtrl.isLoading.value) {
-                      return Text(AppLocalizations.of(context)!.tLoading);
-                    } else if (streakCtrl.isError.value) {
-                      return Text(AppLocalizations.of(context)!.tError);
-                    }
 
                     final bool hasStreak = streakCtrl.hasStreak.value;
                     final int doneSecs = streakCtrl.doneSeconds.value;
@@ -133,6 +128,38 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
                     final Color flameColor = doneSecs >= 300
                         ? Colors.orange
                         : (isDark ? tWhiteColor : tPaleBlackColor);
+
+                    if (streakCtrl.isLoading.value) {
+                      return Row(
+                        children: [
+                          Icon(Icons.local_fire_department, color: flameColor),
+                          const SizedBox(width: 4),
+                          Text(
+                            '...',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? tWhiteColor : tDarkColor,
+                            ),
+                          ),
+                        ],
+                      );
+                    } else if (streakCtrl.isError.value) {
+                      return Row(
+                        children: [
+                          Icon(Icons.local_fire_department, color: flameColor),
+                          const SizedBox(width: 4),
+                          Text(
+                            AppLocalizations.of(context)!.tError,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? tWhiteColor : tDarkColor,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
 
                     return Row(
                       children: [

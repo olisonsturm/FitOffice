@@ -144,7 +144,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tWelcomeTitle => 'FitOffice@DHBW';
 
   @override
-  String get tWelcomeSubTitle => 'Get fit. Stay focused. Thrive at DHBW.';
+  String get tWelcomeSubtitle =>
+      'Stay fit during your office day. Join us now!';
 
   @override
   String get tLoginTitle => 'Welcome Back,';
@@ -479,7 +480,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Please complete your active exercise first before continuing with administrative tasks.';
 
   @override
-  String get tAddExercises => 'ADD EXERCISES';
+  String get tAddExercises => 'Add Exercises';
 
   @override
   String get tAddExercisesHeader => 'Add Exercises';
@@ -616,7 +617,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tFriends => 'Friends';
 
   @override
-  String get tFriendNow => ' is your friend now.';
+  String get tFriendNow => 'is your friend now.';
 
   @override
   String get tNoFriendsYet => 'You don\'t have any friends yet.';
@@ -625,13 +626,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tExceptionAddingFriend => 'Couldn\'t add friend';
 
   @override
-  String get tFriendDeleted => ' isn\'t your friend anymore.';
+  String get tFriendDeleted => 'isn\'t your friend anymore';
 
   @override
-  String get tFriendDeleteException => 'Couldn\'t delete friend.';
+  String get tFriendDeleteException => 'Couldn\'t delete friend';
 
   @override
-  String get tIsAlreadyYourFriend => ' is already your friend.';
+  String get tIsAlreadyYourFriend => 'is already your friends';
 
   @override
   String get tFriendshipRequests => 'Friendships Requests';
@@ -931,6 +932,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tSkip => 'Skip';
 
   @override
+  String get tLoadingProgress => 'Loading progress...';
+
+  @override
+  String get tCancelRequest => 'Cancel Request';
+
+  @override
+  String get tCancelRequestConfirm =>
+      'Are you sure you want to cancel the friendship request with';
+
+  @override
+  String get tRemoveFriend => 'Remove Friend';
+
+  @override
+  String get tRemoveFriendConfirm => 'Are you sure to end your friendship with';
+
+  @override
+  String get tFriendRequestSentTo => 'Friendship request sent to';
+
+  @override
+  String get tFriendshipAlreadyExists => 'Friendship already exists with';
+
+  @override
+  String get tRemove => 'Remove';
+
+  @override
+  String get tInfo => 'Info';
+
+  @override
+  String get tFriendRequestDenied => 'Friendship request denied';
+
+  @override
+  String get tFriendRequestAccepted => 'Friendship request accepted';
+
+  @override
   String get tMinutes => 'Minutes';
 
   @override
@@ -948,4 +983,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tLoadingProgress => 'Loading progress...';
+
+  @override
+  String get tGerman => ' (German)';
+
+  @override
+  String get tEnglish => ' (English)';
+
+  @override
+  String get tRemoveAccount => 'Remove Account';
+
+  @override
+  String get tRemoveAccountConfirm =>
+      'Are you sure you want to remove your account? This action cannot be undone.';
+
 }

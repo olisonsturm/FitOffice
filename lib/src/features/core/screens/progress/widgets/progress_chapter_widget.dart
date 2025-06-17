@@ -50,20 +50,6 @@ class ProgressChapterWidget extends StatelessWidget {
     final Color completedColor = tPrimaryColor;
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Check if this chapter is currently being animated
-    bool isCurrentChapter;
-
-    // Korrigierte Logik für aktives Kapitel
-    if (currentStep % stepsPerChapter == 0 && isAnimating) {
-      // Wenn wir genau am Ende eines Kapitels sind, dann ist das
-      // ABGESCHLOSSENE Kapitel das aktive (nicht das nächste)
-      final int completedChapterIndex = (currentStep / stepsPerChapter).floor() - 1;
-      isCurrentChapter = chapterIndex == completedChapterIndex;
-    } else {
-      // Normale Berechnung innerhalb eines Kapitels
-      isCurrentChapter = currentStep >= startStep && currentStep < startStep + stepCount;
-    }
-
     // Check if chapter is completed
     final bool isCompleted = currentStep >= startStep + stepCount;
 
@@ -72,30 +58,9 @@ class ProgressChapterWidget extends StatelessWidget {
       curve: Curves.easeInOutCubic,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        gradient: isCurrentChapter && isAnimating
-            ? LinearGradient(
-          colors: [
-            tPrimaryColor.withValues(alpha: 0.1),
-            tSecondaryColor.withValues(alpha: 0.1),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        )
-            : null,
-        boxShadow: isCurrentChapter && isAnimating
-            ? [
-          BoxShadow(
-            color: tPrimaryColor.withValues(alpha: 0.2),
-            blurRadius: 20,
-            spreadRadius: 2,
-          ),
-        ]
-            : null,
       ),
       child: Column(
         children: [
-          const SizedBox(height: tDefaultSpace),
-
           // Chapter Title with Animation
           AnimatedBuilder(
             animation: chapterAnimation ?? const AlwaysStoppedAnimation(0.0),
@@ -202,7 +167,7 @@ class ProgressChapterWidget extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: tDefaultSpace),
+          const SizedBox(height: 8), // vorher tDefaultSpace
         ],
       ),
     );
@@ -220,10 +185,8 @@ class ProgressChapterWidget extends StatelessWidget {
     return AnimatedBuilder(
       animation: stepAnimation ?? const AlwaysStoppedAnimation(0.0),
       builder: (context, child) {
-        // Determine icon color (keine Größenänderung mehr für einzelne Schritte)
-        double size = 100.0; // Original size, jetzt konstant für alle
+        // Bestimme die Farbe des Icons (keine dynamische Größenänderung mehr hier)
         Color iconColor;
-
         if (isLocked) {
           iconColor = inactiveColor ?? Colors.grey;
         } else if (isCompleted) {
@@ -234,20 +197,24 @@ class ProgressChapterWidget extends StatelessWidget {
           iconColor = activeColor;
         }
 
+        // Größenkonstanten
+        const double containerSize = 100.0;
+        const double iconSize = 100.0;
+
         // WICHTIG: KEIN extra Space für den Container selbst, sondern Shadow-Effekt innerhalb der festen Größe
         return Container(
-          width: 100.0, // Feste Größe ohne Extraplatz
-          height: 100.0, // Feste Größe ohne Extraplatz
+          width: containerSize,
+          height: containerSize,
           clipBehavior: Clip.none,
           color: Colors.transparent,
           child: Stack(
-            alignment: Alignment.center,
+            alignment: Alignment.center, // Zentriert alles im Stack
             children: [
               // Glow-Effekt als separates Element (unter der Pfote)
               if (isCompleted)
                 Container(
-                  width: 100.0,
-                  height: 100.0,
+                  width: containerSize,
+                  height: containerSize,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     boxShadow: [
@@ -260,11 +227,50 @@ class ProgressChapterWidget extends StatelessWidget {
                   ),
                 ),
 
-              // Paw icon
-              Icon(
-                Icons.pets,
-                size: size,
-                color: iconColor,
+              // Zusätzlicher Glow-Effekt für aktuelle Pfote - subtiler
+              if (isCurrent && isAnimating)
+                AnimatedBuilder(
+                  animation: stepAnimation ?? const AlwaysStoppedAnimation(0.0),
+                  builder: (context, _) {
+                    final animValue = stepAnimation?.value ?? 0.0;
+                    return Container(
+                      width: containerSize,
+                      height: containerSize,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: activeColor.withValues(alpha: 0.2 + (animValue * 0.2)),
+                            blurRadius: 12.0 + (animValue * 6.0), // Reduzierter Blur-Effekt
+                            spreadRadius: 2.0 + (animValue * 0.5), // Minimaler Spread
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+
+              // Pfotensymbol - jetzt mit ScaleTransition für korrekte Zentrierung
+              Center(
+                child: ScaleTransition(
+                  scale: isCurrent && isAnimating
+                      ? Tween<double>(begin: 1.0, end: 1.08).animate(stepAnimation!) // Nur 8% vergrößern statt 12%
+                      : const AlwaysStoppedAnimation(1.0),
+                  child: Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.rotationZ(
+                      (chapterIndex % 2 == 0 ? -1 : 1) *
+                        (stepIndex == 0
+                            ? 2
+                            : 2 + (stepIndex - 1) * 0.1 + (isCurrent ? 0.1 : 0.0)),
+                    ),
+                    child: Icon(
+                      Icons.pets,
+                      size: iconSize,
+                      color: iconColor,
+                    ),
+                  ),
+                ),
               ),
 
               // Completion indicator (Häkchen)

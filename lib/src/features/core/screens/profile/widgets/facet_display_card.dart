@@ -21,41 +21,46 @@ class FactDisplayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        color: isDark ? Colors.grey[800] : backgroundColor,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: Colors.grey.withAlpha((0.5 * 255).toInt()),
-          width: 1.5,
+    return IgnorePointer(
+      child: Opacity(
+        opacity: 0.7, // Slightly faded to look non-interactive
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: isDark ? Colors.grey[800] : backgroundColor,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+              width: 1.5,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: iconColor.withValues(alpha: .7), size: 40),
+              AutoSizeText(
+                title,
+                maxLines: 1,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: (isDark ? Colors.white : Colors.black).withValues(alpha: .7),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              AutoSizeText(
+                subtitle,
+                maxLines: 1,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: (isDark ? Colors.white70 : Colors.black54).withValues(alpha: .7),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: iconColor, size: 40),
-          AutoSizeText(
-            title,
-            maxLines: 1,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: isDark ? Colors.white : Colors.black,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          AutoSizeText(
-            subtitle,
-            maxLines: 1,
-            style: TextStyle(
-              fontSize: 14,
-              color: isDark ? Colors.white70 : Colors.black54,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
       ),
     );
   }

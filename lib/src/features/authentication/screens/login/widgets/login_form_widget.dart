@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:fit_office/src/common_widgets/buttons/primary_button.dart';
 import 'package:fit_office/src/features/authentication/controllers/login_controller.dart';
 import '../../../../../constants/colors.dart';
 import '../../../../../constants/sizes.dart';
 import '../../../../../utils/helper/helper_controller.dart';
-import '../../forget_password/forget_password_options/forget_password_model_bottom_sheet.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
+
+import '../../forget_password/forget_password_model_bottom_sheet.dart';
 
 class LoginFormWidget extends StatelessWidget {
   const LoginFormWidget({super.key});
@@ -17,7 +17,7 @@ class LoginFormWidget extends StatelessWidget {
     final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
     final controller = Get.put(LoginController());
     return Container(
-      padding: const EdgeInsets.only(top: tFormHeight - 15, bottom: 10),
+      padding: const EdgeInsets.only(top: 0, bottom: 0),
       child: AutofillGroup(
         child: Form(
           key: controller.loginFormKey,
@@ -30,7 +30,21 @@ class LoginFormWidget extends StatelessWidget {
                 autofillHints: const [AutofillHints.username],
                 validator: (value) => Helper.validateEmail(value, context),
                 decoration: InputDecoration(
-                  prefixIcon: Icon(LineAwesomeIcons.user),
+                  filled: true,
+                  fillColor: isDark ? tDarkColor.withValues(alpha: 0.7) : Colors.grey[100],
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: isDark ? tWhiteColor : tBlackColor, width: 1.5),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.red),
+                  ),
+                  prefixIcon: Icon(LineAwesomeIcons.user, color: tPrimaryColor),
                   hintText: AppLocalizations.of(context)!.tEmail,
                   errorStyle:
                   const TextStyle(overflow: TextOverflow.visible),
@@ -44,7 +58,6 @@ class LoginFormWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: tFormHeight - 20),
-
               // Password Field
               Obx(() => TextFormField(
                 controller: controller.password,
@@ -53,7 +66,21 @@ class LoginFormWidget extends StatelessWidget {
                 value!.isEmpty ? 'Enter your password' : null,
                 obscureText: !controller.showPassword.value,
                 decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.fingerprint),
+                  filled: true,
+                  fillColor: isDark ? tDarkColor.withValues(alpha: 0.7) : Colors.grey[100],
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: isDark ? tWhiteColor : tBlackColor, width: 1.5),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.red),
+                  ),
+                  prefixIcon: const Icon(Icons.fingerprint, color: tPrimaryColor),
                   label: RichText(
                     text: TextSpan(
                       text: AppLocalizations.of(context)!.tPassword,
@@ -71,7 +98,6 @@ class LoginFormWidget extends StatelessWidget {
                 ),
               )),
               const SizedBox(height: tFormHeight - 20),
-
               // Forget password
               Align(
                 alignment: Alignment.centerRight,
@@ -91,14 +117,39 @@ class LoginFormWidget extends StatelessWidget {
                       )),
                 ),
               ),
-
               // Login Button
-              Obx(() => TPrimaryButton(
-                isLoading: controller.isLoading.value,
-                text: AppLocalizations.of(context)!.tLogin.tr,
-                onPressed: controller.isLoading.value
-                    ? () {}
-                    : () => controller.login(context),
+              Obx(() => GestureDetector(
+                onTap: controller.isLoading.value ? null : () => controller.login(context),
+                child: Container(
+                  width: double.infinity,
+                  height: 50,
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    color: tPrimaryColor,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: tPrimaryColor,
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Center(
+                    child: controller.isLoading.value
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(color: tPrimaryColor, strokeWidth: 2),
+                          )
+                        : Text(
+                            AppLocalizations.of(context)!.tLogin.toUpperCase(),
+                            style: TextStyle(
+                              color: isDark ? tBlackColor : tWhiteColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                  ),
+                ),
               )),
             ],
           ),

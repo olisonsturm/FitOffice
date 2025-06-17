@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
+import 'package:fit_office/src/utils/theme/widget_themes/dialog_theme.dart';
 
 void showConfirmationDialogModel(
     {required BuildContext context,
@@ -15,18 +16,21 @@ void showConfirmationDialogModel(
       content: Text(content),
       actions: [
         TextButton(
+          style: Theme.of(context).brightness == Brightness.dark
+              ? TDialogTheme.getDarkCancelButtonStyle()
+              : TDialogTheme.getLightCancelButtonStyle(),
           onPressed: () => Navigator.pop(context),
           child: Text(cancel),
         ),
         TextButton(
+          style: Theme.of(context).brightness == Brightness.dark
+              ? TDialogTheme.getDarkConfirmButtonStyle()
+              : TDialogTheme.getLightConfirmButtonStyle(),
           onPressed: () {
             Navigator.pop(context);
             onConfirm();
           },
-          child: Text(
-            confirm,
-            style: TextStyle(color: Colors.blue),
-          ),
+          child: Text(confirm),
         ),
       ],
     ),

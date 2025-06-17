@@ -173,6 +173,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
   Widget build(BuildContext context) {
     bool shouldShowOnlyExercises =
         _searchQuery.trim().isNotEmpty || widget.forceShowExercisesOnly;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (shouldShowOnlyExercises) {
       return AllExercisesList(
@@ -290,7 +291,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
       children: [
         Text(
           AppLocalizations.of(context)!.tDashboardPhysicalExercisesTitle,
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: isDark ? widget.txtTheme.bodyLarge?.color : Colors.black),
         ),
         const SizedBox(height: 10),
         DashboardPhysicalSection(
@@ -300,7 +301,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         const SizedBox(height: 20),
         Text(
           AppLocalizations.of(context)!.tDashboardPsychologicalExercisesTitle,
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: isDark ? widget.txtTheme.bodyLarge?.color : Colors.black),
         ),
         const SizedBox(height: 10),
         DashboardMentalSection(
@@ -310,7 +311,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         const SizedBox(height: 20),
         Text(
           AppLocalizations.of(context)!.tDashboardFavouriteExercises,
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: isDark ? widget.txtTheme.bodyLarge?.color : Colors.black),
         ),
         const SizedBox(height: 10),
         DashboardFavoritesSection(
@@ -320,7 +321,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
         const SizedBox(height: 20),
         Text(
           AppLocalizations.of(context)!.tDashboardAllExercises,
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: isDark ? widget.txtTheme.bodyLarge?.color : Colors.black),
         ),
         AllExercisesList(
           exercises: _filteredExercises,

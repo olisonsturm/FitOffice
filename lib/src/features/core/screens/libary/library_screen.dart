@@ -128,7 +128,9 @@ class LibraryScreenState extends State<LibraryScreen> {
                         ? Text(
                         '${AppLocalizations.of(context)!.tDashboardTitle} ${_user?.fullName ?? ''}',
                         style: txtTheme.bodyMedium)
-                        : const CircularProgressIndicator(),
+                        : Text(
+                        '${AppLocalizations.of(context)!.tDashboardTitle} ...',
+                        style: txtTheme.bodyMedium),
                     Text(AppLocalizations.of(context)!.tDashboardHeading,
                         style: txtTheme.displayMedium),
                   ],
