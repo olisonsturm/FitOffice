@@ -133,7 +133,12 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                   email: widget.email.text.trim(),
                   userName: widget.userName.text.trim(),
                   fullName: widget.fullName.text.trim(),
+                  createdAt: widget.user.createdAt,
                   updatedAt: Timestamp.now(),
+                  role: widget.user.role, // Ensure role is preserved
+                  fitnessLevel: widget.user.fitnessLevel,
+                  completedExercises: widget.user.completedExercises,
+                  profilePicture: widget.user.profilePicture,
                 );
 
                 // Update the user record and global state

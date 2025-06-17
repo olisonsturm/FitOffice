@@ -78,7 +78,7 @@ class UserRepository extends GetxController {
   Future<void> updateUserRecord(String userId,
       Map<String, dynamic> data) async {
     try {
-      await _db.collection("users").doc(userId).update(data);
+      await _db.collection("users").doc(userId).set(data, SetOptions(merge: true));
     } on FirebaseAuthException catch (e) {
       final result = TExceptions.fromCode(e.code);
       throw result.message;

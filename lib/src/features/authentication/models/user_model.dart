@@ -26,7 +26,6 @@ class UserModel {
       "username": userName,
       "email": email,
       "fullName": fullName,
-      "role": role,
     };
 
     if (createdAt != null) data["createdAt"] = createdAt;
@@ -57,7 +56,7 @@ class UserModel {
         fitnessLevel: data["fitnessLevel"] ?? "beginner",
         completedExercises: data["completedExercises"] ?? 0,
         profilePicture: data["profilePicture"] ?? "",
-      role: data["role"] ?? "user",
+        role: data["role"] ?? "user",
     );
   }
 }

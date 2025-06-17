@@ -9,6 +9,7 @@ import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/utils/app_bindings.dart';
 import 'package:fit_office/src/utils/theme/theme.dart';
+import 'dart:io';
 
 import 'main.dart';
 
@@ -34,12 +35,12 @@ class _AppState extends State<App> {
       sound: true,
     );
 
-    // Token ausgeben (wichtig zum Senden der Notification)
-    FirebaseMessaging.instance.getToken().then((token) async {
-      if (kDebugMode) {
-        print("Firebase Messaging Token: $token");
-      }
+    Future<void> saveFcmToken() async {
       try {
+        final token = await FirebaseMessaging.instance.getToken();
+        if (kDebugMode) {
+          print("Firebase Messaging Token: $token");
+        }
         final authRepo = Get.find<AuthenticationRepository>();
         final userId = authRepo.getUserID;
         if (userId.isNotEmpty) {
@@ -57,7 +58,24 @@ class _AppState extends State<App> {
           print("Error saving FCM token: $e");
         }
       }
-    });
+    }
+
+    // iOS: Wait for APNS token before getting FCM token
+    if (Platform.isIOS) {
+      FirebaseMessaging.instance.getAPNSToken().then((apnsToken) async {
+        if (apnsToken != null) {
+          await saveFcmToken();
+        } else {
+          // Optionally, retry or listen for token refresh
+          FirebaseMessaging.instance.onTokenRefresh.listen((_) {
+            saveFcmToken();
+          });
+        }
+      });
+    } else {
+      // Android/web: get token directly
+      saveFcmToken();
+    }
 
     // Wenn die App im Vordergrund ist, Notifications als lokale Notifications anzeigen
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -112,5 +130,3 @@ class _AppState extends State<App> {
     );
   }
 }
-
-
