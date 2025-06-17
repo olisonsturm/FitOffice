@@ -19,7 +19,7 @@ class StartExerciseDialog extends StatelessWidget {
             ),
             child: Material(
               borderRadius: BorderRadius.circular(20),
-              color: isDarkMode ? tDarkGreyColor : tWhiteColor,
+              color: isDarkMode ? tDarkColor : tWhiteColor,
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Stack(

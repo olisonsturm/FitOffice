@@ -19,7 +19,8 @@ import '../../controllers/statistics_controller.dart';
 import 'exercise_filter.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  final int initialIndex;
+  const Dashboard({super.key, required this.initialIndex});
 
   @override
   DashboardState createState() => DashboardState();
@@ -36,11 +37,11 @@ class DashboardState extends State<Dashboard> {
   final GlobalKey _profileTabKey = GlobalKey();
   List<TargetFocus> targets = [];
 
-  int _selectedIndex = 1; // Default to Library tab
+  int selectedIndex = 1; // Default to Library tab
   String favoriteCount = '';
 
   String _getPageTitle() {
-    switch (_selectedIndex) {
+    switch (selectedIndex) {
       case 0:
         return AppLocalizations.of(context)!.tProgress;
       case 1:
@@ -177,13 +178,13 @@ class DashboardState extends State<Dashboard> {
       final key = currentTarget.keyTarget;
 
       if (key == _progressTabKey) {
-        _selectedIndex = 0;
+        selectedIndex = 0;
       } else if (key == _libraryTabKey) {
-        _selectedIndex = 1;
+        selectedIndex = 1;
       } else if (key == _statisticsTabKey) {
-        _selectedIndex = 2;
+        selectedIndex = 2;
       } else if (key == _profileTabKey) {
-        _selectedIndex = 3;
+        selectedIndex = 3;
       }
     });
 
@@ -225,17 +226,17 @@ class DashboardState extends State<Dashboard> {
             setState(() {
               switch (counter) {
                 case 0:
-                  _selectedIndex = 0;
+                  selectedIndex = 0;
                 case 1:
-                  _selectedIndex = 1;
+                  selectedIndex = 1;
                 case 2:
-                  _selectedIndex = 2;
+                  selectedIndex = 2;
                 case 3:
-                  _selectedIndex = 3;
+                  selectedIndex = 3;
                 case 4:
-                  _selectedIndex = 3;
+                  selectedIndex = 3;
                 default:
-                  _selectedIndex = 0;
+                  selectedIndex = 0;
               }
               counter++;
             });
@@ -746,6 +747,7 @@ class DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
+    selectedIndex = widget.initialIndex;
     _initializeDashboard();
   }
 
@@ -789,7 +791,7 @@ class DashboardState extends State<Dashboard> {
       body: Stack(
         children: [
           IndexedStack(
-            index: _selectedIndex,
+            index: selectedIndex,
             children: [
               // 0: Progress Screen
               ProgressScreen(),
@@ -822,11 +824,11 @@ class DashboardState extends State<Dashboard> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
+        currentIndex: selectedIndex,
         onTap: (index) {
           FocusScope.of(context).unfocus();
           setState(() {
-            _selectedIndex = index;
+            selectedIndex = index;
           });
         },
         type: BottomNavigationBarType.fixed,

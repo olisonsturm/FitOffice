@@ -28,7 +28,6 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
   String? _locale;
 
   bool get isRunningThisExercise =>
-      timerController.isRunning.value &&
       timerController.exerciseName.value == widget.exerciseData['name'];
 
   void _loadLocale() async {
