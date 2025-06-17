@@ -997,4 +997,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tEnglish => ' (Englisch)';
+
+  @override
+  String get tRemoveAccount => 'Konto löschen';
+
+  @override
+  String get tRemoveAccountConfirm =>
+      'Möchtest du dein Konto wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.';
 }
