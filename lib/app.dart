@@ -28,7 +28,7 @@ class _AppState extends State<App> {
     FCMTokenService.initializeFCM();
 
     // Wenn die App im Vordergrund ist, Notifications als lokale Notifications anzeigen
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    _firebaseMessageSubscription = FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
 
