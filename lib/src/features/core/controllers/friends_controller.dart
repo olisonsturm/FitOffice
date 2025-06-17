@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:fit_office/src/utils/helper/helper_controller.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../../authentication/models/user_model.dart';
@@ -368,6 +369,51 @@ class FriendsController extends GetxController {
       return UserModel.fromSnapshot(userDoc);
     } else {
       throw Exception(localizations.tNoUserFound);
+    }
+  }
+
+  Future<String?> getUserEmailById(String userId) async {
+    try {
+      // Get the document reference using the userId
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (userDoc.exists) {
+        // Extract the email from the document data
+        final userData = userDoc.data() as Map<String, dynamic>;
+        return userData['email'] as String?;
+      } else {
+        return null; // User not found
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching user email: $e');
+      }
+      return null;
+    }
+  }
+  Future<String?> getUserNameById(String userId) async {
+    try {
+      // Get the document reference using the userId
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (userDoc.exists) {
+        // Extract the username from the document data
+        final userData = userDoc.data() as Map<String, dynamic>;
+        return userData['username'] as String?;
+      } else {
+        return null; // User not found
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching username: $e');
+      }
+      return null;
     }
   }
 }

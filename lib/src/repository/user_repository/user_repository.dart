@@ -29,7 +29,9 @@ class UserRepository extends GetxController {
     } on FirebaseException catch (e) {
       throw e.message.toString();
     } catch (e) {
-      throw e.toString().isEmpty ? 'Something went wrong. Please Try Again' : e.toString();
+      throw e
+          .toString()
+          .isEmpty ? 'Something went wrong. Please Try Again' : e.toString();
     }
   }
 
@@ -48,7 +50,9 @@ class UserRepository extends GetxController {
 
       return UserModel.fromSnapshot(snapshot);
     } catch (e) {
-      throw e.toString().isEmpty ? 'Something went wrong. Please Try Again' : e.toString();
+      throw e
+          .toString()
+          .isEmpty ? 'Something went wrong. Please Try Again' : e.toString();
     }
   }
 
@@ -56,7 +60,8 @@ class UserRepository extends GetxController {
   Future<List<UserModel>> allUsers() async {
     try {
       final snapshot = await _db.collection("users").get();
-      final users = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).toList();
+      final users = snapshot.docs.map((e) => UserModel.fromSnapshot(e))
+          .toList();
       return users;
     } on FirebaseAuthException catch (e) {
       final result = TExceptions.fromCode(e.code);
@@ -70,7 +75,8 @@ class UserRepository extends GetxController {
   }
 
   /// Update User details
-  Future<void> updateUserRecord(String userId, Map<String, dynamic> data) async {
+  Future<void> updateUserRecord(String userId,
+      Map<String, dynamic> data) async {
     try {
       await _db.collection("users").doc(userId).update(data);
     } on FirebaseAuthException catch (e) {
@@ -100,7 +106,8 @@ class UserRepository extends GetxController {
   /// Check if user exists with email
   Future<bool> recordExist(String email) async {
     try {
-      final snapshot = await _db.collection("users").where("email", isEqualTo: email).get();
+      final snapshot = await _db.collection("users").where(
+          "email", isEqualTo: email).get();
       return snapshot.docs.isEmpty ? false : true;
     } catch (e) {
       throw "Error fetching record.";

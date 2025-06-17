@@ -2,8 +2,13 @@ import 'dart:async';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:fit_office/src/utils/helper/helper_controller.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
+
+import '../../features/core/controllers/friends_controller.dart';
+import '../../repository/authentication_repository/authentication_repository.dart';
+import '../theme/widget_themes/dialog_theme.dart';
 
 class DeepLinkService extends GetxService {
 
@@ -87,11 +92,52 @@ class DeepLinkService extends GetxService {
       Helper.errorSnackBar(title: 'Share Error', message: 'Could not generate friend request link');
     }
   }
-  static void _handleFriendRequest(String userId) {
+  static void _handleFriendRequest(String userId) async {
     debugPrint('Processing friend request for user: $userId');
-    // Example: UserRepository().sendFriendRequest(userId);
+    final context = Get.context;
+    if (context == null) {
+      Helper.errorSnackBar(title: 'Error', message: 'No context available for dialog');
+      return;
+    }
+    final controller = FriendsController();
+    final userName = await controller.getUserNameById(userId);
+    if (userName == null) {
+      Helper.errorSnackBar(title: 'Error', message: 'User not found');
+      return;
+    }
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Friend Request'),
+        content: Text('Do you want to send a friend request to $userName?'),
+        actions: [
+          TextButton(
+            style: isDarkMode
+                ? TDialogTheme.getDarkCancelButtonStyle()
+                : TDialogTheme.getLightCancelButtonStyle(),
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Decline'),
+          ),
+          TextButton(
+            style: isDarkMode
+                ? TDialogTheme.getDarkConfirmButtonStyle()
+                : TDialogTheme.getLightConfirmButtonStyle(),
+            onPressed: () async {
+              Navigator.of(ctx).pop();
+              try {
+                final String? senderEmail = await controller.getUserEmailById(AuthenticationRepository.instance.getUserID);
+                final String? receiverUserName = await controller.getUserNameById(userId);
 
-    // Show confirmation to user
-    Helper.successSnackBar(title: 'Friend Request', message: 'Friend request sent successfully');
+                await controller.sendFriendRequest(senderEmail!, receiverUserName!, context);
+              } catch (e) {
+                Helper.errorSnackBar(title: 'Error', message: e.toString());
+              }
+            },
+            child: const Text('Send Request'),
+          ),
+        ],
+      ),
+    );
   }
 }
