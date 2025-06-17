@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:fit_office/src/repository/authentication_repository/authentication_repository.dart';
-import 'package:flutter/foundation.dart';
+import 'package:fit_office/src/utils/services/FCMTokenService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -9,7 +7,6 @@ import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/utils/app_bindings.dart';
 import 'package:fit_office/src/utils/theme/theme.dart';
-import 'dart:io';
 
 import 'main.dart';
 
@@ -28,61 +25,14 @@ class _AppState extends State<App> {
 
     _appLocale = widget.initialLocale;
 
-    // Berechtigungen anfragen (iOS)
-    FirebaseMessaging.instance.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-
-    Future<void> saveFcmToken() async {
-      try {
-        final token = await FirebaseMessaging.instance.getToken();
-        if (kDebugMode) {
-          print("Firebase Messaging Token: $token");
-        }
-        final authRepo = Get.find<AuthenticationRepository>();
-        final userId = authRepo.getUserID;
-        if (userId.isNotEmpty) {
-          final doc = FirebaseFirestore.instance.collection('users').doc(userId);
-          await doc.set({
-            'fcmToken': token,
-          }, SetOptions(merge: true));
-        } else {
-          if (kDebugMode) {
-            print("User not authenticated. FCM token not saved.");
-          }
-        }
-      } catch (e) {
-        if (kDebugMode) {
-          print("Error saving FCM token: $e");
-        }
-      }
-    }
-
-    // iOS: Wait for APNS token before getting FCM token
-    if (Platform.isIOS) {
-      FirebaseMessaging.instance.getAPNSToken().then((apnsToken) async {
-        if (apnsToken != null) {
-          await saveFcmToken();
-        } else {
-          // Optionally, retry or listen for token refresh
-          FirebaseMessaging.instance.onTokenRefresh.listen((_) {
-            saveFcmToken();
-          });
-        }
-      });
-    } else {
-      // Android/web: get token directly
-      saveFcmToken();
-    }
+    FCMTokenService.initializeFCM();
 
     // Wenn die App im Vordergrund ist, Notifications als lokale Notifications anzeigen
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
-      // AndroidNotification? android = message.notification?.android;
+      AndroidNotification? android = message.notification?.android;
 
-      if (notification != null) {
+      if (notification != null && android != null) {
         flutterLocalNotificationsPlugin.show(
           notification.hashCode,
           notification.title,
@@ -93,8 +43,11 @@ class _AppState extends State<App> {
               'Friend Request Notifications',
               importance: Importance.max,
               priority: Priority.high,
+              channelDescription: 'Channel for friend request notifications',
+              icon: '@mipmap/launcher_icon',
             ),
           ),
+          payload: message.data['type'],
         );
       }
     });

@@ -1,3 +1,4 @@
+import 'package:fit_office/src/utils/services/FCMTokenService.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
@@ -29,6 +30,9 @@ class LoginController extends GetxController {
       final auth = AuthenticationRepository.instance;
       await auth.loginWithEmailAndPassword(email.text.trim(), password.text.trim());
       auth.setInitialScreen(auth.firebaseUser);
+
+      // Save FCM token after login
+      await FCMTokenService.initializeFCM();
     } catch (e) {
       isLoading.value = false;
       Helper.errorSnackBar(title: localizations.tOhSnap, message: e.toString());

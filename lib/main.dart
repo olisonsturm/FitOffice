@@ -42,6 +42,9 @@ Future<void> main() async {
     Get.put(AuthenticationRepository());
   });
 
+  /// Ensure Firebase authentication is initialized before calling updateFcmTokenIfAuthenticated
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   /// Initialize Deep Links
   await DeepLinkService.initDeepLinks();
 
@@ -54,7 +57,7 @@ Future<void> main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   const AndroidInitializationSettings initializationSettingsAndroid =
   AndroidInitializationSettings('@mipmap/launcher_icon');
-  /// iOS
+  /// iOS TODO: Will not work without Developer Account because of APNS!!! So no push notifications on iOS!!!
   const DarwinInitializationSettings initializationSettingsIOS =
   DarwinInitializationSettings(
     requestAlertPermission: true,
@@ -78,15 +81,15 @@ Future<void> main() async {
   await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
       AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
 
-  /// -- Initialize Global Overlay
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    GlobalExerciseOverlay().init(Get.context!);
-  });
-
   /// -- Main App Starts here (app.dart) ...
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then((_) {
     runApp(App(initialLocale: Locale(localeCode)));
+  });
+
+  /// -- Initialize Global Overlay
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    GlobalExerciseOverlay().init(Get.context!);
   });
 }
