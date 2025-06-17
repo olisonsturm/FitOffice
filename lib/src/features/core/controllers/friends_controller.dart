@@ -373,28 +373,14 @@ class FriendsController extends GetxController {
   }
 
   Future<String?> getUserEmailById(String userId) async {
-    try {
-      // Get the document reference using the userId
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
-
-      if (userDoc.exists) {
-        // Extract the email from the document data
-        final userData = userDoc.data() as Map<String, dynamic>;
-        return userData['email'] as String?;
-      } else {
-        return null; // User not found
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error fetching user email: $e');
-      }
-      return null;
-    }
+    return _getUserFieldById(userId, 'email');
   }
+
   Future<String?> getUserNameById(String userId) async {
+    return _getUserFieldById(userId, 'username');
+  }
+
+  Future<String?> _getUserFieldById(String userId, String fieldName) async {
     try {
       // Get the document reference using the userId
       final userDoc = await FirebaseFirestore.instance
