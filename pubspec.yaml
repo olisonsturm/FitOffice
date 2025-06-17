@@ -53,6 +53,9 @@ dependencies:
   tutorial_coach_mark: ^1.2.0
   package_info_plus: ^8.3.0
   url_launcher: ^6.3.1
+  share_plus: ^11.0.0
+  firebase_dynamic_links: ^6.1.7
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:

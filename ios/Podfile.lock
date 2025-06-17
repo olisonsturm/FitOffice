@@ -1205,6 +1205,9 @@ PODS:
     - FirebaseAuth (~> 11.13.0)
   - Firebase/CoreOnly (11.13.0):
     - FirebaseCore (~> 11.13.0)
+  - Firebase/DynamicLinks (11.13.0):
+    - Firebase/CoreOnly
+    - FirebaseDynamicLinks (~> 11.13.0)
   - Firebase/Firestore (11.13.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 11.13.0)
@@ -1217,6 +1220,10 @@ PODS:
     - Flutter
   - firebase_core (3.14.0):
     - Firebase/CoreOnly (= 11.13.0)
+    - Flutter
+  - firebase_dynamic_links (6.1.7):
+    - Firebase/DynamicLinks (= 11.13.0)
+    - firebase_core
     - Flutter
   - firebase_storage (12.4.7):
     - Firebase/Storage (= 11.13.0)
@@ -1241,6 +1248,8 @@ PODS:
     - FirebaseCore (~> 11.13.0)
   - FirebaseCoreInternal (11.13.0):
     - "GoogleUtilities/NSData+zlib (~> 8.1)"
+  - FirebaseDynamicLinks (11.13.0):
+    - FirebaseCore (~> 11.13.0)
   - FirebaseFirestore (11.13.0):
     - FirebaseCore (~> 11.13.0)
     - FirebaseCoreExtension (~> 11.13.0)
@@ -1400,6 +1409,8 @@ PODS:
     - Flutter
     - FlutterMacOS
   - RecaptchaInterop (101.0.0)
+  - share_plus (0.0.1):
+    - Flutter
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -1419,12 +1430,14 @@ DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
+  - firebase_dynamic_links (from `.symlinks/plugins/firebase_dynamic_links/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite_darwin (from `.symlinks/plugins/sqflite_darwin/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
@@ -1442,6 +1455,7 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseCoreExtension
     - FirebaseCoreInternal
+    - FirebaseDynamicLinks
     - FirebaseFirestore
     - FirebaseFirestoreInternal
     - FirebaseSharedSwift
@@ -1463,6 +1477,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
+  firebase_dynamic_links:
+    :path: ".symlinks/plugins/firebase_dynamic_links/ios"
   firebase_storage:
     :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
@@ -1475,6 +1491,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  share_plus:
+    :path: ".symlinks/plugins/share_plus/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sqflite_darwin:
@@ -1494,6 +1512,7 @@ SPEC CHECKSUMS:
   Firebase: 3435bc66b4d494c2f22c79fd3aae4c1db6662327
   firebase_auth: ebc1f561cc3077efebad5005974c9ed58008973b
   firebase_core: 700bac7ed92bb754fd70fbf01d72b36ecdd6d450
+  firebase_dynamic_links: e7d860fff34de6d9d5910fa7ef6f85d2def89501
   firebase_storage: 17e3f7e7ee83680abb6aad6a28fe1404bf6b5a53
   FirebaseAppCheckInterop: a92ba81d0ee3c4cddb1a2e52c668ea51dc63c3ae
   FirebaseAuth: 175cb5503dfdb52191b8ff81cdd52c1d9dee9ac9
@@ -1501,6 +1520,7 @@ SPEC CHECKSUMS:
   FirebaseCore: c692c7f1c75305ab6aff2b367f25e11d73aa8bd0
   FirebaseCoreExtension: c048485c347616dba6165358dbef765c5197597b
   FirebaseCoreInternal: 29d7b3af4aaf0b8f3ed20b568c13df399b06f68c
+  FirebaseDynamicLinks: a784b5beaf9850a7ee4270b0fb189dba6263edcc
   FirebaseFirestore: 3ae3aeaad5b5ef5ec0dba86882a7156f509ff480
   FirebaseFirestoreInternal: 6c8aa676751593471f66d857db5b8674ea66116b
   FirebaseSharedSwift: bdd5c8674c4712a98e70287c936bc5cca5d640f6
@@ -1517,6 +1537,7 @@ SPEC CHECKSUMS:
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   RecaptchaInterop: 11e0b637842dfb48308d242afc3f448062325aba
+  share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d

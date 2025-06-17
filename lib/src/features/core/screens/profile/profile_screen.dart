@@ -6,9 +6,11 @@ import 'package:fit_office/src/features/core/screens/profile/widgets/bug_report_
 import 'package:fit_office/src/features/core/screens/profile/widgets/facet_display_card.dart';
 import 'package:fit_office/src/features/core/screens/profile/widgets/help_support_modal.dart';
 import 'package:fit_office/src/features/core/screens/profile/widgets/privacy_policy_modal.dart';
+import 'package:fit_office/src/features/core/screens/profile/widgets/qr_code_dialog.dart';
 import 'package:fit_office/src/features/core/screens/profile/widgets/terms_cond_modal.dart';
 import 'package:fit_office/src/utils/helper/dialog_helper.dart';
 import 'package:fit_office/src/utils/helper/helper_controller.dart';
+import 'package:fit_office/src/utils/services/deep_link_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -185,6 +187,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const Divider(),
                   FriendsBoxWidget(currentUserId: user.id!),
+                  const SizedBox(height: 8),
                   CustomProfileButton(
                     isDark: isDark,
                     icon: LineAwesomeIcons.user_plus_solid,
@@ -206,30 +209,43 @@ class ProfileScreen extends StatelessWidget {
                       Get.to(() => AddFriendsScreen(currentUserId: user.id!));
                     },
                   ),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: CustomProfileButton(
+                          isDark: isDark,
+                          icon: LineAwesomeIcons.share_square,
+                          label: 'Send Friend Link',
+                          onPress: () {
+                            final deepLinkService = Get.find<DeepLinkService>();
+                            deepLinkService.shareFriendRequestLink(user.id!);
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        flex: 2,
+                        child: CustomProfileButton(
+                          isDark: isDark,
+                          icon: LineAwesomeIcons.qrcode_solid,
+                          label: 'QR Code',
+                          onPress: () async {
+                            try {
+                              QrCodeDialog.show(context, user.id!, user.userName);
+                            } catch (e) {
+                              Helper.errorSnackBar(
+                                  title: 'Error',
+                                  message: 'Could not generate QR code'
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                   FriendRequestsWidget(currentUserId: user.id!),
                   const SizedBox(height: 10),
-                  // CustomProfileButton(
-                  //   //auch mit dem Dialog anpassen!
-                  //   isDark: isDark,
-                  //   icon: LineAwesomeIcons.user_friends_solid,
-                  //   label: AppLocalizations.of(context)!.tViewFriends,
-                  //   onPress: () async {
-                  //     final timerController =
-                  //         Get.find<ExerciseTimerController>();
-                  //     if (timerController.isRunning.value ||
-                  //         timerController.isPaused.value) {
-                  //       await showUnifiedDialog(
-                  //         context: context,
-                  //         barrierDismissible: false,
-                  //         builder: (_) =>
-                  //             ActiveTimerDialog.forAction('viewfriends', context),
-                  //       );
-                  //       return;
-                  //     }
-                  //
-                  //     Get.to(() => const AllUsersPage());
-                  //   },
-                  // ),
                   const Divider(),
                   const SizedBox(height: 10),
                   Text(AppLocalizations.of(context)!.tSettings,
