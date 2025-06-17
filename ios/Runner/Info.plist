@@ -52,5 +52,13 @@
 			<string>tel</string>
 			<string>mailto</string>
 		</array>
+        <key>com.apple.developer.associated-domains</key>
+        <array>
+          <string>applinks:fitoffice.page.link</string>
+        </array>
+        <key>FirebaseDynamicLinksCustomDomains</key>
+        <array>
+          <string>https://fitoffice.page.link</string>
+        </array>
 	</dict>
 </plist>

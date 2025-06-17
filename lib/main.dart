@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fit_office/src/utils/services/deep_link_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -25,6 +26,9 @@ Future<void> main() async {
       .then((_) {
     Get.put(AuthenticationRepository());
   });
+
+  /// -- README(Docs[6]) -- Initialize GetX Deep Links
+  await DeepLinkService.initDeepLinks();
 
   final prefs = await SharedPreferences.getInstance();
   final localeCode = prefs.getString('locale') ?? 'en';

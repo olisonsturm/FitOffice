@@ -310,5 +310,7 @@
   "tHistoryNoExercise1": "Keine Übungshistorie gefunden für",
   "tHistoryNoExercise2": ". Beginne eine Übungen zu erfassen, um deine Historie zu sehen",
   "tGerman": " (Deutsch)",
-  "tEnglish": " (Englisch)"
+  "tEnglish": " (Englisch)",
+  "tRemoveAccount": "Konto löschen",
+    "tRemoveAccountConfirm": "Möchtest du dein Konto wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden."
 }

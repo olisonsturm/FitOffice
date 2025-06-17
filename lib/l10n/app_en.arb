@@ -310,5 +310,7 @@
   "tHistoryNoExercise1": "No exercise history found for",
   "tHistoryNoExercise2": ". Start tracking your exercises to see them here.",
   "tGerman": " (German)",
-  "tEnglish": " (English)"
+  "tEnglish": " (English)",
+  "tRemoveAccount": "Remove Account",
+  "tRemoveAccountConfirm": "Are you sure you want to remove your account? This action cannot be undone."
 }

@@ -986,4 +986,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tEnglish => ' (English)';
+
+  @override
+  String get tRemoveAccount => 'Remove Account';
+
+  @override
+  String get tRemoveAccountConfirm =>
+      'Are you sure you want to remove your account? This action cannot be undone.';
 }

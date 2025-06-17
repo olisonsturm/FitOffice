@@ -1963,6 +1963,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **' (English)'**
   String get tEnglish;
+
+  /// No description provided for @tRemoveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Account'**
+  String get tRemoveAccount;
+
+  /// No description provided for @tRemoveAccountConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to remove your account? This action cannot be undone.'**
+  String get tRemoveAccountConfirm;
 }
 
 class _AppLocalizationsDelegate

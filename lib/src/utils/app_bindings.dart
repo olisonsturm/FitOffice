@@ -1,9 +1,9 @@
 import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/src/repository/firebase_storage/storage_service.dart';
+import 'package:fit_office/src/utils/services/deep_link_service.dart';
 import 'package:get/get.dart';
 import 'package:fit_office/src/features/authentication/controllers/login_controller.dart';
 import 'package:fit_office/src/features/authentication/controllers/on_boarding_controller.dart';
-import 'package:fit_office/src/features/authentication/controllers/otp_controller.dart';
 import 'package:fit_office/src/features/authentication/controllers/signup_controller.dart';
 import 'package:fit_office/src/repository/user_repository/user_repository.dart';
 import '../repository/authentication_repository/authentication_repository.dart';
@@ -19,9 +19,10 @@ class InitialBinding extends Bindings{
 
     Get.lazyPut(() => LoginController(), fenix: true);
     Get.lazyPut(() => SignUpController(), fenix: true);
-    Get.lazyPut(() => OTPController(), fenix: true);
 
     Get.lazyPut(() => ExerciseTimerController(), fenix: true);
+
+    Get.lazyPut(() => DeepLinkService(), fenix: true);
   }
 
 }

@@ -11,6 +11,7 @@ import 'package:fit_office/l10n/app_localizations.dart';
 import '../../../../../repository/authentication_repository/authentication_repository.dart';
 import '../../../../../repository/user_repository/user_repository.dart';
 import '../../../../../utils/helper/helper_controller.dart';
+import '../../../../../utils/theme/widget_themes/dialog_theme.dart';
 import '../../../../authentication/models/user_model.dart';
 import '../../../../authentication/screens/forget_password/forget_password_model_bottom_sheet.dart';
 import '../../../controllers/profile_controller.dart';
@@ -156,30 +157,50 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
             icon: LineAwesomeIcons.trash_solid,
             label: localisation.tDelete,
             onPress: () async {
-              try {
-                // Delete Firebase Auth account
-                await FirebaseFirestore.instance.runTransaction((transaction) async {
-                  // Delete Firestore document
-                  await UserRepository.instance.deleteUser(widget.user.id!);
-                  // Delete Firebase Auth account
-                  await AuthenticationRepository.instance.deleteUser();
-                });
-
-                // Show success message
-                Helper.successSnackBar(title: localisation.tSuccess, message: 'Account deleted successfully');
-              } on FirebaseAuthException catch (e) {
-                // Log the error code and message
-                if (kDebugMode) {
-                  print('FirebaseAuthException: ${e.code} - ${e.message}');
-                }
-                Helper.errorSnackBar(title: localisation.tOhSnap, message: 'Failed to delete account: ${e.message}');
-              } catch (e) {
-                // Log any other errors
-                if (kDebugMode) {
-                  print('Exception: $e');
-                }
-                Helper.errorSnackBar(title: localisation.tOhSnap, message: 'Failed to delete account: $e');
-              }
+              final theme = Theme.of(context);
+              final isDarkMode = theme.brightness == Brightness.dark;
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text(localisation.tRemoveAccount),
+                  content: Text(localisation.tRemoveAccountConfirm),
+                  actions: [
+                    TextButton(
+                      style: isDarkMode
+                          ? TDialogTheme.getDarkCancelButtonStyle()
+                          : TDialogTheme.getLightCancelButtonStyle(),
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(localisation.tCancel),
+                    ),
+                    TextButton(
+                      style: isDarkMode
+                          ? TDialogTheme.getDarkDeleteButtonStyle()
+                          : TDialogTheme.getLightDeleteButtonStyle(),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        try {
+                          await FirebaseFirestore.instance.runTransaction((transaction) async {
+                            await UserRepository.instance.deleteUser(widget.user.id!);
+                            await AuthenticationRepository.instance.deleteUser();
+                          });
+                          Helper.successSnackBar(title: localisation.tSuccess, message: 'Account deleted successfully');
+                        } on FirebaseAuthException catch (e) {
+                          if (kDebugMode) {
+                            print('FirebaseAuthException: \\${e.code} - \\${e.message}');
+                          }
+                          Helper.errorSnackBar(title: localisation.tOhSnap, message: 'Failed to delete account: \\${e.message}');
+                        } catch (e) {
+                          if (kDebugMode) {
+                            print('Exception: \\${e}');
+                          }
+                          Helper.errorSnackBar(title: localisation.tOhSnap, message: 'Failed to delete account: \\${e}');
+                        }
+                      },
+                      child: Text(localisation.tRemove),
+                    ),
+                  ],
+                ),
+              );
             },
             iconColor: Colors.red,
             textColor: Colors.red,
