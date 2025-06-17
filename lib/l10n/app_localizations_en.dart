@@ -899,19 +899,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tTutorialStatistics =>
-      'Here you will find all the important statistics. You can activate a streak by doing one exercise per day for 5 minutes. You will receive one step for each day. The number of steps is displayed at the top left of the flame. But beware: the streak will be reset to 0 if you exercise for less than 5 minutes! Click to continue.';
+      'Here you will find all the important statistics. You can activate a streak by doing exercises per day for at least 5 minutes. You will receive one step for each day and your streak will increase by one. Your current streak is displayed at the top left of the flame. But beware: your streak will be reset to 0 if you practise for less than 5 minutes in a day! Click to continue.';
 
   @override
   String get tTutorialStatistics1 =>
-      'Here you will find all the important statistics. You can activate a streak by doing one exercise per day for 5 minutes.';
+      'Here you will find all the important statistics. You can activate a streak by doing exercises per day for at least 5 minutes.';
 
   @override
   String get tTutorialStatistics2 =>
-      'You will receive one step for each day. The number of steps is displayed at the top left of the flame.';
+      ' You will receive one step for each day and your streak will increase by one. Your current streak is displayed at the top left of the flame.';
 
   @override
   String get tTutorialStatistics3 =>
-      'But beware: the streak will be reset to 0 if you exercise for less than 5 minutes! Click to continue.';
+      'But beware: your streak will be reset to 0 if you practise for less than 5 minutes in a day! Click to continue.';
 
   @override
   String get tLastExercise => 'Last exercise done';
@@ -945,5 +945,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tHistoryNoExercise2 =>
       '. Start tracking your exercises to see them here.';
+
+  @override
   String get tLoadingProgress => 'Loading progress...';
 }

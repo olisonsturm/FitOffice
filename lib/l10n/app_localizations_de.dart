@@ -909,19 +909,19 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tTutorialStatistics =>
-      'Hier findest du alle wichtigen Statistiken. Du kannst eine Streak aktivieren indem du 5 Minuten lang eine Übung pro Tag machst. Für jeden Tag erhältst du einen Schritt. Die Anzahl der Schritte wird dir oben links neben der Flamme angezeigt. Aber Achtung: Die Streak wird auf 0 zurückgesetzt, wenn du weniger als 5 Minuten übst! Klicke um fortzufahren.';
+      'Hier findest du alle wichtigen Statistiken. Du kannst eine Streak aktivieren indem du mindestens 5 Minuten lang Übungen am Tag machst. Für jeden Tag erhältst du einen Schritt und baust deine Streak um eins aus. Deine Streak wird dir oben links neben der Flamme angezeigt. Aber Achtung: Die Streak wird auf 0 zurückgesetzt, wenn du an einem Tag weniger als 5 Minuten übst! Klicke um fortzufahren.';
 
   @override
   String get tTutorialStatistics1 =>
-      'Hier findest du alle wichtigen Statistiken. Du kannst eine Streak aktivieren indem du 5 Minuten lang eine Übung pro Tag machst.';
+      'Hier findest du alle wichtigen Statistiken. Du kannst eine Streak aktivieren indem du mindestesn 5 Minuten lang Übungen am Tag machst.';
 
   @override
   String get tTutorialStatistics2 =>
-      'Für jeden Tag erhältst du einen Schritt. Die Anzahl der Schritte wird dir oben links neben der Flamme angezeigt.';
+      'Für jeden Tag erhältst du einen Schritt und baust deine Streak um eins aus. Deine Streak wird dir oben links neben der Flamme angezeigt.';
 
   @override
   String get tTutorialStatistics3 =>
-      'Aber Achtung: Die Streak wird auf 0 zurückgesetzt, wenn du weniger als 5 Minuten übst! Klicke um fortzufahren.';
+      'Aber Achtung: Die Streak wird auf 0 zurückgesetzt, wenn du an einem Tag weniger als 5 Minuten übst! Klicke um fortzufahren.';
 
   @override
   String get tLastExercise => 'Zeitpunkt der letzten Übung';
@@ -956,5 +956,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tHistoryNoExercise2 =>
       '. Beginne eine Übungen zu erfassen, um deine Historie zu sehen.';
 
+  @override
   String get tLoadingProgress => 'Lade Fortschritt...';
 }
