@@ -1805,25 +1805,25 @@ abstract class AppLocalizations {
   /// No description provided for @tTutorialStatistics.
   ///
   /// In en, this message translates to:
-  /// **'Here you will find all the important statistics. You can activate a streak by doing one exercise per day for 5 minutes. You will receive one step for each day. The number of steps is displayed at the top left of the flame. But beware: the streak will be reset to 0 if you exercise for less than 5 minutes! Click to continue.'**
+  /// **'Here you will find all the important statistics. You can activate a streak by doing exercises per day for at least 5 minutes. You will receive one step for each day and your streak will increase by one. Your current streak is displayed at the top left of the flame. But beware: your streak will be reset to 0 if you practise for less than 5 minutes in a day! Click to continue.'**
   String get tTutorialStatistics;
 
   /// No description provided for @tTutorialStatistics1.
   ///
   /// In en, this message translates to:
-  /// **'Here you will find all the important statistics. You can activate a streak by doing one exercise per day for 5 minutes.'**
+  /// **'Here you will find all the important statistics. You can activate a streak by doing exercises per day for at least 5 minutes.'**
   String get tTutorialStatistics1;
 
   /// No description provided for @tTutorialStatistics2.
   ///
   /// In en, this message translates to:
-  /// **'You will receive one step for each day. The number of steps is displayed at the top left of the flame.'**
+  /// **' You will receive one step for each day and your streak will increase by one. Your current streak is displayed at the top left of the flame.'**
   String get tTutorialStatistics2;
 
   /// No description provided for @tTutorialStatistics3.
   ///
   /// In en, this message translates to:
-  /// **'But beware: the streak will be reset to 0 if you exercise for less than 5 minutes! Click to continue.'**
+  /// **'But beware: your streak will be reset to 0 if you practise for less than 5 minutes in a day! Click to continue.'**
   String get tTutorialStatistics3;
 
   /// No description provided for @tLastExercise.
@@ -1952,6 +1952,13 @@ abstract class AppLocalizations {
   /// **'. Start tracking your exercises to see them here.'**
   String get tHistoryNoExercise2;
 
+
+  /// No description provided for @tLoadingProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading progress...'**
+  String get tLoadingProgress;
+
   /// No description provided for @tGerman.
   ///
   /// In en, this message translates to:
@@ -1975,6 +1982,7 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to remove your account? This action cannot be undone.'**
   String get tRemoveAccountConfirm;
+
 }
 
 class _AppLocalizationsDelegate
