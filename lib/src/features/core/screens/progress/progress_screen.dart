@@ -62,18 +62,26 @@ class ProgressScreenState extends State<ProgressScreen>
       curve: Curves.elasticOut,
     );
 
-    // Nach dem Widget-Build zum aktuellen Kapitel scrollen
+    // Check if we arrived from completing an exercise
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Verzögerung hinzufügen, damit alle Widgets gerendert sind
+      // Check if we have arguments from exercise completion
+      if (Get.arguments != null &&
+          Get.arguments['exerciseCompleted'] == true &&
+          Get.arguments['isFirstInTimeWindow'] == true) {
+        // Advance step as this is the first exercise in the time window
+        advanceStep();
+      } else {
+        // Regular initialization - load progress normally
+        _loadProgressFromStatistics();
+      }
+
+      // After short delay, scroll to current chapter
       Future.delayed(const Duration(milliseconds: 300), () {
         if (currentStep > 0) {
           _scrollToCurrentChapter();
         }
       });
     });
-
-    // Load progress when screen opens
-    _loadProgressFromStatistics();
   }
 
   @override
@@ -440,21 +448,22 @@ class ProgressScreenState extends State<ProgressScreen>
       ),
 
       // Temporary manual trigger (remove in production)
-      floatingActionButton: FloatingActionButton(
-        onPressed: _isAnimating ? null : advanceStep,
-        backgroundColor: _isAnimating ? Colors.grey : tPrimaryColor,
-        child: _isAnimating
-            ? const SizedBox(
-          width: 20,
-          height: 20,
-          child: CircularProgressIndicator(
-            color: Colors.white,
-            strokeWidth: 2,
-          ),
-        )
-            : const Icon(Icons.arrow_forward),
-      ),
+    //   floatingActionButton: FloatingActionButton(
+    //     onPressed: _isAnimating ? null : advanceStep,
+    //     backgroundColor: _isAnimating ? Colors.grey : tPrimaryColor,
+    //     child: _isAnimating
+    //         ? const SizedBox(
+    //       width: 20,
+    //       height: 20,
+    //       child: CircularProgressIndicator(
+    //         color: Colors.white,
+    //         strokeWidth: 2,
+    //       ),
+    //     )
+    //         : const Icon(Icons.arrow_forward),
+    //   ),
     );
   }
 }
+
 

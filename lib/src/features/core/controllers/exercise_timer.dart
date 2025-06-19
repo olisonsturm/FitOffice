@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit_office/src/features/core/controllers/statistics_controller.dart';
 import 'package:get/get.dart';
 
+import '../screens/dashboard/dashboard.dart';
+
 class ExerciseTimerController extends GetxController {
   var isRunning = false.obs;
   var isPaused = false.obs;
@@ -20,6 +22,7 @@ class ExerciseTimerController extends GetxController {
 
   void stopAndSave({required bool shouldSave}) async {
     final user = FirebaseAuth.instance.currentUser;
+    bool isFirstExerciseInTimeWindow = false;
 
     if (user != null && shouldSave) {
       final now = DateTime.now();
@@ -38,6 +41,9 @@ class ExerciseTimerController extends GetxController {
         'duration': durationInSeconds,
         //in Sekunden --> am Tag dann 300 Sekunden ingesamt nötig, dass die Streak verlängert wird, bzw. die tägliche Mindestdauer erreicht/erfüllt wird
       });
+
+      // Check if this is the first exercise in the last 4 hours
+      isFirstExerciseInTimeWindow = await checkIfFirstExerciseInTimeWindow(user.uid);
 
       // Check and update streak - Fixed null safety
       if ((await statisticsController.isStreakActive(user.email!) == false) &&
@@ -62,6 +68,34 @@ class ExerciseTimerController extends GetxController {
     exerciseName.value = '';
     exerciseCategory.value = '';
     elapsed.value = Duration.zero;
+
+    // Navigate to dashboard with Progress tab selected
+    Get.offAll(
+            () => Dashboard(initialIndex: 0),
+        arguments: {
+          'exerciseCompleted': true,
+          'isFirstInTimeWindow': isFirstExerciseInTimeWindow
+        }
+    );
+  }
+
+// New method to check if this is the first exercise in the last 4 hours
+  Future<bool> checkIfFirstExerciseInTimeWindow(String userId) async {
+    final now = DateTime.now();
+    final fourHoursAgo = now.subtract(const Duration(hours: 4));
+
+    // Query for any completed exercises in the last 4 hours
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('exerciseLogs')
+        .where('endTime', isGreaterThan: Timestamp.fromDate(fourHoursAgo))
+        .orderBy('endTime', descending: true)
+        .limit(2)  // Get at most 2 to check if the current one is first
+        .get();
+
+    // If there's only 1 result (the one we just added), it's the first in 4 hours
+    return snapshot.docs.length <= 1;
   }
 
   @override

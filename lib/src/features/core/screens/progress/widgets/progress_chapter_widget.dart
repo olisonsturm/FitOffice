@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/sizes.dart';
+import 'package:lottie/lottie.dart';
 
 class ProgressChapterWidget extends StatelessWidget {
   final String title;
@@ -163,6 +164,20 @@ class ProgressChapterWidget extends StatelessWidget {
                     ),
                   );
                 }),
+
+                // Fox animation jumping between steps
+                if (currentStep >= startStep && currentStep < startStep + stepCount)
+                  AnimatedPositioned(
+                    duration: const Duration(milliseconds: 600),
+                    curve: Curves.easeInOut,
+                    left: pawPositions[(currentStep - startStep)].dx + (screenWidth) / 2 - 90,
+                    top: pawPositions[(currentStep - startStep)].dy - 65,
+                    child: Lottie.asset(
+                      'assets/lottie/FittyFuchsWaving.json',
+                      width: 150,
+                      height: 150,
+                    ),
+                  ),
               ],
             ),
           ),

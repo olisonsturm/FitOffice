@@ -127,6 +127,21 @@ class ProgressScreenState extends State<ProgressScreen>
     _controller.animateTo(nextStep, duration: const Duration(seconds: 1));
   }
 
+  // Updated advanceStep to trigger fox animation
+  void advanceStep() {
+    if (_controller.isAnimating) return;
+
+    final nextStep = _controller.value + 1.0 / (numberOfLevels - 1);
+
+    setState(() {
+      _controller.value = nextStep.clamp(0.0, 1.0);
+    });
+
+    // Trigger step animation
+    _controller.reset();
+    _controller.forward();
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;

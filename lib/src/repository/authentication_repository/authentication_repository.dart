@@ -44,7 +44,7 @@ class AuthenticationRepository extends GetxController {
   Future<void> setInitialScreen(User? user) async {
     if (user != null) {
 
-      user.emailVerified ? Get.offAll(() => const Dashboard()) : Get.offAll(() => const MailVerification());
+      user.emailVerified ? Get.offAll(() => const Dashboard(initialIndex: 1,)) : Get.offAll(() => const MailVerification());
     } else {
       // Check if it's the user's first time, then navigate accordingly
       userStorage.writeIfNull('isFirstTime', true);
