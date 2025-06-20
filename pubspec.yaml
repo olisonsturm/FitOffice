@@ -3,10 +3,8 @@ description: A stay fit in the office app.
 publish_to: 'none'
 version: 1.0.1
 
-
 environment:
   sdk: '>=3.2.0 <4.0.0'
-
 
 dependencies:
   flutter:
@@ -23,9 +21,6 @@ dependencies:
   liquid_swipe: ^3.0.0
   smooth_page_indicator: ^1.1.0
 
-  ## -- OTP TEXT FIELD PACKAGE
-  flutter_otp_text_field: ^1.1.1
-
   ## -- FIREBASE PACKAGES
   firebase_core: ^3.13.0
   firebase_auth: ^5.5.2
@@ -37,12 +32,13 @@ dependencies:
   line_awesome_flutter: ^3.0.1
   flutter_native_splash: ^2.4.0
   string_similarity: ^2.1.1
-  supabase_flutter: ^2.8.4
-  image_picker: ^1.1.2
 
-  ## -- New Packages
+  ## -- AVATAR PACKAGES
+  image_picker: ^1.1.2
   crop_your_image: ^2.0.0
   cached_network_image: ^3.4.0
+
+  ## -- Utilities
   video_player: ^2.9.5
   chewie: ^1.10.0
   auto_size_text: ^3.0.0
@@ -63,16 +59,16 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.3
 
 ## -- Overrides
-dependency_overrides:
-  async: ^2.13.0
-  vector_math: ^2.1.5
-  fake_async: ^1.3.3
-  leak_tracker: ^11.0.1
-  leak_tracker_flutter_testing: ^3.0.10
-  leak_tracker_testing: ^3.0.2
-  lints: ^6.0.0
-  material_color_utilities: ^0.12.0
-  vm_service: ^15.0.0
+#dependency_overrides:
+#  async: ^2.13.0
+#  vector_math: ^2.1.5
+#  fake_async: ^1.3.3
+#  leak_tracker: ^11.0.1
+#  leak_tracker_flutter_testing: ^3.0.10
+#  leak_tracker_testing: ^3.0.2
+#  lints: ^6.0.0
+#  material_color_utilities: ^0.12.0
+#  vm_service: ^15.0.0
 
 flutter:
   uses-material-design: true
