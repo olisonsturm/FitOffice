@@ -11,6 +11,20 @@ import '../../../controllers/friends_controller.dart';
 
 /// Screen that allows the current user to search for other users to add as friends,
 /// view their friendship status, send friend requests, withdraw requests, or remove friends.
+///
+/// Features:
+/// - Search users by username with a minimum of 2 characters.
+/// - Displays friendship status per user: accepted, pending, or none.
+/// - Allows sending friend requests to users not yet friends.
+/// - Allows withdrawing pending friend requests.
+/// - Allows removing friends.
+/// - Shows confirmation dialogs before withdrawing or removing.
+/// - Navigates to detailed friend profile screens.
+///
+/// This screen uses Firestore to query users and friendship data, and FirebaseAuth to
+/// retrieve the current user's email.
+///
+/// The UI reacts dynamically to search input, friendship status, and loading state.
 class AddFriendsScreen extends StatefulWidget {
   final String currentUserId;
 

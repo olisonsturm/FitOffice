@@ -6,6 +6,11 @@ import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
 /// A dialog widget that provides UI and functionality to delete a specific exercise.
+///
+/// It shows a confirmation dialog with the exercise name, and upon confirmation,
+/// deletes the exercise document from Firestore along with its associated video
+/// in Firebase Storage (if any). It also deletes related exercise logs.
+/// Optionally triggers an [onSuccess] callback after successful deletion.
 class DeleteExerciseDialog extends StatefulWidget {
   final Map<String, dynamic> exercise;
   final String exerciseName;

@@ -8,6 +8,13 @@ import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 
 /// A page that allows creating a new user or editing an existing user's details.
+///
+/// Displays a form with fields for full name, username, email, password (only on create),
+/// role selection, and fitness level. Supports form validation and communicates with
+/// backend controllers to update or create users.
+///
+/// When editing an existing user, disables email editing and password entry.
+/// Shows a confirmation dialog before saving changes.
 class EditUserPage extends StatefulWidget {
   final UserModel? user;
 

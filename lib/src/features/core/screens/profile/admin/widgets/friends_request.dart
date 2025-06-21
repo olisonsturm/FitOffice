@@ -8,6 +8,16 @@ import 'package:get/get.dart';
 import '../../widgets/avatar.dart';
 
 /// A widget that displays a list of incoming friend requests for the current user.
+///
+/// Shows a loading indicator while requests are being fetched.
+/// If there are no requests, displays a placeholder message.
+/// Otherwise, shows a scrollable list of friend requests with sender info and
+/// buttons to accept or deny each request.
+///
+/// Uses the [FriendsController] to access friend request data and respond to requests.
+///
+/// The widget automatically rebuilds when the friend requests or loading status changes,
+/// thanks to the use of `Obx` from GetX for reactive state management.
 class FriendRequestsWidget extends StatefulWidget {
   final String currentUserId;
 

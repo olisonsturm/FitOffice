@@ -1,6 +1,20 @@
 import 'package:flutter/material.dart';
 
 /// A customizable save button widget that visually indicates whether there are unsaved changes.
+///
+/// The button is enabled only when [hasChanges] is true. When enabled, it calls the provided
+/// [onPressed] callback when tapped. When disabled, it appears greyed out and is not tappable.
+///
+/// The button displays an icon and a label side by side, and has a subtle container styling
+/// with rounded corners and shadow to make it stand out.
+///
+/// Example usage:
+/// ```dart
+/// SaveButton(
+///   hasChanges: _formHasChanges,
+///   onPressed: _saveData,
+///   label: 'Save Changes',
+/// )
 class SaveButton extends StatelessWidget {
   final bool hasChanges;
   final VoidCallback? onPressed;

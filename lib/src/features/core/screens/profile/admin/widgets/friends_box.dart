@@ -11,6 +11,29 @@ import '../../widgets/avatar.dart';
 
 /// A widget that displays the current user's friends list in a card-like box,
 /// supporting both a preview (up to 3 friends) and an expanded view.
+///
+/// This widget reacts to changes from the [FriendsController] (using GetX),
+/// and supports deleting friends or canceling pending requests with a confirmation dialog.
+///
+/// Friends are displayed in a list with their avatar, name, and an action icon:
+/// - If the friendship is accepted: shows a remove icon.
+/// - If the request is pending: shows a cancel icon.
+///
+/// ### Parameters:
+/// - [currentUserId] – The ID of the current user to fetch and manage friends.
+///
+/// ### Example:
+/// ```dart
+/// FriendsBoxWidget(currentUserId: userId)
+/// ```
+///
+/// This widget should be placed inside a scrollable container or column.
+///
+/// ### Features:
+/// - Localized text using [AppLocalizations].
+/// - Responsive dark/light theme.
+/// - Dynamic display of friends list (preview or full).
+/// - Actionable friend management (remove/cancel request).
 class FriendsBoxWidget extends StatefulWidget {
   final String currentUserId;
 

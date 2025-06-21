@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 import '../add_friends.dart';
 
-/// A widget that displays a styled button to add friends.
+/// A widget that displays a styled button to add friends,
+/// alongside a secondary share icon button.
+///
+/// This widget is used to navigate to the [AddFriendsScreen] when the
+/// primary button is pressed. The secondary icon button (share)
+/// currently has no assigned behavior.
 class AddFriendsButton extends StatelessWidget {
   final String currentUserId;
 

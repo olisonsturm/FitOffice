@@ -15,11 +15,29 @@ import '../../../controllers/exercise_controller.dart';
 import '../../dashboard/widgets/video_player.dart';
 
 /// A form widget for creating or editing an exercise.
+///
+/// This form allows the user to input details such as exercise name, description,
+/// category, and optionally upload a video demonstrating the exercise. It supports
+/// localization by managing separate fields for English and default language.
+///
+/// When in edit mode, it initializes the form fields with the existing exercise data.
+/// It also handles video playback, upload, and deletion.
+///
+/// Validation ensures required fields are filled before submission.
 class ExerciseForm extends StatefulWidget {
+  /// The exercise data map when editing an existing exercise.
   final Map<String, dynamic>? exercise;
+
+  /// The name of the exercise being edited.
   final String? exerciseName;
+
+  /// Flag indicating if the form is in edit mode or create mode.
   final bool isEdit;
 
+  /// Creates an ExerciseForm.
+  ///
+  /// [exercise] and [exerciseName] are used when editing an existing exercise.
+  /// [isEdit] must be set to true for editing, false for creating a new exercise.
   const ExerciseForm(
       {super.key, this.exercise, this.exerciseName, required this.isEdit});
 
@@ -206,7 +224,8 @@ class _ExerciseFormState extends State<ExerciseForm> {
           exerciseController.deleteVideoByUrl(_videoToDelete!);
         } catch (e) {
           if (mounted) {
-            _showSnackbar('${AppLocalizations.of(context)!.tDeleteVideoFailed}: $e');
+            _showSnackbar(
+                '${AppLocalizations.of(context)!.tDeleteVideoFailed}: $e');
           }
         }
       }
@@ -294,7 +313,8 @@ class _ExerciseFormState extends State<ExerciseForm> {
     super.initState();
     if (widget.isEdit && widget.exercise != null) {
       _nameController = TextEditingController(text: widget.exercise!['name']);
-      _nameEnController = TextEditingController(text: widget.exercise!['name_en']);
+      _nameEnController =
+          TextEditingController(text: widget.exercise!['name_en']);
       _descriptionController =
           TextEditingController(text: widget.exercise!['description']);
       _descriptionEnController =
@@ -346,7 +366,9 @@ class _ExerciseFormState extends State<ExerciseForm> {
     final localisation = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.isEdit ? localisation.tEditExerciseHeading : localisation.tAddExercisesHeader),
+        title: Text(widget.isEdit
+            ? localisation.tEditExerciseHeading
+            : localisation.tAddExercisesHeader),
         backgroundColor: tPrimaryColor,
         elevation: 0,
         scrolledUnderElevation: 0,
@@ -419,35 +441,36 @@ class _ExerciseFormState extends State<ExerciseForm> {
             ),
           ),
           const SizedBox(height: 12),
-              TextField(
-                controller: _nameEnController,
-                decoration: InputDecoration(
-                  labelText: "${localisation.tName}${localisation.tEnglish}",
-                  labelStyle: TextStyle(color: tBottomNavBarSelectedColor),
-                  floatingLabelStyle: TextStyle(
-                      color: tBottomNavBarSelectedColor,
-                      fontWeight: FontWeight.bold),
-                  filled: true,
-                  fillColor: isDarkMode ? Colors.grey[850] : tWhiteColor,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                        color: isDarkMode ? Colors.white24 : Colors.black12),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide:
-                    BorderSide(color: tBottomNavBarSelectedColor, width: 2),
-                  ),
-                ),
+          TextField(
+            controller: _nameEnController,
+            decoration: InputDecoration(
+              labelText: "${localisation.tName}${localisation.tEnglish}",
+              labelStyle: TextStyle(color: tBottomNavBarSelectedColor),
+              floatingLabelStyle: TextStyle(
+                  color: tBottomNavBarSelectedColor,
+                  fontWeight: FontWeight.bold),
+              filled: true,
+              fillColor: isDarkMode ? Colors.grey[850] : tWhiteColor,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                    color: isDarkMode ? Colors.white24 : Colors.black12),
               ),
-              const SizedBox(height: 12),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide:
+                    BorderSide(color: tBottomNavBarSelectedColor, width: 2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
           TextField(
               controller: _descriptionController,
               maxLines: 5,
               style: TextStyle(color: isDarkMode ? tWhiteColor : tBlackColor),
               decoration: InputDecoration(
-                labelText: "${localisation.tDescription}${localisation.tGerman}",
+                labelText:
+                    "${localisation.tDescription}${localisation.tGerman}",
                 labelStyle: TextStyle(color: tBottomNavBarSelectedColor),
                 floatingLabelStyle: TextStyle(
                     color: tBottomNavBarSelectedColor,
@@ -466,30 +489,31 @@ class _ExerciseFormState extends State<ExerciseForm> {
                 ),
               )),
           const SizedBox(height: 12),
-              TextField(
-                  controller: _descriptionEnController,
-                  maxLines: 5,
-                  style: TextStyle(color: isDarkMode ? tWhiteColor : tBlackColor),
-                  decoration: InputDecoration(
-                    labelText: "${localisation.tDescription}${localisation.tEnglish}",
-                    labelStyle: TextStyle(color: tBottomNavBarSelectedColor),
-                    floatingLabelStyle: TextStyle(
-                        color: tBottomNavBarSelectedColor,
-                        fontWeight: FontWeight.bold),
-                    filled: true,
-                    fillColor: isDarkMode ? Colors.grey[850] : tWhiteColor,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                          color: isDarkMode ? Colors.white24 : Colors.black12),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide:
+          TextField(
+              controller: _descriptionEnController,
+              maxLines: 5,
+              style: TextStyle(color: isDarkMode ? tWhiteColor : tBlackColor),
+              decoration: InputDecoration(
+                labelText:
+                    "${localisation.tDescription}${localisation.tEnglish}",
+                labelStyle: TextStyle(color: tBottomNavBarSelectedColor),
+                floatingLabelStyle: TextStyle(
+                    color: tBottomNavBarSelectedColor,
+                    fontWeight: FontWeight.bold),
+                filled: true,
+                fillColor: isDarkMode ? Colors.grey[850] : tWhiteColor,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                      color: isDarkMode ? Colors.white24 : Colors.black12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide:
                       BorderSide(color: tBottomNavBarSelectedColor, width: 2),
-                    ),
-                  )),
-              const SizedBox(height: 12),
+                ),
+              )),
+          const SizedBox(height: 12),
           DropdownButtonFormField<String>(
             value: _selectedCategory,
             decoration: InputDecoration(
@@ -637,7 +661,8 @@ class _ExerciseFormState extends State<ExerciseForm> {
                                     });
 
                                     _checkIfChanged();
-                                    _showSnackbar(localisation.tVideoDeleteSuccess);
+                                    _showSnackbar(
+                                        localisation.tVideoDeleteSuccess);
                                   },
                                   iconSize: 28,
                                   padding: EdgeInsets.zero,
