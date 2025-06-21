@@ -13,6 +13,7 @@ import 'package:fit_office/src/features/core/screens/profile/admin/widgets/confi
 
 import '../statistics/widgets/statistics.dart';
 
+/// A screen that displays the profile details of a friend or another user.
 class FriendProfile extends StatefulWidget {
   final String userName;
   final bool isFriend;
@@ -39,6 +40,9 @@ class _FriendProfileState extends State<FriendProfile> {
     isPendingLocal = widget.isPending ?? false;
   }
 
+  /// Fetches the user data from Firestore by username.
+  ///
+  /// Throws an exception with a localized message if the user is not found.
   Future<UserModel> getFriend(String userName) async {
     final localizations = AppLocalizations.of(context)!;
     final querySnapshot = await FirebaseFirestore.instance
@@ -54,6 +58,9 @@ class _FriendProfileState extends State<FriendProfile> {
     }
   }
 
+  /// Formats a Firestore [Timestamp] to a human-readable date string.
+  ///
+  /// Returns the date formatted as 'dd.MM.yyyy'.
   String formatTimestamp(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();
     return DateFormat('dd.MM.yyyy').format(dateTime);

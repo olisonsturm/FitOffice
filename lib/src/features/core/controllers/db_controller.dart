@@ -12,6 +12,7 @@ class DbController {
   late UserModel user;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  /// Gets steps of active streak of user.
   Future<String?> fetchActiveStreakSteps(BuildContext context) async {
     final localizations = AppLocalizations.of(context)!;
     final userId = user.id;
@@ -44,12 +45,14 @@ class DbController {
     return "0";
   }
 
+  /// Converts timestamp to string.
   String timestampToString(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();
     String formattedDate = DateFormat('dd.MM.yyyy HH:mm').format(dateTime);
     return formattedDate;
   }
 
+  /// Counts exercise of one category.
   Future<String> getNumberOfExercisesByCategory(String category) async {
     final numberOfExercisesByCategory = await firestore
         .collection('exercises')
@@ -59,6 +62,7 @@ class DbController {
     return numberOfExercisesByCategory.count.toString();
   }
 
+  /// Returns all exercises matching exerciseName.
   Future<List<Map<String, dynamic>>> getExercises(String exerciseName) async {
     final snapshot = await firestore.collection('exercises').get();
     final prefs = await SharedPreferences.getInstance();
@@ -91,6 +95,7 @@ class DbController {
     return results;
   }
 
+  /// Returns all exercises of one category.
   Future<List<Map<String, dynamic>>> getAllExercisesOfCategory(
       String categoryName) async {
     final snapshot = await firestore
@@ -101,6 +106,7 @@ class DbController {
     return snapshot.docs.map((doc) => doc.data()).toList();
   }
 
+  /// Returns all favourite exercises of a user.
   Future<List<Map<String, dynamic>>> getFavouriteExercises(String email) async {
     final userQuery = await firestore
         .collection('users')
@@ -129,6 +135,7 @@ class DbController {
     return exerciseList;
   }
 
+  /// Adds an exercise to favourite exercises of a user.
   Future<void> addFavorite(String email, String exerciseName) async {
     final exerciseQuery = await firestore
         .collection('exercises')
@@ -147,19 +154,18 @@ class DbController {
 
     final userDoc = userQuery.docs.first;
 
-    // ➔ Jetzt prüfen, ob die Favorit bereits existiert!
     final favoriteQuery = await userDoc.reference
         .collection('favorites')
         .where('exercise', isEqualTo: exerciseRef)
         .get();
 
     if (favoriteQuery.docs.isEmpty) {
-      // Nur wenn noch nicht vorhanden, hinzufügen!
       await userDoc.reference.collection('favorites').add(
           {'exercise': exerciseRef, 'addedAt': FieldValue.serverTimestamp()});
     }
   }
 
+  /// Removes exercise from favourites of a user.
   Future<void> removeFavorite(String email, String exerciseName) async {
     final exerciseQuery = await firestore
         .collection('exercises')
@@ -190,6 +196,7 @@ class DbController {
     await favoriteQuery.docs.first.reference.delete();
   }
 
+  /// Deletes user.
   Future<void> deleteUser(String userEmail) async {
     final snapshot = await firestore
         .collection('users')
@@ -200,6 +207,7 @@ class DbController {
     await userRef.delete();
   }
 
+  /// Updates user data.
   Future<void> updateUser(UserModel user) async {
     final query = await FirebaseFirestore.instance
         .collection('users')
@@ -215,11 +223,13 @@ class DbController {
     }
   }
 
+  /// Returns list of all users.
   Future<List<UserModel>> getAllUsers() async {
     final snapshot = await firestore.collection('users').get();
     return snapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).toList();
   }
 
+  /// Returns all exercises.
   Future<List<Map<String, dynamic>>> getAllExercises() async {
     try {
       final snapshot =
@@ -230,6 +240,7 @@ class DbController {
     }
   }
 
+  /// Returns exercises filtered by category or returns favourites.
   Future<Map<String, dynamic>> getFilteredExercises({
     required String email,
     String? category,
@@ -259,6 +270,7 @@ class DbController {
     };
   }
 
+  /// Changes favourite status of exercise to the opposite of current status.
   Future<void> toggleFavorite({
     required String email,
     required String exerciseName,
@@ -271,6 +283,7 @@ class DbController {
     }
   }
 
+  /// Deletes all logged instances of exercise.
   Future<void> deleteExciseLogsOfExercise(String exerciseName) async {
     final usersSnapshot = await firestore.collection('users').get();
 
@@ -288,6 +301,7 @@ class DbController {
     }
   }
 
+  /// Gets exercise including all information.
   Future<Map<String, dynamic>?> getExerciseByName(String name) async {
     final snapshot = await firestore
         .collection('exercises')

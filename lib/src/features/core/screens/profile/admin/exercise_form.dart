@@ -14,6 +14,7 @@ import '../../../../../constants/text_strings.dart';
 import '../../../controllers/exercise_controller.dart';
 import '../../dashboard/widgets/video_player.dart';
 
+/// A form widget for creating or editing an exercise.
 class ExerciseForm extends StatefulWidget {
   final Map<String, dynamic>? exercise;
   final String? exerciseName;
@@ -65,6 +66,9 @@ class _ExerciseFormState extends State<ExerciseForm> {
     'Mind': tMental,
   };
 
+  /// Initializes the video player for editing mode using the provided video URL.
+  ///
+  /// Checks for valid URLs before initializing the player.
   Future<void> initVideoPlayerEditVideo(String? url) async {
     if (url == null || url.isEmpty) return;
 
@@ -90,6 +94,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
     }
   }
 
+  /// Resets the form fields and video player state to initial empty values.
   void _resetForm() {
     _nameEnController.clear();
     _descriptionEnController.clear();
@@ -108,6 +113,9 @@ class _ExerciseFormState extends State<ExerciseForm> {
     });
   }
 
+  /// Shows a confirmation dialog before saving or adding the exercise.
+  ///
+  /// Calls [_saveExercise] if editing, [_addExercise] if creating.
   void _showConfirmationDialog(bool isEdit) {
     showConfirmationDialogModel(
       context: context,
@@ -117,6 +125,10 @@ class _ExerciseFormState extends State<ExerciseForm> {
     );
   }
 
+  /// Adds a new exercise with the current form data.
+  ///
+  /// Uploads video if selected, validates required fields, shows loading state,
+  /// and resets the form upon success.
   Future<void> _addExercise() async {
     final localizations = AppLocalizations.of(context)!;
     final name = _nameController.text.trim();
@@ -165,6 +177,10 @@ class _ExerciseFormState extends State<ExerciseForm> {
     if (mounted) setState(() => isLoading = false);
   }
 
+  /// Saves updates to an existing exercise.
+  ///
+  /// Handles video deletion, uploading, and updates the exercise data in the database.
+  /// Validates required fields and shows feedback via snackbar.
   void _saveExercise() async {
     final name = _nameController.text.trim();
     final description = _descriptionController.text.trim();
@@ -231,10 +247,13 @@ class _ExerciseFormState extends State<ExerciseForm> {
     setState(() => isLoading = false);
   }
 
+  /// Called when any form input changes; used to update the UI.
   void _onFormChanged() {
     setState(() {});
   }
 
+  /// Checks if any of the form fields or video selection have changed
+  /// compared to the original loaded exercise data.
   void _checkIfChanged() {
     final name = _nameController.text.trim();
     final nameEn = _nameEnController.text.trim();
@@ -263,6 +282,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
     }
   }
 
+  /// Displays a snackbar with the given [message].
   void _showSnackbar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),

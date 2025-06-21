@@ -7,6 +7,12 @@ import 'package:get/get.dart';
 import '../../../../authentication/models/user_model.dart';
 import '../../../controllers/profile_controller.dart';
 
+/// A widget that displays various fitness statistics related to a user.
+///
+/// The widget fetches user data and displays multiple statistic cards,
+/// including streak information, last exercise time/duration, top exercises,
+/// and longest streak. It can show statistics for the currently logged-in user
+/// or for a specified user email.
 class StatisticsWidget extends StatelessWidget {
   const StatisticsWidget({
     super.key,

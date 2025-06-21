@@ -10,8 +10,10 @@ import '../../controllers/profile_controller.dart';
 import '../dashboard/widgets/categories.dart';
 import '../dashboard/widgets/search.dart';
 
+/// Global key used to access the state of [LibraryScreenState] from outside the widget tree.
 final GlobalKey<LibraryScreenState> libraryKey = GlobalKey<LibraryScreenState>();
 
+/// A screen displaying the user's exercise library, including search and category-based filtering.
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
 
@@ -36,12 +38,15 @@ class LibraryScreenState extends State<LibraryScreen> {
 
   String favoriteCount = '';
 
+  /// Forces the app to unfocus any input fields when returning from another screen.
   void forceRedirectFocus() {
     if (!wasSearchFocusedBeforeNavigation && mounted) {
       FocusScope.of(context).unfocus();
     }
   }
 
+  /// Handles logic after returning from an exercise screen,
+  /// restoring or removing focus based on previous state.
   void handleReturnedFromExercise() {
     if (!wasSearchFocusedBeforeNavigation) {
       removeSearchFocus();
@@ -50,6 +55,7 @@ class LibraryScreenState extends State<LibraryScreen> {
     }
   }
 
+  /// Removes focus from the search box and resets focus state.
   void removeSearchFocus() {
     FocusScope.of(context).unfocus();
     _searchBoxKey.currentState?.removeFocus();
@@ -58,20 +64,7 @@ class LibraryScreenState extends State<LibraryScreen> {
     });
   }
 
-  //TODO: Unused by now
-  // void _toggleFavorite(String exerciseName) async {
-  //   final user = await _profileController.getUserData();
-  //   final isFavorite = _userFavorites.contains(exerciseName);
-  //
-  //   if (isFavorite) {
-  //     await _dbController.removeFavorite(user.email, exerciseName);
-  //   } else {
-  //     await _dbController.addFavorite(user.email, exerciseName);
-  //   }
-  //
-  //   _loadUserFavorites();
-  // }
-
+  /// Loads the user's favorite exercises and updates the UI to show the count.
   void _loadUserFavorites() async {
     final user = await _profileController.getUserData();
     final userFavorites = await _dbController.getFavouriteExercises(user.email);
@@ -94,6 +87,7 @@ class LibraryScreenState extends State<LibraryScreen> {
     _loadUserFavorites();
   }
 
+  /// Loads the currently authenticated user's data into [_user].
   void _loadUserData() async {
     final userData = await _controller.getUserData();
     setState(() {
@@ -138,7 +132,7 @@ class LibraryScreenState extends State<LibraryScreen> {
               ),
             ),
 
-            // Sticky SearchBar
+            /// Sticky search bar with text input and listeners
             SliverPersistentHeader(
               pinned: true,
               delegate: _StickySearchBar(
@@ -186,7 +180,7 @@ class LibraryScreenState extends State<LibraryScreen> {
               ),
             ),
 
-            // Kategorien + All Exercises
+            /// Main dashboard content (categories + exercises)
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.only(
@@ -212,11 +206,14 @@ class LibraryScreenState extends State<LibraryScreen> {
   }
 }
 
+/// A custom sticky header used to display the search bar.
+/// This delegate ensures the header stays visible while scrolling.
 class _StickySearchBar extends SliverPersistentHeaderDelegate {
   @override
   final double minExtent;
   @override
   final double maxExtent;
+  /// The widget to render inside the sticky header.
   final Widget child;
 
   _StickySearchBar({

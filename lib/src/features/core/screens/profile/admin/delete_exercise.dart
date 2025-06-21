@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// A dialog widget that provides UI and functionality to delete a specific exercise.
 class DeleteExerciseDialog extends StatefulWidget {
   final Map<String, dynamic> exercise;
   final String exerciseName;
@@ -25,6 +26,9 @@ class _DeleteExerciseDialogState extends State<DeleteExerciseDialog> {
   bool isDeleting = false;
   final dbController = DbController();
 
+  /// Deletes the exercise document and associated video (if any) from Firestore and Firebase Storage.
+  /// Also deletes related exercise logs.
+  /// Shows a success message on completion or error message on failure.
   Future<void> _deleteExercise() async {
     setState(() => isDeleting = true);
 
@@ -62,7 +66,7 @@ class _DeleteExerciseDialogState extends State<DeleteExerciseDialog> {
       if (mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Fehler: $e')),
+          SnackBar(content: Text('$e')),
         );
       }
     }

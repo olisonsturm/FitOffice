@@ -9,6 +9,8 @@ import 'package:get/get.dart';
 
 import '../../widgets/avatar.dart';
 
+/// A widget that displays the current user's friends list in a card-like box,
+/// supporting both a preview (up to 3 friends) and an expanded view.
 class FriendsBoxWidget extends StatefulWidget {
   final String currentUserId;
 
@@ -25,7 +27,6 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
   @override
   void initState() {
     super.initState();
-    // Initialisiere Streams für den aktuellen Benutzer
     _friendsController.initStreamsForUser(widget.currentUserId);
   }
 
@@ -48,7 +49,6 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
             ),
             const Spacer(),
             Obx(() {
-              // Zeige Show All/Show Less nur, wenn es mehr als 3 Freunde gibt
               if (_friendsController.friends.length > 3) {
                 return TextButton(
                   onPressed: () => setState(() => showAll = !showAll),
@@ -67,7 +67,6 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
         ),
         const SizedBox(height: 8),
 
-        // Verwenden von Obx für automatische Aktualisierung
         Obx(() {
           if (_friendsController.isLoadingFriends.value) {
             return const Center(child: CircularProgressIndicator(color: tPrimaryColor));
@@ -92,18 +91,16 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
               ),
             );
           } else {
-            // Anzeigen von Freunden, entweder alle oder nur die ersten 3
             final displayedFriends = showAll
                 ? _friendsController.friends
                 : _friendsController.friends.take(3).toList();
 
-            // Berechne Höhe basierend auf Anzahl der anzuzeigenden Freunde
             double? containerHeight;
             if (!showAll && _friendsController.friends.isNotEmpty) {
               final itemsToShow = _friendsController.friends.length > 3
                   ? 3
                   : _friendsController.friends.length;
-              containerHeight = itemsToShow * 56.0; // Standard-ListTile Höhe
+              containerHeight = itemsToShow * 56.0;
             }
 
             return Container(
@@ -189,6 +186,7 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
     );
   }
 
+  /// Displays a confirmation dialog for removing a friend or canceling a pending request.
   void _showDeleteConfirmationDialog(String userName, bool isPending) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
@@ -221,7 +219,6 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                 : TDialogTheme.getLightDeleteButtonStyle(),
             onPressed: () async {
               Navigator.of(context).pop();
-              // E-Mail-Adresse des aktuellen Benutzers aus Firestore
               final userDoc = await FirebaseFirestore.instance
                   .collection('users')
                   .doc(widget.currentUserId)
@@ -231,13 +228,7 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                 final userData = userDoc.data() as Map<String, dynamic>;
                 final userEmail = userData['email'] as String;
 
-                try {
-                  // Verwende den Controller zum Löschen der Freundschaft
-                  // Die Erfolgsmeldung wird nun direkt im Controller angezeigt
-                  await _friendsController.removeFriendship(userEmail, userName, context);
-                } catch (e) {
-                  // Fehlerbehandlung wurde in den Controller verschoben
-                }
+                await _friendsController.removeFriendship(userEmail, userName, context);
               }
             },
             child: Text(

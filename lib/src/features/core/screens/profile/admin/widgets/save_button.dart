@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// A customizable save button widget that visually indicates whether there are unsaved changes.
 class SaveButton extends StatelessWidget {
   final bool hasChanges;
   final VoidCallback? onPressed;

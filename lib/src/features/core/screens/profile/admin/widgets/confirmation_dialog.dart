@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/text_strings.dart';
 import 'package:fit_office/src/utils/theme/widget_themes/dialog_theme.dart';
 
+/// Displays a customizable confirmation dialog with `confirm` and `cancel` actions.
 void showConfirmationDialogModel(
     {required BuildContext context,
     required String title,

@@ -8,19 +8,23 @@ import 'package:get/get.dart';
 
 import '../../authentication/models/user_model.dart';
 
+/// A controller for managing friendships and friend requests.
+///
+/// Handles listening to Firestore updates, maintains the list of friends
+/// and friend requests, and provides methods for sending, accepting,
+/// denying, and removing friendships.
 class FriendsController extends GetxController {
   static FriendsController get instance => Get.find();
 
-  // Reaktive Variablen für Freunde und Anfragen
   final friends = <Map<String, dynamic>>[].obs;
   final friendRequests = <DocumentSnapshot>[].obs;
   final isLoadingFriends = true.obs;
   final isLoadingRequests = true.obs;
 
-  // Stream-Subscriptions für automatische Updates
   StreamSubscription<QuerySnapshot>? _friendsSubscription;
   StreamSubscription<QuerySnapshot>? _requestsSubscription;
 
+  /// Cancels active stream subscriptions when the controller is disposed.
   @override
   void onClose() {
     _friendsSubscription?.cancel();
@@ -28,43 +32,39 @@ class FriendsController extends GetxController {
     super.onClose();
   }
 
-  // Methode zum Initialisieren der Streams für einen bestimmten Benutzer
+  /// Initializes Firestore listeners for the given [userId].
   void initStreamsForUser(String userId) {
     listenToFriendships(userId);
     listenToFriendRequests(userId);
   }
 
-  // Stream für Freundschaften eines Benutzers
+  /// Listens for changes to friendship documents where [userId] is involved.
+  ///
+  /// Updates the [friends] list with accepted or pending friends.
   void listenToFriendships(String userId) {
     isLoadingFriends.value = true;
-    friends.clear(); // Liste leeren, bevor wir sie neu befüllen
+    friends.clear();
 
     final userRef = FirebaseFirestore.instance
         .collection('users')
         .doc(userId);
     final friendshipsRef = FirebaseFirestore.instance.collection('friendships');
 
-    // Als Sender: akzeptierte Freundschaften und ausstehende Anfragen (die ich gesendet habe)
     final senderQuery = friendshipsRef
         .where('sender', isEqualTo: userRef)
         .where('status', whereIn: ['accepted', 'pending'])
         .snapshots();
 
-    // Als Empfänger: NUR akzeptierte Freundschaften (keine ausstehenden Anfragen)
     final receiverQuery = friendshipsRef
         .where('receiver', isEqualTo: userRef)
         .where('status', isEqualTo: 'accepted')
         .snapshots();
 
-    // Verarbeite beide Streams
-    _friendsSubscription?.cancel(); // Alte Subscription beenden
+    _friendsSubscription?.cancel();
 
-    // Verwende einen kombinierten Ansatz für beide Streams
     _friendsSubscription = senderQuery.listen((senderSnapshot) async {
-      // Zuerst Sender-Daten verarbeiten
       List<DocumentSnapshot> allDocs = List.from(senderSnapshot.docs);
 
-      // Jetzt auch den zweiten Stream manuell abfragen und hinzufügen
       final receiverDocs = await friendshipsRef
           .where('receiver', isEqualTo: userRef)
           .where('status', isEqualTo: 'accepted')
@@ -72,10 +72,8 @@ class FriendsController extends GetxController {
 
       allDocs.addAll(receiverDocs.docs);
 
-      // Alle Daten auf einmal verarbeiten
       await _processNewFriendData(userId, allDocs);
 
-      // Dann auf Änderungen hören
       receiverQuery.listen((receiverSnapshot) async {
         List<DocumentSnapshot> combinedDocs = List.from(senderSnapshot.docs);
         combinedDocs.addAll(receiverSnapshot.docs);
@@ -84,23 +82,24 @@ class FriendsController extends GetxController {
     });
   }
 
-  // Stream für Freundschaftsanfragen eines Benutzers
+  /// Listens for incoming friend requests directed at [userId].
+  ///
+  /// Populates the [friendRequests] list with pending requests.
   void listenToFriendRequests(String userId) {
     isLoadingRequests.value = true;
-    friendRequests.clear(); // Liste leeren, bevor wir sie neu befüllen
+    friendRequests.clear();
 
     final userRef = FirebaseFirestore.instance
         .collection('users')
         .doc(userId);
     final friendshipsRef = FirebaseFirestore.instance.collection('friendships');
 
-    // Stream für eingehende Anfragen
     final requestsQuery = friendshipsRef
         .where('receiver', isEqualTo: userRef)
         .where('status', isEqualTo: 'pending')
         .snapshots();
 
-    _requestsSubscription?.cancel(); // Alte Subscription beenden
+    _requestsSubscription?.cancel();
 
     _requestsSubscription = requestsQuery.listen((snapshot) {
       friendRequests.value = snapshot.docs;
@@ -108,40 +107,39 @@ class FriendsController extends GetxController {
     });
   }
 
-  // Verarbeitung neuer Freundschaftsdaten
+  /// Processes friendship documents and updates the [friends] list.
+  ///
+  /// [userId] is the current user; [docs] are Firestore friendship documents.
   Future<void> _processNewFriendData(String userId, List<DocumentSnapshot> docs) async {
-    // Erstelle eine neue Liste für aktualisierte Freunde
     final List<Map<String, dynamic>> updatedFriends = [];
 
-    // Sammle zunächst alle gültigen Dokumente
     for (var doc in docs) {
       final data = doc.data() as Map<String, dynamic>;
       final DocumentReference otherUserRef;
 
-      // Bestimme, wer der andere Benutzer ist
       if ((data['sender'] as DocumentReference).id == userId) {
         otherUserRef = data['receiver'] as DocumentReference;
       } else {
         otherUserRef = data['sender'] as DocumentReference;
       }
 
-      // Lade Daten des anderen Benutzers
       final otherUserSnap = await otherUserRef.get();
       if (otherUserSnap.exists) {
         final userData = otherUserSnap.data() as Map<String, dynamic>;
         userData['friendshipDocId'] = doc.id;
         userData['status'] = data['status'];
 
-        // Füge zu unserer aktualisierten Liste hinzu
         updatedFriends.add(userData);
       }
     }
 
-    // Ersetze die gesamte Liste mit der aktualisierten Liste
     friends.value = updatedFriends;
     isLoadingFriends.value = false;
   }
 
+  /// Sends a friend request from [senderEmail] to [receiverUserName].
+  ///
+  /// Displays a success, error, or warning snackbar depending on the outcome.
   Future<void> sendFriendRequest(
       String senderEmail, String receiverUserName, BuildContext context) async {
     final usersRef = FirebaseFirestore.instance.collection('users');
@@ -163,7 +161,6 @@ class FriendsController extends GetxController {
     final senderRef = senderQuery.docs.first.reference;
     final receiverRef = receiverQuery.docs.first.reference;
 
-    // Prüfe, ob bereits eine Freundschaftsanfrage existiert
     final existing = await FirebaseFirestore.instance
         .collection('friendships')
         .where(Filter.or(
@@ -179,7 +176,6 @@ class FriendsController extends GetxController {
         .get();
 
     if (existing.docs.isEmpty) {
-      // Erstelle eine neue Freundschaftsanfrage
       final docRef = await FirebaseFirestore.instance.collection('friendships').add({
         'sender': senderRef,
         'receiver': receiverRef,
@@ -187,10 +183,8 @@ class FriendsController extends GetxController {
         'since': FieldValue.serverTimestamp(),
       });
 
-      // Hole Sender-Daten für die lokale UI-Aktualisierung
       final senderData = senderQuery.docs.first.data();
 
-      // Manuelles Hinzufügen zur friends-Liste für sofortige UI-Aktualisierung
       friends.add({
         'username': senderData['username'],
         'email': senderData['email'],
@@ -199,13 +193,11 @@ class FriendsController extends GetxController {
         'status': 'pending',
       });
 
-      // Erfolgsmeldung anzeigen
       Helper.successSnackBar(
         title: localizations.tSuccess,
         message: '${localizations.tFriendRequestSentTo} $receiverUserName',
       );
     } else {
-      // Es existiert bereits eine Freundschaftsanfrage
       Helper.warningSnackBar(
         title: localizations.tInfo,
         message: localizations.tFriendshipAlreadyExists,
@@ -213,8 +205,10 @@ class FriendsController extends GetxController {
     }
   }
 
+  /// Removes a friendship or cancels a friend request.
+  ///
+  /// Displays appropriate success or error messages.
   Future<void> removeFriendship(String userEmail, String otherUserName, BuildContext context) async {
-    // Lokale Variablen für Texte speichern, bevor asynchrone Operationen beginnen
     final errorTitle = AppLocalizations.of(context)?.tError ?? "Error";
     final noUserFoundMessage = AppLocalizations.of(context)?.tNoUserFound ?? "User not found";
     final successTitle = AppLocalizations.of(context)?.tSuccess ?? "Success";
@@ -241,7 +235,6 @@ class FriendsController extends GetxController {
     final otherUserRef = otherUserQuery.docs.first.reference;
 
     try {
-      // Finde alle Freundschaftseinträge zwischen den beiden Benutzern
       final friendships = await FirebaseFirestore.instance
           .collection('friendships')
           .where(Filter.or(
@@ -256,7 +249,6 @@ class FriendsController extends GetxController {
         throw Exception("No friendship found");
       }
 
-      // Überprüfe, ob es sich um eine ausstehende Anfrage oder eine akzeptierte Freundschaft handelt
       bool isPending = false;
       for (var doc in friendships.docs) {
         final status = doc.get('status');
@@ -266,18 +258,15 @@ class FriendsController extends GetxController {
         }
       }
 
-      // Lösche alle Freundschaftseinträge
       for (var doc in friendships.docs) {
         await doc.reference.delete();
       }
 
-      // Entferne den Freund auch aus der lokalen Liste, damit die UI sofort aktualisiert wird
       friends.removeWhere((friend) =>
         friend['username'] == otherUserName ||
         (friend['email'] != null && friend['email'] == otherUserName)
       );
 
-      // Zeige je nach Status der Freundschaft die entsprechende Erfolgsnachricht an
       if (isPending) {
         Helper.warningSnackBar(
           title: infoTitle,
@@ -298,14 +287,15 @@ class FriendsController extends GetxController {
     }
   }
 
+  /// Accepts or denies a friend request.
+  ///
+  /// [doc] is the friend request document, [newStatus] must be `'accepted'` or `'denied'`.
   Future<void> respondToFriendRequest(DocumentSnapshot doc, String newStatus, BuildContext context) async {
     final localizations = AppLocalizations.of(context)!;
     if (newStatus == 'denied') {
       await doc.reference.delete();
-      // Entferne die Anfrage aus unserer Liste
       friendRequests.removeWhere((request) => request.id == doc.id);
 
-      // Benachrichtigung anzeigen
       Helper.successSnackBar(
         title: localizations.tInfo,
         message: localizations.tFriendRequestDenied,
@@ -314,9 +304,7 @@ class FriendsController extends GetxController {
       await doc.reference.update({
         'status': newStatus,
       });
-      // Die Streams werden die Änderung automatisch erkennen
 
-      // Benachrichtigung anzeigen
       Helper.successSnackBar(
         title: localizations.tSuccess,
         message: localizations.tFriendRequestAccepted,
@@ -324,6 +312,9 @@ class FriendsController extends GetxController {
     }
   }
 
+  /// Retrieves the current friendship status between two users.
+  ///
+  /// Returns `null` if no friendship exists.
   Future<String?> getFriendshipStatus(
       String currentEmail, String otherUserName) async {
     final usersRef = FirebaseFirestore.instance.collection('users');
@@ -355,6 +346,9 @@ class FriendsController extends GetxController {
     return null;
   }
 
+  /// Fetches the [UserModel] for a given [userName].
+  ///
+  /// Throws an exception if no user is found.
   Future<UserModel> getFriend(String userName, BuildContext context) async {
     final localizations = AppLocalizations.of(context)!;
 

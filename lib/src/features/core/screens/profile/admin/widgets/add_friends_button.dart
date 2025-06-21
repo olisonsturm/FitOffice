@@ -1,9 +1,9 @@
-//TODO: Add functionality to the share button and add colors to constants
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 import '../add_friends.dart';
 
+/// A widget that displays a styled button to add friends.
 class AddFriendsButton extends StatelessWidget {
   final String currentUserId;
 
@@ -13,7 +13,7 @@ class AddFriendsButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        // ADD FRIENDS BUTTON
+        /// Main "Add Friends" button
         Expanded(
           child: Container(
             decoration: BoxDecoration(
@@ -54,8 +54,6 @@ class AddFriendsButton extends StatelessWidget {
         ),
 
         const SizedBox(width: 12),
-
-        // SHARE BUTTON (noch ohne Funktionalität)
         Container(
           height: 52,
           width: 52,

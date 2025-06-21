@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// A custom confirmation dialog widget for deleting a video.
 class ConfirmVideoDeleteDialog extends StatelessWidget {
   const ConfirmVideoDeleteDialog({super.key});
 

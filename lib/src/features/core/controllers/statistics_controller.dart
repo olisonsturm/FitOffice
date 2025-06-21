@@ -6,9 +6,12 @@ import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Controller responsible for managing and analyzing user exercise statistics,
+/// streaks, and related information from Firestore.
 class StatisticsController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  /// Returns a [DocumentReference] to the user's document using their email.
   Future<DocumentReference> _getUserDocRef(String email) async {
     final snapshot = await firestore
         .collection('users')
@@ -23,6 +26,10 @@ class StatisticsController {
     return snapshot.docs.first.reference;
   }
 
+  /// Returns the top 3 most performed exercises by the user based on duration.
+  ///
+  /// The result is locale-aware, adapting exercise names depending on
+  /// language settings stored in shared preferences.
   Future<List<String>> getTop3Exercises(String userEmail) async {
     final prefs = await SharedPreferences.getInstance();
     final locale = prefs.getString('locale');
@@ -91,6 +98,7 @@ class StatisticsController {
     }).toList();
   }
 
+  /// Formats a duration in seconds to a human-readable string (e.g., 1h 2m 30s).
   String _formatDuration(int totalSeconds) {
     final hours = totalSeconds ~/ 3600;
     final minutes = (totalSeconds % 3600) ~/ 60;
@@ -105,6 +113,7 @@ class StatisticsController {
     }
   }
 
+  /// Checks if the user currently has an active streak.
   Future<bool> isStreakActive(String userEmail) async {
     final userRef = await _getUserDocRef(userEmail);
     final streaks = await userRef
@@ -116,6 +125,9 @@ class StatisticsController {
     return streaks.docs.isNotEmpty;
   }
 
+  /// Returns the total number of seconds the user exercised on a given day.
+  ///
+  /// Defaults to today if no [day] is specified.
   Future<int> getDoneExercisesInSeconds(String userEmail,
       {DateTime? day}) async {
     final userRef = await _getUserDocRef(userEmail);
@@ -146,6 +158,7 @@ class StatisticsController {
     return total;
   }
 
+  /// Returns the number of active streak steps (days) the user has maintained.
   Future<int> getStreakSteps(String userEmail) async {
     final userRef = await _getUserDocRef(userEmail);
     final streaks = await userRef
@@ -168,6 +181,8 @@ class StatisticsController {
     return today.difference(start).inDays + 1;
   }
 
+  /// Sets the user's streak to inactive if they failed to meet the exercise
+  /// requirement (less than 5 minutes) yesterday.
   Future<void> setStreakInvalid(String userEmail) async {
     final yesterday = DateTime.now().subtract(const Duration(days: 1));
     final todayStart = DateTime.now().subtract(Duration(
@@ -213,6 +228,10 @@ class StatisticsController {
     }
   }
 
+  /// Retrieves the user's longest streak, either active or completed.
+  ///
+  /// Returns a map with the duration in days, start date, and end date (or
+  /// "active" if the streak is ongoing).
   Future<Map<String, dynamic>?> getLongestStreak(
       String userEmail, BuildContext context) async {
     final localizations = AppLocalizations.of(context)!;
@@ -258,6 +277,7 @@ class StatisticsController {
     };
   }
 
+  /// Formats a [DateTime] to a string in the format dd.MM.yyyy.
   String _formatDate(DateTime date) {
     final day = date.day.toString().padLeft(2, '0');
     final month = date.month.toString().padLeft(2, '0');
@@ -265,6 +285,7 @@ class StatisticsController {
     return '$day.$month.$year';
   }
 
+  /// Returns the time of the last completed exercise.
   Future<String> getTimeOfLastExercise(
       String userEmail, BuildContext context) async {
     final localizations = AppLocalizations.of(context)!;
@@ -282,6 +303,7 @@ class StatisticsController {
     return formatted;
   }
 
+  /// Returns the duration of the last exercise session as a formatted string.
   Future<String> getDurationOfLastExercise(
       String userEmail, BuildContext context) async {
     final localisations = AppLocalizations.of(context)!;
@@ -301,6 +323,7 @@ class StatisticsController {
     return formattedDuration;
   }
 
+  /// Returns the total number of exercises the user has logged.
   Future<int> getTotalExercises(String userEmail) async {
     final userSnapshot = await firestore
         .collection('users')
@@ -321,6 +344,8 @@ class StatisticsController {
   }
 }
 
+/// Controller responsible for managing UI-bound streak data using reactive
+/// GetX observables.
 class StreakController extends GetxController {
   final StatisticsController _statisticsController = StatisticsController();
 
@@ -330,6 +355,7 @@ class StreakController extends GetxController {
   var isLoading = true.obs;
   var isError = false.obs;
 
+  /// Loads current streak data and updates observable properties.
   Future<void> loadStreakData() async {
     isLoading.value = true;
     isError.value = false;

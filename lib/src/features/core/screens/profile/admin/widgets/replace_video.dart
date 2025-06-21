@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// A dialog widget that prompts the user to confirm whether they want to replace an existing video.
 class ReplaceVideoDialog extends StatelessWidget {
   const ReplaceVideoDialog({super.key});
 

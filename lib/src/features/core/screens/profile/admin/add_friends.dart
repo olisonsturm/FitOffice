@@ -9,6 +9,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../controllers/friends_controller.dart';
 
+/// Screen that allows the current user to search for other users to add as friends,
+/// view their friendship status, send friend requests, withdraw requests, or remove friends.
 class AddFriendsScreen extends StatefulWidget {
   final String currentUserId;
 
@@ -36,6 +38,10 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
     });
   }
 
+  /// Performs a Firestore query to search users by username matching the [query].
+  ///
+  /// Updates the [results] and [friendshipStatus] state accordingly.
+  /// Resets results if query length is less than 2 characters.
   void _searchUsers(String query) async {
     if (query.length < 2) {
       if (mounted) {
@@ -91,6 +97,10 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
     }
   }
 
+  /// Withdraws a pending friend request to [username].
+  ///
+  /// Updates the local state optimistically, deletes the pending request in Firestore,
+  /// and shows a confirmation SnackBar. Restores state on error.
   Future<void> _withdrawFriendRequest(String username) async {
     if (!mounted) return;
 
@@ -142,7 +152,11 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
     }
   }
 
-  // New method to show confirmation dialog before removing friend or withdrawing request
+  /// Shows a confirmation dialog before withdrawing a friend request or removing a friend.
+  ///
+  /// [userName] is the username of the friend.
+  /// [isPending] indicates if the action is to cancel a pending friend request (true)
+  /// or to remove an accepted friend (false).
   void _showDeleteConfirmationDialog(String userName, bool isPending) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
