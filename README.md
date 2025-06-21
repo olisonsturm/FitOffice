@@ -35,7 +35,19 @@ The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.<br>Brought
 
 ## Overview
 
-**FitOffice** is...
+**FitOffice** is a Flutter-based mobile app designed to help students at DHBW to 
+stay physically and mentally fit during their study breaks. Whether you're in the 
+middle of a long revision session or taking a short pause between classes, 
+FitOffice offers guided exercises that promote healthy 
+habits without disrupting your study flow. 
+
+### Key Highlights:
+- Short physical exercises tailored for desk environments
+- Personal statistics to track your progress
+- Motivational support from FittyFuchs, your daily supporter
+- Share your statistics with friends in the app
+
+FitOffice empowers students to integrate fitness into their daily routine — one break at a time.
 
 ---
 
@@ -53,7 +65,8 @@ This project requires the following dependencies:
 Build FitOffice from the source and install dependencies:
 
 1. **Clone the repository:**
-
 ```sh
 ❯ git clone https://github.com/olisonsturm/FitOffice
 ```
+2. **Install Flutter and follow the steps:**
+https://docs.flutter.dev/get-started/install
