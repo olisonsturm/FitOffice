@@ -7,6 +7,14 @@ import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import 'package:fit_office/src/features/core/controllers/db_controller.dart';
 
+/// A page that allows creating a new user or editing an existing user's details.
+///
+/// Displays a form with fields for full name, username, email, password (only on create),
+/// role selection, and fitness level. Supports form validation and communicates with
+/// backend controllers to update or create users.
+///
+/// When editing an existing user, disables email editing and password entry.
+/// Shows a confirmation dialog before saving changes.
 class EditUserPage extends StatefulWidget {
   final UserModel? user;
 
@@ -66,6 +74,8 @@ class _EditUserPageState extends State<EditUserPage> {
     super.dispose();
   }
 
+  /// Checks if any form field value has changed from the original user data.
+  /// Updates [hasChanged] accordingly to enable/disable the save button.
   void _checkChanges() {
     final hasAnyChanged = _nameController.text != widget.user?.fullName ||
         _userNameController.text != widget.user?.userName ||
@@ -79,6 +89,11 @@ class _EditUserPageState extends State<EditUserPage> {
     });
   }
 
+  /// Validates and attempts to save changes to the user.
+  ///
+  /// If editing, updates the user data in the database.
+  /// If creating, uses the sign-up controller to create a new user.
+  /// Shows appropriate SnackBars on success or failure.
   Future<void> _saveChanges() async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final localisations = AppLocalizations.of(context)!;
@@ -129,6 +144,7 @@ class _EditUserPageState extends State<EditUserPage> {
     }
   }
 
+  /// Displays a confirmation dialog before saving changes.
   void _showSaveConfirmationDialog() {
     showConfirmationDialogModel(
       context: context,

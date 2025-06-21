@@ -909,7 +909,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tTutorialStatistics =>
-      'Hier findest du alle wichtigen Statistiken. Du kannst eine Streak aktivieren indem du mindestens 5 Minuten lang Übungen am Tag machst. Für jeden Tag erhältst du einen Schritt und baust deine Streak um eins aus. Deine Streak wird dir oben links neben der Flamme angezeigt. Aber Achtung: Die Streak wird auf 0 zurückgesetzt, wenn du an einem Tag weniger als 5 Minuten übst! Klicke um fortzufahren.';
+      'Hier findest du alle wichtigen Statistiken. Du kannst eine Streak aktivieren indem du mindestens 5 Minuten lang Übungen am Tag machst. Für jeden Tag erhältst du einen Schritt und baust deine Streak um eins aus. Deine aktuelle Streak wird dir oben links neben der Flamme angezeigt. Aber Achtung: Die Streak wird auf 0 zurückgesetzt, wenn du an einem Tag weniger als 5 Minuten übst! Klicke um fortzufahren.';
 
   @override
   String get tTutorialStatistics1 =>
@@ -917,7 +917,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tTutorialStatistics2 =>
-      'Für jeden Tag erhältst du einen Schritt und baust deine Streak um eins aus. Deine Streak wird dir oben links neben der Flamme angezeigt.';
+      'Für jeden Tag erhältst du einen Schritt und baust deine Streak um eins aus. Deine aktuelle Streak wird dir oben links neben der Flamme angezeigt.';
 
   @override
   String get tTutorialStatistics3 =>
@@ -993,9 +993,6 @@ class AppLocalizationsDe extends AppLocalizations {
       '. Beginne eine Übungen zu erfassen, um deine Historie zu sehen';
 
   @override
-  String get tLoadingProgress => 'Lade Fortschritt...';
-  
-  @override
   String get tGerman => ' (Deutsch)';
 
   @override
@@ -1007,5 +1004,4 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get tRemoveAccountConfirm =>
       'Möchtest du dein Konto wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.';
-
 }

@@ -2,6 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// A dialog widget that prompts the user to confirm whether they want to replace an existing video.
+///
+/// Displays a title, a message, and two buttons for confirming or canceling the action.
+/// Also includes a close (cancel) button in the top-right corner.
+///
+/// The dialog adapts its colors based on the current app theme (dark or light mode).
+///
+/// When a button is pressed, the dialog closes and returns a boolean value indicating
+/// the user's choice:
+/// - `true` if the user confirms replacing the video,
+/// - `false` if the user cancels the replacement,
+/// - or `null` if the dialog is dismissed by tapping outside or pressing the close button.
 class ReplaceVideoDialog extends StatelessWidget {
   const ReplaceVideoDialog({super.key});
 

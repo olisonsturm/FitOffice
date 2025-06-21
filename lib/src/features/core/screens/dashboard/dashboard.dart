@@ -18,6 +18,12 @@ import '../../controllers/profile_controller.dart';
 import '../../controllers/statistics_controller.dart';
 import 'exercise_filter.dart';
 
+/// The main dashboard screen of the app that allows navigation between
+/// the Library, Progress, Statistics, and Profile sections.
+///
+/// This screen also initiates the onboarding tutorial for first-time users,
+/// handles tutorial language selection, and tracks user preferences using
+/// SharedPreferences.
 class Dashboard extends StatefulWidget {
   final int initialIndex;
   const Dashboard({super.key, required this.initialIndex});
@@ -40,6 +46,7 @@ class DashboardState extends State<Dashboard> {
   int selectedIndex = 1; // Default to Library tab
   String favoriteCount = '';
 
+  /// Gets the current tab title based on the selected index.
   String _getPageTitle() {
     switch (selectedIndex) {
       case 0:
@@ -55,6 +62,7 @@ class DashboardState extends State<Dashboard> {
     }
   }
 
+  /// Loads the user's favorite exercises and updates the [favoriteCount].
   void _loadUserFavorites() async {
     final user = await _profileController.getUserData();
     final userFavorites = await _dbController.getFavouriteExercises(user.email);
@@ -67,6 +75,7 @@ class DashboardState extends State<Dashboard> {
     });
   }
 
+  /// Checks if the user has seen the tutorial before and starts it if not.
   void checkAndStartTutorial() async {
     final prefs = await SharedPreferences.getInstance();
     final hasSeenTutorial =
@@ -77,6 +86,7 @@ class DashboardState extends State<Dashboard> {
     }
   }
 
+  /// Displays a dialog to let the user choose their preferred tutorial language.
   void _showLanguageSelection() {
     showDialog(
       context: context,
@@ -144,6 +154,7 @@ class DashboardState extends State<Dashboard> {
     );
   }
 
+  /// Sets the tutorial language and starts the tutorial.
   Future<void> _selectLanguageAndContinue(String languageCode) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('locale', languageCode);
@@ -161,6 +172,9 @@ class DashboardState extends State<Dashboard> {
   int tutorialStep = 0;
   int counter = 0;
 
+  /// Starts the tutorial from a specific step index.
+  ///
+  /// Automatically navigates to the tab associated with each tutorial target.
   void startTutorialStep(int step) async {
     if (_isShowingTutorial) return;
     _isShowingTutorial = true;
@@ -264,6 +278,7 @@ class DashboardState extends State<Dashboard> {
     });
   }
 
+  /// Changes the tutorial language and restarts the tutorial.
   Future<void> changeTutorialLanguage(String languageCode) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('locale', languageCode);
@@ -275,6 +290,14 @@ class DashboardState extends State<Dashboard> {
     });
   }
 
+  /// Initializes all tutorial targets for guided onboarding using the `showcaseview` or `tutorial_coach_mark` package.
+  ///
+  /// This function defines visual focus areas (`TargetFocus`) over key UI elements
+  /// like tabs or full-screen overlays, each displaying animations and localized
+  /// instructional text via Lottie animations. The tutorial steps help users
+  /// understand key features and UI elements of the app.
+  ///
+  /// Must be called inside a context-aware widget (e.g., in `initState()` or after build).
   void _initTargets() {
     final screenSize = MediaQuery.of(context).size;
     targets.clear();
@@ -751,6 +774,7 @@ class DashboardState extends State<Dashboard> {
     _initializeDashboard();
   }
 
+  /// Initializes dashboard-related user data and triggers the tutorial if applicable.
   void _initializeDashboard() async {
     _currentUser = await _profileController.getUserData();
     _streakController.loadStreakData();
@@ -763,6 +787,7 @@ class DashboardState extends State<Dashboard> {
   }
   final GlobalKey _fullscreenDummyKey = GlobalKey();
 
+  /// Builds the main dashboard UI with navigation tabs and conditional tutorial overlays.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -790,6 +815,7 @@ class DashboardState extends State<Dashboard> {
       ),
       body: Stack(
         children: [
+          /// Displays one of the four main screens based on [selectedIndex].
           IndexedStack(
             index: selectedIndex,
             children: [
@@ -806,6 +832,7 @@ class DashboardState extends State<Dashboard> {
               ProfileScreen(),
             ],
           ),
+          /// Conditionally renders the full-screen tutorial overlay.
           if (_isShowingTutorial)
             Positioned(
               top: 0,
@@ -817,12 +844,13 @@ class DashboardState extends State<Dashboard> {
                 decoration: BoxDecoration(
                   color: Get.context?.theme.brightness == Brightness.dark
                       ? const Color.fromARGB(204, 0, 0, 0)
-                      : const Color(0xFF333333), // exakt: schwarz mit 0.8 alpha
+                      : const Color(0xFF333333),
                 ),
               ),
             ),
         ],
       ),
+      /// Bottom navigation bar for switching between tabs.
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex,
         onTap: (index) {

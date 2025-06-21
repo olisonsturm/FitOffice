@@ -13,6 +13,16 @@ import 'package:fit_office/src/features/core/screens/profile/admin/widgets/confi
 
 import '../statistics/widgets/statistics.dart';
 
+/// A screen that displays the profile details of a friend or another user.
+///
+/// This widget fetches and shows user information such as avatar, username,
+/// full name, email, number of friends, join date, and allows managing friend requests.
+/// If the user is already a friend, statistics related to the user are shown.
+///
+/// Parameters:
+/// - [userName]: The username of the friend/user whose profile is displayed.
+/// - [isFriend]: Indicates whether the displayed user is a friend of the current user.
+/// - [isPending]: Optional flag indicating if a friend request is pending.
 class FriendProfile extends StatefulWidget {
   final String userName;
   final bool isFriend;
@@ -39,6 +49,9 @@ class _FriendProfileState extends State<FriendProfile> {
     isPendingLocal = widget.isPending ?? false;
   }
 
+  /// Fetches the user data from Firestore by username.
+  ///
+  /// Throws an exception with a localized message if the user is not found.
   Future<UserModel> getFriend(String userName) async {
     final localizations = AppLocalizations.of(context)!;
     final querySnapshot = await FirebaseFirestore.instance
@@ -54,6 +67,9 @@ class _FriendProfileState extends State<FriendProfile> {
     }
   }
 
+  /// Formats a Firestore [Timestamp] to a human-readable date string.
+  ///
+  /// Returns the date formatted as 'dd.MM.yyyy'.
   String formatTimestamp(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();
     return DateFormat('dd.MM.yyyy').format(dateTime);

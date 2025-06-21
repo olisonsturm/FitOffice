@@ -13,7 +13,15 @@ import '../../../models/dashboard/categories_model.dart';
 import '../exercise_filter.dart';
 import 'exercises_list.dart';
 
+/// A widget that displays categorized lists of exercises in the dashboard,
+/// including physical, mental, and favorite exercises.
+///
+/// It also supports search and filtering, and can be configured to show only
+/// the full list of exercises.
 class DashboardCategories extends StatefulWidget {
+  /// [txtTheme] is used for styling, [onSearchChanged] is a callback when the
+  /// search query changes. If [forceShowExercisesOnly] is true, categories are hidden.
+  /// [onReturnedFromFilter] is an optional callback triggered when returning from filter screens.
   const DashboardCategories({
     super.key,
     required this.txtTheme,
@@ -55,6 +63,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
     _loadUserFavorites();
   }
 
+  /// Loads the count of exercises for each category.
   void _loadExerciseCount() async {
     String countUpperBody =
         await _dbController.getNumberOfExercisesByCategory(tUpperBody);
@@ -73,6 +82,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
     });
   }
 
+  /// Loads all exercises from the database.
   void _loadAllExercises() async {
     final all = await _dbController.getAllExercises();
     setState(() {
@@ -81,6 +91,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
     });
   }
 
+  /// Loads the user's favorite exercises.
   void _loadUserFavorites() async {
     final user = await _profileController.getUserData();
     final userFavorites = await _dbController.getFavouriteExercises(user.email);
@@ -93,6 +104,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
     });
   }
 
+  /// Toggles the favorite status for a given [exerciseName].
   Future<void> _toggleFavorite(String exerciseName) async {
     final isFavorite = _userFavorites.contains(exerciseName);
     final user = await _profileController.getUserData();
@@ -130,6 +142,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
     }
   }
 
+  /// Filters the list of [exercises] based on the [query].
   List<Map<String, dynamic>> _filterExercises(
       String query, List<Map<String, dynamic>> exercises) {
     if (query.trim().isEmpty) return exercises;
@@ -155,6 +168,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
     }).toList();
   }
 
+  /// Updates the search query and applies filtering.
   void updateSearchQuery(String query) {
     setState(() {
       _searchQuery = query;
@@ -164,6 +178,7 @@ class DashboardCategoriesState extends State<DashboardCategories> {
     widget.onSearchChanged(query);
   }
 
+  /// Refreshes the exercises and favorites from the database.
   void refreshData() {
     _loadUserFavorites();
     _loadAllExercises();

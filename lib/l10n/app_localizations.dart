@@ -1952,13 +1952,6 @@ abstract class AppLocalizations {
   /// **'. Start tracking your exercises to see them here.'**
   String get tHistoryNoExercise2;
 
-
-  /// No description provided for @tLoadingProgress.
-  ///
-  /// In en, this message translates to:
-  /// **'Loading progress...'**
-  String get tLoadingProgress;
-
   /// No description provided for @tGerman.
   ///
   /// In en, this message translates to:
@@ -1982,7 +1975,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to remove your account? This action cannot be undone.'**
   String get tRemoveAccountConfirm;
-
 }
 
 class _AppLocalizationsDelegate

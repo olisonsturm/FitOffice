@@ -12,6 +12,14 @@ import '../../../dashboard/widgets/search.dart';
 import '../../widgets/avatar.dart';
 import '../edit_user_page.dart';
 
+/// A page that displays a list of all users or only friends of the current user,
+/// with search functionality and admin controls.
+///
+/// This widget is used in an administrative or social context where the current
+/// user can view other user accounts. If `showOnlyFriends` is true and
+/// `currentUserId` is provided, it filters the list to only show friends.
+///
+/// Admins can also edit or delete users from this list.
 class AllUsersPage extends StatefulWidget {
   final bool showOnlyFriends;
   final String? currentUserId;
@@ -40,6 +48,8 @@ class _AllUsersPageState extends State<AllUsersPage> {
     _loadData();
   }
 
+  /// Loads user data from Firebase and optionally filters to only friends
+  /// depending on [widget.showOnlyFriends].
   void _loadData() async {
     final currentUser = await _profileController.getUserData();
 
@@ -87,12 +97,14 @@ class _AllUsersPageState extends State<AllUsersPage> {
     });
   }
 
+  /// Filters the list of users based on a search query.
   void _searchUsers(String query) {
     final normalizedQuery = query.toLowerCase().trim();
 
     setState(() {
       _filteredUsers = _allUsers.where((user) {
-        final usernameMatch = user.userName.toLowerCase().contains(normalizedQuery);
+        final usernameMatch =
+            user.userName.toLowerCase().contains(normalizedQuery);
         final emailMatch = user.email.toLowerCase().contains(normalizedQuery);
         return usernameMatch || emailMatch;
       }).toList();
@@ -112,20 +124,21 @@ class _AllUsersPageState extends State<AllUsersPage> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
+                  /// Search bar to filter users
                   DashboardSearchBox(
                     txtTheme: Theme.of(context).textTheme,
                     onSearchSubmitted: _searchUsers,
                     onTextChanged: (query) {
                       _categoriesKey.currentState?.updateSearchQuery(query);
-                      setState(() {
-                      });
+                      setState(() {});
                     },
                     onFocusChanged: (hasFocus) {
-                      setState(() {
-                      });
+                      setState(() {});
                     },
                   ),
                   const SizedBox(height: 16),
+
+                  /// Show message or filtered user list
                   _filteredUsers.isEmpty
                       ? Text(AppLocalizations.of(context)!.tNoUsersFound)
                       : Expanded(
@@ -164,6 +177,8 @@ class _AllUsersPageState extends State<AllUsersPage> {
                                         fontSize: 10,
                                         color: Colors.black,
                                       )),
+
+                                  /// Admin controls: Edit/Delete
                                   trailing: _currentUser.role == 'admin'
                                       ? Row(
                                           mainAxisSize: MainAxisSize.min,
@@ -197,9 +212,13 @@ class _AllUsersPageState extends State<AllUsersPage> {
                                                         '${AppLocalizations.of(context)!.tAskDeleteUser}${user.userName}${AppLocalizations.of(context)!.tDeleteUserConsequence}'),
                                                     actions: [
                                                       TextButton(
-                                                        style: Theme.of(context).brightness == Brightness.dark
-                                                            ? TDialogTheme.getDarkCancelButtonStyle()
-                                                            : TDialogTheme.getLightCancelButtonStyle(),
+                                                        style: Theme.of(context)
+                                                                    .brightness ==
+                                                                Brightness.dark
+                                                            ? TDialogTheme
+                                                                .getDarkCancelButtonStyle()
+                                                            : TDialogTheme
+                                                                .getLightCancelButtonStyle(),
                                                         onPressed: () {
                                                           Navigator.of(context)
                                                               .pop();
@@ -210,9 +229,13 @@ class _AllUsersPageState extends State<AllUsersPage> {
                                                                 .tCancel),
                                                       ),
                                                       TextButton(
-                                                        style: Theme.of(context).brightness == Brightness.dark
-                                                            ? TDialogTheme.getDarkDeleteButtonStyle()
-                                                            : TDialogTheme.getLightDeleteButtonStyle(),
+                                                        style: Theme.of(context)
+                                                                    .brightness ==
+                                                                Brightness.dark
+                                                            ? TDialogTheme
+                                                                .getDarkDeleteButtonStyle()
+                                                            : TDialogTheme
+                                                                .getLightDeleteButtonStyle(),
                                                         onPressed: () async {
                                                           Navigator.of(context)
                                                               .pop();

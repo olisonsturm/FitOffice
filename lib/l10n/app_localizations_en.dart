@@ -982,9 +982,6 @@ class AppLocalizationsEn extends AppLocalizations {
       '. Start tracking your exercises to see them here.';
 
   @override
-  String get tLoadingProgress => 'Loading progress...';
-
-  @override
   String get tGerman => ' (German)';
 
   @override
@@ -996,5 +993,4 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tRemoveAccountConfirm =>
       'Are you sure you want to remove your account? This action cannot be undone.';
-
 }

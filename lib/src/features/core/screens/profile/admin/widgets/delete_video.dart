@@ -2,6 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// A custom confirmation dialog widget for deleting a video.
+///
+/// This widget presents the user with a confirmation prompt containing:
+/// - A title asking for video deletion.
+/// - A description message explaining the consequence.
+/// - A red "Delete" button that confirms deletion and returns `true`.
+/// - A gray "Cancel" button that cancels the action and returns `false`.
+/// - A close icon in the top-right corner to dismiss the dialog without a result.
+///
+/// This dialog is localized using [AppLocalizations] and supports dark mode.
+///
+/// ### Usage:
+/// Call it using `showDialog()` and await the result:
+/// ```dart
+/// final bool? confirmed = await showDialog<bool>(
+///   context: context,
+///   builder: (context) => const ConfirmVideoDeleteDialog(),
+/// );
+///
+/// if (confirmed == true) {
+///   // Perform video deletion
+/// }
 class ConfirmVideoDeleteDialog extends StatelessWidget {
   const ConfirmVideoDeleteDialog({super.key});
 

@@ -2,6 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// A widget that provides a search interface for finding users by their usernames.
+///
+/// Displays a search input field and shows up to three matching usernames in a list
+/// as the user types a query. If more than three results are available, the user
+/// can view the full list in a dialog.
+///
+/// The search queries the 'users' collection in Firestore and filters usernames
+/// that contain the search query, excluding the current user.
+///
+/// The search activates only when the query length is at least two characters.
 class FriendSearchWidget extends StatefulWidget {
   final String? currentUserId;
 
@@ -27,6 +37,11 @@ class _FriendSearchWidgetState extends State<FriendSearchWidget> {
     });
   }
 
+  /// Performs a search query against Firestore 'users' collection filtering by username.
+  ///
+  /// Ignores queries shorter than 2 characters or when currentUserId is null.
+  /// Updates [userResults] and [fullResults] with the filtered usernames.
+  /// Sets [isSearching] to true while query is in progress.
   void searchUsers(String query) async {
     if (query.length < 2 || widget.currentUserId == null) {
       setState(() {
@@ -66,6 +81,9 @@ class _FriendSearchWidgetState extends State<FriendSearchWidget> {
     }
   }
 
+  /// Displays a dialog showing the full list of search results.
+  ///
+  /// If no results are available, displays a localized "No user found" message.
   void _showFullResultDialog() {
     showDialog(
       context: context,

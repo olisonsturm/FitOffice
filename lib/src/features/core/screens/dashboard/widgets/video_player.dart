@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
 
+/// A widget that plays a video from a network URL or a local file using
+/// [video_player] and [chewie] for a consistent video UI.
+///
+/// This widget supports reinitialization if the source file or URL changes,
+/// and handles video looping back to the start once finished.
 class VideoPlayerWidget extends StatefulWidget {
   final String? videoUrl;
   final File? file;
@@ -32,6 +37,10 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     }
   }
 
+  /// Initializes the video player and chewie controller based on input source.
+  ///
+  /// Disposes of any previously created controllers. If the video finishes,
+  /// it automatically seeks back to the beginning.
   Future<void> _initializePlayer() async {
     _videoPlayerController?.dispose();
     _chewieController?.dispose();
