@@ -54,8 +54,39 @@ class ProfileController extends GetxController {
   Future<void> updateRecord(UserModel updatedUser, BuildContext context) async {
     final localizations = AppLocalizations.of(context)!;
     try {
-      await _userRepo.updateUserRecord(updatedUser.id!, updatedUser.toJson());
-      user.value = updatedUser; // Update global state
+      // Fetch the current user data
+      final currentUser = await getUserData();
+
+      // Prepare the data to update only changed fields
+      final updatedData = <String, dynamic>{};
+      if (updatedUser.email != currentUser.email) {
+        updatedData['email'] = updatedUser.email;
+      }
+      if (updatedUser.userName != currentUser.userName) {
+        updatedData['username'] = updatedUser.userName;
+      }
+      if (updatedUser.fullName != currentUser.fullName) {
+        updatedData['fullName'] = updatedUser.fullName;
+      }
+      updatedData['updatedAt'] = Timestamp.now();
+
+      // Update the user record in the database
+      await _userRepo.updateUserRecord(currentUser.id!, updatedData);
+
+      // Update global state
+      user.value = UserModel(
+        id: currentUser.id,
+        email: updatedData['email'] ?? currentUser.email,
+        userName: updatedData['username'] ?? currentUser.userName,
+        fullName: updatedData['fullName'] ?? currentUser.fullName,
+        createdAt: currentUser.createdAt,
+        updatedAt: Timestamp.now(),
+        role: currentUser.role, // Preserve the role
+        fitnessLevel: currentUser.fitnessLevel,
+        completedExercises: currentUser.completedExercises,
+        profilePicture: currentUser.profilePicture,
+      );
+
       Helper.successSnackBar(
           title: localizations.tCongratulations, message: 'Profile Record has been updated!');
     } catch (e) {

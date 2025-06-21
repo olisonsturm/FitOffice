@@ -52,6 +52,8 @@ dependencies:
   share_plus: ^11.0.0
   firebase_dynamic_links: ^6.1.7
   qr_flutter: ^4.1.0
+  flutter_local_notifications: ^19.2.1
+  firebase_messaging: ^15.2.7
 
 dev_dependencies:
   flutter_test:

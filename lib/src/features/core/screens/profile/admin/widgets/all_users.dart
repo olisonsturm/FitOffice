@@ -113,6 +113,7 @@ class _AllUsersPageState extends State<AllUsersPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.tMenu3),
@@ -147,12 +148,12 @@ class _AllUsersPageState extends State<AllUsersPage> {
                             itemBuilder: (context, index) {
                               final user = _filteredUsers[index];
                               return Card(
-                                color: Colors.white,
+                                color: isDark ? Colors.grey.shade800 : Colors.white,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                   side: BorderSide(
-                                    color: Colors.grey.shade300,
+                                    color: isDark ? Colors.white24 : Colors.black12,
                                     width: 1.0,
                                   ),
                                 ),
@@ -173,9 +174,9 @@ class _AllUsersPageState extends State<AllUsersPage> {
                                   ),
                                   subtitle: Text(
                                       '${user.email}\nRole: ${user.role ?? 'No role'}',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 10,
-                                        color: Colors.black,
+                                        color: isDark ? Colors.white70 : Colors.black54,
                                       )),
 
                                   /// Admin controls: Edit/Delete
@@ -184,8 +185,8 @@ class _AllUsersPageState extends State<AllUsersPage> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             IconButton(
-                                              icon: const Icon(Icons.edit,
-                                                  color: Colors.blue),
+                                              icon: Icon(Icons.edit,
+                                                  color: isDark ? Colors.white : Colors.black),
                                               onPressed: () {
                                                 Navigator.push(
                                                   context,

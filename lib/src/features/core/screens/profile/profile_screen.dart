@@ -133,7 +133,7 @@ class ProfileScreen extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        flex: 5,
+                        flex: 3,
                         child: CustomProfileButton(
                           isDark: isDark,
                           icon: LineAwesomeIcons.user_edit_solid,
@@ -158,7 +158,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 10),
                       Flexible(
-                        flex: 3,
+                        flex: 2,
                         child: CustomProfileButton(
                           isDark: isDark,
                           icon: LineAwesomeIcons.sign_out_alt_solid,
