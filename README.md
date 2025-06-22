@@ -1,8 +1,11 @@
 
 <div align="center">
 
-![FitOffice Logo](assets/logo/fit_office.png)
-![FittyFuchsWaving.gif](assets/gif/FittyFuchsWaving.gif)
+
+<div style="display: flex; align-items: center; gap: 16px;">
+  <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="200">
+  <img src="assets/gif/FittyFuchsWaving.gif" alt="FittyFuchs Waving" width="120">
+</div>
 
 # FitOffice@DHBW
 
