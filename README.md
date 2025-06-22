@@ -82,3 +82,25 @@ https://docs.flutter.dev/get-started/install
 ```
 
 6. **Request access to the Firebase console** from @olisonsturm.
+
+## Development
+
+### Contributing
+
+We welcome contributions to FitOffice! If you have ideas for improvements, bug fixes, or new features, please follow these steps:
+1. **Fork the repository** on GitHub.
+2. **Create a new branch** for your feature or bug fix:
+```sh
+❯ git checkout -b feature/your-feature-name
+```
+3. **Make your changes** and commit them:
+```sh
+❯ git commit -m "Add your commit message here"
+```
+4. **Push your changes** to your fork:
+```sh
+❯ git push origin feature/your-feature-name
+```
+5. **Create a pull request** on GitHub, describing your changes and why they should be merged.
+6. **Wait for review** and address any feedback provided by the maintainers.
+7. **Celebrate your contribution!** 🎉
