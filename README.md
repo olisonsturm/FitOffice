@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="https://github.com/olisonsturm/FitOffice/blob/markdowns/assets/logo/fit_office.png" alt="FitOffice Logo" width="400">
+  <img src="https://github.com/olisonsturm/FitOffice/blob/markdowns/assets/logo/fit_office.png" alt="FitOffice Logo" width="200">
 
 # FitOffice@DHBW
 
@@ -111,7 +111,15 @@ We welcome contributions to FitOffice! If you have ideas for improvements, bug f
 6. **Wait for review** and address any feedback provided by the maintainers.
 7. **Celebrate your contribution!** 🎉
 
+### Issues
+
+If you encounter any bugs or have a feature requests, please open an issue on GitHub. 
+Click here to [create a new issue](https://github.com/olisonsturm/FitOffice/issues/new/choose).
+We appreciate your feedback and contributions to improve FitOffice.
+
+
 ## Contact
+
 For any questions please create a [discussion on GitHub](https://github.com/olisonsturm/FitOffice/discussions/new/choose)
 or contact the maintainers directly:
 - **Olison Sturm** - [GitHub](https://github.com/olisonsturm) | [LinkedIn](https://www.linkedin.com/in/olisonsturm/)
@@ -119,7 +127,8 @@ or contact the maintainers directly:
 - **Jonas Menz** - [GitHub](https://github.com/Menzerich)
 
 ## Acknowledgements
-We would like to thank the DHBW Ravensburg for their support and resources, as well as all contributors who have helped make FitOffice a reality. Special thanks to our health management students for their insights and for their original idea of FitOffice.
+
+We would like to thank the DHBW Ravensburg for their support, as well as all contributors who have helped make FitOffice a reality. Special thanks to our health management students for their insights and for their original idea of FitOffice.
 
 ## License
 

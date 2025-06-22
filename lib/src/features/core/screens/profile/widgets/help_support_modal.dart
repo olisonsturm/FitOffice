@@ -146,7 +146,7 @@ class HelpSupportModal {
                               'Feature Request',
                               'Suggest improvements',
                               isDark,
-                              onTap: () => _launchUrl('https://github.com/olisonsturm/FitOffice/issues/new?labels=enhancement'),
+                              onTap: () => _launchUrl('https://github.com/olisonsturm/FitOffice/issues/new/choose'),
                             ),
 
                             const SizedBox(height: 12),

@@ -132,7 +132,7 @@ class BugReportModal {
                               'Report Bug',
                               'Create new issue',
                               isDark,
-                              onTap: () => _launchUrl('https://github.com/olisonsturm/FitOffice/issues/new'),
+                              onTap: () => _launchUrl('https://github.com/olisonsturm/FitOffice/issues/new/choose'),
                             ),
 
                             const SizedBox(height: 16),
