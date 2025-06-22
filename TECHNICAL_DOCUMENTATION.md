@@ -299,24 +299,7 @@ Follow the official Dart style guide with these additions:
 2. **Class Naming**: Use PascalCase for class names
 3. **Variable Naming**: Use camelCase for variables and functions
 4. **Constants**: Use SCREAMING_SNAKE_CASE for constants
-
-### Testing Guidelines
-1. Write unit tests for business logic
-2. Write widget tests for UI components
-3. Write integration tests for user flows
-4. Maintain test coverage above 80%
-
-### Running Tests
-```bash
-# Run all tests
-flutter test
-
-# Run tests with coverage
-flutter test --coverage
-
-# Run specific test file
-flutter test test/unit/user_service_test.dart
-```
+5. **Comments**: Use `///` for documentation comments, `//` for inline comments
 
 ## Troubleshooting
 
@@ -349,7 +332,6 @@ flutter test test/unit/user_service_test.dart
 2. Implement `ListView.builder` for large lists
 3. Optimize image loading with caching
 4. Use `RepaintBoundary` for expensive widgets
-5. Profile app performance regularly
 
 ## Additional Resources
 
@@ -366,6 +348,12 @@ flutter test test/unit/user_service_test.dart
 - Flutter Inspector
 - Dart DevTools
 - Android Studio/VS Code Flutter extensions
+- Postman for API testing
+- Firebase Console for backend management
+- Git for version control
+- GitHub for collaboration and issue tracking
+- GitHub Actions to automate deployment of dart code documentation to GitHub Pages
+- GitHub Pages for hosting documentation
 
 --- 
 
