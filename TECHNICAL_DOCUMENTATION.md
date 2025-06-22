@@ -49,7 +49,7 @@ See [PROJECT DOCUMENTATION](/PROJECT_DOCUMENTATION.pdf) for detailed architectur
 
 ### Entity Relationship Model 
 
-![Entity Relationship Model](assets/diagrams/ERM.png)
+![Entity Relationship Model](/assets/diagrams/ERM.png)
 
 ## Project Structure
 
