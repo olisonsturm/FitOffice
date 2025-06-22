@@ -125,6 +125,6 @@ This project is licensed under the GNU Affero General Public License v3.0. See t
 
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/olisonsturm/FitOffice/main/assets/logo.png" alt="FitOffice Logo" width="200">
-  Stay fit, stay focused, and enjoy your study breaks with FitOffice! 💪
+  <img src="https://github.com/olisonsturm/FitOffice/blob/markdowns/assets/logo/fit_office.png" alt="FitOffice Logo" width="200">
+  <p>Made with ❤️ at DHBW Ravensburg</p>
 </div>
