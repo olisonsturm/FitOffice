@@ -14,6 +14,10 @@ The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.<br>Brought
 ![Flutter](https://img.shields.io/badge/Flutter-02569B.svg?style=flat&logo=Flutter&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28.svg?style=flat&logo=Firebase&logoColor=orange)
 
+![Screenshot 1](https://raw.githubusercontent.com/olisonsturm/FitOffice/main/assets/screenshots/screenshot1.png)
+![Screenshot 2](https://raw.githubusercontent.com/olisonsturm/FitOffice/main/assets/screenshots/screenshot2.png)
+![Screenshot 3](https://raw.githubusercontent.com/olisonsturm/FitOffice/main/assets/screenshots/screenshot3.png)
+
 </div>
 
 ## Table of Contents
@@ -76,9 +80,9 @@ https://docs.flutter.dev/get-started/install
 ❯ flutter pub get
 ```
 
-5. **Run the app:**
+5. **Run the app on iOS or Andorid:**
 ```sh
-❯ flutter run
+❯ flutter run 
 ```
 
 6. **Request access to the Firebase console** from @olisonsturm.
@@ -104,3 +108,19 @@ We welcome contributions to FitOffice! If you have ideas for improvements, bug f
 5. **Create a pull request** on GitHub, describing your changes and why they should be merged.
 6. **Wait for review** and address any feedback provided by the maintainers.
 7. **Celebrate your contribution!** 🎉
+
+## Contact
+For any questions please create a [discussion on GitHub](https://github.com/olisonsturm/FitOffice/discussions/new/choose)
+or contact the maintainers directly:
+- **Olison Sturm** - [GitHub](https://github.com/olisonsturm) | [LinkedIn](https://www.linkedin.com/in/olisonsturm/)
+- **Max Schäfer** - [GitHub](https://github.com/MaxSch-03)
+- **Jonas Menz** - [GitHub](https://github.com/Menzerich)
+
+## Acknowledgements
+We would like to thank the DHBW Ravensburg for their support and resources, as well as all contributors who have helped make FitOffice a reality. Special thanks to our health management students for their insights and for their original idea of FitOffice.
+
+## License
+
+This project is licensed under the GNU Affero General Public License v3.0. See the [LICENSE](https://github.com/olisonsturm/FitOffice/blob/master/LICENSE) file for details.
+
+# Stay fit, stay focused, and enjoy your study breaks with FitOffice! 💪
