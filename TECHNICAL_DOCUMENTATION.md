@@ -1,5 +1,7 @@
 # Technical Documentation
 
+This document only provides a high-level overview of the project architecture, core components, and development practices. For detailed implementation and architecture diagrams, please refer to the [FitOffice PROJECT DOCUMENTATION](/PROJECT_DOCUMENTATION.pdf).
+
 ## Table of Contents
 1. [Project Overview](#project-overview)
 2. [Architecture](#architecture)
