@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// A custom modal dialog to confirm the cancellation of an ongoing exercise.
+/// Shows the exercise name, a message, and two action buttons (Cancel/Keep Going).
 class CancelExerciseDialog extends StatelessWidget {
   final String exerciseName;
 

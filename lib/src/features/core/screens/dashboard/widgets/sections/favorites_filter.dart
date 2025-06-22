@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fit_office/src/features/core/models/dashboard/categories_model.dart';
 
+/// A horizontally scrollable section that displays favorite categories.
+/// Each item shows an icon (with title inside) and a heading/subheading.
 class DashboardFavoritesSection extends StatelessWidget {
   final List<DashboardCategoriesModel> categories;
   final TextTheme txtTheme;

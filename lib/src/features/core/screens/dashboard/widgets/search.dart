@@ -3,6 +3,9 @@ import 'package:fit_office/src/utils/helper/helper_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// A customizable search bar for the dashboard UI.
+/// - Supports real-time text input and focus detection.
+/// - Triggers callbacks for submit, change, and focus updates.
 class DashboardSearchBox extends StatefulWidget {
   const DashboardSearchBox({
     super.key,
@@ -13,8 +16,14 @@ class DashboardSearchBox extends StatefulWidget {
   });
 
   final TextTheme txtTheme;
+
+  /// Called when user presses Enter/Submit on keyboard.
   final void Function(String) onSearchSubmitted;
+
+  /// Called on every text input change.
   final void Function(String) onTextChanged;
+
+  /// Called when focus state changes (e.g., for conditional UI).
   final void Function(bool) onFocusChanged;
 
   @override
@@ -23,16 +32,20 @@ class DashboardSearchBox extends StatefulWidget {
 
 class DashboardSearchBoxState extends State<DashboardSearchBox> {
   late FocusNode _focusNode;
+
   late TextEditingController _controller;
+
   late FocusNode _redirectFocusNode;
 
+  /// Allows external widgets to request focus on the search bar
   void requestFocus() {
     _focusNode.requestFocus();
   }
 
+  /// Removes focus from the search bar (also blurs global focus)
   void removeFocus() {
     _focusNode.unfocus();
-    FocusManager.instance.primaryFocus?.unfocus(); // <-- Ergänzen!
+    FocusManager.instance.primaryFocus?.unfocus(); 
   }
 
   @override
@@ -107,7 +120,7 @@ class DashboardSearchBoxState extends State<DashboardSearchBox> {
                           icon: const Icon(Icons.clear),
                           onPressed: () {
                             _controller.clear();
-                            widget.onTextChanged(''); // dynamisch leeren
+                            widget.onTextChanged('');
                             _focusNode.requestFocus();
                             setState(() {});
                           },
@@ -126,7 +139,9 @@ class DashboardSearchBoxState extends State<DashboardSearchBox> {
                       if (mounted) _focusNode.unfocus();
                     });
                   } else {
-                    Helper.modernSnackBar(title: localizations.tInfo, message: localizations.tDashboardExerciseSearchNoInput);
+                    Helper.modernSnackBar(
+                        title: localizations.tInfo,
+                        message: localizations.tDashboardExerciseSearchNoInput);
                   }
                 }),
           ),

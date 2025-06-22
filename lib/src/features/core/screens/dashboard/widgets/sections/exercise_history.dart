@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import '../../../../controllers/profile_controller.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// A widget that displays a list of previous exercise sessions
+/// for a given exercise name, retrieved from Firestore.
 class ExerciseHistoryTab extends StatelessWidget {
   final String name;
   final ScrollController scrollController;
@@ -44,7 +46,7 @@ class ExerciseHistoryTab extends StatelessWidget {
               .doc(userId)
               .collection('exerciseLogs')
               .where('exerciseName', isEqualTo: name.trim())
-              //.orderBy('endTime', descending: true)  --> Index dafür notwendig?! dass man das einstellen kann
+              //.orderBy('endTime', descending: true)
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -68,7 +70,7 @@ class ExerciseHistoryTab extends StatelessWidget {
                 ),
               );
             }
-
+            // Display a list of exercise history entries
             return ListView.builder(
               controller: scrollController,
               padding: const EdgeInsets.symmetric(vertical: 8),
@@ -81,11 +83,12 @@ class ExerciseHistoryTab extends StatelessWidget {
                     ? data['duration']
                     : int.tryParse(data['duration'].toString()) ?? 0;
 
+                // If no valid timestamp, skip rendering this entry
                 if (timestamp == null) return const SizedBox();
 
                 final minutes = durationSeconds ~/ 60;
                 final seconds = durationSeconds % 60;
-
+                // Format timestamp to readable date and time
                 final formattedDate =
                     "${timestamp.day.toString().padLeft(2, '0')}.${timestamp.month.toString().padLeft(2, '0')}.${timestamp.year} – ${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}";
 

@@ -15,8 +15,13 @@ import '../../../controllers/exercise_timer.dart';
 import '../../../controllers/profile_controller.dart';
 import 'active_dialog.dart';
 
+/// Exercise detail screen displaying information, history, and favorite status.
+/// Includes admin controls and integration with the global timer.
 class ExerciseDetailScreen extends StatefulWidget {
+  /// Globally tracks the currently opened exercise name
   static RxnString currentExerciseName = RxnString();
+
+  /// Globally tracks the currently selected tab index (0 = Info, 1 = History)
   static RxInt currentTabIndex = 0.obs;
 
   final Map<String, dynamic> exerciseData;
@@ -51,7 +56,6 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
           widget.exerciseData['name'];
       ExerciseDetailScreen.currentTabIndex.value = 0;
 
-      //final timerActive = Get.find<ExerciseTimerController>().isRunning.value;
 
       final position = _scrollController.position;
       final isScrollable = position.maxScrollExtent > 0;
@@ -90,6 +94,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     super.dispose();
   }
 
+  /// Load current user's role to determine admin rights
   void _loadUserRole() async {
     final user = await _profileController.getUserData();
     setState(() {
@@ -97,6 +102,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     });
   }
 
+  /// Check if the exercise is in user's favorites
   void _loadFavoriteStatus() async {
     final user = await _profileController.getUserData();
     final favorites = await _dbController.getFavouriteExercises(user.email);
@@ -108,6 +114,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     });
   }
 
+  /// Toggle the favorite status of the exercise
   void toggleFavorite() async {
     if (isProcessing) return;
     setState(() {
@@ -192,7 +199,9 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     return Scaffold(
       backgroundColor: isDarkMode ? Colors.black : tWhiteColor,
       appBar: SliderAppBar(
-        title: _locale == 'de' ? widget.exerciseData['name'] ?? '' : widget.exerciseData['name_en'] ?? '',
+        title: _locale == 'de'
+            ? widget.exerciseData['name'] ?? ''
+            : widget.exerciseData['name_en'] ?? '',
         subtitle: widget.exerciseData['category'] ?? '',
         showBackButton: true,
         showFavoriteIcon: true,
@@ -282,6 +291,8 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
               ),
             ],
           ),
+
+          /// Scroll-to-Bottom Button
           if (showScrollDownButton)
             Positioned(
               bottom: Get.find<ExerciseTimerController>().isRunning.value
@@ -327,7 +338,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     );
   }
 }
-
+/// Custom tab button widget for the tab switcher
 class _TabButton extends StatelessWidget {
   final String text;
   final bool isSelected;

@@ -8,6 +8,9 @@ import 'package:get/get.dart';
 
 import '../../../authentication/models/user_model.dart';
 
+/// A page that displays a filtered list of exercises.
+/// Either shows exercises from a specific category **or** only the user's favorites.
+/// Users can directly toggle the favorite status from the list.
 class ExerciseFilter extends StatefulWidget {
   final String heading;
   final String? category; // z. B. 'Upper Body'
@@ -27,7 +30,6 @@ class ExerciseFilter extends StatefulWidget {
 class _ExerciseFilterState extends State<ExerciseFilter> {
   final ProfileController _profileController = Get.put(ProfileController());
   final DbController _dbController = DbController();
-
   List<Map<String, dynamic>> _exercises = [];
   List<String> _userFavorites = [];
   UserModel? _user;
@@ -37,7 +39,7 @@ class _ExerciseFilterState extends State<ExerciseFilter> {
   void initState() {
     super.initState();
 
-    // Schutz: keine Kategorie bei showOnlyFavorites erlaubt
+    /// Validation: A category must NOT be provided when showing only favorites.
     assert(
       !(widget.showOnlyFavorites && widget.category != null),
       'Do not provide a category when showOnlyFavorites is true.',
@@ -46,6 +48,7 @@ class _ExerciseFilterState extends State<ExerciseFilter> {
     _loadUserAndExercises();
   }
 
+  /// Loads current user data and fetches filtered exercises from the database.
   Future<void> _loadUserAndExercises() async {
     setState(() => _isLoading = true);
 
@@ -58,7 +61,7 @@ class _ExerciseFilterState extends State<ExerciseFilter> {
       onlyFavorites: widget.showOnlyFavorites,
     );
 
-    if (!mounted) return;
+    if (!mounted) return; 
 
     setState(() {
       _exercises = List<Map<String, dynamic>>.from(result['exercises']);
@@ -78,7 +81,7 @@ class _ExerciseFilterState extends State<ExerciseFilter> {
       isCurrentlyFavorite: isFavorite,
     );
 
-    await _loadUserAndExercises();
+    await _loadUserAndExercises(); 
   }
 
   @override
