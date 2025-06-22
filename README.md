@@ -17,7 +17,10 @@ The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.<br>Brought
 </div>
 
 ## Table of Contents
-- [[toc]]
+- [Overview](#overview)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Setup Instructions](#setup-instructions)
 
 
 ## Overview
@@ -42,10 +45,12 @@ FitOffice empowers students to integrate fitness into their daily routine — on
 
 This project requires the following dependencies:
 
+- **Flutter SDK:** Version 3.7.0 or higher
+- **Firebase:** Access to  the Firebase console for configuration
 - **Programming Language:** Dart
 - **Package Manager:** Pub
 
-### Installation
+### Setup Instructions
 
 Build FitOffice from the source and install dependencies:
 
@@ -55,3 +60,20 @@ Build FitOffice from the source and install dependencies:
 ```
 2. **Install Flutter and follow the steps:**
 https://docs.flutter.dev/get-started/install
+
+3. **Navigate to the project directory:**
+```sh
+❯ cd FitOffice
+```
+
+4. **Install dependencies:**
+```sh
+❯ flutter pub get
+```
+
+5. **Run the app:**
+```sh
+❯ flutter run
+```
+
+6. **Request access to the Firebase console** from @olisonsturm.
