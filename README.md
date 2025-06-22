@@ -111,10 +111,10 @@ We welcome contributions to FitOffice! If you have ideas for improvements, bug f
 6. **Wait for review** and address any feedback provided by the maintainers.
 7. **Celebrate your contribution!** 🎉
 
-### Issues
+## Issues
 
 If you encounter any bugs or have a feature requests, please open an issue on GitHub. 
-Click here to [create a new issue](https://github.com/olisonsturm/FitOffice/issues/new/choose).
+- Click here to [create a new issue](https://github.com/olisonsturm/FitOffice/issues/new/choose).
 We appreciate your feedback and contributions to improve FitOffice.
 
 
