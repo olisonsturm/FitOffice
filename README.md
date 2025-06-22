@@ -1,6 +1,4 @@
-
 <div align="center">
-
 
 <div style="display: flex; align-items: center; gap: 16px;">
   <img src="assets/gif/FittyFuchsWaving.gif" alt="FittyFuchs Waving" width="150">
@@ -31,6 +29,7 @@ The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.<br>Brought
 </div>
 
 ## Table of Contents
+
 - [Overview](#overview)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
@@ -42,7 +41,6 @@ The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.<br>Brought
 - [Contact](#contact)
 - [Acknowledgements](#acknowledgements)
 - [License](#license)
-
 
 ## Overview
 
