@@ -1,5 +1,7 @@
 # Technical Documentation
 
+This document only provides a high-level overview of the project architecture, core components, and development practices. For detailed implementation and architecture diagrams, please refer to the [FitOffice PROJECT DOCUMENTATION](/PROJECT_DOCUMENTATION.pdf).
+
 ## Table of Contents
 1. [Project Overview](#project-overview)
 2. [Architecture](#architecture)
@@ -9,51 +11,36 @@
 6. [Data Models](#data-models)
 7. [Services](#services)
 8. [UI Components](#ui-components)
-9. [Routing](#routing)
-10. [Development Setup](#development-setup)
-11. [Build and Deployment](#build-and-deployment)
-12. [Contributing Guidelines](#contributing-guidelines)
-13. [Code Style and Conventions](#code-style-and-conventions)
-14. [Testing](#testing)
-15. [Troubleshooting](#troubleshooting)
+9. [Development Setup](#development-setup)
+10. [Build and Deployment](#build-and-deployment)
+11. [Code Style and Conventions](#code-style-and-conventions)
+12. [Troubleshooting](#troubleshooting)
 
 ## Project Overview
 
 This is a Flutter application built with modern architecture patterns and best practices. The project follows a clean architecture approach with clear separation of concerns, making it maintainable and scalable.
 
+[FitOffice PROJECT DOCUMENTATION](/PROJECT_DOCUMENTATION.pdf) provides a comprehensive overview of the project, including architecture diagrams and implementation details.
+
 ### Key Features
 - Cross-platform mobile application (iOS & Android)
-- Modern Flutter UI with Material Design 3
-- State management using Provider/Riverpod pattern
-- Clean architecture with separation of concerns
-- Responsive design for different screen sizes
-- Local data persistence
-- Network connectivity handling
+- Modern Flutter UI
+- Responsive design
+- State management using GetX
+- Dependency injection with GetX
+- Firebase integration for backend services
 
 ### Technology Stack
 - **Framework**: Flutter 3.x
 - **Language**: Dart 3.x
-- **State Management**: Provider/Riverpod
-- **Local Storage**: SharedPreferences/Hive
-- **HTTP Client**: Dio/http
-- **Architecture**: Clean Architecture + MVVM
+- **State Management**: GetX
+- **Routing**: GetX for navigation
+- **Dependency Injection**: GetX
+- **Database**: Firebase Firestore for cloud storage, SharedPreferences for local storage
 
 ## Architecture
 
-The application follows Clean Architecture principles with the following layers:
-
-```
-┌─────────────────────────────────────┐
-│           Presentation Layer        │
-│  (UI, Widgets, State Management)    │
-├─────────────────────────────────────┤
-│           Business Layer            │
-│     (Use Cases, Business Logic)     │
-├─────────────────────────────────────┤
-│             Data Layer              │
-│  (Repositories, Data Sources, APIs) │
-└─────────────────────────────────────┘
-```
+See [PROJECT DOCUMENTATION](/PROJECT_DOCUMENTATION.pdf) for detailed information on the architecture.
 
 ### Architecture Principles
 1. **Dependency Inversion**: High-level modules don't depend on low-level modules
@@ -62,40 +49,176 @@ The application follows Clean Architecture principles with the following layers:
 4. **Interface Segregation**: Clients shouldn't depend on interfaces they don't use
 5. **Dependency Injection**: Dependencies are injected rather than created
 
+### Entity Relationship Model 
+
+![Entity Relationship Model](/assets/diagrams/ERM.png)
+
 ## Project Structure
 
 ```
 lib/
-├── main.dart                 # Application entry point
-├── app/                      # App-level configuration
-│   ├── app.dart             # Main app widget
-│   ├── routes/              # Route definitions
-│   └── themes/              # App themes and styling
-├── core/                     # Core utilities and shared code
-│   ├── constants/           # App constants
-│   ├── errors/              # Error handling
-│   ├── network/             # Network utilities
-│   ├── utils/               # Utility functions
-│   └── extensions/          # Dart extensions
-├── features/                 # Feature modules
-│   └── [feature_name]/      # Individual feature
-│       ├── data/            # Data layer
-│       │   ├── datasources/ # Remote/Local data sources
-│       │   ├── models/      # Data models
-│       │   └── repositories/ # Repository implementations
-│       ├── domain/          # Business logic layer
-│       │   ├── entities/    # Business entities
-│       │   ├── repositories/ # Repository interfaces
-│       │   └── usecases/    # Use cases
-│       └── presentation/    # UI layer
-│           ├── pages/       # Screen widgets
-│           ├── widgets/     # Reusable widgets
-│           └── providers/   # State management
-├── shared/                   # Shared components
-│   ├── widgets/             # Common widgets
-│   ├── services/            # Shared services
-│   └── models/              # Shared models
-└── generated/               # Generated files (assets, l10n)
+├── main.dart                           # Application entry point
+├── app.dart                           # Main app configuration
+├── global_overlay.dart                # Global overlay functionality
+├── firebase_options.dart             # Firebase configuration
+├── l10n/                             # Localization files
+│   ├── app_localizations.dart        # Main localization
+│   ├── app_localizations_de.dart     # German translations
+│   └── app_localizations_en.dart     # English translations
+└── src/
+    ├── constants/                     # Application constants
+    │   ├── colors.dart               # Color definitions
+    │   ├── image_strings.dart        # Image path constants
+    │   ├── sizes.dart                # Size constants
+    │   └── text_strings.dart         # Text constants
+    ├── repository/                    # Data repositories
+    │   ├── authentication_repository/
+    │   │   ├── authentication_repository.dart
+    │   │   └── exceptions/
+    │   │       └── t_exceptions.dart
+    │   ├── user_repository/
+    │   │   └── user_repository.dart
+    │   └── firebase_storage/
+    │       └── storage_service.dart
+    ├── features/
+    │   ├── authentication/            # Authentication feature
+    │   │   ├── controllers/
+    │   │   │   ├── login_controller.dart
+    │   │   │   ├── signup_controller.dart
+    │   │   │   ├── on_boarding_controller.dart
+    │   │   │   └── mail_verification_controller.dart
+    │   │   ├── models/
+    │   │   │   ├── user_model.dart
+    │   │   │   └── model_on_boarding.dart
+    │   │   └── screens/
+    │   │       ├── welcome/
+    │   │       │   └── welcome_screen.dart
+    │   │       ├── on_boarding/
+    │   │       │   ├── on_boarding_screen.dart
+    │   │       │   └── on_boarding_page_widget.dart
+    │   │       ├── login/
+    │   │       │   ├── login_screen.dart
+    │   │       │   └── widgets/
+    │   │       │       └── login_form_widget.dart
+    │   │       ├── signup/
+    │   │       │   ├── signup_screen.dart
+    │   │       │   └── widgets/
+    │   │       │       └── signup_form_widget.dart
+    │   │       ├── forget_password/
+    │   │       │   └── forget_password_model_bottom_sheet.dart
+    │   │       └── mail_verification/
+    │   │           └── mail_verification.dart
+    │   └── core/                      # Core app features
+    │       ├── controllers/
+    │       │   ├── db_controller.dart
+    │       │   ├── exercise_controller.dart
+    │       │   ├── exercise_timer.dart
+    │       │   ├── friends_controller.dart
+    │       │   ├── profile_controller.dart
+    │       │   └── statistics_controller.dart
+    │       ├── models/
+    │       │   ├── dashboard/
+    │       │   │   ├── courses_model.dart
+    │       │   │   └── categories_model.dart
+    │       │   ├── exercise_model.dart
+    │       │   ├── exercise_history_model.dart
+    │       │   ├── friendship_model.dart
+    │       │   └── streak_model.dart
+    │       └── screens/
+    │           ├── dashboard/         # Main dashboard
+    │           │   ├── dashboard.dart
+    │           │   ├── exercise_filter.dart
+    │           │   └── widgets/
+    │           │       ├── appbar.dart
+    │           │       ├── banners.dart
+    │           │       ├── categories.dart
+    │           │       ├── search.dart
+    │           │       ├── top_courses.dart
+    │           │       ├── exercises_list.dart
+    │           │       ├── view_exercise.dart
+    │           │       ├── start_exercise.dart
+    │           │       ├── cancel_exercise.dart
+    │           │       ├── end_exercise.dart
+    │           │       ├── video_player.dart
+    │           │       ├── active_dialog.dart
+    │           │       └── sections/
+    │           │           ├── exercise_info.dart
+    │           │           ├── exercise_history.dart
+    │           │           ├── mental_filter.dart
+    │           │           ├── physicals_filter.dart
+    │           │           └── favorites_filter.dart
+    │           ├── profile/           # User profiles
+    │           │   ├── profile_screen.dart
+    │           │   ├── friend_profile.dart
+    │           │   ├── all_users.dart
+    │           │   ├── widgets/
+    │           │   │   ├── avatar.dart
+    │           │   │   ├── avatar_with_edit.dart
+    │           │   │   ├── avatar_zoom.dart
+    │           │   │   ├── profile_form.dart
+    │           │   │   ├── profile_menu.dart
+    │           │   │   ├── custom_profile_button.dart
+    │           │   │   ├── facet_display_card.dart
+    │           │   │   ├── qr_code_dialog.dart
+    │           │   │   ├── update_profile_modal.dart
+    │           │   │   ├── help_support_modal.dart
+    │           │   │   ├── bug_report_modal.dart
+    │           │   │   ├── about_modal.dart
+    │           │   │   ├── terms_cond_modal.dart
+    │           │   │   └── privacy_policy_modal.dart
+    │           │   └── admin/         # Admin functionality
+    │           │       ├── exercise_form.dart
+    │           │       ├── edit_user_page.dart
+    │           │       ├── add_friends.dart
+    │           │       ├── upload_video.dart
+    │           │       ├── delete_exercise.dart
+    │           │       └── widgets/
+    │           │           ├── friends_box.dart
+    │           │           ├── friends_search.dart
+    │           │           ├── friends_request.dart
+    │           │           ├── add_friends_button.dart
+    │           │           ├── save_button.dart
+    │           │           ├── navigation_button.dart
+    │           │           ├── delete_video.dart
+    │           │           ├── replace_video.dart
+    │           │           ├── confirmation_dialog.dart
+    │           │           └── all_users.dart
+    │           ├── progress/          # Progress tracking
+    │           │   ├── progress_screen.dart
+    │           │   └── widgets/
+    │           │       └── progress_chapter_widget.dart
+    │           ├── statistics/        # Statistics and analytics
+    │           │   ├── statistics_screen.dart
+    │           │   └── widgets/
+    │           │       └── statistics.dart
+    │           └── libary/           # Library/content management
+    │               └── library_screen.dart
+    ├── utils/                        # Utility functions and helpers
+    │   ├── app_bindings.dart         # Dependency injection bindings
+    │   ├── helper/
+    │   │   ├── app_info.dart
+    │   │   ├── helper_controller.dart
+    │   │   └── dialog_helper.dart
+    │   ├── services/
+    │   │   ├── deep_link_service.dart
+    │   │   └── fcm_token_service.dart
+    │   ├── theme/                    # App theming
+    │   │   ├── theme.dart
+    │   │   └── widget_themes/
+    │   │       ├── text_theme.dart
+    │   │       ├── elevated_button_theme.dart
+    │   │       ├── outlined_button_theme.dart
+    │   │       ├── appbar_theme.dart
+    │   │       ├── text_field_theme.dart
+    │   │       └── dialog_theme.dart
+    │   └── animations/              # Animation utilities
+    │       └── fade_in_animation/
+    │           ├── animation_design.dart
+    │           ├── fade_in_animation_controller.dart
+    │           └── fade_in_animation_model.dart
+    └── common_widgets/              # Shared/reusable widgets
+        └── form/
+            └── form_header_widget.dart
 ```
 
 ## Core Components
@@ -120,57 +243,27 @@ lib/
     - Die Methode `onReady()` setzt den `firebaseUser`-Zustand, entfernt den Splash Screen und leitet zum entsprechenden Bildschirm weiter.
     - Nutzung in anderen Klassen: `[final auth = AuthenticationRepository.instance;]`
 
-### main.dart
-The application entry point that initializes the app and sets up global configurations.
-
-```dart
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize services
-  await initializeServices();
-  
-  runApp(MyApp());
-}
-```
-
 ### App Configuration
 - **Theme Management**: Centralized theme configuration with light/dark mode support
-- **Routing**: Declarative routing using GoRouter or Navigator 2.0
 - **Localization**: Multi-language support using Flutter's internationalization
 
 ## State Management
 
-The application uses a combination of state management solutions:
+The application uses a GetX-based state management approach, which allows for reactive programming and efficient state updates.
 
-### Provider Pattern
-Used for simple state management and dependency injection:
+### State Management Principles
+1. **Reactive Programming**: UI updates automatically when state changes
+2. **Separation of Concerns**: UI logic is separated from business logic
+3. **Dependency Injection**: Controllers and services are injected where needed
+4. **Single Source of Truth**: Each piece of state is managed in one place
+5. **Scoped State**: State is scoped to the feature or module it belongs to
+6. **Lifecycle Management**: Controllers are initialized and disposed of properly to avoid memory leaks
+7. **Error Handling**: Centralized error handling for state management
+8. **Performance Optimization**: Use of `GetBuilder` and `Obx` for efficient updates
 
-```dart
-class UserProvider extends ChangeNotifier {
-  User? _user;
-  
-  User? get user => _user;
-  
-  void setUser(User user) {
-    _user = user;
-    notifyListeners();
-  }
-}
-```
+## Models
 
-### Riverpod (if applicable)
-For more complex state management with better testing support:
-
-```dart
-final userProvider = StateNotifierProvider<UserNotifier, UserState>((ref) {
-  return UserNotifier();
-});
-```
-
-## Data Models
-
-### Entity Models
+### Example Entity Model
 Business logic entities that represent core business concepts:
 
 ```dart
@@ -187,7 +280,7 @@ class User {
 }
 ```
 
-### Data Models
+### Example Data Model
 Models used for data transfer and serialization:
 
 ```dart
@@ -218,26 +311,7 @@ class UserModel extends User {
 
 ## Services
 
-### Network Service
-Handles HTTP requests and API communication:
-
-```dart
-class NetworkService {
-  final Dio _dio;
-  
-  NetworkService(this._dio);
-  
-  Future<Response> get(String endpoint) async {
-    try {
-      return await _dio.get(endpoint);
-    } catch (e) {
-      throw NetworkException(e.toString());
-    }
-  }
-}
-```
-
-### Storage Service
+### Example Service
 Manages local data persistence:
 
 ```dart
@@ -262,7 +336,7 @@ class StorageService {
 
 ## UI Components
 
-### Custom Widgets
+### Example Custom Widgets
 Reusable UI components following Material Design principles:
 
 ```dart
@@ -290,7 +364,7 @@ class CustomButton extends StatelessWidget {
 }
 ```
 
-### Screen Structure
+### Example Screen Structure
 Each screen follows a consistent structure:
 
 ```dart
@@ -310,96 +384,33 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Home')),
-      body: _buildBody(),
+      body: _,
     );
   }
-  
-  Widget _buildBody() {
-    // Build screen content
-  }
 }
-```
-
-## Routing
-
-### Route Configuration
-Using GoRouter for declarative routing:
-
-```dart
-final GoRouter router = GoRouter(
-  routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => HomePage(),
-    ),
-    GoRoute(
-      path: '/profile',
-      builder: (context, state) => ProfilePage(),
-    ),
-  ],
-);
-```
-
-### Navigation
-Consistent navigation patterns throughout the app:
-
-```dart
-// Navigate to a new screen
-context.go('/profile');
-
-// Navigate with parameters
-context.go('/user/${userId}');
-
-// Navigate back
-context.pop();
 ```
 
 ## Development Setup
 
-### Prerequisites
-- Flutter SDK 3.x or higher
-- Dart SDK 3.x or higher
-- Android Studio / VS Code with Flutter extensions
-- iOS development: Xcode (for iOS development)
-
-### Installation Steps
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd <project-name>
-   ```
-
-2. Install dependencies:
-   ```bash
-   flutter pub get
-   ```
-
-3. Generate necessary files:
-   ```bash
-   flutter packages pub run build_runner build
-   ```
-
-4. Run the application:
-   ```bash
-   flutter run
-   ```
-
-### Environment Configuration
-Create environment-specific configuration files:
-
-```dart
-// lib/core/config/app_config.dart
-class AppConfig {
-  static const String apiBaseUrl = String.fromEnvironment(
-    'API_BASE_URL',
-    defaultValue: 'https://api.example.com',
-  );
-  
-  static const bool isDebug = bool.fromEnvironment('DEBUG', defaultValue: false);
-}
-```
+Please see [Setup & Run Instructions](https://github.com/olisonsturm/FitOffice/#setup--run-instructions) in README.md for detailed setup instructions.
 
 ## Build and Deployment
+
+### Dart Code Documentation
+
+Generate a whole codebase documentation by using our bash script:
+
+1. Make sure you have `dartdoc` installed:
+   ```bash
+   dart pub global activate dartdoc
+   ```
+2. Make sure you are in the root directory of the project.
+3. Run the script to generate documentation:
+   ```bash
+   ./dart_doc_all.bash
+   ```
+   
+This process generates a Dart file that exports all Dart files in `lib/`, then runs `dart doc .` to create the documentation in the `doc/api/` directory. The script also starts a web server with `python3 -m http.server` to serve the docs locally. When changes are pushed to the master branch, the documentation is automatically deployed to GitHub Pages at `https://olisonsturm.github.io/FitOffice/`.
 
 ### Android Build
 ```bash
@@ -425,32 +436,6 @@ flutter build ios --release
 ### Build Configuration
 Configure build settings in `android/app/build.gradle` and `ios/Runner.xcodeproj`.
 
-## Contributing Guidelines
-
-### Code Review Process
-1. Create a feature branch from `develop`
-2. Implement changes following coding standards
-3. Write/update tests for new functionality
-4. Submit a pull request with detailed description
-5. Address review feedback
-6. Merge after approval
-
-### Branch Naming Convention
-- Feature: `feature/feature-name`
-- Bug fix: `bugfix/bug-description`
-- Hotfix: `hotfix/critical-fix`
-
-### Commit Message Format
-```
-type(scope): description
-
-[optional body]
-
-[optional footer]
-```
-
-Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
-
 ## Code Style and Conventions
 
 ### Dart Style Guide
@@ -460,68 +445,7 @@ Follow the official Dart style guide with these additions:
 2. **Class Naming**: Use PascalCase for class names
 3. **Variable Naming**: Use camelCase for variables and functions
 4. **Constants**: Use SCREAMING_SNAKE_CASE for constants
-
-### Widget Organization
-```dart
-class MyWidget extends StatelessWidget {
-  // 1. Constructor and properties
-  final String title;
-  
-  const MyWidget({Key? key, required this.title}) : super(key: key);
-  
-  // 2. Build method
-  @override
-  Widget build(BuildContext context) {
-    return _buildContent();
-  }
-  
-  // 3. Private helper methods
-  Widget _buildContent() {
-    // Implementation
-  }
-}
-```
-
-### Error Handling
-```dart
-try {
-  final result = await apiService.getData();
-  return Right(result);
-} on NetworkException catch (e) {
-  return Left(NetworkFailure(e.message));
-} catch (e) {
-  return Left(UnknownFailure(e.toString()));
-}
-```
-
-## Testing
-
-### Test Structure
-```
-test/
-├── unit/                    # Unit tests
-├── widget/                  # Widget tests
-├── integration/             # Integration tests
-└── helpers/                 # Test helpers and mocks
-```
-
-### Testing Guidelines
-1. Write unit tests for business logic
-2. Write widget tests for UI components
-3. Write integration tests for user flows
-4. Maintain test coverage above 80%
-
-### Running Tests
-```bash
-# Run all tests
-flutter test
-
-# Run tests with coverage
-flutter test --coverage
-
-# Run specific test file
-flutter test test/unit/user_service_test.dart
-```
+5. **Comments**: Use `///` for documentation comments, `//` for inline comments
 
 ## Troubleshooting
 
@@ -554,7 +478,6 @@ flutter test test/unit/user_service_test.dart
 2. Implement `ListView.builder` for large lists
 3. Optimize image loading with caching
 4. Use `RepaintBoundary` for expensive widgets
-5. Profile app performance regularly
 
 ## Additional Resources
 
@@ -562,31 +485,22 @@ flutter test test/unit/user_service_test.dart
 - [Flutter Documentation](https://flutter.dev/docs)
 - [Dart Language Guide](https://dart.dev/guides)
 - [Material Design Guidelines](https://material.io/design)
-
-### Useful Packages
-- `provider` - State management
-- `dio` - HTTP client
-- `shared_preferences` - Local storage
-- `go_router` - Routing
-- `flutter_bloc` - BLoC pattern implementation
+- [Firebase Documentation](https://firebase.google.com/docs)
+- [FlutterFire](https://firebase.flutter.dev/)
+- [Flutter DevTools](https://flutter.dev/docs/development/tools/devtools)
+- [GetX Documentation](https://pub.dev/packages/get)
 
 ### Development Tools
 - Flutter Inspector
 - Dart DevTools
 - Android Studio/VS Code Flutter extensions
-- Flipper for debugging
+- Postman for API testing
+- Firebase Console for backend management
+- Git for version control
+- GitHub for collaboration and issue tracking
+- GitHub Actions to automate deployment of dart code documentation to GitHub Pages
+- GitHub Pages for hosting documentation
 
----
+--- 
 
-## Changelog
-
-### Version 1.0.0
-- Initial release with core functionality
-- User authentication
-- Basic CRUD operations
-- Responsive UI design
-
----
-
-*Last updated: [Current Date]*
-*Document version: 1.0*
+*Document version: 2.0*

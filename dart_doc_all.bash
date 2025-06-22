@@ -16,7 +16,7 @@ done
 dart doc .
 
 # Start the python server to serve the documentation
-python -m http.server 8000 --directory doc/api
+python -m http.server 8000 --directory doc/api &
 
 # Notify the user
 echo "Documentation generated and served at http://localhost:8000"

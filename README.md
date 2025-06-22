@@ -1,15 +1,13 @@
-
 <div align="center">
-
 
 <div style="display: flex; align-items: center; gap: 16px;">
   <img src="assets/gif/FittyFuchsWaving.gif" alt="FittyFuchs Waving" width="150">
   <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="150">
 </div>
 
-# FitOffice@DHBW
+# FitOffice: Aktive@DHBW
 
-The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.<br>Brought to life by health management students. Developed by business information systems students.
+The original FitOffice App. Made with ❤️ at DHBW Ravensburg.<br>Brought to life by health management students. Developed by business information systems students.
 
 ![last-commit](https://img.shields.io/github/last-commit/olisonsturm/FitOffice?style=flat&logo=git&logoColor=white&color=0080ff)
 ![repo-top-language](https://img.shields.io/github/languages/top/olisonsturm/FitOffice?style=flat&color=0080ff)
@@ -31,6 +29,7 @@ The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.<br>Brought
 </div>
 
 ## Table of Contents
+
 - [Overview](#overview)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
@@ -42,7 +41,6 @@ The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.<br>Brought
 - [Contact](#contact)
 - [Acknowledgements](#acknowledgements)
 - [License](#license)
-
 
 ## Overview
 
@@ -59,6 +57,9 @@ habits without disrupting your study flow.
 - Share your statistics with friends in the app
 
 FitOffice empowers students to integrate fitness into their daily routine — one break at a time.
+
+Everything based on the original idea of FitOffice by health management students at DHBW Ravensburg and the following Pflichtenheft:
+Click here to open the ![Pflichtenheft](/Pflichtenheft.pdf).
 
 ## Getting Started
 
@@ -110,7 +111,7 @@ FitOffice is built using Flutter, a powerful framework for building cross-platfo
 
 - For a technical overview, see the [TECHNICAL OVERVIEW](TECHNICAL_DOCUMENTATION.md).
 - For a detailed project documentation, see the [PROJECT DOCUMENTATION](PROJECT_DOCUMENTATION.pdf).
-- For a detailed code documentation, see the [DART DOCUMENTATION](https://olisonsturm.github.io/FitOffice/).
+- For a detailed code documentation, see the [CODE DOCUMENTATION](https://olisonsturm.github.io/FitOffice/).
 
 ### Contributing
 
@@ -158,5 +159,5 @@ This project is licensed under the GNU Affero General Public License v3.0. See t
 <div align="center">
   <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="200">
   <p>Proudly crafted with ❤️ and ☕ by passionate students of Health Management & Business Information Systems at DHBW Ravensburg</p>
-  <p>© 2025 FitOffice DHBW Ravensburg</p>
+  <p>© 2025 FitOffice Team - DHBW Ravensburg</p>
 </div>

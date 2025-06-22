@@ -44,31 +44,46 @@
       
 <section class="desc markdown">
   <div align="center">
+<div style="display: flex; align-items: center; gap: 16px;">
+  <img src="assets/gif/FittyFuchsWaving.gif" alt="FittyFuchs Waving" width="150">
+  <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="150">
+</div>
 <h1 id="fitofficedhbw">FitOffice@DHBW</h1>
 <p>The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.<br>Brought to life by health management students. Developed by business information systems students.</p>
 <p><img src="https://img.shields.io/github/last-commit/olisonsturm/FitOffice?style=flat&amp;logo=git&amp;logoColor=white&amp;color=0080ff" alt="last-commit">
 <img src="https://img.shields.io/github/languages/top/olisonsturm/FitOffice?style=flat&amp;color=0080ff" alt="repo-top-language">
 <img src="https://img.shields.io/github/languages/count/olisonsturm/FitOffice?style=flat&amp;color=0080ff" alt="repo-language-count"></p>
-<p><em>Built with the tools and technologies:</em></p>
-<p><img src="https://img.shields.io/badge/JSON-000000.svg?style=flat&amp;logo=JSON&amp;logoColor=white" alt="JSON">
-<img src="https://img.shields.io/badge/Markdown-000000.svg?style=flat&amp;logo=Markdown&amp;logoColor=white" alt="Markdown">
-<img src="https://img.shields.io/badge/Swift-F05138.svg?style=flat&amp;logo=Swift&amp;logoColor=white" alt="Swift">
-<img src="https://img.shields.io/badge/Gradle-02303A.svg?style=flat&amp;logo=Gradle&amp;logoColor=white" alt="Gradle">
-<img src="https://img.shields.io/badge/Dart-0175C2.svg?style=flat&amp;logo=Dart&amp;logoColor=white" alt="Dart">
-<img src="https://img.shields.io/badge/C++-00599C.svg?style=flat&amp;logo=C%2B%2B&amp;logoColor=white" alt="C++"></p>
-<p><img src="https://img.shields.io/badge/XML-005FAD.svg?style=flat&amp;logo=XML&amp;logoColor=white" alt="XML">
+<p><em>Built with:</em></p>
+<p><img src="https://img.shields.io/badge/Dart-0175C2.svg?style=flat&amp;logo=Dart&amp;logoColor=white" alt="Dart">
 <img src="https://img.shields.io/badge/Flutter-02569B.svg?style=flat&amp;logo=Flutter&amp;logoColor=white" alt="Flutter">
-<img src="https://img.shields.io/badge/CMake-064F8C.svg?style=flat&amp;logo=CMake&amp;logoColor=white" alt="CMake">
-<img src="https://img.shields.io/badge/Kotlin-7F52FF.svg?style=flat&amp;logo=Kotlin&amp;logoColor=white" alt="Kotlin">
-<img src="https://img.shields.io/badge/Podman-892CA0.svg?style=flat&amp;logo=Podman&amp;logoColor=white" alt="Podman">
-<img src="https://img.shields.io/badge/YAML-CB171E.svg?style=flat&amp;logo=YAML&amp;logoColor=white" alt="YAML"></p>
+<img src="https://img.shields.io/badge/Firebase-FFCA28.svg?style=flat&amp;logo=Firebase&amp;logoColor=orange" alt="Firebase"></p>
+<div style="display: flex; justify-content: center; gap: 0px; align-items: flex-start;">
+<img src="assets/mockup/progress_mock.jpeg" alt="Progress Mock" style="height: 300px; width: auto;">
+<img src="assets/mockup/library_mock.jpeg" alt="Library Mock" style="height: 300px; width: auto;">
+<img src="assets/mockup/statistics_mock.jpeg" alt="Statistics Mock" style="height: 300px; width: auto;">
+<img src="assets/mockup/profile_mock.jpeg" alt="Profile Mock" style="height: 300px; width: auto;">
 </div>
-<hr>
+</div>
 <h2 id="table-of-contents">Table of Contents</h2>
 <ul>
-<li>[<code>toc</code>]</li>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#getting-started">Getting Started</a>
+<ul>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#setup--run-instructions">Setup &amp; Run Instructions</a></li>
 </ul>
-<hr>
+</li>
+<li><a href="#development">Development</a>
+<ul>
+<li><a href="#documentation">Documentation</a></li>
+<li><a href="#contributing">Contributing</a></li>
+</ul>
+</li>
+<li><a href="#issues">Issues</a></li>
+<li><a href="#contact">Contact</a></li>
+<li><a href="#acknowledgements">Acknowledgements</a></li>
+<li><a href="#license">License</a></li>
+</ul>
 <h2 id="overview">Overview</h2>
 <p><strong>FitOffice</strong> is a Flutter-based mobile app designed to help students at DHBW to
 stay physically and mentally fit during their study breaks. Whether you're in the
@@ -83,15 +98,24 @@ habits without disrupting your study flow.</p>
 <li>Share your statistics with friends in the app</li>
 </ul>
 <p>FitOffice empowers students to integrate fitness into their daily routine — one break at a time.</p>
-<hr>
 <h2 id="getting-started">Getting Started</h2>
 <h3 id="prerequisites">Prerequisites</h3>
 <p>This project requires the following dependencies:</p>
 <ul>
+<li><strong>Flutter SDK:</strong> Version 3.7.0 or higher</li>
+<li><strong>Firebase:</strong> Access to  the Firebase console for configuration</li>
 <li><strong>Programming Language:</strong> Dart</li>
 <li><strong>Package Manager:</strong> Pub</li>
+<li><strong>Development Environment:</strong> Any IDE that supports Flutter (e.g., Visual Studio Code, Android Studio)</li>
+<li><strong>Git:</strong> For version control</li>
+<li><strong>Extensions:</strong>
+<ul>
+<li>Flutter and Dart extensions for your IDE</li>
+<li>Firebase CLI for managing Firebase projects</li>
 </ul>
-<h3 id="installation">Installation</h3>
+</li>
+</ul>
+<h3 id="setup--run-instructions">Setup &amp; Run Instructions</h3>
 <p>Build FitOffice from the source and install dependencies:</p>
 <ol>
 <li><strong>Clone the repository:</strong></li>
@@ -99,9 +123,80 @@ habits without disrupting your study flow.</p>
 <pre class="language-sh"><code class="language-sh">❯ git clone https://github.com/olisonsturm/FitOffice
 </code></pre>
 <ol start="2">
-<li><strong>Install Flutter and follow the steps:</strong>
-<a href="https://docs.flutter.dev/get-started/install">https://docs.flutter.dev/get-started/install</a></li>
+<li>
+<p><strong>Install Flutter and follow the steps:</strong>
+<a href="https://docs.flutter.dev/get-started/install">https://docs.flutter.dev/get-started/install</a></p>
+</li>
+<li>
+<p><strong>Navigate to the project directory:</strong></p>
+</li>
 </ol>
+<pre class="language-sh"><code class="language-sh">❯ cd FitOffice
+</code></pre>
+<ol start="4">
+<li><strong>Install dependencies:</strong></li>
+</ol>
+<pre class="language-sh"><code class="language-sh">❯ flutter pub get
+</code></pre>
+<ol start="5">
+<li><strong>Run the app on iOS or Andorid:</strong></li>
+</ol>
+<pre class="language-sh"><code class="language-sh">❯ flutter run 
+</code></pre>
+<h2 id="development">Development</h2>
+<p>FitOffice is built using Flutter, a powerful framework for building cross-platform mobile applications. The codebase is structured to facilitate easy navigation and development.</p>
+<h3 id="documentation">Documentation</h3>
+<ul>
+<li>For a technical overview, see the <a href="TECHNICAL_DOCUMENTATION.md">TECHNICAL OVERVIEW</a>.</li>
+<li>For a detailed project documentation, see the <a href="PROJECT_DOCUMENTATION.pdf">PROJECT DOCUMENTATION</a>.</li>
+<li>For a detailed code documentation, see the <a href="https://olisonsturm.github.io/FitOffice/">DART DOCUMENTATION</a>.</li>
+</ul>
+<h3 id="contributing">Contributing</h3>
+<p>We welcome contributions to FitOffice! If you have ideas for improvements, bug fixes, or new features, please follow these steps:</p>
+<ol>
+<li><strong>Fork the repository</strong> on GitHub.</li>
+<li><strong>Create a new branch</strong> for your feature or bug fix:</li>
+</ol>
+<pre class="language-sh"><code class="language-sh">❯ git checkout -b feature/your-feature-name
+</code></pre>
+<ol start="3">
+<li><strong>Make your changes</strong> and commit them:</li>
+</ol>
+<pre class="language-sh"><code class="language-sh">❯ git commit -m "Add your commit message here"
+</code></pre>
+<ol start="4">
+<li><strong>Push your changes</strong> to your fork:</li>
+</ol>
+<pre class="language-sh"><code class="language-sh">❯ git push origin feature/your-feature-name
+</code></pre>
+<ol start="5">
+<li><strong>Create a pull request</strong> on GitHub, describing your changes and why they should be merged.</li>
+<li><strong>Wait for review</strong> and address any feedback provided by the maintainers.</li>
+<li><strong>Celebrate your contribution!</strong> 🎉</li>
+</ol>
+<h2 id="issues">Issues</h2>
+<p>If you encounter any bugs or have a feature requests, please open an issue on GitHub. We appreciate your feedback and contributions to improve FitOffice.</p>
+<ul>
+<li>Click here to <a href="https://github.com/olisonsturm/FitOffice/issues/new/choose">create a new issue</a>.</li>
+</ul>
+<h2 id="contact">Contact</h2>
+<p>For any questions please create a <a href="https://github.com/olisonsturm/FitOffice/discussions/new/choose">discussion on GitHub</a>
+or contact the maintainers directly:</p>
+<ul>
+<li><strong>Olison Sturm</strong> - <a href="https://github.com/olisonsturm">GitHub</a> | <a href="https://www.linkedin.com/in/olisonsturm/">LinkedIn</a></li>
+<li><strong>Max Schäfer</strong> - <a href="https://github.com/MaxSch-03">GitHub</a></li>
+<li><strong>Jonas Menz</strong> - <a href="https://github.com/Menzerich">GitHub</a></li>
+</ul>
+<h2 id="acknowledgements">Acknowledgements</h2>
+<p>We would like to thank the DHBW Ravensburg for their support, as well as all contributors who have helped make FitOffice a reality. Special thanks to our health management students for their insights and for their original idea of FitOffice.</p>
+<h2 id="license">License</h2>
+<p>This project is licensed under the GNU Affero General Public License v3.0. See the <a href="LICENSE">LICENSE</a> file for details.</p>
+<h1 id=""></h1>
+<div align="center">
+  <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="200">
+  <p>Proudly crafted with ❤️ and ☕ by passionate students of Health Management &amp; Business Information Systems at DHBW Ravensburg</p>
+  <p>© 2025 FitOffice DHBW Ravensburg</p>
+</div>
 </section>
 
 

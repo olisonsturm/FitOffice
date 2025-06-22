@@ -291,14 +291,14 @@ Widget build(BuildContext context) {
                         Helper.successSnackBar(title: localisation.tSuccess, message: &#39;Account deleted successfully&#39;);
                       } on FirebaseAuthException catch (e) {
                         if (kDebugMode) {
-                          print(&#39;FirebaseAuthException: \\${e.code} - \\${e.message}&#39;);
+                          print(&#39;FirebaseAuthException: ${e.code} - ${e.message}&#39;);
                         }
-                        Helper.errorSnackBar(title: localisation.tOhSnap, message: &#39;Failed to delete account: \\${e.message}&#39;);
+                        Helper.errorSnackBar(title: localisation.tOhSnap, message: &#39;Failed to delete account: ${e.message}&#39;);
                       } catch (e) {
                         if (kDebugMode) {
-                          print(&#39;Exception: \\$e&#39;);
+                          print(&#39;Exception: $e&#39;);
                         }
-                        Helper.errorSnackBar(title: localisation.tOhSnap, message: &#39;Failed to delete account: \\$e&#39;);
+                        Helper.errorSnackBar(title: localisation.tOhSnap, message: &#39;Failed to delete account: $e&#39;);
                       }
                     },
                     child: Text(localisation.tRemove),
