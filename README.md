@@ -1,16 +1,9 @@
-<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
 <div align="center">
 
 
   <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="200">
-  <lottie-player
-    src="assets/lottie/FittyFuchsWaving.json"
-    background="transparent"
-    speed="1"
-    style="width: 200px; height: 200px;"
-    loop
-    autoplay>
-  </lottie-player>
+  ![FittyFuchs](assets/gif/FittyFuchsWaving.gif)
 
 # FitOffice@DHBW
 
@@ -26,9 +19,10 @@ The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.<br>Brought
 ![Flutter](https://img.shields.io/badge/Flutter-02569B.svg?style=flat&logo=Flutter&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28.svg?style=flat&logo=Firebase&logoColor=orange)
 
-![Screenshot 1](assets/screenshots/screenshot1.png)
-![Screenshot 2](assets/screenshots/screenshot2.png)
-![Screenshot 3](assets/screenshots/screenshot3.png)
+![Screenshot 1](assets/mockups/screenshot1.png)
+![Screenshot 2](assets/mockups/screenshot2.png)
+![Screenshot 3](assets/mockups/screenshot3.png)
+![Screenshot 4](assets/mockups/screenshot4.png)
 
 </div>
 
@@ -110,8 +104,8 @@ FitOffice is built using Flutter, a powerful framework for building cross-platfo
 
 ### Documentation
 
-For a technical overview, see the [TECHNICAL OVERVIEW](TECHNICAL_DOCUMENTATION.md).
-For a detailed project documentation, see the [PROJECT DOCUMENTATION](PROJECT_DOCUMENTATION.pdf).
+- For a technical overview, see the [TECHNICAL OVERVIEW](TECHNICAL_DOCUMENTATION.md).
+- For a detailed project documentation, see the [PROJECT DOCUMENTATION](PROJECT_DOCUMENTATION.pdf).
 
 ### Contributing
 
@@ -154,6 +148,7 @@ We would like to thank the DHBW Ravensburg for their support, as well as all con
 
 This project is licensed under the GNU Affero General Public License v3.0. See the [LICENSE](LICENSE) file for details.
 
+# 
 
 <div align="center">
   <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="200">
