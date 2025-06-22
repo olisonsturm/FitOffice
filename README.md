@@ -21,10 +21,10 @@ The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.<br>Brought
 ![Flutter](https://img.shields.io/badge/Flutter-02569B.svg?style=flat&logo=Flutter&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28.svg?style=flat&logo=Firebase&logoColor=orange)
 
-![Progress](assets/mockup/progress_mock.png)
-![Library](assets/mockup/library_mock.png)
-![Statistics](assets/mockup/statistics_mock.png)
-![Profile](assets/mockup/profile_mock.png)
+![progress_mock.jpeg](assets%2Fmockup%2Fprogress_mock.jpeg)
+![library_mock.jpeg](assets%2Fmockup%2Flibrary_mock.jpeg)
+![statistics_mock.jpeg](assets%2Fmockup%2Fstatistics_mock.jpeg)
+![profile_mock.jpeg](assets%2Fmockup%2Fprofile_mock.jpeg)
 
 </div>
 
