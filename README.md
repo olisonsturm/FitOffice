@@ -26,7 +26,13 @@ The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.<br>Brought
 - [Overview](#overview)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
-  - [Setup Instructions](#setup-instructions)
+  - [Setup & Run Instructions](#setup--run-instructions)
+- [Development](#development)
+  - [Contributing](#contributing)
+- [Issues](#issues)
+- [Contact](#contact)
+- [Acknowledgements](#acknowledgements)
+- [License](#license)
 
 
 ## Overview
@@ -61,7 +67,7 @@ This project requires the following dependencies:
   - Flutter and Dart extensions for your IDE
   - Firebase CLI for managing Firebase projects
 
-### Setup Instructions
+### Setup & Run Instructions
 
 Build FitOffice from the source and install dependencies:
 
@@ -87,9 +93,13 @@ https://docs.flutter.dev/get-started/install
 ❯ flutter run 
 ```
 
-6. **Request access to the Firebase console** from @olisonsturm.
-
 ## Development
+
+FitOffice is built using Flutter, a powerful framework for building cross-platform mobile applications. The codebase is structured to facilitate easy navigation and development.
+
+### Technical Documentation
+
+For detailed project documentation, see the [FitOffice Documentation](TECHNICAL_DOCUMENTATION.md).
 
 ### Contributing
 
@@ -113,10 +123,8 @@ We welcome contributions to FitOffice! If you have ideas for improvements, bug f
 
 ## Issues
 
-If you encounter any bugs or have a feature requests, please open an issue on GitHub. 
+If you encounter any bugs or have a feature requests, please open an issue on GitHub. We appreciate your feedback and contributions to improve FitOffice.
 - Click here to [create a new issue](https://github.com/olisonsturm/FitOffice/issues/new/choose).
-We appreciate your feedback and contributions to improve FitOffice.
-
 
 ## Contact
 
