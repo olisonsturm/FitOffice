@@ -3,8 +3,8 @@
 
 
 <div style="display: flex; align-items: center; gap: 16px;">
-  <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="150">
   <img src="assets/gif/FittyFuchsWaving.gif" alt="FittyFuchs Waving" width="150">
+  <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="150">
 </div>
 
 # FitOffice@DHBW
@@ -21,10 +21,10 @@ The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.<br>Brought
 ![Flutter](https://img.shields.io/badge/Flutter-02569B.svg?style=flat&logo=Flutter&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28.svg?style=flat&logo=Firebase&logoColor=orange)
 
-![Screenshot 1](assets/mockups/screenshot1.png)
-![Screenshot 2](assets/mockups/screenshot2.png)
-![Screenshot 3](assets/mockups/screenshot3.png)
-![Screenshot 4](assets/mockups/screenshot4.png)
+![Progress](assets/mockup/progress_mock.png)
+![Library](assets/mockup/library_mock.png)
+![Statistics](assets/mockup/statistics_mock.png)
+![Profile](assets/mockup/profile_mock.png)
 
 </div>
 
