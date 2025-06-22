@@ -59,7 +59,7 @@ habits without disrupting your study flow.
 FitOffice empowers students to integrate fitness into their daily routine — one break at a time.
 
 Everything based on the original idea of FitOffice by health management students at DHBW Ravensburg and the following Pflichtenheft:
-Click here to open the ![Pflichtenheft](/Pflichtenheft.pdf).
+Click here to open the [Pflichtenheft](/Pflichtenheft.pdf).
 
 ## Getting Started
 
