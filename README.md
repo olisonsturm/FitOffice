@@ -140,11 +140,11 @@ We would like to thank the DHBW Ravensburg for their support, as well as all con
 
 ## License
 
-This project is licensed under the GNU Affero General Public License v3.0. See the [LICENSE](https://github.com/olisonsturm/FitOffice/blob/master/LICENSE) file for details.
+This project is licensed under the GNU Affero General Public License v3.0. See the [LICENSE](LICENSE) file for details.
 
 
 <div align="center">
-  <img src="https://github.com/olisonsturm/FitOffice/blob/markdowns/assets/logo/fit_office.png" alt="FitOffice Logo" width="200">
+  <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="200">
   <p>Proudly crafted with ❤️ and ☕ by passionate students of Health Management & Business Information Systems at DHBW Ravensburg</p>
   <p>© 2025 FitOffice DHBW Ravensburg</p>
 </div>
