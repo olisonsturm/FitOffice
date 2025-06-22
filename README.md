@@ -58,6 +58,9 @@ habits without disrupting your study flow.
 
 FitOffice empowers students to integrate fitness into their daily routine — one break at a time.
 
+Everything based on the original idea of FitOffice by health management students at DHBW Ravensburg and the following Pflichtenheft:
+Click here to open the ![Pflichtenheft](/Pflichtenheft.pdf).
+
 ## Getting Started
 
 ### Prerequisites
@@ -108,7 +111,7 @@ FitOffice is built using Flutter, a powerful framework for building cross-platfo
 
 - For a technical overview, see the [TECHNICAL OVERVIEW](TECHNICAL_DOCUMENTATION.md).
 - For a detailed project documentation, see the [PROJECT DOCUMENTATION](PROJECT_DOCUMENTATION.pdf).
-- For a detailed code documentation, see the [DART DOCUMENTATION](https://olisonsturm.github.io/FitOffice/).
+- For a detailed code documentation, see the [CODE DOCUMENTATION](https://olisonsturm.github.io/FitOffice/).
 
 ### Contributing
 
