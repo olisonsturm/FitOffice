@@ -1,5 +1,7 @@
 <div align="center">
 
+  <img src="https://github.com/olisonsturm/FitOffice/blob/markdowns/assets/logo/fit_office.png" alt="FitOffice Logo" width="400">
+
 # FitOffice@DHBW
 
 The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.<br>Brought to life by health management students. Developed by business information systems students.
