@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="https://github.com/olisonsturm/FitOffice/blob/markdowns/assets/logo/fit_office.png" alt="FitOffice Logo" width="200">
+  <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="200"><img src="assets/lottie/FittyFuchsWaving" alt="FittyFuchs" width="200">
 
 # FitOffice@DHBW
 
@@ -16,9 +16,9 @@ The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.<br>Brought
 ![Flutter](https://img.shields.io/badge/Flutter-02569B.svg?style=flat&logo=Flutter&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28.svg?style=flat&logo=Firebase&logoColor=orange)
 
-![Screenshot 1](https://raw.githubusercontent.com/olisonsturm/FitOffice/main/assets/screenshots/screenshot1.png)
-![Screenshot 2](https://raw.githubusercontent.com/olisonsturm/FitOffice/main/assets/screenshots/screenshot2.png)
-![Screenshot 3](https://raw.githubusercontent.com/olisonsturm/FitOffice/main/assets/screenshots/screenshot3.png)
+![Screenshot 1](assets/screenshots/screenshot1.png)
+![Screenshot 2](assets/screenshots/screenshot2.png)
+![Screenshot 3](assets/screenshots/screenshot3.png)
 
 </div>
 
@@ -28,6 +28,7 @@ The original FitOffice@DHBW App. Made with ❤️ at DHBW Ravensburg.<br>Brought
   - [Prerequisites](#prerequisites)
   - [Setup & Run Instructions](#setup--run-instructions)
 - [Development](#development)
+  - [Documentation](#documentation)
   - [Contributing](#contributing)
 - [Issues](#issues)
 - [Contact](#contact)
@@ -97,9 +98,10 @@ https://docs.flutter.dev/get-started/install
 
 FitOffice is built using Flutter, a powerful framework for building cross-platform mobile applications. The codebase is structured to facilitate easy navigation and development.
 
-### Technical Documentation
+### Documentation
 
-For detailed project documentation, see the [FitOffice Documentation](TECHNICAL_DOCUMENTATION.md).
+For a technical overview, see the [TECHNICAL OVERVIEW](TECHNICAL_DOCUMENTATION.md).
+For a detailed project documentation, see the [PROJECT DOCUMENTATION](PROJECT_DOCUMENTATION.pdf).
 
 ### Contributing
 
