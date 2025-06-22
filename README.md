@@ -123,4 +123,8 @@ We would like to thank the DHBW Ravensburg for their support and resources, as w
 
 This project is licensed under the GNU Affero General Public License v3.0. See the [LICENSE](https://github.com/olisonsturm/FitOffice/blob/master/LICENSE) file for details.
 
-# Stay fit, stay focused, and enjoy your study breaks with FitOffice! 💪
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/olisonsturm/FitOffice/main/assets/logo.png" alt="FitOffice Logo" width="200">
+  Stay fit, stay focused, and enjoy your study breaks with FitOffice! 💪
+</div>
