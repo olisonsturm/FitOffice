@@ -38,7 +38,7 @@ This is a Flutter application built with modern architecture patterns and best p
 
 ## Architecture
 
-See [PROJECT DOCUMENTATION](/PROJECT_DOCUMENTATION.pdf) for detailed architecture diagrams.
+See [PROJECT DOCUMENTATION](/PROJECT_DOCUMENTATION.pdf) for detailed information on the architecture.
 
 ### Architecture Principles
 1. **Dependency Inversion**: High-level modules don't depend on low-level modules
@@ -55,46 +55,168 @@ See [PROJECT DOCUMENTATION](/PROJECT_DOCUMENTATION.pdf) for detailed architectur
 
 ```
 lib/
-├── main.dart                      # Application entry point
-├── app/
-│   ├── app.dart                  # Main GetMaterialApp configuration
-│   ├── bindings/
-│   │   └── initial_binding.dart  # GetX controller registration
-│   └── routes/
-│       └── app_pages.dart        # GetX route definitions
-├── core/
-│   ├── constants/                # Application constants
-│   ├── errors/                   # Error handling utilities
-│   ├── services/                 # Core services like network, storage
-│   └── utils/                    # Utility functions
-├── features/
-│   ├── auth/                     # Authentication feature
-│   │   ├── controllers/          # GetX controllers
-│   │   ├── repositories/
-│   │   │   └── authentication_repository.dart
-│   │   ├── screens/              # UI screens
-│   │   └── widgets/              # Feature-specific widgets
-│   ├── home/                     # Home feature
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── screens/
-│   │   └── widgets/
-│   ├── profile/                  # Profile feature
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── screens/
-│   │   └── widgets/
-│   └── workout/                  # Workout feature
-│       ├── controllers/
-│       ├── models/
-│       ├── screens/
-│       └── widgets/
-├── shared/
-│   ├── widgets/                  # Common widgets
-│   ├── models/                   # Shared data models
-│   └── themes/                   # Theme configurations
-└── firebase/                     # Firebase service initializations
-    └── firebase_options.dart
+├── main.dart                           # Application entry point
+├── app.dart                           # Main app configuration
+├── global_overlay.dart                # Global overlay functionality
+├── firebase_options.dart             # Firebase configuration
+├── l10n/                             # Localization files
+│   ├── app_localizations.dart        # Main localization
+│   ├── app_localizations_de.dart     # German translations
+│   └── app_localizations_en.dart     # English translations
+└── src/
+    ├── constants/                     # Application constants
+    │   ├── colors.dart               # Color definitions
+    │   ├── image_strings.dart        # Image path constants
+    │   ├── sizes.dart                # Size constants
+    │   └── text_strings.dart         # Text constants
+    ├── repository/                    # Data repositories
+    │   ├── authentication_repository/
+    │   │   ├── authentication_repository.dart
+    │   │   └── exceptions/
+    │   │       └── t_exceptions.dart
+    │   ├── user_repository/
+    │   │   └── user_repository.dart
+    │   └── firebase_storage/
+    │       └── storage_service.dart
+    ├── features/
+    │   ├── authentication/            # Authentication feature
+    │   │   ├── controllers/
+    │   │   │   ├── login_controller.dart
+    │   │   │   ├── signup_controller.dart
+    │   │   │   ├── on_boarding_controller.dart
+    │   │   │   └── mail_verification_controller.dart
+    │   │   ├── models/
+    │   │   │   ├── user_model.dart
+    │   │   │   └── model_on_boarding.dart
+    │   │   └── screens/
+    │   │       ├── welcome/
+    │   │       │   └── welcome_screen.dart
+    │   │       ├── on_boarding/
+    │   │       │   ├── on_boarding_screen.dart
+    │   │       │   └── on_boarding_page_widget.dart
+    │   │       ├── login/
+    │   │       │   ├── login_screen.dart
+    │   │       │   └── widgets/
+    │   │       │       └── login_form_widget.dart
+    │   │       ├── signup/
+    │   │       │   ├── signup_screen.dart
+    │   │       │   └── widgets/
+    │   │       │       └── signup_form_widget.dart
+    │   │       ├── forget_password/
+    │   │       │   └── forget_password_model_bottom_sheet.dart
+    │   │       └── mail_verification/
+    │   │           └── mail_verification.dart
+    │   └── core/                      # Core app features
+    │       ├── controllers/
+    │       │   ├── db_controller.dart
+    │       │   ├── exercise_controller.dart
+    │       │   ├── exercise_timer.dart
+    │       │   ├── friends_controller.dart
+    │       │   ├── profile_controller.dart
+    │       │   └── statistics_controller.dart
+    │       ├── models/
+    │       │   ├── dashboard/
+    │       │   │   ├── courses_model.dart
+    │       │   │   └── categories_model.dart
+    │       │   ├── exercise_model.dart
+    │       │   ├── exercise_history_model.dart
+    │       │   ├── friendship_model.dart
+    │       │   └── streak_model.dart
+    │       └── screens/
+    │           ├── dashboard/         # Main dashboard
+    │           │   ├── dashboard.dart
+    │           │   ├── exercise_filter.dart
+    │           │   └── widgets/
+    │           │       ├── appbar.dart
+    │           │       ├── banners.dart
+    │           │       ├── categories.dart
+    │           │       ├── search.dart
+    │           │       ├── top_courses.dart
+    │           │       ├── exercises_list.dart
+    │           │       ├── view_exercise.dart
+    │           │       ├── start_exercise.dart
+    │           │       ├── cancel_exercise.dart
+    │           │       ├── end_exercise.dart
+    │           │       ├── video_player.dart
+    │           │       ├── active_dialog.dart
+    │           │       └── sections/
+    │           │           ├── exercise_info.dart
+    │           │           ├── exercise_history.dart
+    │           │           ├── mental_filter.dart
+    │           │           ├── physicals_filter.dart
+    │           │           └── favorites_filter.dart
+    │           ├── profile/           # User profiles
+    │           │   ├── profile_screen.dart
+    │           │   ├── friend_profile.dart
+    │           │   ├── all_users.dart
+    │           │   ├── widgets/
+    │           │   │   ├── avatar.dart
+    │           │   │   ├── avatar_with_edit.dart
+    │           │   │   ├── avatar_zoom.dart
+    │           │   │   ├── profile_form.dart
+    │           │   │   ├── profile_menu.dart
+    │           │   │   ├── custom_profile_button.dart
+    │           │   │   ├── facet_display_card.dart
+    │           │   │   ├── qr_code_dialog.dart
+    │           │   │   ├── update_profile_modal.dart
+    │           │   │   ├── help_support_modal.dart
+    │           │   │   ├── bug_report_modal.dart
+    │           │   │   ├── about_modal.dart
+    │           │   │   ├── terms_cond_modal.dart
+    │           │   │   └── privacy_policy_modal.dart
+    │           │   └── admin/         # Admin functionality
+    │           │       ├── exercise_form.dart
+    │           │       ├── edit_user_page.dart
+    │           │       ├── add_friends.dart
+    │           │       ├── upload_video.dart
+    │           │       ├── delete_exercise.dart
+    │           │       └── widgets/
+    │           │           ├── friends_box.dart
+    │           │           ├── friends_search.dart
+    │           │           ├── friends_request.dart
+    │           │           ├── add_friends_button.dart
+    │           │           ├── save_button.dart
+    │           │           ├── navigation_button.dart
+    │           │           ├── delete_video.dart
+    │           │           ├── replace_video.dart
+    │           │           ├── confirmation_dialog.dart
+    │           │           └── all_users.dart
+    │           ├── progress/          # Progress tracking
+    │           │   ├── progress_screen.dart
+    │           │   └── widgets/
+    │           │       └── progress_chapter_widget.dart
+    │           ├── statistics/        # Statistics and analytics
+    │           │   ├── statistics_screen.dart
+    │           │   └── widgets/
+    │           │       └── statistics.dart
+    │           └── libary/           # Library/content management
+    │               └── library_screen.dart
+    ├── utils/                        # Utility functions and helpers
+    │   ├── app_bindings.dart         # Dependency injection bindings
+    │   ├── helper/
+    │   │   ├── app_info.dart
+    │   │   ├── helper_controller.dart
+    │   │   └── dialog_helper.dart
+    │   ├── services/
+    │   │   ├── deep_link_service.dart
+    │   │   └── fcm_token_service.dart
+    │   ├── theme/                    # App theming
+    │   │   ├── theme.dart
+    │   │   └── widget_themes/
+    │   │       ├── text_theme.dart
+    │   │       ├── elevated_button_theme.dart
+    │   │       ├── outlined_button_theme.dart
+    │   │       ├── appbar_theme.dart
+    │   │       ├── text_field_theme.dart
+    │   │       └── dialog_theme.dart
+    │   └── animations/              # Animation utilities
+    │       └── fade_in_animation/
+    │           ├── animation_design.dart
+    │           ├── fade_in_animation_controller.dart
+    │           └── fade_in_animation_model.dart
+    └── common_widgets/              # Shared/reusable widgets
+        └── form/
+            └── form_header_widget.dart
 ```
 
 ## Core Components
@@ -139,7 +261,7 @@ The application uses a GetX-based state management approach, which allows for re
 
 ## Models
 
-### Entity Models
+### Example Entity Models
 Business logic entities that represent core business concepts:
 
 ```dart
@@ -156,7 +278,7 @@ class User {
 }
 ```
 
-### Data Models
+### Example Data Models
 Models used for data transfer and serialization:
 
 ```dart
@@ -187,7 +309,7 @@ class UserModel extends User {
 
 ## Services
 
-### Storage Service
+### Example Storage Service
 Manages local data persistence:
 
 ```dart
@@ -212,7 +334,7 @@ class StorageService {
 
 ## UI Components
 
-### Custom Widgets
+### Example Custom Widgets
 Reusable UI components following Material Design principles:
 
 ```dart
@@ -240,7 +362,7 @@ class CustomButton extends StatelessWidget {
 }
 ```
 
-### Screen Structure
+### Example Screen Structure
 Each screen follows a consistent structure:
 
 ```dart
@@ -363,5 +485,4 @@ Follow the official Dart style guide with these additions:
 
 --- 
 
-*Last updated: [Current Date]*
-*Document version: 1.0*
+*Document version: 2.0*
