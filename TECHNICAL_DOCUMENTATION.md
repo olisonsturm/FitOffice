@@ -9,13 +9,10 @@
 6. [Data Models](#data-models)
 7. [Services](#services)
 8. [UI Components](#ui-components)
-9. [Routing](#routing)
-10. [Development Setup](#development-setup)
-11. [Build and Deployment](#build-and-deployment)
-12. [Contributing Guidelines](#contributing-guidelines)
-13. [Code Style and Conventions](#code-style-and-conventions)
-14. [Testing](#testing)
-15. [Troubleshooting](#troubleshooting)
+9. [Development Setup](#development-setup)
+10. [Build and Deployment](#build-and-deployment)
+11. [Code Style and Conventions](#code-style-and-conventions)
+12. [Troubleshooting](#troubleshooting)
 
 ## Project Overview
 
@@ -23,37 +20,23 @@ This is a Flutter application built with modern architecture patterns and best p
 
 ### Key Features
 - Cross-platform mobile application (iOS & Android)
-- Modern Flutter UI with Material Design 3
-- State management using Provider/Riverpod pattern
-- Clean architecture with separation of concerns
-- Responsive design for different screen sizes
-- Local data persistence
-- Network connectivity handling
+- Modern Flutter UI
+- Responsive design
+- State management using GetX
+- Dependency injection with GetX
+- Firebase integration for backend services
 
 ### Technology Stack
 - **Framework**: Flutter 3.x
 - **Language**: Dart 3.x
-- **State Management**: Provider/Riverpod
-- **Local Storage**: SharedPreferences/Hive
-- **HTTP Client**: Dio/http
-- **Architecture**: Clean Architecture + MVVM
+- **State Management**: GetX
+- **Routing**: GetX for navigation
+- **Dependency Injection**: GetX
+- **Database**: Firebase Firestore for cloud storage, SharedPreferences for local storage
 
 ## Architecture
 
-The application follows Clean Architecture principles with the following layers:
-
-```
-┌─────────────────────────────────────┐
-│           Presentation Layer        │
-│  (UI, Widgets, State Management)    │
-├─────────────────────────────────────┤
-│           Business Layer            │
-│     (Use Cases, Business Logic)     │
-├─────────────────────────────────────┤
-│             Data Layer              │
-│  (Repositories, Data Sources, APIs) │
-└─────────────────────────────────────┘
-```
+See [PROJECT DOCUMENTATION](/PROJECT_DOCUMENTATION.pdf) for detailed architecture diagrams.
 
 ### Architecture Principles
 1. **Dependency Inversion**: High-level modules don't depend on low-level modules
@@ -66,36 +49,46 @@ The application follows Clean Architecture principles with the following layers:
 
 ```
 lib/
-├── main.dart                 # Application entry point
-├── app/                      # App-level configuration
-│   ├── app.dart             # Main app widget
-│   ├── routes/              # Route definitions
-│   └── themes/              # App themes and styling
-├── core/                     # Core utilities and shared code
-│   ├── constants/           # App constants
-│   ├── errors/              # Error handling
-│   ├── network/             # Network utilities
-│   ├── utils/               # Utility functions
-│   └── extensions/          # Dart extensions
-├── features/                 # Feature modules
-│   └── [feature_name]/      # Individual feature
-│       ├── data/            # Data layer
-│       │   ├── datasources/ # Remote/Local data sources
-│       │   ├── models/      # Data models
-│       │   └── repositories/ # Repository implementations
-│       ├── domain/          # Business logic layer
-│       │   ├── entities/    # Business entities
-│       │   ├── repositories/ # Repository interfaces
-│       │   └── usecases/    # Use cases
-│       └── presentation/    # UI layer
-│           ├── pages/       # Screen widgets
-│           ├── widgets/     # Reusable widgets
-│           └── providers/   # State management
-├── shared/                   # Shared components
-│   ├── widgets/             # Common widgets
-│   ├── services/            # Shared services
-│   └── models/              # Shared models
-└── generated/               # Generated files (assets, l10n)
+├── main.dart                      # Application entry point
+├── app/
+│   ├── app.dart                  # Main GetMaterialApp configuration
+│   ├── bindings/
+│   │   └── initial_binding.dart  # GetX controller registration
+│   └── routes/
+│       └── app_pages.dart        # GetX route definitions
+├── core/
+│   ├── constants/                # Application constants
+│   ├── errors/                   # Error handling utilities
+│   ├── services/                 # Core services like network, storage
+│   └── utils/                    # Utility functions
+├── features/
+│   ├── auth/                     # Authentication feature
+│   │   ├── controllers/          # GetX controllers
+│   │   ├── repositories/
+│   │   │   └── authentication_repository.dart
+│   │   ├── screens/              # UI screens
+│   │   └── widgets/              # Feature-specific widgets
+│   ├── home/                     # Home feature
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── screens/
+│   │   └── widgets/
+│   ├── profile/                  # Profile feature
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── screens/
+│   │   └── widgets/
+│   └── workout/                  # Workout feature
+│       ├── controllers/
+│       ├── models/
+│       ├── screens/
+│       └── widgets/
+├── shared/
+│   ├── widgets/                  # Common widgets
+│   ├── models/                   # Shared data models
+│   └── themes/                   # Theme configurations
+└── firebase/                     # Firebase service initializations
+    └── firebase_options.dart
 ```
 
 ## Core Components
@@ -120,55 +113,25 @@ lib/
     - Die Methode `onReady()` setzt den `firebaseUser`-Zustand, entfernt den Splash Screen und leitet zum entsprechenden Bildschirm weiter.
     - Nutzung in anderen Klassen: `[final auth = AuthenticationRepository.instance;]`
 
-### main.dart
-The application entry point that initializes the app and sets up global configurations.
-
-```dart
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize services
-  await initializeServices();
-  
-  runApp(MyApp());
-}
-```
-
 ### App Configuration
 - **Theme Management**: Centralized theme configuration with light/dark mode support
-- **Routing**: Declarative routing using GoRouter or Navigator 2.0
 - **Localization**: Multi-language support using Flutter's internationalization
 
 ## State Management
 
-The application uses a combination of state management solutions:
+The application uses a GetX-based state management approach, which allows for reactive programming and efficient state updates.
 
-### Provider Pattern
-Used for simple state management and dependency injection:
+### State Management Principles
+1. **Reactive Programming**: UI updates automatically when state changes
+2. **Separation of Concerns**: UI logic is separated from business logic
+3. **Dependency Injection**: Controllers and services are injected where needed
+4. **Single Source of Truth**: Each piece of state is managed in one place
+5. **Scoped State**: State is scoped to the feature or module it belongs to
+6. **Lifecycle Management**: Controllers are initialized and disposed of properly to avoid memory leaks
+7. **Error Handling**: Centralized error handling for state management
+8. **Performance Optimization**: Use of `GetBuilder` and `Obx` for efficient updates
 
-```dart
-class UserProvider extends ChangeNotifier {
-  User? _user;
-  
-  User? get user => _user;
-  
-  void setUser(User user) {
-    _user = user;
-    notifyListeners();
-  }
-}
-```
-
-### Riverpod (if applicable)
-For more complex state management with better testing support:
-
-```dart
-final userProvider = StateNotifierProvider<UserNotifier, UserState>((ref) {
-  return UserNotifier();
-});
-```
-
-## Data Models
+## Models
 
 ### Entity Models
 Business logic entities that represent core business concepts:
@@ -217,25 +180,6 @@ class UserModel extends User {
 ```
 
 ## Services
-
-### Network Service
-Handles HTTP requests and API communication:
-
-```dart
-class NetworkService {
-  final Dio _dio;
-  
-  NetworkService(this._dio);
-  
-  Future<Response> get(String endpoint) async {
-    try {
-      return await _dio.get(endpoint);
-    } catch (e) {
-      throw NetworkException(e.toString());
-    }
-  }
-}
-```
 
 ### Storage Service
 Manages local data persistence:
@@ -310,94 +254,15 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Home')),
-      body: _buildBody(),
+      body: _,
     );
   }
-  
-  Widget _buildBody() {
-    // Build screen content
-  }
 }
-```
-
-## Routing
-
-### Route Configuration
-Using GoRouter for declarative routing:
-
-```dart
-final GoRouter router = GoRouter(
-  routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => HomePage(),
-    ),
-    GoRoute(
-      path: '/profile',
-      builder: (context, state) => ProfilePage(),
-    ),
-  ],
-);
-```
-
-### Navigation
-Consistent navigation patterns throughout the app:
-
-```dart
-// Navigate to a new screen
-context.go('/profile');
-
-// Navigate with parameters
-context.go('/user/${userId}');
-
-// Navigate back
-context.pop();
 ```
 
 ## Development Setup
 
-### Prerequisites
-- Flutter SDK 3.x or higher
-- Dart SDK 3.x or higher
-- Android Studio / VS Code with Flutter extensions
-- iOS development: Xcode (for iOS development)
-
-### Installation Steps
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd <project-name>
-   ```
-
-2. Install dependencies:
-   ```bash
-   flutter pub get
-   ```
-
-3. Generate necessary files:
-   ```bash
-   flutter packages pub run build_runner build
-   ```
-
-4. Run the application:
-   ```bash
-   flutter run
-   ```
-
-### Environment Configuration
-Create environment-specific configuration files:
-
-```dart
-// lib/core/config/app_config.dart
-class AppConfig {
-  static const String apiBaseUrl = String.fromEnvironment(
-    'API_BASE_URL',
-    defaultValue: 'https://api.example.com',
-  );
-  
-  static const bool isDebug = bool.fromEnvironment('DEBUG', defaultValue: false);
-}
-```
+Please see [Setup & Run Instructions](https://github.com/olisonsturm/FitOffice/#setup--run-instructions) in README.md for detailed setup instructions.
 
 ## Build and Deployment
 
@@ -425,32 +290,6 @@ flutter build ios --release
 ### Build Configuration
 Configure build settings in `android/app/build.gradle` and `ios/Runner.xcodeproj`.
 
-## Contributing Guidelines
-
-### Code Review Process
-1. Create a feature branch from `develop`
-2. Implement changes following coding standards
-3. Write/update tests for new functionality
-4. Submit a pull request with detailed description
-5. Address review feedback
-6. Merge after approval
-
-### Branch Naming Convention
-- Feature: `feature/feature-name`
-- Bug fix: `bugfix/bug-description`
-- Hotfix: `hotfix/critical-fix`
-
-### Commit Message Format
-```
-type(scope): description
-
-[optional body]
-
-[optional footer]
-```
-
-Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
-
 ## Code Style and Conventions
 
 ### Dart Style Guide
@@ -460,50 +299,6 @@ Follow the official Dart style guide with these additions:
 2. **Class Naming**: Use PascalCase for class names
 3. **Variable Naming**: Use camelCase for variables and functions
 4. **Constants**: Use SCREAMING_SNAKE_CASE for constants
-
-### Widget Organization
-```dart
-class MyWidget extends StatelessWidget {
-  // 1. Constructor and properties
-  final String title;
-  
-  const MyWidget({Key? key, required this.title}) : super(key: key);
-  
-  // 2. Build method
-  @override
-  Widget build(BuildContext context) {
-    return _buildContent();
-  }
-  
-  // 3. Private helper methods
-  Widget _buildContent() {
-    // Implementation
-  }
-}
-```
-
-### Error Handling
-```dart
-try {
-  final result = await apiService.getData();
-  return Right(result);
-} on NetworkException catch (e) {
-  return Left(NetworkFailure(e.message));
-} catch (e) {
-  return Left(UnknownFailure(e.toString()));
-}
-```
-
-## Testing
-
-### Test Structure
-```
-test/
-├── unit/                    # Unit tests
-├── widget/                  # Widget tests
-├── integration/             # Integration tests
-└── helpers/                 # Test helpers and mocks
-```
 
 ### Testing Guidelines
 1. Write unit tests for business logic
@@ -562,31 +357,17 @@ flutter test test/unit/user_service_test.dart
 - [Flutter Documentation](https://flutter.dev/docs)
 - [Dart Language Guide](https://dart.dev/guides)
 - [Material Design Guidelines](https://material.io/design)
-
-### Useful Packages
-- `provider` - State management
-- `dio` - HTTP client
-- `shared_preferences` - Local storage
-- `go_router` - Routing
-- `flutter_bloc` - BLoC pattern implementation
+- [Firebase Documentation](https://firebase.google.com/docs)
+- [FlutterFire](https://firebase.flutter.dev/)
+- [Flutter DevTools](https://flutter.dev/docs/development/tools/devtools)
+- [GetX Documentation](https://pub.dev/packages/get)
 
 ### Development Tools
 - Flutter Inspector
 - Dart DevTools
 - Android Studio/VS Code Flutter extensions
-- Flipper for debugging
 
----
-
-## Changelog
-
-### Version 1.0.0
-- Initial release with core functionality
-- User authentication
-- Basic CRUD operations
-- Responsive UI design
-
----
+--- 
 
 *Last updated: [Current Date]*
 *Document version: 1.0*
