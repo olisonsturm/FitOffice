@@ -111,7 +111,7 @@ FitOffice is built using Flutter, a powerful framework for building cross-platfo
 
 - For a technical overview, see the [TECHNICAL OVERVIEW](TECHNICAL_DOCUMENTATION.md).
 - For a detailed project documentation, see the [PROJECT DOCUMENTATION](PROJECT_DOCUMENTATION.pdf).
-- For a detailed code documentation, see the [CODE DOCUMENTATION](https://olisonsturm.github.io/FitOffice/).
+- For a detailed code documentation, see the [CODE DOCUMENTATION](https://olisonsturm.github.io/FitOffice/fit_office/).
 
 ### Contributing
 
