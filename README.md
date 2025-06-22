@@ -49,6 +49,11 @@ This project requires the following dependencies:
 - **Firebase:** Access to  the Firebase console for configuration
 - **Programming Language:** Dart
 - **Package Manager:** Pub
+- **Development Environment:** Any IDE that supports Flutter (e.g., Visual Studio Code, Android Studio)
+- **Git:** For version control
+- **Extensions:** 
+  - Flutter and Dart extensions for your IDE
+  - Firebase CLI for managing Firebase projects
 
 ### Setup Instructions
 
