@@ -47,6 +47,10 @@ See [PROJECT DOCUMENTATION](/PROJECT_DOCUMENTATION.pdf) for detailed architectur
 4. **Interface Segregation**: Clients shouldn't depend on interfaces they don't use
 5. **Dependency Injection**: Dependencies are injected rather than created
 
+### Entity Relationship Model 
+
+![Entity Relationship Model](assets/diagrams/ERM.png)
+
 ## Project Structure
 
 ```
