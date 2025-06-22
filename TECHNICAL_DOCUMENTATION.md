@@ -396,6 +396,22 @@ Please see [Setup & Run Instructions](https://github.com/olisonsturm/FitOffice/#
 
 ## Build and Deployment
 
+### Dart Code Documentation
+
+Generate a whole codebase documentation by using our bash script:
+
+1. Make sure you have `dartdoc` installed:
+   ```bash
+   dart pub global activate dartdoc
+   ```
+2. Make sure you are in the root directory of the project.
+3. Run the script to generate documentation:
+   ```bash
+   ./dart_doc_all.bash
+   ```
+   
+This will automatically generate a dart file to export all the dart files in `lib/`. I will then directly generate the dart documentation by performing  `dart doc .`. After that, the documentation will be available in the `doc/api/` directory. The script will also automatically start the web server via `python3 -m http.server` to serve the documentation. If you pushed everything to the master branch, the documentation will be automatically deployed to GitHub Pages. And will be available at `https://olisonsturm.github.io/FitOffice/`.
+
 ### Android Build
 ```bash
 # Debug build
@@ -419,6 +435,7 @@ flutter build ios --release
 
 ### Build Configuration
 Configure build settings in `android/app/build.gradle` and `ios/Runner.xcodeproj`.
+
 
 ## Code Style and Conventions
 
