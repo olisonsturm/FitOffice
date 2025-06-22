@@ -1,6 +1,15 @@
 <div align="center">
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
-  <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="200"><img src="assets/lottie/FittyFuchsWaving" alt="FittyFuchs" width="200">
+  <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="200">
+  <lottie-player
+    src="assets/lottie/FittyFuchsWaving.json"
+    background="transparent"
+    speed="1"
+    style="width: 200px; height: 200px;"
+    loop
+    autoplay>
+  </lottie-player>
 
 # FitOffice@DHBW
 
