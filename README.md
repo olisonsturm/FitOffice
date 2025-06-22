@@ -1,9 +1,7 @@
 
 <div align="center">
 
-
-  <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="200">
-
+![FitOffice Logo](assets/logo/fit_office.png)
 ![FittyFuchsWaving.gif](assets/gif/FittyFuchsWaving.gif)
 
 # FitOffice@DHBW
