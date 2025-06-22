@@ -3,7 +3,8 @@
 
 
   <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="200">
-  ![FittyFuchs](assets/gif/FittyFuchsWaving.gif)
+
+![FittyFuchsWaving.gif](assets/gif/FittyFuchsWaving.gif)
 
 # FitOffice@DHBW
 
