@@ -1,5 +1,6 @@
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 <div align="center">
-  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
 
   <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="200">
   <lottie-player
