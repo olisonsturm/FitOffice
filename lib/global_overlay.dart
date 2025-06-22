@@ -9,6 +9,7 @@ import 'package:fit_office/src/features/core/controllers/exercise_timer.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/view_exercise.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/widgets/end_exercise.dart';
 
+/// GlobalExerciseOverlay is a singleton class that manages an overlay entry
 class GlobalExerciseOverlay {
   static final GlobalExerciseOverlay _instance =
       GlobalExerciseOverlay._internal();
@@ -18,6 +19,8 @@ class GlobalExerciseOverlay {
   OverlayEntry? _overlayEntry;
   final RxBool _dialogIsOpen = false.obs;
 
+  /// Initializes the overlay by listening to the ExerciseTimerController's isRunning state
+  /// @param context The BuildContext to show the overlay in
   void init(BuildContext context) {
     final timerController = Get.find<ExerciseTimerController>();
 
@@ -30,6 +33,8 @@ class GlobalExerciseOverlay {
     });
   }
 
+  /// Toggles the visibility of the overlay
+  /// @param context The BuildContext to show the overlay in
   void _showOverlay(BuildContext context) {
     if (_overlayEntry != null) return;
 
@@ -247,17 +252,21 @@ class GlobalExerciseOverlay {
     overlay?.insert(_overlayEntry!);
   }
 
+  /// Removes the overlay entry if it exists
   void _removeOverlay() {
     _overlayEntry?.remove();
     _overlayEntry = null;
   }
 
+  /// Checks if the dialog is currently open
   bool get isDialogOpen => _dialogIsOpen.value;
 
+  /// Sets the dialog open state
   void setDialogOpen(bool isOpen) {
     _dialogIsOpen.value = isOpen;
   }
 
+  /// The height of the overlay when it is displayed
   static const double overlayHeight = 86;
 
 }

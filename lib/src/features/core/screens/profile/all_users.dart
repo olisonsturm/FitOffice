@@ -7,6 +7,8 @@ import 'package:fit_office/src/features/core/controllers/profile_controller.dart
 import '../../../../constants/colors.dart';
 import '../../../../constants/sizes.dart';
 
+/// A screen that displays a list of all users in the application.
+/// Allows the admin to view user details such as username, full name, and email.
 class AllUsers extends StatelessWidget {
   AllUsers({super.key});
 

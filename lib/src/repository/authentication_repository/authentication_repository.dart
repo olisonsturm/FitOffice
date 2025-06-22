@@ -9,14 +9,15 @@ import 'package:fit_office/src/features/core/screens/dashboard/dashboard.dart';
 import '../../features/authentication/screens/on_boarding/on_boarding_screen.dart';
 import 'exceptions/t_exceptions.dart';
 
-/// -- README(Docs[6]) -- Bindings
+/// AuthenticationRepository is responsible for managing user authentication
+/// using Firebase Authentication.
+/// It provides methods for email/password login and registration
 class AuthenticationRepository extends GetxController {
   static AuthenticationRepository get instance => Get.find();
 
   /// Variables
   late final Rx<User?> _firebaseUser;
   final _auth = FirebaseAuth.instance;
-  final _phoneVerificationId = ''.obs;
   final userStorage = GetStorage(); // Use this to store data locally (e.g. OnBoarding)
 
   /// Getters
@@ -31,6 +32,7 @@ class AuthenticationRepository extends GetxController {
   String get getPhoneNo => firebaseUser?.phoneNumber ?? "";
 
   /// Loads when app Launch from main.dart
+  /// This method initializes the Firebase user stream and sets the initial screen based on the user's authentication status.
   @override
   void onReady() {
     _firebaseUser = Rx<User?>(_auth.currentUser);
@@ -41,6 +43,9 @@ class AuthenticationRepository extends GetxController {
   }
 
   /// Setting initial screen
+  /// This method checks if the user is authenticated and whether their email is verified.
+  /// Parameter [user] is the current Firebase user.
+  /// If the user is authenticated and their email is verified, it navigates to the Dashboard.
   Future<void> setInitialScreen(User? user) async {
     if (user != null) {
 
@@ -53,15 +58,16 @@ class AuthenticationRepository extends GetxController {
           ? Get.offAll(() => const WelcomeScreen())
           : Get.offAll(() => const OnBoardingScreen());
     }
-
-    // Note: As per this code you will not see OnBoarding Screen on app launch.
-    // If you want to add that functionality please refer to this tutorial.
-    // https://www.youtube.com/watch?v=GYtMpccOOtU&t=78s
   }
 
   /* ---------------------------- Email & Password sign-in ---------------------------------*/
 
-  /// [EmailAuthentication] - LOGIN
+  /// EmailAuthentication - LOGIN
+  /// This method allows users to log in using their email and password.
+  /// It handles FirebaseAuthException to provide custom error messages.
+  /// @param email The user's email address.
+  /// @param password The user's password.
+  /// @throws String if the login fails due to an authentication error.
   Future<void> loginWithEmailAndPassword(String email, String password) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
@@ -74,7 +80,11 @@ class AuthenticationRepository extends GetxController {
     }
   }
 
-  /// [EmailAuthentication] - REGISTER
+/// EmailAuthentication - REGISTER
+/// Allows users to register using their email and password.
+/// Handles FirebaseAuthException to provide custom error messages.
+/// Parameters: [email] (user's email address), [password] (user's password)
+/// Throws a String if registration fails due to an authentication error.
   Future<void> registerWithEmailAndPassword(String email, String password) async {
     try {
       await _auth.createUserWithEmailAndPassword(email: email, password: password).then((userCredential) async {
@@ -100,7 +110,10 @@ class AuthenticationRepository extends GetxController {
     }
   }
 
-  /// [EmailVerification] - MAIL VERIFICATION
+  /// EmailVerification - MAIL VERIFICATION
+  /// This method sends a verification email to the user's email address.
+  /// It handles FirebaseAuthException to provide custom error messages.
+  /// @throws String if the email verification fails due to an authentication error.
   Future<void> sendEmailVerification() async {
     try {
       await _auth.currentUser?.sendEmailVerification();
@@ -113,56 +126,12 @@ class AuthenticationRepository extends GetxController {
     }
   }
 
-  /// [PhoneAuthentication] - LOGIN
-  Future<void> loginWithPhoneNo(String phoneNumber) async {
-    try {
-      await _auth.signInWithPhoneNumber(phoneNumber);
-    } on FirebaseAuthException catch (e) {
-      final ex = TExceptions.fromCode(e.code);
-      throw ex.message;
-    } catch (e) {
-      throw e.toString().isEmpty ? 'Unknown Error Occurred. Try again!' : e.toString();
-    }
-  }
-
-  /// [PhoneAuthentication] - REGISTER
-  Future<void> phoneAuthentication(String phoneNo) async {
-    try {
-      await _auth.verifyPhoneNumber(
-        phoneNumber: phoneNo,
-        verificationCompleted: (credential) async {
-          await _auth.signInWithCredential(credential);
-        },
-        codeSent: (verificationId, resendToken) {
-          _phoneVerificationId.value = verificationId;
-        },
-        codeAutoRetrievalTimeout: (verificationId) {
-          _phoneVerificationId.value = verificationId;
-        },
-        verificationFailed: (e) {
-          final result = TExceptions.fromCode(e.code);
-          throw result.message;
-        },
-      );
-    } on FirebaseAuthException catch (e) {
-      final result = TExceptions.fromCode(e.code);
-      throw result.message;
-    } catch (e) {
-      throw e.toString().isEmpty ? 'Unknown Error Occurred. Try again!' : e.toString();
-    }
-  }
-
-  /// [PhoneAuthentication] - VERIFY PHONE NO BY OTP
-  Future<bool> verifyOTP(String otp) async {
-    var credentials = await _auth.signInWithCredential(
-      PhoneAuthProvider.credential(verificationId: _phoneVerificationId.value, smsCode: otp),
-    );
-    return credentials.user != null ? true : false;
-  }
-
   /* ---------------------------- ./end Federated identity & social sign-in ---------------------------------*/
 
-  /// [LogoutUser] - Valid for any authentication.
+  /// LogoutUser - Valid for any authentication.
+  /// This method logs out the current user from Firebase Authentication.
+  /// It handles FirebaseAuthException to provide custom error messages.
+  /// @throws String if the logout fails due to an authentication error.
   Future<void> logout() async {
     try {
       await FirebaseAuth.instance.signOut();
@@ -176,7 +145,10 @@ class AuthenticationRepository extends GetxController {
     }
   }
 
-  /// [DeleteUser] - Valid for any authentication.
+  /// DeleteUser - Valid for any authentication.
+  /// This method deletes the current user from Firebase Authentication.
+  /// It handles FirebaseAuthException to provide custom error messages.
+  /// @throws String if the deletion fails due to an authentication error.
   Future<void> deleteUser() async {
     try {
       await _auth.currentUser?.delete();

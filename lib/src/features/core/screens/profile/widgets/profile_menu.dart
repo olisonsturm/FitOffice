@@ -4,6 +4,7 @@ import 'package:fit_office/src/constants/sizes.dart';
 
 import '../../../../../constants/colors.dart';
 
+/// A widget representing a menu item in the profile section.
 class ProfileMenuWidget extends StatelessWidget {
   const ProfileMenuWidget({
     super.key,

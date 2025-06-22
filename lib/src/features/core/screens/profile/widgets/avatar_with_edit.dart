@@ -13,6 +13,12 @@ import '../../../../../constants/colors.dart';
 import '../../../../../constants/image_strings.dart';
 import 'avatar_zoom.dart';
 
+/// A widget that displays a user's avatar with an option to edit it.
+/// This widget allows users to pick an image from their gallery, crop it, and upload it as their profile picture.
+/// It uses a [StorageService] to handle image storage and retrieval.
+/// It also integrates with a [ProfileController] to notify when the profile picture is updated.
+/// The avatar is displayed as a circular image with a pencil icon for editing.
+/// When the avatar is tapped, it opens a zoomed view of the image.
 class AvatarWithEdit extends StatefulWidget {
   const AvatarWithEdit({super.key});
 

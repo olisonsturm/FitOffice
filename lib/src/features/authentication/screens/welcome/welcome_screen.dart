@@ -9,6 +9,8 @@ import '../../../../utils/animations/fade_in_animation/fade_in_animation_model.d
 import '../login/login_screen.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// WelcomeScreen widget that displays a welcome message with a logo and buttons for login and signup.
+/// It uses GetX for state management and navigation.
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 

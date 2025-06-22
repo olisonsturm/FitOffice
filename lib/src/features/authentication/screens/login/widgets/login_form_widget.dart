@@ -9,6 +9,7 @@ import 'package:fit_office/l10n/app_localizations.dart';
 
 import '../../forget_password/forget_password_model_bottom_sheet.dart';
 
+/// LoginFormWidget that displays a form for user login with email and password fields.
 class LoginFormWidget extends StatelessWidget {
   const LoginFormWidget({super.key});
 

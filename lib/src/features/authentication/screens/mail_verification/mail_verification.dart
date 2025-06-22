@@ -7,6 +7,7 @@ import 'package:fit_office/src/repository/authentication_repository/authenticati
 import 'package:fit_office/l10n/app_localizations.dart';
 import '../../controllers/mail_verification_controller.dart';
 
+/// MailVerification widget that displays a screen for email verification.
 class MailVerification extends StatelessWidget {
   const MailVerification({super.key});
 

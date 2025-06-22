@@ -191,14 +191,14 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                           Helper.successSnackBar(title: localisation.tSuccess, message: 'Account deleted successfully');
                         } on FirebaseAuthException catch (e) {
                           if (kDebugMode) {
-                            print('FirebaseAuthException: \\${e.code} - \\${e.message}');
+                            print('FirebaseAuthException: ${e.code} - ${e.message}');
                           }
-                          Helper.errorSnackBar(title: localisation.tOhSnap, message: 'Failed to delete account: \\${e.message}');
+                          Helper.errorSnackBar(title: localisation.tOhSnap, message: 'Failed to delete account: ${e.message}');
                         } catch (e) {
                           if (kDebugMode) {
-                            print('Exception: \\${e}');
+                            print('Exception: $e');
                           }
-                          Helper.errorSnackBar(title: localisation.tOhSnap, message: 'Failed to delete account: \\${e}');
+                          Helper.errorSnackBar(title: localisation.tOhSnap, message: 'Failed to delete account: $e');
                         }
                       },
                       child: Text(localisation.tRemove),

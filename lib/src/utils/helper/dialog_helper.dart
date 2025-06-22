@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../../features/core/controllers/exercise_timer.dart';
 
+/// Shows a unified dialog that handles focus and timer state
 Future<T?> showUnifiedDialog<T>({
   required BuildContext context,
   required WidgetBuilder builder,
@@ -16,7 +17,6 @@ Future<T?> showUnifiedDialog<T>({
   final dashboard =
       libraryState ?? context.findAncestorStateOfType<LibraryScreenState>();
 
-  // 🧠 Nur merken, wenn der Fokus aktuell NOCH aktiv ist
   if (dashboard?.searchHasFocus == true) {
     dashboard?.wasSearchFocusedBeforeNavigation = true;
   } else {
@@ -25,8 +25,6 @@ Future<T?> showUnifiedDialog<T>({
 
   dashboard?.forceRedirectFocus();
 
-  // FocusManager.instance.primaryFocus?.unfocus();
-  // dashboard?.removeSearchFocus();
 
   if (dashboard?.searchHasFocus == true) {
     dashboard?.wasSearchFocusedBeforeNavigation = true;
@@ -35,7 +33,7 @@ Future<T?> showUnifiedDialog<T>({
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
-  // Timer pausieren, falls aktiv
+  // Stop the timer if it is running
   final wasRunning =
       timerController.isRunning.value && !timerController.isPaused.value;
 
@@ -54,13 +52,13 @@ Future<T?> showUnifiedDialog<T>({
 
   overlayManager.setDialogOpen(false);
 
-  // Timer ggf. wieder starten
+  // If the timer was paused due to showing the dialog, we resume it
   if (timerController.autoPaused.value) {
     timerController.resume();
     timerController.autoPaused.value = false;
   }
 
-  // Fokus korrekt behandeln
+  // If the timer was running before showing the dialog, we resume it
   dashboard?.handleReturnedFromExercise();
 
   return result;

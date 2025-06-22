@@ -4,6 +4,7 @@ import 'package:fit_office/src/features/core/screens/profile/widgets/profile_for
 import 'package:fit_office/src/features/core/screens/profile/widgets/avatar_with_edit.dart';
 import '../../../../../constants/sizes.dart';
 
+/// A modal dialog for updating user profile information.
 class UpdateProfileModal {
   static void show(BuildContext context, UserModel user) {
     final email = TextEditingController(text: user.email);

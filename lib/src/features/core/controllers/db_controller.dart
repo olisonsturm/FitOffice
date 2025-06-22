@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:string_similarity/string_similarity.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// DbController class that handles database operations related to user data, exercises, and streaks.
 class DbController {
   late UserModel user;
   FirebaseFirestore firestore = FirebaseFirestore.instance;

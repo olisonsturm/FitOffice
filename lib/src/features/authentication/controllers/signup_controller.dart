@@ -5,6 +5,9 @@ import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import 'package:fit_office/src/repository/user_repository/user_repository.dart';
 import '../../../repository/authentication_repository/authentication_repository.dart';
 
+/// SignUpController is responsible for managing the sign-up process.
+/// It handles user input validation, user creation, and authentication.
+/// It uses GetX for state management and navigation.
 class SignUpController extends GetxController {
   static SignUpController get instance => Get.find();
 
@@ -27,7 +30,10 @@ class SignUpController extends GetxController {
   // Therefore, when new user is authenticated, AuthenticationRepository() detects
   // the change and call _setScreen() to switch screens
 
-  /// Register New User using either [EmailAndPassword] OR [PhoneNumber] authentication
+  /// Register New User using either EmailAndPassword OR PhoneNumber authentication
+  /// This method validates the form, creates a new user model,
+  /// authenticates the user with Firebase,
+  /// and stores the user data in Firestore.
   Future<void> createUser() async {
     try {
       isLoading.value = true;
@@ -63,15 +69,6 @@ class SignUpController extends GetxController {
     } catch (e) {
       isLoading.value = false;
       Get.snackbar("Error", e.toString(), snackPosition: SnackPosition.BOTTOM, duration: const Duration(seconds: 5));
-    }
-  }
-
-  /// [PhoneNoAuthentication]
-  Future<void> phoneAuthentication(String phoneNo) async {
-    try {
-      await AuthenticationRepository.instance.phoneAuthentication(phoneNo);
-    } catch (e) {
-      throw e.toString();
     }
   }
 }

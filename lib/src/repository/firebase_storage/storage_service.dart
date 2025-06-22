@@ -14,6 +14,8 @@ import '../../constants/image_strings.dart';
 import '../../features/authentication/models/user_model.dart';
 import '../../features/core/controllers/profile_controller.dart';
 
+/// StorageService is responsible for managing file uploads and retrievals
+/// to Firebase Storage and Firestore.
 class StorageService {
   final Reference storage = FirebaseStorage.instance.ref();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -22,6 +24,8 @@ class StorageService {
 
 
   /// Uploads a profile picture for a user
+  /// @param imageFile The image file to be uploaded
+  /// @throws Exception if the user ID is null or if the upload fails
   Future<void> uploadProfilePicture(XFile imageFile) async {
     try {
       final userData = await controller.getUserData();
@@ -55,6 +59,8 @@ class StorageService {
   }
 
   /// Deletes a user's profile picture
+  /// @param userId The ID of the user whose profile picture is to be deleted
+  /// @throws Exception if the deletion fails
   Future<void> deleteProfilePicture(String userId) async {
     try {
       // Reference the file in Firebase Storage
@@ -72,6 +78,9 @@ class StorageService {
   }
 
   /// Retrieves the public URL of a user's profile picture
+  /// @param userEmail The email of the user whose profile picture is to be retrieved
+  /// @return A Future that resolves to an ImageProvider for the profile picture
+  /// @throws Exception if the user document is not found or if the profile picture path is invalid
   Future<ImageProvider> getProfilePicture({String? userEmail}) async {
     try {
       late final DocumentSnapshot doc;
@@ -139,6 +148,12 @@ class StorageService {
     }
   }
 
+  /// Uploads a file to Firebase Storage
+  /// @param file The file to be uploaded
+  /// @param storagePath The path in the storage bucket where the file will be stored
+  /// @param contentType The content type of the file (default is 'image/jpeg')
+  /// @param customMetadata Optional custom metadata to be associated with the file
+  /// @return A Future that resolves to an UploadTask if the upload is successful, or null if no file was selected
   Future<UploadTask?> uploadFile({
     required XFile? file,
     required String storagePath, // Path in the storage bucket

@@ -5,6 +5,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../controllers/on_boarding_controller.dart';
 
+/// OnBoardingScreen is the main screen for the onboarding process.
 class OnBoardingScreen extends StatelessWidget {
   const OnBoardingScreen({super.key});
 

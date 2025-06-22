@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+/// OnBoardingModel is a model class that represents the data for each onboarding page.
 class OnBoardingModel {
   final String image;
   final String title;

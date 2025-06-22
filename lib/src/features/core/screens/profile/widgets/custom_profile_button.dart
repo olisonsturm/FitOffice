@@ -2,6 +2,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
+/// A custom button widget for profile actions, featuring an icon, label, and optional active state.
+/// It supports both light and dark themes, with customizable colors for the icon and text.
+/// The button can be tapped to trigger a callback function, and it visually indicates whether it is active by changing its background color and showing a check icon.
 class CustomProfileButton extends StatelessWidget {
   final IconData icon;
   final String label;

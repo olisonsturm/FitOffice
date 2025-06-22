@@ -9,6 +9,9 @@ import 'package:fit_office/l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
+/// ProgressScreen displays the user's progress through chapters of exercises,
+/// allowing them to see their current step, chapter completion, and animations
+/// for chapter transitions.
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});
 

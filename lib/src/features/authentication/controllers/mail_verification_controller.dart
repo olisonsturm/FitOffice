@@ -5,6 +5,8 @@ import 'package:fit_office/src/repository/authentication_repository/authenticati
 import 'package:fit_office/src/utils/helper/helper_controller.dart';
 import '../../../constants/text_strings.dart';
 
+/// MailVerificationController is responsible for managing the email verification process.
+/// It handles sending verification emails, checking the verification status
 class MailVerificationController extends GetxController {
 
   @override
@@ -14,7 +16,7 @@ class MailVerificationController extends GetxController {
     setTimerForAutoRedirect();
   }
 
-  /// -- Send OR Resend Email Verification
+  /// This method sends a verification email to the current user.
   Future<void> sendVerificationEmail() async {
     try {
       await AuthenticationRepository.instance.sendEmailVerification();
@@ -23,7 +25,7 @@ class MailVerificationController extends GetxController {
     }
   }
 
-  /// -- Set Timer to check if Verification Completed then Redirect
+  /// Set Timer to check if Verification Completed then Redirect
   void setTimerForAutoRedirect() {
     Timer.periodic(const Duration(seconds: 3), (timer) {
       FirebaseAuth.instance.currentUser?.reload();
@@ -35,7 +37,7 @@ class MailVerificationController extends GetxController {
     });
   }
 
-  /// -- Manually Check if Verification Completed then Redirect
+  /// Manually Check if Verification Completed then Redirect
   void manuallyCheckEmailVerificationStatus() {
     FirebaseAuth.instance.currentUser?.reload();
     final user = FirebaseAuth.instance.currentUser;

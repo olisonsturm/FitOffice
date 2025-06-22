@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../../../constants/colors.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// SignupScreen widget that displays a signup form with a logo, title, subtitle, and navigation to login.
 class SignupScreen extends StatelessWidget {
   const SignupScreen({super.key});
 

@@ -30,11 +30,18 @@ import 'admin/widgets/friends_request.dart';
 import 'widgets/custom_profile_button.dart';
 import 'widgets/avatar.dart';
 
+/// A screen that displays the user's profile, including personal information, statistics, and settings.
+/// This screen allows users to view and edit their profile, manage friends, and access various settings and information about the app.
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
 
   final controller = Get.put(ProfileController());
 
+  /// Extracts the campus name from the user's email address.
+  /// The email should be in the format of either `@stud.dhbw-{campus}.de` or `@dhbw-{campus}.de`.
+  /// If the email does not match these patterns, it returns "Unknown".
+  /// @param email The user's email address.
+  /// @return The campus name extracted from the email, formatted with spaces and capitalized first letter, or "Unknown" if not found.
   String _extractCampusFromEmail(String email) {
     final campusRegex =
         RegExp(r'@stud\.dhbw-([a-z\-]+)\.de$|@dhbw-([a-z\-]+)\.de$');
@@ -481,6 +488,9 @@ class ProfileScreen extends StatelessWidget {
   }
 
   //TODO: all PopUpModals with Yes and No should be in one style; maybe the same style as all other PopUps! Texts should be added to localizations!
+  /// Shows a logout confirmation modal dialog.
+  /// This dialog asks the user to confirm if they want to log out of the application.
+  /// @param context The BuildContext in which the dialog should be displayed.
   void _showLogoutModal(BuildContext context) {
     final isDarkMode = Get.isDarkMode;
 
