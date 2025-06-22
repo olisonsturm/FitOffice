@@ -196,9 +196,9 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
                           Helper.errorSnackBar(title: localisation.tOhSnap, message: 'Failed to delete account: \\${e.message}');
                         } catch (e) {
                           if (kDebugMode) {
-                            print('Exception: \\${e}');
+                            print('Exception: \\$e');
                           }
-                          Helper.errorSnackBar(title: localisation.tOhSnap, message: 'Failed to delete account: \\${e}');
+                          Helper.errorSnackBar(title: localisation.tOhSnap, message: 'Failed to delete account: \\$e');
                         }
                       },
                       child: Text(localisation.tRemove),

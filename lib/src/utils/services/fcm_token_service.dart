@@ -2,11 +2,13 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'dart:io';
 
 import '../../repository/authentication_repository/authentication_repository.dart';
 
+/// Service to handle Firebase Cloud Messaging (FCM) token management
+/// This service initializes FCM, retrieves the token, and updates it in Firestore.
+/// including APNS handling for iOS devices, but isn't working at the moment without an Apple Developer Account.
 class FCMTokenService {
   static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
@@ -111,6 +113,9 @@ class FCMTokenService {
   }
 
   /// Update FCM token in Firestore
+  /// This method updates the user's FCM token in Firestore
+  /// @param token The FCM token to update
+  /// @return void
   static void updateFcmToken(String token) {
     try {
       final userId = Get.find<AuthenticationRepository>().getUserID;

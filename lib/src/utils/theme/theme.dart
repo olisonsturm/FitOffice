@@ -7,6 +7,7 @@ import 'package:fit_office/src/utils/theme/widget_themes/outlined_button_theme.d
 import 'package:fit_office/src/utils/theme/widget_themes/text_field_theme.dart';
 import 'package:fit_office/src/utils/theme/widget_themes/text_theme.dart';
 
+/// A class that defines the app's themes, including light and dark themes.
 class TAppTheme {
   TAppTheme._();
 

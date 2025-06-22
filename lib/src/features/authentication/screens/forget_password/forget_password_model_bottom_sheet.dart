@@ -6,6 +6,7 @@ import '../../../../common_widgets/form/form_header_widget.dart';
 import '../../../../constants/sizes.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// ForgetPasswordScreen widget that displays a modal bottom sheet for password reset.
 class ForgetPasswordScreen {
   static Future<dynamic> buildShowModalBottomSheet(BuildContext context, {required bool enableEdit, String? email}) {
 return showModalBottomSheet(

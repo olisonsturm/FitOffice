@@ -5,12 +5,17 @@ import 'package:get/get.dart';
 import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import '../authentication_repository/exceptions/t_exceptions.dart';
 
+/// UserRepository is responsible for managing user data in Firestore.
+/// It provides methods to create, read, update, and delete user records,
+/// as well as checking for user existence by email.
+/// Uses FirebaseAuth for authentication and FirebaseFirestore for database operations.
 class UserRepository extends GetxController {
   static UserRepository get instance => Get.find();
 
   final _db = FirebaseFirestore.instance;
 
-  /// Store user data
+  /// This method creates a new user record in Firestore using the current authenticated user's UID.
+  /// @param user The UserModel object containing user details to be stored.
   Future<void> createUser(UserModel user) async {
     try {
       // Get the current authenticated user's UID
@@ -35,7 +40,11 @@ class UserRepository extends GetxController {
     }
   }
 
-  /// Fetch User Specific details
+  /// This method retrieves the details of the currently authenticated user from Firestore.
+  /// @return A Future that resolves to a UserModel object containing user details.
+  /// @throws Exception if the user is not authenticated or if there is an error fetching the user details.
+  /// @throws String if the user record does not exist.
+  /// @throws String if there is an error fetching the user details.
   Future<UserModel> getUserDetails() async {
     try {
       final auth = FirebaseAuth.instance;
@@ -56,7 +65,11 @@ class UserRepository extends GetxController {
     }
   }
 
-  /// Fetch All Users
+  /// This method retrieves all user records from Firestore.
+  /// @return A Future that resolves to a list of UserModel objects containing user details.
+  /// @throws String if there is an error fetching the user records.
+  /// @throws String if there are no user records found.
+  /// @throws String if there is an error fetching the user records.
   Future<List<UserModel>> allUsers() async {
     try {
       final snapshot = await _db.collection("users").get();
@@ -74,7 +87,11 @@ class UserRepository extends GetxController {
     }
   }
 
-  /// Update User details
+  /// This method updates an existing user record in Firestore.
+  /// @param userId The ID of the user whose record is to be updated.
+  /// @param data A map containing the fields to be updated in the user record.
+  /// @throws String if the user record does not exist.
+  /// @throws String if there is an error updating the user record.
   Future<void> updateUserRecord(String userId,
       Map<String, dynamic> data) async {
     try {
@@ -89,7 +106,10 @@ class UserRepository extends GetxController {
     }
   }
 
-  /// Delete User Data
+  /// This method deletes a user record from Firestore.
+  /// @param id The ID of the user whose record is to be deleted.
+  /// @throws String if the user record does not exist.
+  /// @throws String if there is an error deleting the user record.
   Future<void> deleteUser(String id) async {
     try {
       await _db.collection("users").doc(id).delete();
@@ -104,6 +124,9 @@ class UserRepository extends GetxController {
   }
 
   /// Check if user exists with email
+  /// @param email The email address to check for user existence.
+  /// @return A Future that resolves to a boolean indicating whether a user with the given email exists.
+  /// @throws String if there is an error fetching the record.
   Future<bool> recordExist(String email) async {
     try {
       final snapshot = await _db.collection("users").where(
@@ -114,6 +137,11 @@ class UserRepository extends GetxController {
     }
   }
 
+  /// This method retrieves user details by their ID.
+  /// @param userId The ID of the user whose details are to be retrieved.
+  /// @return A Future that resolves to a UserModel object containing user details.
+  /// @throws String if the user record does not exist.
+  /// @throws String if there is an error fetching the user details.
   Future<UserModel> getUserDetailsById(String userId) async {
     try {
       final snapshot = await _db.collection("users").doc(userId).get();

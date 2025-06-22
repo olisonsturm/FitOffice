@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:fit_office/src/utils/helper/helper_controller.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
@@ -10,8 +9,12 @@ import '../../features/core/controllers/friends_controller.dart';
 import '../../repository/authentication_repository/authentication_repository.dart';
 import '../theme/widget_themes/dialog_theme.dart';
 
+/// Service to handle deep links using Firebase Dynamic Links
+/// This service initializes Firebase Dynamic Links, listens for incoming links,
+/// Will be deprecated in August 2024. TODO: Should be migrated to Branch.io in the future.
 class DeepLinkService extends GetxService {
 
+  /// Initializes Firebase Dynamic Links and sets up listeners for incoming links
   static Future<void> initDeepLinks() async {
     // Handle initial dynamic link
     final PendingDynamicLinkData? initialLink =
@@ -21,7 +24,6 @@ class DeepLinkService extends GetxService {
     }
 
     // Listen for dynamic links when app is in foreground
-    // TODO: Migrating from Firebase Dynamic Links to Branch.io in the future. Will be deprecated in August 2024.
     FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
       handleDeepLink(dynamicLinkData.link.toString());
     }).onError((error) {
@@ -29,6 +31,9 @@ class DeepLinkService extends GetxService {
     });
   }
 
+  /// Handles incoming deep links by parsing the link and performing actions based on its content
+  /// @param link The deep link URL as a String
+  /// @returns void
   static void handleDeepLink(String link) {
     debugPrint('Received deep link: $link');
     final uri = Uri.parse(link);
@@ -55,6 +60,9 @@ class DeepLinkService extends GetxService {
     }
   }
 
+  /// Generates a Firebase Dynamic Link for sending friend requests
+  /// @param userId The ID of the user to whom the friend request is being sent
+  /// @returns A Future that resolves to the generated short link as a String
   static Future<String> generateFriendRequestLink(String userId) async {
     final dynamicLinkParams = DynamicLinkParameters(
       uriPrefix: 'https://fitoffice.page.link',
@@ -78,6 +86,8 @@ class DeepLinkService extends GetxService {
     return shortLink.shortUrl.toString();
   }
 
+  /// Shares a friend request link via the SharePlus package
+  /// @param currentUserId The ID of the current user to include in the link
   Future<void> shareFriendRequestLink(String currentUserId) async {
     try {
       final link = await DeepLinkService.generateFriendRequestLink(currentUserId);
@@ -92,6 +102,10 @@ class DeepLinkService extends GetxService {
       Helper.errorSnackBar(title: 'Share Error', message: 'Could not generate friend request link');
     }
   }
+
+  /// Handles friend request actions by showing a dialog to confirm sending the request
+  /// @param userId The ID of the user to whom the friend request is being sent
+  /// @returns void
   static void _handleFriendRequest(String userId) async {
     debugPrint('Processing friend request for user: $userId');
     final context = Get.context;

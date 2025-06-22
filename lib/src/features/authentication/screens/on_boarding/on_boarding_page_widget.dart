@@ -5,6 +5,7 @@ import '../../../../constants/sizes.dart';
 import '../../../../constants/colors.dart';
 import '../../models/model_on_boarding.dart';
 
+/// OnBoardingPageWidget displays a single page of the onboarding process.
 class OnBoardingPageWidget extends StatelessWidget {
   const OnBoardingPageWidget({
     super.key,

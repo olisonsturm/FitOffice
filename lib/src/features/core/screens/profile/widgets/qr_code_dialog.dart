@@ -8,6 +8,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../../../../constants/colors.dart';
 import '../../../../../utils/services/deep_link_service.dart';
 
+/// A dialog that displays a QR code for adding a user as a friend.
 class QrCodeDialog extends StatelessWidget {
   final String link;
   final String userName;

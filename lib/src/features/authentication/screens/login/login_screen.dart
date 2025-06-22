@@ -6,6 +6,7 @@ import 'package:fit_office/src/features/authentication/screens/signup/signup_scr
 import '../../../../constants/colors.dart';
 import 'widgets/login_form_widget.dart';
 
+/// LoginScreen widget that displays a login form with a logo, title, subtitle, and navigation to signup.
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 

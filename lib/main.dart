@@ -18,6 +18,7 @@ import 'app.dart';
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
 
+/// Firebase Messaging Background Handler
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // Wird aufgerufen, wenn eine Nachricht im Hintergrund/terminated State ankommt
   await Firebase.initializeApp();
@@ -26,7 +27,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   }
 }
 
-
+/// Main function to initialize the app
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
@@ -53,11 +54,11 @@ Future<void> main() async {
   final localeCode = prefs.getString('locale') ?? 'en';
 
   /// Initialize Messaging & Local Notifications
-  /// Android
+  // Android
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   const AndroidInitializationSettings initializationSettingsAndroid =
   AndroidInitializationSettings('@mipmap/launcher_icon');
-  /// iOS TODO: Will not work without Developer Account because of APNS!!! So no push notifications on iOS!!!
+  // iOS TODO: Will not work without Developer Account because of APNS!!! So no push notifications on iOS!!!
   const DarwinInitializationSettings initializationSettingsIOS =
   DarwinInitializationSettings(
     requestAlertPermission: true,
@@ -81,14 +82,15 @@ Future<void> main() async {
   await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
       AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
 
-  /// -- Main App Starts here (app.dart) ...
+  /// Set preferred orientations to portrait only
+  /// This is important to ensure the app does not rotate
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then((_) {
     runApp(App(initialLocale: Locale(localeCode)));
   });
 
-  /// -- Initialize Global Overlay
+  /// Initialize Global Overlay
   WidgetsBinding.instance.addPostFrameCallback((_) {
     GlobalExerciseOverlay().init(Get.context!);
   });

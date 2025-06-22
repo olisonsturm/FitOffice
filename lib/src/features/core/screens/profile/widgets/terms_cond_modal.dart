@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 import '../../../../../constants/sizes.dart';
 
+/// A modal bottom sheet that displays the terms and conditions of the FitOffice@DHBW application.
 class TermsConditionsModal {
   static Future<void> show(BuildContext context, {required bool isDark}) {
 
@@ -159,6 +160,7 @@ class TermsConditionsModal {
       );
   }
 
+  /// Builds a section with a title and content for the terms and conditions modal.
   static Widget _buildSection(BuildContext context, {
     required bool isDark,
     required String title,

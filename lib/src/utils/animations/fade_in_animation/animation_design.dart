@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'fade_in_animation_controller.dart';
 import 'fade_in_animation_model.dart';
 
+/// A widget that provides a fade-in animation effect with customizable position and duration.
+/// This widget uses the GetX package for state management and animation control.
 class TFadeInAnimation extends StatelessWidget {
   TFadeInAnimation({
     super.key,

@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:fit_office/src/features/authentication/screens/welcome/welcome_screen.dart';
 
+/// FadeInAnimationController is responsible for managing the fade-in animation state
+/// and controlling the animation flow for the splash screen and other animations.
 class FadeInAnimationController extends GetxController {
   static FadeInAnimationController get find => Get.find();
 

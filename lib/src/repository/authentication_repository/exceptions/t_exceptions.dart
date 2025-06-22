@@ -2,7 +2,6 @@ class TExceptions implements Exception {
   /// The associated error message.
   final String message;
 
-  /// {@macro log_in_with_email_and_password_failure}
   const TExceptions([this.message = 'An unknown exception occurred.']);
 
   /// Create an authentication message

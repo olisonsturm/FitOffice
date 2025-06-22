@@ -8,7 +8,11 @@ import 'package:fit_office/src/features/authentication/controllers/signup_contro
 import 'package:fit_office/src/repository/user_repository/user_repository.dart';
 import '../repository/authentication_repository/authentication_repository.dart';
 
+/// Initial binding for the application
 class InitialBinding extends Bindings{
+
+  /// This method is called when the application starts.
+  /// It initializes all the necessary services and controllers to be used throughout the app.
   @override
   void dependencies() {
     Get.lazyPut(() => AuthenticationRepository(), fenix: true);

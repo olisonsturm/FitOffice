@@ -1,5 +1,17 @@
 import 'package:flutter/material.dart';
 
+
+/// A widget that displays a zoomable avatar image.
+/// This widget uses a Hero animation to transition between the avatar and the zoomed image.
+/// [imageProvider] is the image to be displayed.
+/// [heroTag] is the tag used for the Hero animation.
+/// Usage:
+/// ```dart
+/// AvatarZoom(
+///   imageProvider: NetworkImage('https://example.com/avatar.jpg'),
+///   heroTag: 'avatarHero',
+/// );
+/// ```
 class AvatarZoom extends StatelessWidget {
   final ImageProvider imageProvider;
   final String heroTag;

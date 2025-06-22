@@ -8,15 +8,18 @@ import 'package:get/get.dart';
 import '../../../../../constants/image_strings.dart';
 import 'avatar_zoom.dart';
 
+/// A widget that displays a user's avatar with an option to edit it.
+/// This widget allows users to pick an image from their gallery, crop it, and upload it as their profile picture.
+/// It uses a [StorageService] to handle image storage and retrieval.
 class Avatar extends StatefulWidget {
   final String? userEmail;
   const Avatar({super.key, this.userEmail});
 
   @override
-  ImageWithIconSate createState() => ImageWithIconSate();
+  ImageWithIconState createState() => ImageWithIconState();
 }
 
-class ImageWithIconSate extends State<Avatar> {
+class ImageWithIconState extends State<Avatar> {
   final StorageService _storageService = StorageService();
   final profileController = Get.find<ProfileController>();
 

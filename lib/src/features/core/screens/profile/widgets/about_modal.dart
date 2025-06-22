@@ -3,6 +3,7 @@ import 'package:fit_office/src/utils/helper/app_info.dart';
 import 'package:flutter/material.dart';
 import '../../../../../constants/sizes.dart';
 
+/// A modal dialog that displays information about the FitOffice@DHBW app.
 class AboutModal {
   static void show(BuildContext context) {
     final theme = Theme.of(context);

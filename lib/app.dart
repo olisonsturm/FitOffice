@@ -1,5 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:fit_office/src/utils/services/FCMTokenService.dart';
+import 'package:fit_office/src/utils/services/fcm_token_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -10,6 +10,7 @@ import 'package:fit_office/src/utils/theme/theme.dart';
 
 import 'main.dart';
 
+/// Main application widget that initializes the app with the given locale
 class App extends StatefulWidget {
   final Locale initialLocale;
   const App({super.key, required this.initialLocale});
@@ -28,7 +29,7 @@ class _AppState extends State<App> {
     FCMTokenService.initializeFCM();
 
     // Wenn die App im Vordergrund ist, Notifications als lokale Notifications anzeigen
-    _firebaseMessageSubscription = FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
 
@@ -58,7 +59,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      /// -- README(Docs[3]) -- Bindings
+      /// Initial binding for the application
       initialBinding: InitialBinding(),
       themeMode: ThemeMode.system,
       theme: TAppTheme.lightTheme,
@@ -77,8 +78,8 @@ class _AppState extends State<App> {
         Locale('de'),
       ],
 
-      /// -- README(Docs[4]) -- To use Screen Transitions here
-      /// -- README(Docs[5]) -- Home Screen or Progress Indicator
+      /// Initial route of the application
+      /// GetX will handle the further navigation/routing
       home: const Scaffold(body: Center(child: CircularProgressIndicator())),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../constants/sizes.dart';
 
+/// A modal bottom sheet that provides help and support options for the FitOffice@DHBW application.
 class HelpSupportModal {
   static void show(BuildContext context) {
     final theme = Theme.of(context);

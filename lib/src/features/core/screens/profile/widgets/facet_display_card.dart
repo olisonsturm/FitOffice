@@ -1,6 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
+/// A card widget that displays a fact with an icon, title, and subtitle.
+/// The card is styled to look non-interactive, with a faded appearance.
+/// It is used to present facts in a visually appealing way, suitable for both light and dark themes.
 class FactDisplayCard extends StatelessWidget {
   final IconData icon;
   final String title; // Bold text

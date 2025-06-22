@@ -8,6 +8,9 @@ import 'package:fit_office/l10n/app_localizations.dart';
 
 import '../../../utils/helper/helper_controller.dart';
 
+/// ProfileController class that manages user profile data and operations.
+/// It handles fetching, updating, and deleting user profiles,
+/// as well as notifying changes in profile picture updates.
 class ProfileController extends GetxController {
   static ProfileController get instance => Get.find();
 
@@ -43,6 +46,8 @@ class ProfileController extends GetxController {
     }
   }
 
+  /// This method ensures that the user data is fetched only once
+  /// @returns the UserModel if it exists, otherwise fetches it
   Future<UserModel> getUserData() async {
     if (user.value == null) {
       await fetchUserData();
@@ -51,6 +56,8 @@ class ProfileController extends GetxController {
   }
 
   /// Update user data and update the global state
+  /// @param updatedUser The updated user model containing new data
+  /// @param context The BuildContext to show snack bars
   Future<void> updateRecord(UserModel updatedUser, BuildContext context) async {
     final localizations = AppLocalizations.of(context)!;
     try {
@@ -95,6 +102,8 @@ class ProfileController extends GetxController {
   }
 
   /// Delete the authenticated user's account
+  /// @param context The BuildContext to show snack bars
+  /// Returns snack bar messages based on success or failure
   Future<void> deleteUser(BuildContext context) async {
     final localizations = AppLocalizations.of(context)!;
     try {
@@ -116,6 +125,9 @@ class ProfileController extends GetxController {
   /// Fetch all users (for admin purposes)
   Future<List<UserModel>> getAllUsers() async => await _userRepo.allUsers();
 
+  /// Fetch friends count for a given username
+  /// @param username The username to search for friends
+  /// @returns Amount of friends for the given username
   Future<int> getNumberOfFriends(String username) async {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('users')
