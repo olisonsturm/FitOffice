@@ -18,7 +18,7 @@
 
 This is a Flutter application built with modern architecture patterns and best practices. The project follows a clean architecture approach with clear separation of concerns, making it maintainable and scalable.
 
-- The [FitOffice Project Documentation](/PROJECT_DOCUMENTATION.pdf) provides a comprehensive overview of the project, including architecture diagrams and implementation details.
+[FitOffice PROJECT DOCUMENTATION](/PROJECT_DOCUMENTATION.pdf) provides a comprehensive overview of the project, including architecture diagrams and implementation details.
 
 ### Key Features
 - Cross-platform mobile application (iOS & Android)
