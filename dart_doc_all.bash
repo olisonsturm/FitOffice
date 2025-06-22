@@ -15,7 +15,7 @@ done
 # Generate documentation for the lib directory (not the specific file)
 dart doc .
 
-# Start th python server to serve the documentation
+# Start the python server to serve the documentation
 python -m http.server 8000 --directory doc/api
 
 # Notify the user
