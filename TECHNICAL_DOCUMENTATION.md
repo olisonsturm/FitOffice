@@ -263,7 +263,7 @@ The application uses a GetX-based state management approach, which allows for re
 
 ## Models
 
-### Example Entity Models
+### Example Entity Model
 Business logic entities that represent core business concepts:
 
 ```dart
@@ -280,7 +280,7 @@ class User {
 }
 ```
 
-### Example Data Models
+### Example Data Model
 Models used for data transfer and serialization:
 
 ```dart
@@ -311,7 +311,7 @@ class UserModel extends User {
 
 ## Services
 
-### Example Storage Service
+### Example Service
 Manages local data persistence:
 
 ```dart
@@ -410,7 +410,7 @@ Generate a whole codebase documentation by using our bash script:
    ./dart_doc_all.bash
    ```
    
-This will automatically generate a dart file to export all the dart files in `lib/`. I will then directly generate the dart documentation by performing  `dart doc .`. After that, the documentation will be available in the `doc/api/` directory. The script will also automatically start the web server via `python3 -m http.server` to serve the documentation. If you pushed everything to the master branch, the documentation will be automatically deployed to GitHub Pages. And will be available at `https://olisonsturm.github.io/FitOffice/`.
+This process generates a Dart file that exports all Dart files in `lib/`, then runs `dart doc .` to create the documentation in the `doc/api/` directory. The script also starts a web server with `python3 -m http.server` to serve the docs locally. When changes are pushed to the master branch, the documentation is automatically deployed to GitHub Pages at `https://olisonsturm.github.io/FitOffice/`.
 
 ### Android Build
 ```bash
@@ -435,7 +435,6 @@ flutter build ios --release
 
 ### Build Configuration
 Configure build settings in `android/app/build.gradle` and `ios/Runner.xcodeproj`.
-
 
 ## Code Style and Conventions
 
