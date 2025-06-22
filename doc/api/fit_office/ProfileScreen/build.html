@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the build method from the ProfileScreen class, for the Dart programming language.">
+  <title>build method - ProfileScreen class - fit_office library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">fit_office</a></li>
+    <li><a href="../../fit_office/">fit_office.dart</a></li>
+    <li><a href="../../fit_office/ProfileScreen-class.html">ProfileScreen</a></li>
+    <li class="self-crumb">build method</li>
+  </ol>
+  <div class="self-name">build</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="fit_office&#47;ProfileScreen-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">build</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+  <div>
+    <ol class="annotation-list">
+        <li>@<a href="https://api.flutter.dev/flutter/dart-core/override-constant.html">override</a></li>
+    </ol>
+  </div>
+<span class="returntype"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span>
+<span class="name ">build</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="build-param-context"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a></span> <span class="parameter-name">context</span></span></li>
+</ol>)
+
+      <div class="features"><span class="feature">override</span></div>
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Describes the part of the user interface represented by this widget.</p>
+<p>The framework calls this method when this widget is inserted into the tree
+in a given <a href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a> and when the dependencies of this widget change
+(e.g., an <a href="https://api.flutter.dev/flutter/widgets/InheritedWidget-class.html">InheritedWidget</a> referenced by this widget changes). This
+method can potentially be called in every frame and should not have any side
+effects beyond building a widget.</p>
+<p>The framework replaces the subtree below this widget with the widget
+returned by this method, either by updating the existing subtree or by
+removing the subtree and inflating a new subtree, depending on whether the
+widget returned by this method can update the root of the existing
+subtree, as determined by calling <a href="https://api.flutter.dev/flutter/widgets/Widget/canUpdate.html">Widget.canUpdate</a>.</p>
+<p>Typically implementations return a newly created constellation of widgets
+that are configured with information from this widget's constructor and
+from the given <a href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a>.</p>
+<p>The given <a href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a> contains information about the location in the
+tree at which this widget is being built. For example, the context
+provides the set of inherited widgets for this location in the tree. A
+given widget might be built with multiple different <a href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a>
+arguments over time if the widget is moved around the tree or if the
+widget is inserted into the tree in multiple places at once.</p>
+<p>The implementation of this method must only depend on:</p>
+<ul>
+<li>the fields of the widget, which themselves must not change over time,
+and</li>
+<li>any ambient state obtained from the <code>context</code> using
+<a href="https://api.flutter.dev/flutter/widgets/BuildContext/dependOnInheritedWidgetOfExactType.html">BuildContext.dependOnInheritedWidgetOfExactType</a>.</li>
+</ul>
+<p>If a widget's <a href="../../fit_office/ProfileScreen/build.html">build</a> method is to depend on anything else, use a
+<a href="https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html">StatefulWidget</a> instead.</p>
+<p>See also:</p>
+<ul>
+<li><a href="https://api.flutter.dev/flutter/widgets/StatelessWidget-class.html">StatelessWidget</a>, which contains the discussion on performance considerations.</li>
+</ul>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">@override
+Widget build(BuildContext context) {
+  final txtTheme = Theme.of(context).textTheme;
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+  final localisation = AppLocalizations.of(context)!;
+
+  controller.fetchUserData();
+
+  return GestureDetector(
+    onTap: () =&gt; FocusScope.of(context).unfocus(),
+    child: Scaffold(
+      backgroundColor: isDark ? tBlackColor : tWhiteColor,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: tDefaultSize),
+        child: Obx(() {
+          final user = controller.user.value;
+          if (user == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    const Avatar(),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(&#39;@${user.userName}&#39;,
+                              style: txtTheme.headlineMedium),
+                          const SizedBox(height: 10),
+                          Text(user.fullName, style: txtTheme.headlineSmall),
+                          Text(user.email, style: txtTheme.bodyLarge),
+                          FutureBuilder&lt;int&gt;(
+                            future: ProfileController.instance.getNumberOfFriends(user.userName),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return const SizedBox.shrink();
+                              }
+                              return Text(&#39;${snapshot.data} ${localisation.tFriends}&#39;);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                const Divider(),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FutureBuilder&lt;int&gt;(
+                        future: StatisticsController().getTotalExercises(user.email),
+                        builder: (context, snapshot) {
+                          return FactDisplayCard(
+                            isDark: isDark,
+                            icon: LineAwesomeIcons.dumbbell_solid,
+                            title: snapshot.data?.toString() ?? &#39;0&#39;,
+                            subtitle: AppLocalizations.of(context)!.tCompletedWorkouts,
+                            iconColor: Colors.orange,
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: FactDisplayCard(
+                        isDark: isDark,
+                        icon: LineAwesomeIcons.map_marked_alt_solid,
+                        title: _extractCampusFromEmail(user.email),
+                        subtitle: &quot;Campus&quot;,
+                        iconColor: Colors.amber,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: CustomProfileButton(
+                        isDark: isDark,
+                        icon: LineAwesomeIcons.user_edit_solid,
+                        label: localisation.tEditProfile,
+                        onPress: () async {
+                          final timerController =
+                              Get.find&lt;ExerciseTimerController&gt;();
+                          if (timerController.isRunning.value ||
+                              timerController.isPaused.value) {
+                            await showUnifiedDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (_) =&gt;
+                                  ActiveTimerDialog.forAction(&#39;editprofile&#39;, context),
+                            );
+                            return;
+                          }
+
+                          UpdateProfileModal.show(context, user);
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Flexible(
+                      flex: 2,
+                      child: CustomProfileButton(
+                        isDark: isDark,
+                        icon: LineAwesomeIcons.sign_out_alt_solid,
+                        iconColor: Colors.red,
+                        label: &quot;Logout&quot;,
+                        textColor: Colors.red,
+                        onPress: () async {
+                          final timerController =
+                              Get.find&lt;ExerciseTimerController&gt;();
+                          if (timerController.isRunning.value ||
+                              timerController.isPaused.value) {
+                            await showUnifiedDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (_) =&gt;
+                                  ActiveTimerDialog.forAction(&#39;logout&#39;, context),
+                            );
+                            return;
+                          }
+
+                          _showLogoutModal(context);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const Divider(),
+                FriendsBoxWidget(currentUserId: user.id!),
+                const SizedBox(height: 8),
+                CustomProfileButton(
+                  isDark: isDark,
+                  icon: LineAwesomeIcons.user_plus_solid,
+                  label: AppLocalizations.of(context)!.tAddFriendsHeader,
+                  onPress: () async {
+                    final timerController =
+                    Get.find&lt;ExerciseTimerController&gt;();
+                    if (timerController.isRunning.value ||
+                        timerController.isPaused.value) {
+                      await showUnifiedDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (_) =&gt;
+                            ActiveTimerDialog.forAction(&#39;addfriends&#39;, context),
+                      );
+                      return;
+                    }
+
+                    Get.to(() =&gt; AddFriendsScreen(currentUserId: user.id!));
+                  },
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: CustomProfileButton(
+                        isDark: isDark,
+                        icon: LineAwesomeIcons.share_square,
+                        label: &#39;Send Friend Link&#39;,
+                        onPress: () {
+                          final deepLinkService = Get.find&lt;DeepLinkService&gt;();
+                          deepLinkService.shareFriendRequestLink(user.id!);
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      flex: 2,
+                      child: CustomProfileButton(
+                        isDark: isDark,
+                        icon: LineAwesomeIcons.qrcode_solid,
+                        label: &#39;QR Code&#39;,
+                        onPress: () async {
+                          try {
+                            QrCodeDialog.show(context, user.id!, user.userName);
+                          } catch (e) {
+                            Helper.errorSnackBar(
+                                title: &#39;Error&#39;,
+                                message: &#39;Could not generate QR code&#39;
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                FriendRequestsWidget(currentUserId: user.id!),
+                const SizedBox(height: 10),
+                const Divider(),
+                const SizedBox(height: 10),
+                Text(AppLocalizations.of(context)!.tSettings,
+                    style: txtTheme.headlineSmall
+                        ?.copyWith(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 10),
+                CustomProfileButton(
+                  isDark: isDark,
+                  icon: LineAwesomeIcons.bell_solid,
+                  label: AppLocalizations.of(context)!.tNotifications,
+                  onPress: () async {
+                    Helper.warningSnackBar(title: &quot;Info&quot;, message: &quot;Feature not implemented yet&quot;);
+                  },
+                ),
+                CustomProfileDropdownButton(
+                  icon: LineAwesomeIcons.language_solid,
+                  isDark: isDark,
+                  selectedValue: Get.locale?.languageCode ?? &#39;en&#39;,
+                  items: const [
+                    DropdownMenuItem(value: &#39;en&#39;, child: Text(&#39;English 🇬🇧&#39;)),
+                    DropdownMenuItem(value: &#39;de&#39;, child: Text(&#39;Deutsch 🇩🇪&#39;)),
+                  ],
+                  onChanged: (val) async {
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.setString(&#39;locale&#39;, val);
+                    if (val == &#39;en&#39;) {
+                      Get.updateLocale(Locale(&#39;en&#39;));
+                    } else if (val == &#39;de&#39;) {
+                      Get.updateLocale(Locale(&#39;de&#39;));
+                    }
+                  },
+                ),
+                const Divider(),
+                const SizedBox(height: 10),
+                Text(&quot;Information&quot;,
+                    style: txtTheme.headlineSmall
+                        ?.copyWith(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 10),
+                CustomProfileButton(
+                  isDark: isDark,
+                  icon: LineAwesomeIcons.info_solid,
+                  label: AppLocalizations.of(context)!.tAbout,
+                  onPress: () {
+                    AboutModal.show(context);
+                  },
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FactDisplayCard(
+                        isDark: isDark,
+                        icon: Icons.timer,
+                        title: &quot;8h&quot;,
+                        subtitle: &quot;Support&quot;,
+                        iconColor: Colors.green,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: FactDisplayCard(
+                        isDark: isDark,
+                        icon: LineAwesomeIcons.bug_solid,
+                        title: &quot;No Bugs&quot;,
+                        subtitle: &quot;Bugs&quot;,
+                        iconColor: Colors.red,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: FutureBuilder&lt;String&gt;(
+                        future: AppInfo.getFullVersionInfo(),
+                        builder: (context, snapshot) {
+                          return FactDisplayCard(
+                            isDark: isDark,
+                            icon: LineAwesomeIcons.info_circle_solid,
+                            title: snapshot.data ?? &#39;...&#39;,
+                            subtitle: &quot;Version&quot;,
+                            iconColor: Colors.blue,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                CustomProfileButton(
+                  isDark: isDark,
+                  icon: LineAwesomeIcons.question_circle_solid,
+                  label: AppLocalizations.of(context)!.tHelpSupport,
+                  onPress: () {
+                    HelpSupportModal.show(context);
+                  },
+                ),
+                CustomProfileButton(
+                  isDark: isDark,
+                  icon: LineAwesomeIcons.bug_solid,
+                  label: AppLocalizations.of(context)!.tReportBug,
+                  onPress: () {
+                    BugReportModal.show(context);
+                  },
+                ),
+                CustomProfileButton(
+                  isDark: isDark,
+                  icon: LineAwesomeIcons.file_contract_solid,
+                  label: AppLocalizations.of(context)!.tTerms,
+                  onPress: () {
+                    TermsConditionsModal.show(context, isDark: isDark);
+                  },
+                ),
+                CustomProfileButton(
+                  isDark: isDark,
+                  icon: LineAwesomeIcons.file_signature_solid,
+                  label: AppLocalizations.of(context)!.tPrivacyPolicy,
+                  onPress: () {
+                    PrivacyPolicyModal.show(context, isDark: isDark);
+                  },
+                ),
+                CustomProfileButton(
+                  isDark: isDark,
+                  icon: LineAwesomeIcons.file_contract_solid,
+                  label: AppLocalizations.of(context)!.tLicenses,
+                  onPress: () async {
+                    final version = await AppInfo.getFullVersionInfo();
+                    showLicensePage(
+                      context: context,
+                      applicationName: &#39;FitOffice&#39;,
+                      applicationVersion: version,
+                      applicationLegalese: &#39;© ${DateTime.now().year} DHBW Ravensburg&#39;,
+                    );
+                  },
+                ),
+                if (user.role == &quot;admin&quot;) ...[
+                  const Divider(),
+                  const SizedBox(height: 10),
+                  Text(AppLocalizations.of(context)!.tAdminSettings,
+                      style: txtTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 10),
+                  CustomProfileButton(
+                    &#47;&#47;alle vier darunter anpassen!
+                    isDark: isDark,
+                    icon: Icons.add,
+                    label: localisation.tAddExercises,
+                    onPress: () async {
+                      final timerController =
+                          Get.find&lt;ExerciseTimerController&gt;();
+                      if (timerController.isRunning.value ||
+                          timerController.isPaused.value) {
+                        await showUnifiedDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) =&gt;
+                              ActiveTimerDialog.forAction(&#39;admin&#39;, context),
+                        );
+                        return;
+                      }
+
+                      Get.to(() =&gt; ExerciseForm(isEdit: false));
+                    },
+                  ),
+                  CustomProfileButton(
+                    isDark: isDark,
+                    icon: LineAwesomeIcons.user_edit_solid,
+                    label: &quot;User Management&quot;,
+                    onPress: () async {
+                      final timerController =
+                          Get.find&lt;ExerciseTimerController&gt;();
+                      if (timerController.isRunning.value ||
+                          timerController.isPaused.value) {
+                        await showUnifiedDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) =&gt;
+                              ActiveTimerDialog.forAction(&#39;admin&#39;, context),
+                        );
+                        return;
+                      }
+
+                      Get.to(() =&gt; const AllUsersPage());
+                    },
+                  ),
+                ],
+                const Divider(),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 24.0, horizontal: 16.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          &quot;Proudly crafted with ❤️ and ☕&quot;,
+                          textAlign: TextAlign.center,
+                          style: txtTheme.bodyMedium?.copyWith(
+                            color:
+                                isDark ? Colors.grey : Colors.blueGrey[700],
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.1,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          &quot;by passionate students of\nHealth Management &amp; Business Information Systems\nat DHBW Ravensburg&quot;,
+                          textAlign: TextAlign.center,
+                          style: txtTheme.bodySmall?.copyWith(
+                            color:
+                                isDark ? Colors.grey : Colors.blueGrey[700],
+                            height: 1.6,
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          &quot;© ${DateTime.now().year} DHBW Ravensburg. All rights reserved.&quot;,
+                          textAlign: TextAlign.center,
+                          style: txtTheme.bodySmall?.copyWith(
+                            color: Colors.grey[500],
+                            fontStyle: FontStyle.italic,
+                            fontSize: 12,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          );
+        }),
+      ),
+    ),
+  );
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">fit_office</a></li>
+    <li><a href="../../fit_office/">fit_office</a></li>
+    <li><a href="../../fit_office/ProfileScreen-class.html">ProfileScreen</a></li>
+    <li class="self-crumb">build method</li>
+</ol>
+
+    <h5>ProfileScreen class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    fit_office
+      1.0.1
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+
