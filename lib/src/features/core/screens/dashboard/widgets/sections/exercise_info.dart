@@ -12,6 +12,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../end_exercise.dart';
 
+/// A widget that displays detailed information about a specific exercise,
+/// including a video preview (if available), a localized description,
+/// and context-sensitive action buttons (start, pause, resume, stop, cancel).
+/// It integrates with the global timer controller and adapts the UI accordingly.
 class ExerciseInfoTab extends StatefulWidget {
   final Map<String, dynamic> exerciseData;
   final ScrollController scrollController;
@@ -26,10 +30,11 @@ class ExerciseInfoTab extends StatefulWidget {
 class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
   final timerController = Get.find<ExerciseTimerController>();
   String? _locale;
-
+  // Determines if the currently running exercise is the one shown in this tab
   bool get isRunningThisExercise =>
       timerController.exerciseName.value == widget.exerciseData['name'];
 
+  // Loads the current app locale from SharedPreferences
   void _loadLocale() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -91,6 +96,7 @@ class _ExerciseInfoTabState extends State<ExerciseInfoTab> {
             ),
           );
 
+    // Reactive UI that updates automatically when the timer state changes
     return Obx(() {
       final isRunning = timerController.isRunning.value;
       final isPaused = timerController.isPaused.value;

@@ -8,13 +8,18 @@ import 'package:video_player/video_player.dart';
 
 import '../../../constants/text_strings.dart';
 
+/// A controller class that handles logic related to exercises,
+/// including form reset, video upload, form validation, video playback initialization,
+/// and interaction with Firestore and Firebase Storage.
 class ExerciseController {
+  /// Maps localized category strings to their internal category keys.
   final Map<String, String> categoryMap = {
     tUpperBody: 'Upper-Body',
     tLowerBody: 'Lower-Body',
     tMental: 'Mind',
   };
 
+  /// Resets all text fields in the exercise form.
   void resetForm(
       {required TextEditingController nameController,
       required TextEditingController descriptionController,
@@ -24,6 +29,8 @@ class ExerciseController {
     videoController.clear();
   }
 
+  /// Uploads a video file to Firebase Storage and returns the download URL.
+  /// Throws an exception if the upload fails.
   Future<String?> uploadVideo(File videoFile) async {
     try {
       final storageRef =
@@ -36,6 +43,7 @@ class ExerciseController {
     }
   }
 
+  /// Saves a new exercise document to Firestore with all relevant details.
   Future<void> saveExercise({
     required String name,
     required String nameEn,
@@ -54,6 +62,8 @@ class ExerciseController {
     });
   }
 
+  /// Initializes the video and Chewie controllers for playback.
+  /// Accepts both local and network video sources.
   Future<(VideoPlayerController, ChewieController)> initializeControllers(
       String path,
       {bool isLocal = false}) async {
@@ -73,6 +83,8 @@ class ExerciseController {
     return (videoPlayerController, chewieController);
   }
 
+  /// Validates whether the exercise form is complete and ready to be saved.
+  /// Either a video file or an uploaded video URL must be present.
   bool isFormValid({
     required String name,
     required String description,
@@ -86,6 +98,7 @@ class ExerciseController {
         (videoFile != null || uploadedUrl != null);
   }
 
+  /// Checks whether any part of the form has been modified from its initial state.
   bool hasChanges(
       {required TextEditingController nameController,
       required TextEditingController descriptionController,
@@ -99,6 +112,8 @@ class ExerciseController {
         uploadedVideoUrl != null;
   }
 
+  /// Updates an existing exercise document in Firestore.
+  /// Looks up the document by its `name`.
   Future<void> editExercise(
       String exerciseName, Map<String, dynamic> updatedData) async {
     final querySnapshot = await FirebaseFirestore.instance
@@ -116,6 +131,8 @@ class ExerciseController {
     }
   }
 
+  /// Compares the current and original exercise data to determine
+  /// if meaningful changes have been made and if the updated data is still valid.
   bool checkIfExerciseChanged({
     required String newName,
     required String newNameEn,
@@ -156,6 +173,7 @@ class ExerciseController {
     return hasAnyChanged && isValid;
   }
 
+  /// Deletes a video from Firebase Storage using its download URL.
   Future<void> deleteVideoByUrl(String url) async {
     try {
       final ref = FirebaseStorage.instance.refFromURL(url);

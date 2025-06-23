@@ -2,6 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// A confirmation dialog shown before starting an exercise session.
+///
+/// Displays:
+/// - A title
+/// - A confirmation message
+/// - The exercise name
+/// - Two action buttons: "Start" and "Cancel"
+///
+/// Returns `true` when confirmed, `false` when cancelled.
+/// You can dismiss the dialog using: `Navigator.pop(context, true/false)`.
 class StartExerciseDialog extends StatelessWidget {
   final String exerciseName;
 
@@ -37,8 +47,10 @@ class StartExerciseDialog extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 24),
+                        // Message prompting user to confirm
                         Text(
-                          AppLocalizations.of(context)!.tStartExerciseConfirmation,
+                          AppLocalizations.of(context)!
+                              .tStartExerciseConfirmation,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 18,
@@ -57,6 +69,7 @@ class StartExerciseDialog extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 40),
+                        // Action buttons
                         Column(
                           children: [
                             SizedBox(
@@ -76,7 +89,8 @@ class StartExerciseDialog extends StatelessWidget {
                                 icon: const Icon(Icons.play_arrow,
                                     color: Colors.white),
                                 label: Text(
-                                  AppLocalizations.of(context)!.tStartExercisePositive,
+                                  AppLocalizations.of(context)!
+                                      .tStartExercisePositive,
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.white,
@@ -103,7 +117,8 @@ class StartExerciseDialog extends StatelessWidget {
                                 icon: const Icon(Icons.undo_sharp,
                                     color: tWhiteColor),
                                 label: Text(
-                                  AppLocalizations.of(context)!.tStartExerciseNegative,
+                                  AppLocalizations.of(context)!
+                                      .tStartExerciseNegative,
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: tWhiteColor,
@@ -117,15 +132,15 @@ class StartExerciseDialog extends StatelessWidget {
                         ),
                       ],
                     ),
+
+                    // Close icon in the top-right corner (dismisses without returning a value)
                     Positioned(
                       right: -12,
                       top: -12,
                       child: IconButton(
                         icon: Icon(
                           Icons.cancel_outlined,
-                          color: isDarkMode
-                              ? tPaleWhiteColor
-                              : tPaleBlackColor,
+                          color: isDarkMode ? tPaleWhiteColor : tPaleBlackColor,
                         ),
                         onPressed: () => Navigator.of(context).pop(),
                         iconSize: 28,

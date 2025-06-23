@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// A reusable dialog widget that appears when an action cannot be performed
+/// due to an active exercise timer (e.g. editing, deleting, logging out).
+///
+/// The dialog includes a title, message, and action button,
+/// all localized and styled based on the current theme.
 class ActiveTimerDialog extends StatelessWidget {
   final String title;
   final String message;
@@ -14,6 +19,8 @@ class ActiveTimerDialog extends StatelessWidget {
     required this.buttonText,
   });
 
+  /// Factory constructor to return a preconfigured dialog
+  /// depending on the type of action attempted during an active timer.
   factory ActiveTimerDialog.forAction(String actionType, BuildContext context) {
     switch (actionType) {
       case 'delete':

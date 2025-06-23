@@ -13,6 +13,7 @@ import 'package:fit_office/src/features/authentication/models/user_model.dart';
 import '../../../controllers/exercise_timer.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// A full-width divider used to separate grouped sections in the exercise list.
 class FullWidthDivider extends StatelessWidget {
   const FullWidthDivider({super.key});
 
@@ -27,6 +28,11 @@ class FullWidthDivider extends StatelessWidget {
   }
 }
 
+/// A heart icon that reflects favorite status and disables interaction during loading.
+///
+/// [isInitiallyFavorite] defines the current state.
+/// [isProcessing] prevents repeated taps during async operation.
+/// [onToggle] is triggered when the icon is pressed.
 class FavoriteIcon extends StatelessWidget {
   final bool isInitiallyFavorite;
   final bool isProcessing;
@@ -51,6 +57,12 @@ class FavoriteIcon extends StatelessWidget {
   }
 }
 
+/// Displays a scrollable, optionally grouped list of exercises with full functionality:
+/// - Search and fuzzy match
+/// - Favorites management
+/// - Admin actions (edit/delete)
+/// - Language-aware name selection
+/// - Grouped alphabetical headers or flat layout
 class AllExercisesList extends StatefulWidget {
   final List<Map<String, dynamic>> exercises;
   final List<String> favorites;
@@ -72,8 +84,10 @@ class AllExercisesList extends StatefulWidget {
 }
 
 class _AllExercisesListState extends State<AllExercisesList> {
+  /// Map to control per-item loading state of the favorite icon
   final Map<String, bool> _isProcessingFavorite = {};
 
+  /// Handle favorite toggle with loading state and error handling
   Future<void> _toggleFavorite(String exerciseName) async {
     if (_isProcessingFavorite[exerciseName] == true) return;
 
@@ -86,7 +100,9 @@ class _AllExercisesListState extends State<AllExercisesList> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.tUpdateFavoriteException)),
+          SnackBar(
+              content:
+                  Text(AppLocalizations.of(context)!.tUpdateFavoriteException)),
         );
       }
     } finally {
@@ -103,12 +119,14 @@ class _AllExercisesListState extends State<AllExercisesList> {
     final lowerQuery = widget.query.toLowerCase().trim();
     final isFiltered = lowerQuery.isNotEmpty;
 
+    // If filtering is active or grouping is disabled, use filtered list
     final List<Map<String, dynamic>> sortedList =
         List<Map<String, dynamic>>.from(
             isFiltered || !widget.showGroupedAlphabetically
                 ? _filtered(widget.exercises, lowerQuery)
                 : widget.exercises);
 
+    /// Alphabetische Sortierung
     sortedList.sort((a, b) =>
         (a['name'] ?? '').toString().compareTo((b['name'] ?? '').toString()));
 
@@ -136,16 +154,20 @@ class _AllExercisesListState extends State<AllExercisesList> {
             if (sortedList.isEmpty) {
               return Padding(
                 padding: const EdgeInsets.all(16),
-                child: Text(AppLocalizations.of(context)!.tDashboardExerciseNotFound),
+                child: Text(
+                    AppLocalizations.of(context)!.tDashboardExerciseNotFound),
               );
             }
 
             if (isFiltered || !widget.showGroupedAlphabetically) {
+              /// Kein Gruppieren – einfache Liste mit Divider
               for (int i = 0; i < sortedList.length; i++) {
-                listWidgets.add(_buildExerciseCard(context, sortedList[i], isAdmin, locale));
+                listWidgets.add(_buildExerciseCard(
+                    context, sortedList[i], isAdmin, locale));
                 if (i < sortedList.length - 1) listWidgets.add(const Divider());
               }
             } else {
+              /// Alphabetische Gruppierung mit Header (z. B. A, B, C …)
               String lastLetter = '';
               List<Map<String, dynamic>> buffer = [];
 
@@ -155,7 +177,8 @@ class _AllExercisesListState extends State<AllExercisesList> {
                 listWidgets.add(const Divider());
 
                 for (int i = 0; i < buffer.length; i++) {
-                  listWidgets.add(_buildExerciseCard(context, buffer[i], isAdmin, locale));
+                  listWidgets.add(
+                      _buildExerciseCard(context, buffer[i], isAdmin, locale));
                 }
                 buffer.clear();
               }
@@ -192,6 +215,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
     );
   }
 
+  /// Filters exercises by query using name, description and similarity
   List<Map<String, dynamic>> _filtered(
       List<Map<String, dynamic>> list, String query) {
     return list.where((exercise) {
@@ -204,14 +228,25 @@ class _AllExercisesListState extends State<AllExercisesList> {
     }).toList();
   }
 
+  /// Build section header (e.g. A, B, C...)
   Widget _buildHeader(String letter) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Text(letter,
-            style: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black87, fontSize: 14, fontWeight: FontWeight.bold)),
+            style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black87,
+                fontSize: 14,
+                fontWeight: FontWeight.bold)),
       );
 
-  Widget _buildExerciseCard(
-      BuildContext context, Map<String, dynamic> exercise, bool isAdmin, String locale) {
+  /// Builds a tappable card for a single exercise with:
+  /// - Title + category
+  /// - Favorite toggle
+  /// - Start button
+  /// - Admin edit/delete buttons (if applicable)
+  Widget _buildExerciseCard(BuildContext context, Map<String, dynamic> exercise,
+      bool isAdmin, String locale) {
     String exerciseName;
     if (locale == 'de') {
       exerciseName = exercise['name'];
@@ -231,7 +266,9 @@ class _AllExercisesListState extends State<AllExercisesList> {
           color: isDark ? Colors.grey[800] : Colors.white,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isDark ? Colors.grey.withValues(alpha: 0.5) : Colors.grey.withValues(alpha: 0.5),
+            color: isDark
+                ? Colors.grey.withValues(alpha: 0.5)
+                : Colors.grey.withValues(alpha: 0.5),
             width: 1.5,
           ),
         ),
@@ -294,8 +331,8 @@ class _AllExercisesListState extends State<AllExercisesList> {
                       final confirmed = await showDialog<bool>(
                         context: Get.context!,
                         barrierDismissible: false,
-                        builder: (_) => StartExerciseDialog(
-                            exerciseName: exerciseName),
+                        builder: (_) =>
+                            StartExerciseDialog(exerciseName: exerciseName),
                       );
                       if (confirmed == true) {
                         exerciseName = exercise['name'];
@@ -324,7 +361,8 @@ class _AllExercisesListState extends State<AllExercisesList> {
                           await showUnifiedDialog(
                             barrierDismissible: false,
                             context: context,
-                            builder: (_) => ActiveTimerDialog.forAction('edit', context),
+                            builder: (_) =>
+                                ActiveTimerDialog.forAction('edit', context),
                           );
                           return;
                         }
@@ -374,7 +412,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
     );
   }
 
-  // Placeholder loading card, now lighter/more transparent to indicate loading state
+  /// Placeholder loading card displayed while user data is loading
   Widget _buildLoadingCard(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark
@@ -398,7 +436,8 @@ class _AllExercisesListState extends State<AllExercisesList> {
           ),
         ),
         child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           leading: Icon(
             Icons.hourglass_empty,
             color: Colors.grey.withValues(alpha: .4),
