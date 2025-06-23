@@ -44,6 +44,7 @@ Future<void> main() async {
     Get.put(AuthenticationRepository());
 
     Get.put(ExerciseTimerController(), permanent: true);
+    Get.put(FriendsController(), permanent: true);
   });
 
   /// Ensure Firebase authentication is initialized before calling updateFcmTokenIfAuthenticated
