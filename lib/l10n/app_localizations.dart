@@ -1739,7 +1739,7 @@ abstract class AppLocalizations {
   /// No description provided for @tLastExerciseTime.
   ///
   /// In en, this message translates to:
-  /// **'Last Exercise Time'**
+  /// **'Last Exercise done at'**
   String get tLastExerciseTime;
 
   /// No description provided for @tProgressTutorial.

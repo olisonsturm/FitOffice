@@ -870,7 +870,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tNoExercisesAvailable => 'Keine Übungen verfügbar';
 
   @override
-  String get tLastExerciseTime => 'Zeit der letzten Übung';
+  String get tLastExerciseTime => 'Zeitpunkt der letzten Übung';
 
   @override
   String get tProgressTutorial => 'Hier kannst du deinen Fortschritt sehen.';
