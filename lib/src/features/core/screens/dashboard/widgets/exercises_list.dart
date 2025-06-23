@@ -277,6 +277,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
           highlightColor: Colors.grey.shade300,
           splashColor: Colors.grey.shade300,
           onTap: () async {
+            // Remove global flag logic, allow navigation as before
             final result = await Navigator.push(
               context,
               MaterialPageRoute(

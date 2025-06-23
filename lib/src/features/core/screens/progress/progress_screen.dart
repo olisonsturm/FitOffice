@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/src/constants/sizes.dart';
 import 'package:fit_office/src/features/core/screens/progress/widgets/progress_chapter_widget.dart';
@@ -17,6 +18,11 @@ class ProgressScreen extends StatefulWidget {
 
   @override
   State<ProgressScreen> createState() => ProgressScreenState();
+
+  void updateProgressTab() {
+
+
+  }
 }
 
 class ProgressScreenState extends State<ProgressScreen>
@@ -67,12 +73,22 @@ class ProgressScreenState extends State<ProgressScreen>
 
     // Check if we arrived from completing an exercise
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Check if we have arguments from exercise completion
-      if (Get.arguments != null &&
-          Get.arguments['exerciseCompleted'] == true &&
-          Get.arguments['isFirstInTimeWindow'] == true) {
-        // Advance step as this is the first exercise in the time window
+      final args = Get.arguments;
+      final bool exerciseCompleted = args != null && args['exerciseCompleted'] == true;
+      final bool isFirstInTimeWindow = args != null && args['isFirstInTimeWindow'] == true;
+
+      if (exerciseCompleted && isFirstInTimeWindow) {
+        // Advance step and start celebration
         advanceStep();
+        if (mounted) {
+          startCelebrationAnimation();
+        }
+      } else if (exerciseCompleted) {
+        // Only start celebration
+        if (mounted) {
+          startCelebrationAnimation();
+        }
+        _loadProgressFromStatistics();
       } else {
         // Regular initialization - load progress normally
         _loadProgressFromStatistics();
@@ -92,6 +108,7 @@ class ProgressScreenState extends State<ProgressScreen>
     _stepAnimationController.dispose();
     _chapterAnimationController.dispose();
     _scrollController.dispose();
+
     super.dispose();
   }
 
@@ -112,18 +129,20 @@ class ProgressScreenState extends State<ProgressScreen>
       if (calculatedStep > 0) {
         await _animateToStep(calculatedStep);
       }
-
-      setState(() {
-        _isInitialized = true;
-      });
-
+      if (mounted) {
+        setState(() {
+          _isInitialized = true;
+        });
+      }
     } catch (e) {
       if (kDebugMode) {
         print('Error loading progress: $e');
       }
-      setState(() {
-        _isInitialized = true;
-      });
+      if (mounted) {
+        setState(() {
+          _isInitialized = true;
+        });
+      }
     }
   }
 
@@ -147,10 +166,11 @@ class ProgressScreenState extends State<ProgressScreen>
 
   Future<void> _animateToStep(int targetStep) async {
     if (_isAnimating || targetStep <= currentStep) return;
-
-    setState(() {
-      _isAnimating = true;
-    });
+    if (mounted) {
+      setState(() {
+        _isAnimating = true;
+      });
+    }
 
     // Animate each step with a slight delay
     for (int step = currentStep + 1; step <= targetStep; step++) {
@@ -158,9 +178,11 @@ class ProgressScreenState extends State<ProgressScreen>
       await Future.delayed(const Duration(milliseconds: 200));
     }
 
-    setState(() {
-      _isAnimating = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isAnimating = false;
+      });
+    }
   }
 
   Future<void> _animateSingleStep(int step) async {
@@ -467,6 +489,40 @@ class ProgressScreenState extends State<ProgressScreen>
     //   ),
     );
   }
+
+void startCelebrationAnimation() {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) => Stack(
+      children: [
+        Positioned.fill(
+          child: IgnorePointer(
+            child: Align(
+              alignment: Alignment.center,
+              child: ConfettiWidget(
+                confettiController: ConfettiController(duration: const Duration(seconds: 2))
+                  ..play(),
+                blastDirectionality: BlastDirectionality.explosive,
+                shouldLoop: false,
+                colors: const [Colors.green, Colors.blue, Colors.pink, Colors.orange, Colors.purple],
+                numberOfParticles: 40,
+                maxBlastForce: 20,
+                minBlastForce: 8,
+                gravity: 0.3,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+  Future.delayed(const Duration(seconds: 2), () {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
+  });
+}
 }
 
 
