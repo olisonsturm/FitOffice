@@ -2,6 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// A confirmation dialog to end an ongoing exercise session.
+///
+/// This widget shows a modal with:
+/// - The exercise name
+/// - A message asking if the user wants to end the exercise
+/// - Two action buttons:
+///   - "Finish" (returns `true`)
+///   - "Continue" (returns `false`)
+///
+/// The dialog adapts its styling based on the current brightness mode.
 class EndExerciseDialog extends StatelessWidget {
   final String exerciseName;
 
@@ -14,7 +24,8 @@ class EndExerciseDialog extends StatelessWidget {
     return Center(
         child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: 365,
+              maxWidth:
+                  365, // Ensures dialog remains nicely sized on all screens
               minWidth: 300,
             ),
             child: Material(
@@ -37,8 +48,10 @@ class EndExerciseDialog extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 24),
+                        // Message explaining the consequence of ending the exercise
                         Text(
-                          AppLocalizations.of(context)!.tEndExerciseConfirmation,
+                          AppLocalizations.of(context)!
+                              .tEndExerciseConfirmation,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 18,
@@ -59,6 +72,7 @@ class EndExerciseDialog extends StatelessWidget {
                         const SizedBox(height: 40),
                         Column(
                           children: [
+                            // Button to confirm ending the exercise (returns true)
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton.icon(
@@ -76,7 +90,8 @@ class EndExerciseDialog extends StatelessWidget {
                                 icon: const Icon(Icons.check_circle,
                                     color: Colors.white),
                                 label: Text(
-                                  AppLocalizations.of(context)!.tEndExercisePositive,
+                                  AppLocalizations.of(context)!
+                                      .tEndExercisePositive,
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.white,
@@ -86,6 +101,7 @@ class EndExerciseDialog extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 12),
+                            // Cancel the dialog, continue the exercise (returns false)
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton.icon(
@@ -103,7 +119,8 @@ class EndExerciseDialog extends StatelessWidget {
                                 icon: const Icon(Icons.undo_sharp,
                                     color: tWhiteColor),
                                 label: Text(
-                                  AppLocalizations.of(context)!.tEndExerciseNegative,
+                                  AppLocalizations.of(context)!
+                                      .tEndExerciseNegative,
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: tWhiteColor,
@@ -123,9 +140,7 @@ class EndExerciseDialog extends StatelessWidget {
                       child: IconButton(
                         icon: Icon(
                           Icons.cancel_outlined,
-                          color: isDarkMode
-                              ? tPaleWhiteColor
-                              : tPaleBlackColor,
+                          color: isDarkMode ? tPaleWhiteColor : tPaleBlackColor,
                         ),
                         onPressed: () => Navigator.of(context).pop(),
                         iconSize: 28,

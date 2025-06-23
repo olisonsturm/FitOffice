@@ -5,8 +5,16 @@ import 'package:get/get.dart';
 import '../../../../controllers/profile_controller.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// Displays a history list of all past executions for a specific exercise.
+///
+/// Data is retrieved from Firestore under:
+/// `users/{userId}/exerciseLogs`
+/// where `exerciseName` matches the given [name].
 class ExerciseHistoryTab extends StatelessWidget {
+  /// Name of the exercise (used to filter history entries)
   final String name;
+
+  /// Shared scroll controller (e.g., for global overlays or scroll-to-bottom)
   final ScrollController scrollController;
 
   const ExerciseHistoryTab(
@@ -47,12 +55,13 @@ class ExerciseHistoryTab extends StatelessWidget {
               //.orderBy('endTime', descending: true)  --> Index dafür notwendig?! dass man das einstellen kann
               .snapshots(),
           builder: (context, snapshot) {
+            // Show loading spinner while listening to the stream
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
 
             final docs = snapshot.data?.docs ?? [];
-
+            // If there is no history for this exercise
             if (docs.isEmpty) {
               return Center(
                 child: Padding(
@@ -68,14 +77,14 @@ class ExerciseHistoryTab extends StatelessWidget {
                 ),
               );
             }
-
+            // Build the list of history entries
             return ListView.builder(
               controller: scrollController,
               padding: const EdgeInsets.symmetric(vertical: 8),
               itemCount: docs.length,
               itemBuilder: (context, index) {
                 final data = docs[index].data() as Map<String, dynamic>;
-
+                // Extract timestamp and duration
                 final timestamp = (data['endTime'] as Timestamp?)?.toDate();
                 final durationSeconds = data['duration'] is int
                     ? data['duration']
@@ -88,7 +97,7 @@ class ExerciseHistoryTab extends StatelessWidget {
 
                 final formattedDate =
                     "${timestamp.day.toString().padLeft(2, '0')}.${timestamp.month.toString().padLeft(2, '0')}.${timestamp.year} – ${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}";
-
+                // Build visual card
                 return Center(
                   child: Container(
                     margin: const EdgeInsets.symmetric(vertical: 8),

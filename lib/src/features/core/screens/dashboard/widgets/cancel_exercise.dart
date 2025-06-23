@@ -2,7 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:fit_office/src/constants/colors.dart';
 import 'package:fit_office/l10n/app_localizations.dart';
 
+/// A custom modal dialog widget that confirms whether the user wants to cancel
+/// an ongoing exercise session.
+///
+/// Displays the name of the current exercise, a confirmation message,
+/// and two buttons:
+/// - A red "Cancel" button to confirm cancellation
+/// - A grey "Keep Going" button to dismiss the dialog
 class CancelExerciseDialog extends StatelessWidget {
+  /// Name of the exercise to be displayed in the dialog
   final String exerciseName;
 
   const CancelExerciseDialog({super.key, required this.exerciseName});
@@ -57,6 +65,7 @@ class CancelExerciseDialog extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 40),
+                        // Action buttons section
                         Column(
                           children: [
                             SizedBox(
@@ -76,7 +85,8 @@ class CancelExerciseDialog extends StatelessWidget {
                                 icon: const Icon(Icons.cancel,
                                     color: tWhiteColor),
                                 label: Text(
-                                  AppLocalizations.of(context)!.tCancelExercisePositive,
+                                  AppLocalizations.of(context)!
+                                      .tCancelExercisePositive,
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: tWhiteColor,
@@ -87,6 +97,7 @@ class CancelExerciseDialog extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 12),
+                            // Keep going button (returns false)
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton.icon(
@@ -105,7 +116,8 @@ class CancelExerciseDialog extends StatelessWidget {
                                 icon: const Icon(Icons.undo_sharp,
                                     color: Colors.white),
                                 label: Text(
-                                  AppLocalizations.of(context)!.tCancelExerciseNegative,
+                                  AppLocalizations.of(context)!
+                                      .tCancelExerciseNegative,
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.white,
@@ -118,6 +130,7 @@ class CancelExerciseDialog extends StatelessWidget {
                         ),
                       ],
                     ),
+                    // Optional close icon in the top right corner
                     Positioned(
                       right: -12,
                       top: -12,

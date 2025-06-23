@@ -5,7 +5,11 @@ import 'package:get/get.dart';
 
 import '../../features/core/controllers/exercise_timer.dart';
 
-/// Shows a unified dialog that handles focus and timer state
+/// Displays a unified dialog with proper timer and focus handling.
+/// Ensures:
+/// - Global timer is paused/resumed as needed
+/// - Focus state (esp. search bar) is preserved/restored correctly
+/// - Overlay state is updated to indicate dialog visibility
 Future<T?> showUnifiedDialog<T>({
   required BuildContext context,
   required WidgetBuilder builder,

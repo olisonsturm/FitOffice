@@ -15,8 +15,20 @@ import '../../../controllers/exercise_timer.dart';
 import '../../../controllers/profile_controller.dart';
 import 'active_dialog.dart';
 
+/// Screen displaying the details of a specific exercise.
+///
+/// Features:
+/// - Info and History tabs (switchable)
+/// - Favorite toggle (with DB sync)
+/// - Admin edit capability
+/// - Integrated scroll-to-bottom button
+/// - Locale-sensitive display
+/// - Reactive overlay padding when the global exercise timer is active
 class ExerciseDetailScreen extends StatefulWidget {
+  /// Globally tracks the currently opened exercise name
   static RxnString currentExerciseName = RxnString();
+
+  /// Globally tracks the currently selected tab index (0 = Info, 1 = History)
   static RxInt currentTabIndex = 0.obs;
 
   final Map<String, dynamic> exerciseData;
@@ -47,12 +59,12 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+            // Track current exercise globally for use in overlays
       ExerciseDetailScreen.currentExerciseName.value =
           widget.exerciseData['name'];
       ExerciseDetailScreen.currentTabIndex.value = 0;
 
-      //final timerActive = Get.find<ExerciseTimerController>().isRunning.value;
-
+      // Determine if scroll-to-bottom button is needed
       final position = _scrollController.position;
       final isScrollable = position.maxScrollExtent > 0;
 
@@ -60,6 +72,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
         showScrollDownButton = isScrollable;
       });
 
+      // Hide scroll button when near bottom
       _scrollController.addListener(() {
         final position = _scrollController.position;
         const delta = 40.0;
@@ -90,6 +103,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     super.dispose();
   }
 
+  /// Load current user's role to determine admin rights
   void _loadUserRole() async {
     final user = await _profileController.getUserData();
     setState(() {
@@ -97,6 +111,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     });
   }
 
+  /// Check if the exercise is in user's favorites
   void _loadFavoriteStatus() async {
     final user = await _profileController.getUserData();
     final favorites = await _dbController.getFavouriteExercises(user.email);
@@ -108,6 +123,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     });
   }
 
+  /// Toggle the favorite status of the exercise
   void toggleFavorite() async {
     if (isProcessing) return;
     setState(() {
@@ -149,6 +165,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     Navigator.pop(context, favoriteChanged);
   }
 
+  /// Opens edit screen for admins. Blocks edit when timer is active.
   void _editExercise() async {
     final timerController = Get.find<ExerciseTimerController>();
     if (timerController.isRunning.value || timerController.isPaused.value) {
@@ -192,7 +209,9 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     return Scaffold(
       backgroundColor: isDarkMode ? Colors.black : tWhiteColor,
       appBar: SliderAppBar(
-        title: _locale == 'de' ? widget.exerciseData['name'] ?? '' : widget.exerciseData['name_en'] ?? '',
+        title: _locale == 'de'
+            ? widget.exerciseData['name'] ?? ''
+            : widget.exerciseData['name_en'] ?? '',
         subtitle: widget.exerciseData['category'] ?? '',
         showBackButton: true,
         showFavoriteIcon: true,
@@ -282,6 +301,8 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
               ),
             ],
           ),
+
+          // Scroll-to-Bottom Button
           if (showScrollDownButton)
             Positioned(
               bottom: Get.find<ExerciseTimerController>().isRunning.value
@@ -327,7 +348,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     );
   }
 }
-
+/// Reusable tab button used for switching between Info and History tabs.
 class _TabButton extends StatelessWidget {
   final String text;
   final bool isSelected;

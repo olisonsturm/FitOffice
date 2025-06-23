@@ -6,6 +6,15 @@ import 'package:fit_office/l10n/app_localizations.dart';
 
 import '../../../controllers/statistics_controller.dart';
 
+/// A customizable AppBar with optional icons, title, subtitle, and status display.
+///
+/// This widget supports:
+/// - Back navigation button
+/// - Favorite toggle (user/admin logic)
+/// - Edit button for admin users
+/// - Dark mode toggle
+/// - Dynamic streak display (e.g., completed activity in seconds)
+/// - Centered title with optional subtitle
 class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String? subtitle;
@@ -219,10 +228,12 @@ class SliderAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
+  /// Required override for PreferredSizeWidget
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
+/// Controller that toggles between dark and light themes using GetX.
 class _ThemeController extends GetxController {
   void toggleTheme() {
     final isDarkMode = Get.context!.theme.brightness == Brightness.dark;
