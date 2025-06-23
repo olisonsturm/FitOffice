@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:fit_office/fit_office.dart';
 import 'package:fit_office/src/utils/services/deep_link_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,8 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
       .then((_) {
     Get.put(AuthenticationRepository());
+
+    Get.put(ExerciseTimerController(), permanent: true);
   });
 
   /// Ensure Firebase authentication is initialized before calling updateFcmTokenIfAuthenticated
