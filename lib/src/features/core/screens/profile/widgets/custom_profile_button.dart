@@ -68,12 +68,12 @@ class CustomProfileButton extends StatelessWidget {
   }
 }
 
-class CustomProfileDropdownButton extends StatefulWidget {
+class CustomProfileDropdownButton extends StatelessWidget {
   final IconData icon;
   final bool isDark;
   final List<DropdownMenuItem<String>> items;
   final String selectedValue;
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String?> onChanged;
 
   const CustomProfileDropdownButton({
     super.key,
@@ -85,22 +85,7 @@ class CustomProfileDropdownButton extends StatefulWidget {
   });
 
   @override
-  CustomProfileDropdownButtonState createState() => CustomProfileDropdownButtonState();
-}
-
-class CustomProfileDropdownButtonState extends State<CustomProfileDropdownButton> {
-  late String currentValue;
-
-  @override
-  void initState() {
-    super.initState();
-    currentValue = widget.selectedValue;
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final isDark = widget.isDark;
-
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -114,12 +99,12 @@ class CustomProfileDropdownButtonState extends State<CustomProfileDropdownButton
       ),
       child: Row(
         children: [
-          Icon(widget.icon, color: Colors.orangeAccent, size: 24),
+          Icon(icon, color: Colors.orangeAccent, size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
-                value: currentValue,
+                value: selectedValue, // Direkt von außen
                 isExpanded: true,
                 icon: Icon(
                   Icons.keyboard_arrow_down,
@@ -131,19 +116,9 @@ class CustomProfileDropdownButtonState extends State<CustomProfileDropdownButton
                   color: isDark ? Colors.white : Colors.black,
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
-                  height: 1.0,
                 ),
-                isDense: true,
-                itemHeight: null,
-                items: widget.items,
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      currentValue = value;
-                    });
-                    widget.onChanged(value);
-                  }
-                },
+                items: items,
+                onChanged: onChanged, // Delegiert zurück an Parent
               ),
             ),
           ),
