@@ -74,29 +74,6 @@ class ExerciseTimerController extends GetxController {
       exerciseCategory.value = '';
       elapsed.value = Duration.zero;
 
-
-      // Navigate to dashboard with Progress tab selected
-      // if (Get.currentRoute == '/Dashboard') {
-      //   // If already on dashboard, just update tab
-      //   final DashboardState dashboardState = Get.find<DashboardState>();
-      //   dashboardState.updateSelectedIndex(0);
-      //   final ProgressScreen progressScreen =
-      //       Get.find<ProgressScreen>();
-      //   progressScreen.updateProgressTab();
-      //
-      // } else if (Get.currentRoute == '') {
-      //   // Coming from a screen with no named route - use back navigation
-      //   Get.back(result: {
-      //     'exerciseCompleted': true,
-      //     'isFirstInTimeWindow': isFirstExerciseInTimeWindow
-      //   });
-      // } else {
-      //   // Use named navigation for other cases
-      //   Get.offNamed('/Dashboard', arguments: {
-      //     'exerciseCompleted': true,
-      //     'isFirstInTimeWindow': isFirstExerciseInTimeWindow
-      //   });
-      // }
       String? currentRoute = Get.currentRoute;
       if (kDebugMode) {
         print("Saving exercise from this route: $currentRoute");

@@ -19,10 +19,6 @@ class ProgressScreen extends StatefulWidget {
   @override
   State<ProgressScreen> createState() => ProgressScreenState();
 
-  void updateProgressTab() {
-
-
-  }
 }
 
 class ProgressScreenState extends State<ProgressScreen>
