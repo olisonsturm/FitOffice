@@ -192,3 +192,4 @@ class ExerciseTimerController extends GetxController {
     super.onClose();
   }
 }
+

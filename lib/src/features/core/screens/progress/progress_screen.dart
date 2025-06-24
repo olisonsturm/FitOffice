@@ -77,21 +77,20 @@ class ProgressScreenState extends State<ProgressScreen>
       final bool exerciseCompleted = args != null && args['exerciseCompleted'] == true;
       final bool isFirstInTimeWindow = args != null && args['isFirstInTimeWindow'] == true;
 
+      if (exerciseCompleted) {
+        // Skip loading spinner and show UI immediately
+        if (mounted) setState(() { _isInitialized = true; });
+      }
+
+      _loadProgressFromStatistics();
+
       if (exerciseCompleted && isFirstInTimeWindow) {
         // Advance step and start celebration
         advanceStep();
-        if (mounted) {
-          startCelebrationAnimation();
-        }
+        if (mounted) _startCelebrationAnimation();
       } else if (exerciseCompleted) {
-        // Only start celebration
-        if (mounted) {
-          startCelebrationAnimation();
-        }
-        _loadProgressFromStatistics();
-      } else {
-        // Regular initialization - load progress normally
-        _loadProgressFromStatistics();
+        // Only start celebration and then load stats (animate one step)
+        if (mounted) _startCelebrationAnimation();
       }
 
       // After short delay, scroll to current chapter
@@ -125,24 +124,21 @@ class ProgressScreenState extends State<ProgressScreen>
       // Calculate current step based on streak and daily goal
       int calculatedStep = _calculateCurrentStep(streakSteps, secondsToday);
 
-      // Animate to the calculated step
-      if (calculatedStep > 0) {
-        await _animateToStep(calculatedStep);
+      // Update step: only animate one increment or set directly
+      if (calculatedStep > currentStep) {
+        if (mounted) {
+          setState(() { currentStep = calculatedStep; });
+        }
       }
+      // Mark loaded
       if (mounted) {
-        setState(() {
-          _isInitialized = true;
-        });
+        setState(() { _isInitialized = true; });
       }
     } catch (e) {
       if (kDebugMode) {
         print('Error loading progress: $e');
       }
-      if (mounted) {
-        setState(() {
-          _isInitialized = true;
-        });
-      }
+      if (mounted) setState(() { _isInitialized = true; });
     }
   }
 
@@ -227,7 +223,7 @@ class ProgressScreenState extends State<ProgressScreen>
     }
   }
 
-  // Neue Hilfsmethode: Scrollt zum Kapitel und wartet auf Abschluss der Animation
+  // Scrollt zum Kapitel und wartet auf Abschluss der Animation
   Future<void> _scrollToChapterAndWait(int chapterIndex) async {
     if (!_scrollController.hasClients) return;
 
@@ -490,7 +486,7 @@ class ProgressScreenState extends State<ProgressScreen>
     );
   }
 
-void startCelebrationAnimation() {
+void _startCelebrationAnimation() {
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -524,5 +520,7 @@ void startCelebrationAnimation() {
   });
 }
 }
+
+
 
 
