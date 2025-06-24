@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fit_office/src/features/core/controllers/statistics_controller.dart';
+import 'package:fit_office/fit_office.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-
-import '../screens/dashboard/dashboard.dart';
 
 /// Controller for managing the global exercise timer.
 /// Tracks running time, handles pause/resume logic, saves exercise logs to Firestore,
@@ -65,22 +64,31 @@ class ExerciseTimerController extends GetxController {
       // Update streak controller
       final streakCtrl = Get.find<StreakController>();
       await streakCtrl.loadStreakData();
+
+      // Reset timer state
+      _stopwatch.stop();
+      _stopwatch.reset();
+      isRunning.value = false;
+      isPaused.value = false;
+      exerciseName.value = '';
+      exerciseCategory.value = '';
+      elapsed.value = Duration.zero;
+
+      String? currentRoute = Get.currentRoute;
+      if (kDebugMode) {
+        print("Saving exercise from this route: $currentRoute");
+      }
+
+      // Always navigate to Progress screen with animation flag
+      Get.to(
+        () => const Dashboard(initialIndex: 0),
+        arguments: {
+          'exerciseCompleted': true,
+          'isFirstInTimeWindow': isFirstExerciseInTimeWindow
+        },
+        preventDuplicates: false, // Allow navigation even if already on Dashboard
+      );
     }
-
-    // Reset timer state
-    _stopwatch.stop();
-    _stopwatch.reset();
-    isRunning.value = false;
-    isPaused.value = false;
-    exerciseName.value = '';
-    exerciseCategory.value = '';
-    elapsed.value = Duration.zero;
-
-    // Navigate to dashboard with Progress tab selected
-    Get.offAll(() => Dashboard(initialIndex: 0), arguments: {
-      'exerciseCompleted': true,
-      'isFirstInTimeWindow': isFirstExerciseInTimeWindow
-    });
   }
 
   /// Checks whether this is the user's first exercise in the last 4 hours.
@@ -161,3 +169,4 @@ class ExerciseTimerController extends GetxController {
     super.onClose();
   }
 }
+

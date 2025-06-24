@@ -77,9 +77,6 @@ class _AppState extends State<App> {
         Locale('en'),
         Locale('de'),
       ],
-
-      /// Initial route of the application
-      /// GetX will handle the further navigation/routing
       home: const Scaffold(body: Center(child: CircularProgressIndicator())),
     );
   }

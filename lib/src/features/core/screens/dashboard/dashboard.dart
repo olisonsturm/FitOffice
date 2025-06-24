@@ -69,11 +69,13 @@ class DashboardState extends State<Dashboard> {
     final userFavorites = await _dbController.getFavouriteExercises(user.email);
     final favoriteNames =
         userFavorites.map((e) => e['name'] as String).toList();
-
-    setState(() {
-      favoriteCount =
-          "${favoriteNames.length} ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
-    });
+    if (mounted) {
+      setState(() {
+        favoriteCount =
+        "${favoriteNames.length} ${AppLocalizations.of(context)!
+            .tDashboardExerciseUnits}";
+      });
+    }
   }
 
   /// Checks if the user has seen the tutorial before and starts it if not.
@@ -887,5 +889,19 @@ class DashboardState extends State<Dashboard> {
         ],
       ),
     );
+  }
+
+  void updateSelectedIndex(int index) {
+    if (mounted && selectedIndex != index) {
+      setState(() {
+        selectedIndex = index;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    tutorialCoachMark?.finish();
+    super.dispose();
   }
 }

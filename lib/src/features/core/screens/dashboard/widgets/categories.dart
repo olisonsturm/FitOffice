@@ -74,12 +74,19 @@ class DashboardCategoriesState extends State<DashboardCategories> {
     String countPsychological =
         await _dbController.getNumberOfExercisesByCategory(tMind);
 
-    setState(() {
-      upperBodyCount = "$countUpperBody ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
-      lowerBodyCount = "$countLowerBody ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
-      fullBodyCount = "$countFullBody ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
-      psychologicalCount = "$countPsychological ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
-    });
+    if (mounted) {
+      setState(() {
+        upperBodyCount = "$countUpperBody ${AppLocalizations.of(context)!
+            .tDashboardExerciseUnits}";
+        lowerBodyCount = "$countLowerBody ${AppLocalizations.of(context)!
+            .tDashboardExerciseUnits}";
+        fullBodyCount = "$countFullBody ${AppLocalizations.of(context)!
+            .tDashboardExerciseUnits}";
+        psychologicalCount =
+        "$countPsychological ${AppLocalizations.of(context)!
+            .tDashboardExerciseUnits}";
+      });
+    }
   }
 
   /// Loads all exercises from the database.
@@ -97,11 +104,13 @@ class DashboardCategoriesState extends State<DashboardCategories> {
     final userFavorites = await _dbController.getFavouriteExercises(user.email);
     final favoriteNames =
         userFavorites.map((e) => e['name'] as String).toList();
-
-    setState(() {
-      _userFavorites = favoriteNames;
-      favoriteCount = "${favoriteNames.length} ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
-    });
+    if (mounted) {
+      setState(() {
+        _userFavorites = favoriteNames;
+        favoriteCount = "${favoriteNames.length} ${AppLocalizations.of(context)!
+            .tDashboardExerciseUnits}";
+      });
+    }
   }
 
   /// Toggles the favorite status for a given [exerciseName].

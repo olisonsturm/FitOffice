@@ -70,10 +70,12 @@ class LibraryScreenState extends State<LibraryScreen> {
     final userFavorites = await _dbController.getFavouriteExercises(user.email);
     final favoriteNames =
     userFavorites.map((e) => e['name'] as String).toList();
-
-    setState(() {
-      favoriteCount = "${favoriteNames.length} ${AppLocalizations.of(context)!.tDashboardExerciseUnits}";
-    });
+    if (mounted) {
+      setState(() {
+        favoriteCount = "${favoriteNames.length} ${AppLocalizations.of(context)!
+            .tDashboardExerciseUnits}";
+      });
+    }
   }
 
   final ProfileController _controller = Get.put(ProfileController());

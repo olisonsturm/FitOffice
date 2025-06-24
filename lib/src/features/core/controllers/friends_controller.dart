@@ -35,8 +35,10 @@ class FriendsController extends GetxController {
 
   /// Initializes Firestore listeners for the given [userId].
   void initStreamsForUser(String userId) {
-    listenToFriendships(userId);
-    listenToFriendRequests(userId);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      listenToFriendships(userId);
+      listenToFriendRequests(userId);
+    });
   }
 
   /// Listens for changes to friendship documents where [userId] is involved.

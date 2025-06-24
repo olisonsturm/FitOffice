@@ -95,6 +95,8 @@ class GlobalExerciseOverlay {
                           Expanded(
                             child: GestureDetector(
                               onTap: () async {
+                                // Only allow opening if not already open
+                                if (hideControlButtons) return;
                                 final dbController =
                                     Get.put(DbController(), permanent: true);
 
@@ -103,7 +105,7 @@ class GlobalExerciseOverlay {
                                         timerController.exerciseName.value);
 
                                 if (exerciseData != null) {
-                                  Navigator.push(
+                                  await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (_) => ExerciseDetailScreen(
@@ -268,5 +270,4 @@ class GlobalExerciseOverlay {
 
   /// The height of the overlay when it is displayed
   static const double overlayHeight = 86;
-
 }
