@@ -277,12 +277,8 @@ class ProfileScreen extends StatelessWidget {
                     ],
                     onChanged: (val) async {
                       final prefs = await SharedPreferences.getInstance();
-                      await prefs.setString('locale', val);
-                      if (val == 'en') {
-                        Get.updateLocale(Locale('en'));
-                      } else if (val == 'de') {
-                        Get.updateLocale(Locale('de'));
-                      }
+                      await prefs.setString('locale', val!);
+                      Get.updateLocale(Locale(val));
                     },
                   ),
                   const Divider(),
