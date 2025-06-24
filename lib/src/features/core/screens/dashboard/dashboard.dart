@@ -1,3 +1,4 @@
+import 'package:fit_office/global_overlay.dart';
 import 'package:fit_office/src/features/core/screens/libary/library_screen.dart';
 import 'package:fit_office/src/features/core/screens/progress/progress_screen.dart';
 import 'package:fit_office/src/features/core/screens/statistics/statistics_screen.dart';
@@ -774,6 +775,10 @@ class DashboardState extends State<Dashboard> {
     super.initState();
     selectedIndex = widget.initialIndex;
     _initializeDashboard();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    GlobalExerciseOverlay().init(context);
+  });
   }
 
   /// Initializes dashboard-related user data and triggers the tutorial if applicable.
