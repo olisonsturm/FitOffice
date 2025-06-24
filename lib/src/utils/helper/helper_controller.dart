@@ -66,8 +66,7 @@ class Helper extends GetxController {
   static String? validateEmail(String? value, BuildContext context) {
     if (value == null || value.isEmpty) return AppLocalizations.of(context)!.tEmailCannotEmpty;
     if (!GetUtils.isEmail(value)) return AppLocalizations.of(context)!.tInvalidEmailFormat;
-    // TODO: Uncomment this line to restrict email domains after development phase
-    //if (!RegExp(r'^[\w\.-]+@[\w\.-]*dhbw[\w\.-]*\.de$').hasMatch(value)) return tOnlyDHBWEmailAllowed;
+    if (!RegExp(r'^[\w\.-]+@[\w\.-]*dhbw[\w\.-]*\.de$').hasMatch(value)) return AppLocalizations.of(context)!.tOnlyDHBWEmailAllowed;
     return null;
   }
 
