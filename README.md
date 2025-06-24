@@ -157,7 +157,7 @@ This project is licensed under the GNU Affero General Public License v3.0. See t
 # 
 
 <div align="center">
-  <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="200">
+  <img src="assets/logo/fit_office_transparent.png" alt="FitOffice Logo" width="200">
   <p>Proudly crafted with ❤️ and ☕ by passionate students of Health Management & Business Information Systems at DHBW Ravensburg</p>
   <p>© 2025 FitOffice Team - DHBW Ravensburg</p>
 </div>
