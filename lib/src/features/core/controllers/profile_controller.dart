@@ -29,6 +29,8 @@ class ProfileController extends GetxController {
     profilePictureUpdated.toggle();
   }
 
+  final _isLoggingOut = false.obs;
+
   /// Fetch user data using the authenticated user's ID
   Future<void> fetchUserData() async {
     try {
@@ -40,11 +42,26 @@ class ProfileController extends GetxController {
         Helper.warningSnackBar(title: 'Error', message: 'No user found!');
         throw Exception('No user found!');
       }
-    } catch (e) {
-      Helper.errorSnackBar(title: 'Error', message: e.toString());
-      rethrow;
+    }  catch (e) {
+    if (!_isLoggingOut.value) {
+      _isLoggingOut.value = true;
+
+      await _authRepo.logout();
+      user.value = null;
+
+      Get.offAllNamed('/onboarding'); 
+      Helper.errorSnackBar(
+        title: 'Error',
+        message: 'Account not found. You have been logged out.',
+      );
+      Future.delayed(Duration(seconds: 2), () {
+        _isLoggingOut.value = false;
+      });
     }
+
+    rethrow;
   }
+}
 
   /// This method ensures that the user data is fetched only once
   /// @returns the UserModel if it exists, otherwise fetches it
