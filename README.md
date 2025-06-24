@@ -2,7 +2,7 @@
 
 <div style="display: flex; align-items: center; gap: 16px;">
   <img src="assets/gif/FittyFuchsWaving.gif" alt="FittyFuchs Waving" width="150">
-  <img src="assets/logo/fit_office.png" alt="FitOffice Logo" width="150">
+  <img src="assets/logo/fit_office_transparent.png" alt="FitOffice Logo" width="150">
 </div>
 
 # FitOffice: Aktive@DHBW
