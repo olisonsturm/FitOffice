@@ -1427,7 +1427,7 @@ abstract class AppLocalizations {
   /// No description provided for @tExerciseResume.
   ///
   /// In en, this message translates to:
-  /// **'Resume exercise'**
+  /// **'Resume'**
   String get tExerciseResume;
 
   /// No description provided for @tExerciseStart.
@@ -1439,19 +1439,19 @@ abstract class AppLocalizations {
   /// No description provided for @tExercisePause.
   ///
   /// In en, this message translates to:
-  /// **'Pause exercise'**
+  /// **'Pause'**
   String get tExercisePause;
 
   /// No description provided for @tExerciseFinish.
   ///
   /// In en, this message translates to:
-  /// **'Finish exercise'**
+  /// **'Finish'**
   String get tExerciseFinish;
 
   /// No description provided for @tExerciseAbort.
   ///
   /// In en, this message translates to:
-  /// **'Abort exercise'**
+  /// **'Abort'**
   String get tExerciseAbort;
 
   /// No description provided for @tNoVideoAvailable.
@@ -1463,7 +1463,7 @@ abstract class AppLocalizations {
   /// No description provided for @tCancelExercise.
   ///
   /// In en, this message translates to:
-  /// **'Cancel Exercise'**
+  /// **'Cancel'**
   String get tCancelExercise;
 
   /// No description provided for @tCancelExerciseMessage.

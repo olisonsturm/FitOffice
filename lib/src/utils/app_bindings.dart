@@ -6,7 +6,6 @@ import 'package:fit_office/src/features/authentication/controllers/login_control
 import 'package:fit_office/src/features/authentication/controllers/on_boarding_controller.dart';
 import 'package:fit_office/src/features/authentication/controllers/signup_controller.dart';
 import 'package:fit_office/src/repository/user_repository/user_repository.dart';
-import '../../fit_office.dart';
 import '../repository/authentication_repository/authentication_repository.dart';
 
 /// Initial binding for the application

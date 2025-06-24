@@ -22,7 +22,7 @@ FlutterLocalNotificationsPlugin();
 
 /// Firebase Messaging Background Handler
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // Wird aufgerufen, wenn eine Nachricht im Hintergrund/terminated State ankommt
+  // Ensure that Firebase is initialized before handling the message
   await Firebase.initializeApp();
   if (kDebugMode) {
     print('Handling a background message: ${message.messageId}');

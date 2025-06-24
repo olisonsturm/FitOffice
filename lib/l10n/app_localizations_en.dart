@@ -703,25 +703,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tExerciseNoDescription => 'No description available';
 
   @override
-  String get tExerciseResume => 'Resume exercise';
+  String get tExerciseResume => 'Resume';
 
   @override
   String get tExerciseStart => 'Start exercise';
 
   @override
-  String get tExercisePause => 'Pause exercise';
+  String get tExercisePause => 'Pause';
 
   @override
-  String get tExerciseFinish => 'Finish exercise';
+  String get tExerciseFinish => 'Finish';
 
   @override
-  String get tExerciseAbort => 'Abort exercise';
+  String get tExerciseAbort => 'Abort';
 
   @override
   String get tNoVideoAvailable => 'No video available';
 
   @override
-  String get tCancelExercise => 'Cancel Exercise';
+  String get tCancelExercise => 'Cancel';
 
   @override
   String get tCancelExerciseMessage =>

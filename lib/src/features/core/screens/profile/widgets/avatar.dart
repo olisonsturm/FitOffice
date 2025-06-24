@@ -37,6 +37,14 @@ class ImageWithIconState extends State<Avatar> {
     });
   }
 
+  @override
+  void didUpdateWidget(covariant Avatar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.userEmail != widget.userEmail) {
+      _loadAvatar();
+    }
+  }
+
   Future<void> _loadAvatar() async {
     try {
       final imageProvider = await _storageService.getProfilePicture(userEmail: widget.userEmail);

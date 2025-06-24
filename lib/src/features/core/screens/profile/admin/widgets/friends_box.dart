@@ -157,6 +157,7 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
                       width: 30,
                       height: 30,
                       child: Avatar(
+                        key: ValueKey(friend['email']),
                         userEmail: friend['email'],
                       ),
                     ),
