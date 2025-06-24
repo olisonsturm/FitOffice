@@ -50,7 +50,10 @@ class _FriendsBoxWidgetState extends State<FriendsBoxWidget> {
   @override
   void initState() {
     super.initState();
-    _friendsController.initStreamsForUser(widget.currentUserId);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _friendsController.initStreamsForUser(widget.currentUserId);
+    });
   }
 
   @override
