@@ -248,14 +248,17 @@ class _AllExercisesListState extends State<AllExercisesList> {
   Widget _buildExerciseCard(BuildContext context, Map<String, dynamic> exercise,
       bool isAdmin, String locale) {
     String exerciseName;
+    String exerciseNameEn;
     if (locale == 'de') {
       exerciseName = exercise['name'];
+      exerciseNameEn = exercise['name'];
     } else {
       exerciseName = exercise['name_en'];
+      exerciseNameEn = exercise['name'];
     }
     final exerciseCategory = exercise['category'];
     final timerController = Get.find<ExerciseTimerController>();
-    final isFavorite = widget.favorites.contains(exerciseName);
+    final isFavorite = widget.favorites.contains(exerciseNameEn);
     final isProcessing = _isProcessingFavorite[exerciseName] ?? false;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -287,7 +290,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
             );
 
             if (result == true) {
-              _toggleFavorite(exerciseName);
+              _toggleFavorite(exerciseNameEn);
             }
           },
           child: ListTile(
@@ -346,7 +349,7 @@ class _AllExercisesListState extends State<AllExercisesList> {
                   FavoriteIcon(
                     isInitiallyFavorite: isFavorite,
                     isProcessing: isProcessing,
-                    onToggle: () => _toggleFavorite(exerciseName),
+                    onToggle: () => _toggleFavorite(exerciseNameEn),
                   ),
                   if (isAdmin) ...[
                     IconButton(
