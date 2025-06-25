@@ -71,7 +71,6 @@ class ProgressScreenState extends State<ProgressScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final args = Get.arguments;
       final bool exerciseCompleted = args != null && args['exerciseCompleted'] == true;
-      final bool isFirstInTimeWindow = args != null && args['isFirstInTimeWindow'] == true;
 
       if (exerciseCompleted) {
         // Skip loading spinner and show UI immediately
@@ -80,11 +79,7 @@ class ProgressScreenState extends State<ProgressScreen>
 
       _loadProgressFromStatistics();
 
-      if (exerciseCompleted && isFirstInTimeWindow) {
-        // Advance step and start celebration
-        advanceStep();
-        if (mounted) _startCelebrationAnimation();
-      } else if (exerciseCompleted) {
+      if (exerciseCompleted) {
         // Only start celebration and then load stats (animate one step)
         if (mounted) _startCelebrationAnimation();
       }
@@ -152,8 +147,8 @@ class ProgressScreenState extends State<ProgressScreen>
       return streakSteps > 0 ? streakSteps : 0;
     }
 
-    // Return current streak + 1 (today's completion)
-    return streakSteps + 1;
+    // Return current streak
+    return streakSteps;
   }
 
   Future<void> _animateToStep(int targetStep) async {
@@ -463,22 +458,6 @@ class ProgressScreenState extends State<ProgressScreen>
             ),
         ],
       ),
-
-      // Temporary manual trigger (remove in production)
-    //   floatingActionButton: FloatingActionButton(
-    //     onPressed: _isAnimating ? null : advanceStep,
-    //     backgroundColor: _isAnimating ? Colors.grey : tPrimaryColor,
-    //     child: _isAnimating
-    //         ? const SizedBox(
-    //       width: 20,
-    //       height: 20,
-    //       child: CircularProgressIndicator(
-    //         color: Colors.white,
-    //         strokeWidth: 2,
-    //       ),
-    //     )
-    //         : const Icon(Icons.arrow_forward),
-    //   ),
     );
   }
 
