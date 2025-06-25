@@ -398,4 +398,30 @@ class FriendsController extends GetxController {
       return null;
     }
   }
+
+  /// Removes all friendships for a given user.
+  Future<void> removeAllFriendships(String userId) async {
+    final userRef = FirebaseFirestore.instance.collection('users').doc(userId);
+    final friendshipsRef = FirebaseFirestore.instance.collection('friendships');
+    final batch = FirebaseFirestore.instance.batch();
+
+    try {
+      var senderQuery = await friendshipsRef.where('sender', isEqualTo: userRef).get();
+      for (final doc in senderQuery.docs) {
+        batch.delete(doc.reference);
+      }
+
+      var receiverQuery = await friendshipsRef.where('receiver', isEqualTo: userRef).get();
+      for (final doc in receiverQuery.docs) {
+        batch.delete(doc.reference);
+      }
+
+      await batch.commit();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error removing all friendships: $e');
+      }
+      rethrow;
+    }
+  }
 }

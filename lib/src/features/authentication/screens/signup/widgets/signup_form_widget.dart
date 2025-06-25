@@ -49,7 +49,7 @@ class SignUpFormWidget extends StatelessWidget {
                   label: RichText(
                     text: TextSpan(
                       text: AppLocalizations.of(context)!.tUserName,
-                      style: TextStyle(color: isDark ? tWhiteColor : tPrimaryColor),
+                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
                       children: const [
                         TextSpan(
                           text: ' *',
@@ -89,7 +89,7 @@ class SignUpFormWidget extends StatelessWidget {
                   label: RichText(
                     text: TextSpan(
                       text: AppLocalizations.of(context)!.tFullName,
-                      style: TextStyle(color: isDark ? tWhiteColor : tPrimaryColor)
+                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor)
                     ),
                   ),
                   prefixIcon: Icon(LineAwesomeIcons.user_tag_solid, color: isDark ? tWhiteColor : tPrimaryColor),
@@ -123,7 +123,7 @@ class SignUpFormWidget extends StatelessWidget {
                   label: RichText(
                     text: TextSpan(
                       text: AppLocalizations.of(context)!.tEmail,
-                      style: TextStyle(color: isDark ? tWhiteColor : tPrimaryColor),
+                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
                       children: const [
                         TextSpan(
                           text: ' *',
@@ -165,7 +165,7 @@ class SignUpFormWidget extends StatelessWidget {
                   label: RichText(
                     text: TextSpan(
                       text: AppLocalizations.of(context)!.tPassword,
-                      style: TextStyle(color: isDark ? tWhiteColor : tPrimaryColor),
+                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
                       children: const [
                         TextSpan(
                           text: ' *',
@@ -215,7 +215,7 @@ class SignUpFormWidget extends StatelessWidget {
                   label: RichText(
                     text: TextSpan(
                       text: 'Confirm Password',
-                      style: TextStyle(color: isDark ? tWhiteColor : tPrimaryColor),
+                      style: TextStyle(color: isDark ? tWhiteColor : tBlackColor),
                       children: const [
                         TextSpan(
                           text: ' *',

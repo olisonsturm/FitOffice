@@ -312,5 +312,13 @@
   "tGerman": " (Deutsch)",
   "tEnglish": " (Englisch)",
   "tRemoveAccount": "Konto löschen",
-  "tRemoveAccountConfirm": "Möchtest du dein Konto wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+  "tRemoveAccountConfirm": "Möchtest du dein Konto wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "tAuthentication": "Authentifizierung",
+  "tReauthenticationRequired": "Re-Authentifizierung erforderlich",
+  "tWarning": "Warnung",
+  "tEnterPassword": "Bitte gib dein Passwort ein",
+  "tAuthenticationFailed": "Authentifizierung fehlgeschlagen",
+  "tConfirm": "Bestätigen",
+  "tDeletingAccount": "Konto wird gelöscht...",
+  "tAccountDeleted": "Dein Konto wurde erfolgreich gelöscht."
 }

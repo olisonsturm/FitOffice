@@ -7,7 +7,9 @@ import 'package:fit_office/src/features/authentication/screens/mail_verification
 import 'package:fit_office/src/features/authentication/screens/welcome/welcome_screen.dart';
 import 'package:fit_office/src/features/core/screens/dashboard/dashboard.dart';
 import '../../features/authentication/screens/on_boarding/on_boarding_screen.dart';
+import '../user_repository/user_repository.dart';
 import 'exceptions/t_exceptions.dart';
+import 'package:fit_office/src/features/core/controllers/friends_controller.dart';
 
 /// AuthenticationRepository is responsible for managing user authentication
 /// using Firebase Authentication.
@@ -159,6 +161,82 @@ class AuthenticationRepository extends GetxController {
       throw e.message;
     } catch (e) {
       throw 'Unable to delete user. Try again.';
+    }
+  }
+
+  /// DeleteUserWithData - Safely deletes both the user's authentication record and Firestore data.
+  /// This method reauthenticates the user before deleting their data to ensure security.
+  /// @param email The user's email address.
+  /// @param password The user's password.
+  /// @throws String if the deletion fails due to any error.
+  Future<void> deleteUserWithData(String email, String password) async {
+    await reauthenticateAndDelete(email, password);
+  }
+
+  /// Helper method to reauthenticate and delete a user
+  /// This can be used when you need to perform sensitive operations that require recent authentication
+  /// @param email The user's email address
+  /// @param password The user's password
+  /// @return A Future that completes when the user is deleted or throws an exception if it fails
+  Future<void> reauthenticateAndDelete(String email, String password) async {
+    try {
+      User? user = _auth.currentUser;
+
+      if (user != null) {
+        // Reauthenticate user
+        AuthCredential credential = EmailAuthProvider.credential(
+          email: email,
+          password: password,
+        );
+        await user.reauthenticateWithCredential(credential);
+
+        if (kDebugMode) {
+          print('User reauthenticated successfully.');
+        }
+
+        // Get user ID before deleting user
+        final userId = user.uid;
+
+        // Delete user from Firebase Auth
+        await user.delete();
+
+        if (kDebugMode) {
+          print('Firebase Auth user deleted successfully');
+        }
+
+        // If Auth deletion succeeded, remove all friendships
+        await FriendsController.instance.removeAllFriendships(userId);
+
+        if (kDebugMode) {
+          print('All friendships removed successfully');
+        }
+
+        // If Auth deletion succeeded, delete the user's data from Firestore
+        final userRepo = UserRepository.instance;
+        await userRepo.deleteUser(userId);
+
+        if (kDebugMode) {
+          print('Firestore user data deleted successfully');
+        }
+
+        // Manually trigger user state update to ensure we correctly reflect auth state
+        _firebaseUser.value = null;
+
+        // Navigate to welcome screen
+        Get.offAll(() => const WelcomeScreen());
+      } else {
+        throw 'No authenticated user found';
+      }
+    } on FirebaseAuthException catch (e) {
+      if (kDebugMode) {
+        print("Reauthentication or deletion failed: ${e.code} - ${e.message}");
+      }
+      throw e.message!;
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error during reauthentication and deletion: $e");
+      }
+      throw 'Failed to delete account: ${e.toString()}';
     }
   }
 }
