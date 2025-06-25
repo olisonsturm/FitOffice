@@ -312,5 +312,13 @@
   "tGerman": " (German)",
   "tEnglish": " (English)",
   "tRemoveAccount": "Remove Account",
-  "tRemoveAccountConfirm": "Are you sure you want to remove your account? This action cannot be undone."
+  "tRemoveAccountConfirm": "Are you sure you want to remove your account? This action cannot be undone.",
+  "tAuthentication": "Authentication",
+  "tReauthenticationRequired": "Reauthentication required",
+  "tWarning": "Warning",
+  "tEnterPassword": "Please enter your password to continue.",
+  "tAuthenticationFailed": "Authentication failed. Please try again.",
+  "tConfirm": "Confirm",
+  "tDeletingAccount": "Deleting account...",
+  "tAccountDeleted": "Your account has been successfully deleted."
 }

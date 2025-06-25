@@ -43,6 +43,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
   late String initialUserName;
   bool isEdited = false;
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -71,7 +72,172 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
     widget.email.removeListener(_checkForChanges);
     widget.fullName.removeListener(_checkForChanges);
     widget.userName.removeListener(_checkForChanges);
+    _passwordController.dispose();
     super.dispose();
+  }
+
+  // Show reauthentication dialog to confirm user's identity before sensitive operations
+  Future<String?> _getPasswordFromUser(BuildContext context) async {
+    final localisation = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
+    _passwordController.clear();
+    String? password;
+
+    await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text(localisation.tAuthentication),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(localisation.tReauthenticationRequired),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: localisation.tPassword,
+                border: const OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            style: isDarkMode
+                ? TDialogTheme.getDarkCancelButtonStyle()
+                : TDialogTheme.getLightCancelButtonStyle(),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(localisation.tCancel),
+          ),
+          TextButton(
+            style: isDarkMode
+                ? TDialogTheme.getDarkConfirmButtonStyle()
+                : TDialogTheme.getLightConfirmButtonStyle(),
+            onPressed: () {
+              if (_passwordController.text.isEmpty) {
+                Helper.warningSnackBar(
+                  title: localisation.tWarning,
+                  message: localisation.tEnterPassword,
+                );
+                return;
+              }
+              password = _passwordController.text;
+              Navigator.of(context).pop();
+            },
+            child: Text(localisation.tConfirm),
+          ),
+        ],
+      ),
+    );
+
+    return password;
+  }
+
+  // Method to handle account deletion with proper error handling
+  Future<void> _handleAccountDeletion(BuildContext context) async {
+    final localisation = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
+    // Show confirmation dialog
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(localisation.tRemoveAccount),
+        content: Text(localisation.tRemoveAccountConfirm),
+        actions: [
+          TextButton(
+            style: isDarkMode
+                ? TDialogTheme.getDarkCancelButtonStyle()
+                : TDialogTheme.getLightCancelButtonStyle(),
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(localisation.tCancel),
+          ),
+          TextButton(
+            style: isDarkMode
+                ? TDialogTheme.getDarkDeleteButtonStyle()
+                : TDialogTheme.getLightDeleteButtonStyle(),
+            onPressed: () async {
+              // Close the confirmation dialog first
+              Navigator.of(dialogContext).pop();
+
+              // First reauthenticate the user
+              final password = await _getPasswordFromUser(context);
+
+              if (password != null && context.mounted) {
+                // Create a separate variable to track the deletion dialog
+                BuildContext? loadingDialogContext;
+
+                try {
+                  // Show loading indicator and store its context
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (ctx) {
+                      loadingDialogContext = ctx;
+                      return AlertDialog(
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const CircularProgressIndicator(),
+                            const SizedBox(height: 16),
+                            Text(localisation.tDeletingAccount),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+
+                  // Perform account deletion
+                  final email = AuthenticationRepository.instance.getUserEmail;
+                  if (email.isEmpty) {
+                    throw 'Could not find user email. Please log in again.';
+                  }
+                  await AuthenticationRepository.instance.deleteUserWithData(email, password);
+
+                  // Dismiss loading dialog if it's showing
+                  if (loadingDialogContext != null && Navigator.of(loadingDialogContext!, rootNavigator: true).canPop()) {
+                    Navigator.of(loadingDialogContext!, rootNavigator: true).pop();
+                  }
+
+                  // Show success message if context is still valid
+                  if (context.mounted) {
+                    Helper.successSnackBar(
+                      title: localisation.tSuccess,
+                      message: localisation.tAccountDeleted
+                    );
+                  }
+                } catch (e) {
+                  // Dismiss loading dialog if it's showing
+                  if (loadingDialogContext != null && Navigator.of(loadingDialogContext!, rootNavigator: true).canPop()) {
+                    Navigator.of(loadingDialogContext!, rootNavigator: true).pop();
+                  }
+
+                  if (kDebugMode) {
+                    print('Account deletion error: $e');
+                  }
+
+                  // Show error message if context is still valid
+                  if (context.mounted) {
+                    Helper.errorSnackBar(
+                      title: localisation.tOhSnap,
+                      message: 'Failed to delete account: ${e.toString()}'
+                    );
+                  }
+                }
+              }
+            },
+            child: Text(localisation.tRemove),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -161,52 +327,7 @@ class ProfileFormScreenState extends State<ProfileFormScreen> {
             isDark: isDark,
             icon: LineAwesomeIcons.trash_solid,
             label: localisation.tDelete,
-            onPress: () async {
-              final theme = Theme.of(context);
-              final isDarkMode = theme.brightness == Brightness.dark;
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text(localisation.tRemoveAccount),
-                  content: Text(localisation.tRemoveAccountConfirm),
-                  actions: [
-                    TextButton(
-                      style: isDarkMode
-                          ? TDialogTheme.getDarkCancelButtonStyle()
-                          : TDialogTheme.getLightCancelButtonStyle(),
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(localisation.tCancel),
-                    ),
-                    TextButton(
-                      style: isDarkMode
-                          ? TDialogTheme.getDarkDeleteButtonStyle()
-                          : TDialogTheme.getLightDeleteButtonStyle(),
-                      onPressed: () async {
-                        Navigator.of(context).pop();
-                        try {
-                          await FirebaseFirestore.instance.runTransaction((transaction) async {
-                            await UserRepository.instance.deleteUser(widget.user.id!);
-                            await AuthenticationRepository.instance.deleteUser();
-                          });
-                          Helper.successSnackBar(title: localisation.tSuccess, message: 'Account deleted successfully');
-                        } on FirebaseAuthException catch (e) {
-                          if (kDebugMode) {
-                            print('FirebaseAuthException: ${e.code} - ${e.message}');
-                          }
-                          Helper.errorSnackBar(title: localisation.tOhSnap, message: 'Failed to delete account: ${e.message}');
-                        } catch (e) {
-                          if (kDebugMode) {
-                            print('Exception: $e');
-                          }
-                          Helper.errorSnackBar(title: localisation.tOhSnap, message: 'Failed to delete account: $e');
-                        }
-                      },
-                      child: Text(localisation.tRemove),
-                    ),
-                  ],
-                ),
-              );
-            },
+            onPress: () => _handleAccountDeletion(context),
             iconColor: Colors.red,
             textColor: Colors.red,
           ),

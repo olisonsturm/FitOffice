@@ -1004,4 +1004,28 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get tRemoveAccountConfirm =>
       'Möchtest du dein Konto wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.';
+
+  @override
+  String get tAuthentication => 'Authentifizierung';
+
+  @override
+  String get tReauthenticationRequired => 'Re-Authentifizierung erforderlich';
+
+  @override
+  String get tWarning => 'Warnung';
+
+  @override
+  String get tEnterPassword => 'Bitte gib dein Passwort ein';
+
+  @override
+  String get tAuthenticationFailed => 'Authentifizierung fehlgeschlagen';
+
+  @override
+  String get tConfirm => 'Bestätigen';
+
+  @override
+  String get tDeletingAccount => 'Konto wird gelöscht...';
+
+  @override
+  String get tAccountDeleted => 'Dein Konto wurde erfolgreich gelöscht.';
 }

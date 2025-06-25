@@ -993,4 +993,29 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tRemoveAccountConfirm =>
       'Are you sure you want to remove your account? This action cannot be undone.';
+
+  @override
+  String get tAuthentication => 'Authentication';
+
+  @override
+  String get tReauthenticationRequired => 'Reauthentication required';
+
+  @override
+  String get tWarning => 'Warning';
+
+  @override
+  String get tEnterPassword => 'Please enter your password to continue.';
+
+  @override
+  String get tAuthenticationFailed =>
+      'Authentication failed. Please try again.';
+
+  @override
+  String get tConfirm => 'Confirm';
+
+  @override
+  String get tDeletingAccount => 'Deleting account...';
+
+  @override
+  String get tAccountDeleted => 'Your account has been successfully deleted.';
 }

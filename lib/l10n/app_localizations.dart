@@ -1975,6 +1975,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to remove your account? This action cannot be undone.'**
   String get tRemoveAccountConfirm;
+
+  /// No description provided for @tAuthentication.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication'**
+  String get tAuthentication;
+
+  /// No description provided for @tReauthenticationRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Reauthentication required'**
+  String get tReauthenticationRequired;
+
+  /// No description provided for @tWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get tWarning;
+
+  /// No description provided for @tEnterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password to continue.'**
+  String get tEnterPassword;
+
+  /// No description provided for @tAuthenticationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication failed. Please try again.'**
+  String get tAuthenticationFailed;
+
+  /// No description provided for @tConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get tConfirm;
+
+  /// No description provided for @tDeletingAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting account...'**
+  String get tDeletingAccount;
+
+  /// No description provided for @tAccountDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been successfully deleted.'**
+  String get tAccountDeleted;
 }
 
 class _AppLocalizationsDelegate

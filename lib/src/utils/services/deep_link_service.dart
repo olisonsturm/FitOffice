@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:fit_office/src/utils/helper/helper_controller.dart';
 import 'package:flutter/material.dart';
@@ -140,10 +141,9 @@ class DeepLinkService extends GetxService {
             onPressed: () async {
               Navigator.of(ctx).pop();
               try {
-                final String? senderEmail = await controller.getUserEmailById(AuthenticationRepository.instance.getUserID);
-                final String? receiverUserName = await controller.getUserNameById(userId);
+                final String? senderEmail = FirebaseAuth.instance.currentUser?.email;
 
-                await controller.sendFriendRequest(senderEmail!, receiverUserName!, context);
+                await controller.sendFriendRequest(senderEmail!, userName, context);
               } catch (e) {
                 Helper.errorSnackBar(title: 'Error', message: e.toString());
               }
